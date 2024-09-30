@@ -8,21 +8,26 @@ Stable tag: 4.0.1.6.1
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Create a Custom WordPress Dashboard or admin using powerful features such as White Label WP, Dark Mode, Media Folders, Admin Columns, Hide Update Notice, Login Customizer, & more.
+Customize your WordPress dashboard with White label, Media Folders, Admin Menu Editor, Admin Columns, Login Customizer, and much much more!
 
 == Description ==
 
-### The Best WordPress Custom Dashboard Plugin with White Label, Admin and Login Customizer
+### The Best WordPress Custom Dashboard Plugin with White Label, Media Folders, Dark Mode, Login Customizer and so much more!
 
-Tired of a dull WordPress dashboard? Meet WP Adminify, your solution for a custom WordPress dashboard that transforms your admin experience. With 20+ powerful features, this intuitive plugin lets you create a custom admin panel, customize layouts, streamline workflows, boost productivity, and improve admin security – all from one intuitive plugin.
+Tired of a dull WordPress dashboard? Meet WP Adminify, your solution for a custom WordPress dashboard that transforms your admin experience. With 20+ powerful features, this intuitive plugin lets you create a custom admin panel, login pages, improve performance, boost productivity, and improve admin security – all from one intuitive dashboard customizer plugin.
 
 ## WP Adminify lets you:##
 * Personalize your WordPress admin area or a client dashboard
-* Organize content effortlessly
-* Enhance site security
-* Optimize performance
+* Organize content effortlessly with media library folders
+* Enhance site security with login redirects
+* Optimize performance with disable embeds
+* Improve productivity with custom dashboard widgets
+* Create custom admin pages for tailored functionality
+* Create custom menu with role-based visibility for a more personalized experience
+* Design custom login screens to match your brand identity
 
-WP Adminify transforms your WordPress dashboard to reflect your unique brand identity. Its intuitive interface and customizable options modernize your workflow, boosting overall productivity. Present a professional image to clients and users with a custom admin panel that works for you. Use WP Adminify to help completely transform your client dashboard and help them establish their brands.
+
+WP Adminify transforms your WordPress dashboard to reflect your unique brand identity. Its intuitive interface and dashboard customization options modernize your workflow, boosting overall productivity and create a custom WordPress dashboard. Present a professional image to clients and users with a custom admin panel that works for you. WP Adminify is a premium dashboard customizer that can completely transform your client dashboard and help them establish their brands. Oh! And you can rebrand WordPress with it as well!
 
 [youtube https://www.youtube.com/watch?v=6WWFTOk6xVo]
 
@@ -30,39 +35,45 @@ WP Adminify transforms your WordPress dashboard to reflect your unique brand ide
 
 Say goodbye to the one-size-fits-all Dashboard and embrace a personalized environment that aligns with your vision. It’s time to customize your WordPress Admin Dashboard with WP Adminify – where every detail extends your digital strategy.
 
-* **WordPress Dashboard White Label:** Customize the admin panel and login screen to match your brand. Add custom admin menus, change howdy text or remove howdy text, and create a streamlined backend for complete WordPress Dashboard Customization.
+* **WordPress Dashboard White Label:** Rebrand the admin panel and design custom login screen to your taste. Add custom admin menus, change howdy text or remove howdy text, and create a streamlined backend for complete WordPress Dashboard Customization.
 * **Adminify UI:** Access 10 modern dashboard UI templates with extensive customization options to transform your WordPress dashboard’s look and feel.
 * **Post Type & Media Folders:** Organize media and post types with folders and subfolders, making media management easy and efficient with Media Library Folders.
 * **Admin Columns Customizer:** Customize admin columns with support for ACF, Metabox, and Pods, ensuring your Admin Columns display the most relevant information.
 * **Smart Dark Mode & Light Mode:** Switch between dark and light modes automatically, with customizable logos, for a personalized WordPress Dashboard Customization experience.
 * **Disable Admin Notices:** Manage and hide promotional notices and updates in one place, keeping your admin panel clean and focused.
-* **Admin Menu Editor:** Rearrange and customize the admin menu, with role-based visibility, for advanced WordPress Dashboard Customization.
+* **URL Path and Slug Display:** Easily identify the URL path and slug for all posts and pages in the WordPress admin dashboard, streamlining content management and SEO.
+* **Login Redirects:** Redirect users to specific pages after login or logout, customizing the user experience and enforcing security measures.
+* **Admin Menu Editor:** Rearrange and create custom menu, with role-based visibility, for advanced WordPress Dashboard Customization.
+* **Custom Admin Pages:** Create custom admin pages for both top-level or sub-level menu configuration with support for popular page builders like Gutenberg, Elementor, Bricks, Oxygen, and Divi.
 * **Dashboard & Welcome Widget:** Add custom dashboard widgets with varied content options and control their visibility based on user roles.
 * **Quick Floating Menu:** Create accessible floating menus with customizable icons and URLs, enhancing navigation and user experience.
 * **WordPress Post Duplicator:** Easily duplicate posts, pages, or custom post types, streamlining content creation.
-* **Disable Comments for WordPress: Manage comment form fields and disable links to reduce spam, ensuring a cleaner commenting experience.
+* **Disable Comments for WordPress:** Manage comment form fields and disable links to reduce spam, ensuring a cleaner commenting experience.
 * **Post Type Order:** Order posts, pages, or custom post types with drag-and-drop functionality, keeping content organized.
 * **Menu Duplicator for WordPress:** Duplicate entire menus or specific items to simplify menu management.
-* **Dashboard Custom CSS / JS:** Apply custom CSS and JS for specific devices, pages, or posts, enhancing WordPress Dashboard Customization.
+* **Dashboard Custom CSS / JS:** Apply custom CSS and JS for specific devices, pages, or posts to create a custom WordPress dashboard.
+
 
 >[Upgrade to WP Adminify Pro](https://wpadminify.com/pricing/)
 
 ## Do more with WP Adminify Pro ##
 
-WP Adminify Pro offers advanced features to customize and secure your WordPress Dashboard. Enhance the user experience with personalized settings and layouts. It’s the perfect upgrade for a more efficient and personalized admin interface.
+WP Adminify Pro is a premium custom dashboard plugin that offers advanced features to create your own custom WordPress Dashboard. Enhance the user experience with personalized settings and layouts. It’s the perfect upgrade for a more efficient and personalized admin interface.
 
 ==Customization and Aesthetics
 
-* **Admin UI Templates:** Choose from a wider range of pre-designed dashboard layouts to match your preferred style or create a unique look for your admin area.
-* **Custom Background:** Personalize your dashboard with your own background image or color for a more engaging workspace.
+* **Custom Admin Panel UI Templates:** Choose from a wider range of pre-designed dashboard layouts to match your preferred style or create a unique look for your admin area.
+* **Custom Background:** Create a WordPress custom dashboard with your own background image or color for a more engaging workspace.
 * **Body Font:** Select a font that improves readability and matches your branding.
-* **Admin Favicon:** Create a custom tab icon for your website's admin area, enhancing brand recognition.
+* **Admin Favicon:** Create a custom tab icon for your client dashboard, enhancing brand recognition.
 * **Schedule Dark Mode:** Automatically switch between light and dark mode based on your preference or time of day.
 * **Post Status Background Colors Customization:** Easily differentiate post statuses with custom background colors for better organization.
-Menu Management
+
+==Dashboard Menu Editor
+
 * **Admin Menu Editor:** Gain full control over your admin menu by creating a custom menu, and removing, or rearranging menu items.
 * **User Info Display:** Choose whether to show or hide user information and avatar on the admin menu for a cleaner look.
-* **Menu Item Style:** Customize the appearance of menu items to match your branding or preferences.
+* **Menu Item Style:** Customize the appearance of menu items on client dashboard to match their branding or preferences.
 * **Dropdown Toggle Icon:** Change the icon used to expand dropdown menus.
 * **Top Menu Links:** Create additional links in the top menu for quick access to important pages.
 * **Bubble Icon:** Add eye-catching bubble icons to menu items for emphasis.
@@ -71,20 +82,24 @@ Menu Management
 ==Dashboard Optimization
 
 * **Hide Update Notices:** WP Adminify hides update notices to declutter your dashboard.
+* **Remove Welcome Panel:** Disable the default WordPress welcome panel to create a cleaner and more focused dashboard.
 * **Screen Options and Help Tab:** Remove the screen options and help tab to create a cleaner workspace.
-Security and Performance
-* **Redirect URLs:** Control where users are sent after logging in or out based on their user role for enhanced security.
+* **Admin Pages:** Create admin pages with role based accessibility features for your WordPress dashboard menu.
+
+==Security and Performance
+
+* **Redirect URLs:** Control where users are sent after logging in or out based on their user role for enhanced security using login redirects.
 * **Disable Automatic Updates Emails:** Stop receiving unwanted emails about WordPress updates.
 * **Disable Login Screen Language Switcher:** Remove the language switcher from the login screen for a streamlined login process.
 * **Disable Embeds:** Prevent content from being embedded from external sources to improve security and performance.
-* **Control Heartbeat API:** Optimize website performance by adjusting the frequency of the heartbeat API or disabling it in specific areas.
-* **Control Revisions:** Prevent database bloat by limiting the number of post revisions saved.
+* **Control Heartbeat API:** Optimize website performance by adjusting the frequency of the heartbeat API or disabling it in specific areas.(Upcoming)
+* **Control Revisions:** Prevent database bloat by limiting the number of post revisions saved.(Upcoming)
 
 [Live Demo](https://demo.wpadminify.com/) | [Docs](https://wpadminify.com/docs)  | [Request Feature](https://wpadminify.com/contact/) | [Upgrade Pro](https://wpadminify.com/pricing/)
 
-==WP Adminify V4.0 Addons
+==WP Adminify v4.0 Addons
 
-With the release of WP Adminify V4.0, we’ve made a few massive changes to the structure of the plugin. We’ve removed several features and turned them into their standalone plugins(Addons). This will allow users to only use the ones they need selectively which helps overall plugin performance and speed.
+With the release of WP Adminify v4.0, we’ve made a few massive changes to the structure of the plugin. We’ve removed several features and turned them into their standalone plugins(Addons). This will allow users to only use the ones they need selectively which helps overall plugin performance and speed.
 
 **[Admin Bar Editor:](https://jeweltheme.com/admin-bar-editor)**
 
@@ -92,7 +107,7 @@ Transform your WordPress Admin Bar (Toolbar) into a tool that works the way you 
 
 **[Loginfy:](https://wpadminify.com/modules/login-customizer/)**
 
-Create a unique and personalized Custom Login page with ease. The Loginfy addon allows you to customize the WordPress login experience, making it consistent with your brand or style, and ensuring a professional appearance for both administrators and users.
+Create a unique and personalized Custom Login Screen with ease. The Loginfy addon allows you to customize the WordPress login experience, making it consistent with your brand or style, and ensuring a professional appearance for both administrators and users.
 
 **[RoleMaster Suite:](https://jeweltheme.com/user-role-editor)**
 
@@ -108,7 +123,7 @@ Easily add scripts to your site's header or footer without touching the code. Th
 
 **[Admin Columns Editor:](https://wpadminify.com/modules/admin-columns/)**
 
-Customize the columns displayed in your admin panels with the Admin Columns Editor. This addon allows you to rearrange, remove, or add columns, ensuring that your Admin Columns show the most relevant information for your workflow.
+Customize the admin columns displayed in your dashboard with the Admin Columns Editor. This addon allows you to rearrange, remove, or add columns, ensuring that your Admin Columns show the most relevant information for your workflow.
 
 **[Google Pagespeed:](https://wpadminify.com/modules/google-pagespeed-insights/)**
 
@@ -123,12 +138,12 @@ Create and manage custom sidebars with the Sidebar Generator addon. Easily assig
 
 ## Why Use WP Adminify?
 
-*  Comprehensive Customization: Change every aspect of your WordPress dashboard to match your brand and workflow.
+*  Premium Dashboard Customizer: Change every aspect of your WordPress dashboard to match your brand and workflow.
 *  Intuitive User Interface: Access to modern UI templates and an option panel for creating your own admin panel designs.
-*  Enhanced Productivity: Organize media and posts with media folders, customize admin columns, and up to date your admin tasks.
+*  Enhanced Productivity: Organize media and posts with media library folders, customize admin columns, create custom menu and admin pages and update your admin tasks.
 *  White Label WordPress Solution: Rebrand the WordPress Dashboard and login screens to reflect your agency or business identity.
 *  User Role Management: Fine-tune user roles and capabilities with upcoming features for precise access control.
-*  Advanced Widget Control: Add and manage custom dashboard widgets to display the content that matters most.
+*  Advanced Dashboard Widgets Control: Add and manage custom dashboard widgets to display the content that matters most.
 *  Performance Insights: Integrated Google Pagespeed Insights to monitor and enhance your website’s performance.
 *  Security Enhancements:  Customize login URLs and disable comments to protect your site from unauthorized access and spam.
 *  Seamless Integration: Works well with various plugins & themes,  allowing for a cohesive experience across your site management tools.
@@ -162,6 +177,9 @@ Yes. It's a WPML ready plugin. You can change all strings in your language.
 
 = Is it RTL ready plugin? =
 Yes. WP Adminify is suitable for RTL users.
+
+= Are the White Label features available in the free version? =
+Yes. You can access most of the white label features for free.
 
 = Does it affect website page speed? =
 No. As it will not load any extra script in your front end, your page speed will not affect by this plugin.
