@@ -79,7 +79,7 @@ if (!class_exists('Performance')) {
                     'text_on'    => __('Show', 'adminify'),
                     'text_off'   => __('Hide', 'adminify'),
                     'text_width' => 80,
-                    'default'    => $this->get_default_field('disable_gutenberg')['disable_gutenberg_enable'],
+                    // 'default'    => $this->get_default_field('disable_gutenberg')['disable_gutenberg_enable'],
                 ],
                 [
                     'id'         => 'disable_for',
@@ -87,7 +87,7 @@ if (!class_exists('Performance')) {
                     'title'      => __('', 'adminify'),
                     'class'      => 'adminify-one-col',
                     'options'    => $disable_gutenberg_for,
-                    'default'    => $this->get_default_field('disable_gutenberg')['disable_for'],
+                    // 'default'    => $this->get_default_field('disable_gutenberg')['disable_for'],
                     'dependency' => ['disable_gutenberg_enable', '==', 'true', true],
                 ]
             ];
@@ -169,7 +169,7 @@ if (!class_exists('Performance')) {
                     'https://wpadminify.com/kb/performance/',
                     '',
                     'https://www.facebook.com/groups/jeweltheme',
-                    'https://wpadminify.com/support/'
+                    \WPAdminify\Inc\Admin\AdminSettings::support_url()
                 ),
             ];
 

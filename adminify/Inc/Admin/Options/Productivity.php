@@ -64,7 +64,8 @@ if (!class_exists('Productivity')) {
 				'custom_admin_columns'	=> [
 					'enable'                       => false,
 					'post_page_column_thumb_image' => [],
-					'columns_data'                 => []
+					'columns_data'                 => [],
+					'slug_column_post_types'       => [],
 				],
 
 				// Sidebar Widgets
@@ -92,7 +93,7 @@ if (!class_exists('Productivity')) {
 					'https://wpadminify.com/kb/productivity/',
 					'',
 					'https://www.facebook.com/groups/jeweltheme',
-					'https://wpadminify.com/support/'
+					\WPAdminify\Inc\Admin\AdminSettings::support_url()
 				),
 			];
 
@@ -464,6 +465,7 @@ if (!class_exists('Productivity')) {
 							'comment_id_column'   => __('Show "Comment ID" Column for Comment, Also show "Parent ID"', 'adminify'),
 							'last_login_column'   => sprintf(__('Show "Last Login" Column for Users %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
 							'taxonomy_id_column'  => __('Show "Taxonomy ID" Column for all possible types of taxonomies', 'adminify'),
+							'posts_slug_column'   => __('Show "URL Path" Column for Post Types', 'adminify'),
 						],
 						'default'    => $this->get_default_field('custom_admin_columns')['columns_data'],
 						'dependency' => ['enable', '==', 'true', true],
@@ -479,7 +481,16 @@ if (!class_exists('Productivity')) {
 						'remove_title' => __('Remove Thumbnail Image', 'adminify'),
 						'default'      => $this->get_default_field('custom_admin_columns')['post_page_column_thumb_image'],
 						'dependency'   => array('columns_data', 'any', 'post_thumb_column', 'true'),
-					]
+					],
+					[
+						'id'         => 'slug_column_post_types',
+						'type'       => 'checkbox',
+						'title'      => __('"URL Path" Column for Post Types', 'adminify'),
+						'subtitle'   => __('Select Post Types for Enabling "URL Path" Column Slug', 'adminify'),
+						'options'    => 'WPAdminify\Inc\Admin\Options\Productivity::get_all_post_types',
+						'default'    => $this->get_default_field('custom_admin_columns')['slug_column_post_types'],
+						'dependency' => array('columns_data', 'any', 'posts_slug_column', 'true'),
+					],
 				]
 			];
 		}

@@ -15,6 +15,7 @@ use \WPAdminify\Inc\Classes\Sidebar_Widgets;
 use \WPAdminify\Inc\Classes\Remove_DashboardWidgets;
 use WPAdminify\Inc\Classes\Adminify_Rollback;
 use WPAdminify\Inc\Admin\AdminSettings;
+use WPAdminify\Inc\Admin\Frames\Init as FrameInit;
 
 // no direct access allowed
 if (!defined('ABSPATH')) {
@@ -46,7 +47,9 @@ if (!class_exists('Admin')) {
 			jltwp_adminify()->add_filter('freemius_pricing_js_path', array($this, 'jltwp_new_freemius_pricing_js'));
 			jltwp_adminify()->add_filter('plugin_icon', array($this, 'jltwp_adminify_logo_icon'));
 
-			jltwp_adminify()->add_filter('support_forum_url', [$this, 'jltwp_adminify_support_forum_url']);
+			add_action('admin_menu', array($this, 'support_menu'), 1100);
+			add_action('admin_menu', [$this, 'submenu_link_new_tab']);
+			// jltwp_adminify()->add_filter('support_forum_url', [$this, 'jltwp_adminify_support_forum_url']);
 
 			// Disable deactivation feedback form
 			jltwp_adminify()->add_filter('show_deactivation_feedback_form', '__return_false');
@@ -56,6 +59,22 @@ if (!class_exists('Admin')) {
 
 			$this->disable_gutenberg_editor();
 		}
+
+
+		function submenu_link_new_tab()
+		{
+			add_action('admin_footer', function () {
+?>
+				<script type="text/javascript">
+					jQuery(document).ready(function($) {
+						// Replace 'your-parent-menu-slug' and 'your-submenu-slug' with actual menu slugs
+						$('a.toplevel_page_wp-adminify-settings, a[href="admin.php?page=adminify-support"]').attr('target', '_blank');
+					});
+				</script>
+<?php
+			});
+		}
+
 
 		public function disable_gutenberg_editor()
 		{
@@ -68,14 +87,15 @@ if (!class_exists('Admin')) {
 			}
 
 			// Disable Block Editor Gutenberg
-			if ( !empty($this->options["disable_gutenberg"]['disable_for']) && in_array('block_editor', $this->options["disable_gutenberg"]['disable_for'] ) ) {
+			if (!empty($this->options["disable_gutenberg"]['disable_for']) && in_array('block_editor', $this->options["disable_gutenberg"]['disable_for'])) {
 				add_filter('use_block_editor_for_post', '__return_false');
 				add_action('wp_enqueue_scripts', [$this, 'remove_backend_gutenberg_scripts'], 20);
 			}
 
 
+
 			// Remove all scripts and styles added by Gutenberg
-			if (!empty($this->options["disable_gutenberg"]['disable_for']) && in_array('remove_gutenberg_scripts', $this->options["disable_gutenberg"]['disable_for'])) {
+			if (!in_array('remove_gutenberg_scripts', $this->options["disable_gutenberg"]['disable_for'])) {
 				add_action('wp_enqueue_scripts', [$this, 'remove_gutenberg_scripts']);
 				remove_action('enqueue_block_assets', 'wp_enqueue_registered_block_scripts_and_styles');
 			}
@@ -86,7 +106,11 @@ if (!class_exists('Admin')) {
 		public function remove_gutenberg_scripts()
 		{
 			wp_dequeue_style('wp-block-library');
-			wp_dequeue_style('wc-block-style');
+			wp_dequeue_style('wc-block-style'); // Remove WooCommerce block CSS
+
+			// Remove Inline CSS
+			// wp_deregister_style('wp-block-library-inline');
+			// wp_dequeue_style('wp-block-library-inline');
 		}
 
 		/**
@@ -96,7 +120,7 @@ if (!class_exists('Admin')) {
 		 */
 		public function remove_backend_gutenberg_scripts()
 		{
-			if(is_admin()){
+			if (is_admin()) {
 				// Remove CSS on the front end.
 				wp_dequeue_style('wp-block-library');
 
@@ -141,17 +165,8 @@ if (!class_exists('Admin')) {
 			new Sidebar_Widgets();
 			new Remove_DashboardWidgets();
 
-			$not_load_frame = [
-				'/wp-admin/post-new.php',
-				'/wp-admin/customize.php',
-				'/wp-admin/site-editor.php',
-				'/wp-admin/post.php'
-			];
-
-			if ( !empty($this->options['admin_ui']) && empty( in_array($_SERVER['PHP_SELF'], $not_load_frame) ) ) {
-				if (preg_match('/https:\/\//', site_url()) && is_ssl()) {
-					\WPAdminify\Inc\Admin\Frames\Init::instance();
-				}
+			if (!empty($this->options['admin_ui']) && preg_match('/https:\/\//', site_url()) && is_ssl()) {
+				FrameInit::instance();
 			}
 
 			// Version Rollback
@@ -202,21 +217,17 @@ if (!class_exists('Admin')) {
 		}
 
 
-		/**
-		 * Support Contact URL
-		 *
-		 * @param [type] $support_url and Pro Support
-		 *
-		 * @return void
-		 */
-		public function jltwp_adminify_support_forum_url($support_url)
+		public function support_menu()
 		{
-			if (jltwp_adminify()->is_premium()) {
-				$support_url = 'https://wpadminify.com/contact';
-			} else {
-				$support_url = 'https://wordpress.org/support/plugin/adminify/';
-			}
-			return $support_url;
+			add_submenu_page(
+				'wp-adminify-settings',       // Ex. wp-adminify-settings
+				__('Get Support', 'adminify'),
+				__('Support', 'adminify'),
+				'manage_options',
+				'adminify-support',
+				function() { wp_redirect(\WPAdminify\Inc\Admin\AdminSettings::support_url()); exit; }, // Redirect to external URL
+				60
+			);
 		}
 	}
 }

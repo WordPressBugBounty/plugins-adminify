@@ -69,13 +69,47 @@ if (!class_exists('Admin')) {
             wp_enqueue_style('frame-adminify--admin', WP_ADMINIFY_ASSETS . 'admin/css/admin' . Utils::assets_ext('.css'), [], WP_ADMINIFY_VER);
             wp_enqueue_script('frame-adminify--admin', WP_ADMINIFY_ASSETS . 'admin/js/frame' . Utils::assets_ext('.js'), ['jquery', 'react'], WP_ADMINIFY_VER, true);
 
-
-
             $localize_array_data = [
                 'ajax_url'  => admin_url('admin-ajax.php'),
-                'security_nonce' => wp_create_nonce('adminify_nonce'),
+                'security_nonce' => wp_create_nonce('adminify_nonce')
             ];
+            
             wp_localize_script( 'frame-adminify--admin', 'WPAdminify', $localize_array_data );
+            wp_localize_script( 'frame-adminify--admin', 'WPAdminifyFrameNotAllowedURLs', self::get_not_allowed_urls() );
+        }
+
+        public static function get_not_allowed_urls() {
+
+            $not_allowed_urls = [
+                '/wp-admin/customize.php',
+                '/wp-admin/site-editor.php',
+                [
+                    'url' => '*',
+                    'query_params' => ['fl_builder', 'fl_builder_ui']
+                ],
+                [
+                    'url' => '*',
+                    'query_params' => ['action' => 'elementor']
+                ],
+                [
+                    'url' => '*',
+                    'query_params' => ['bricks' => 'true']
+                ],
+                [
+                    'url' => '*',
+                    'query_params' => ['ct_builder' => 'true', 'oxygen_iframe!']
+                ],
+                [
+                    'url' => '/wp-admin/post-new.php',
+                    'post_type' => ['post', 'page']
+                ],
+                [
+                    'url' => '/wp-admin/post.php',
+                    'post_type' => ['post', 'page']
+                ]
+            ];
+
+            return apply_filters( 'adminify_frame_not_allowed_urls', $not_allowed_urls );
         }
 
         /**

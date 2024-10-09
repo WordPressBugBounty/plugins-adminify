@@ -306,7 +306,7 @@ if (!class_exists('DashboardWidget_Setttings')) {
 					'https://wpadminify.com/kb/wordpress-custom-dashboard-widget',
 					'https://www.youtube.com/playlist?list=PLqpMw0NsHXV-EKj9Xm1DMGa6FGniHHly8',
 					'https://www.facebook.com/groups/jeweltheme',
-					'https://wpadminify.com/support/dashboard-welcome-widgets'
+					\WPAdminify\Inc\Admin\AdminSettings::support_url()
 				),
 			];
 

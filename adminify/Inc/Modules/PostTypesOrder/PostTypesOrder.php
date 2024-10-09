@@ -140,7 +140,7 @@ class PostTypesOrder extends AdminSettingsModel {
 
 		global $wpdb;
 		$objects = $this->adminify_pto_get_options();
-		$tags    = $this->adminify_pto_get_options_taxonomies();
+		// $tags    = $this->adminify_pto_get_options_taxonomies();
 
 		if ( ! empty( $objects ) ) {
 			foreach ( $objects as $object ) {
@@ -169,34 +169,34 @@ class PostTypesOrder extends AdminSettingsModel {
 			}
 		}
 
-		if ( ! empty( $tags ) ) {
-			foreach ( $tags as $taxonomy ) {
-				$result = $wpdb->get_results(
-					"
-					SELECT count(*) as cnt, max(term_order) as max, min(term_order) as min
-					FROM $wpdb->terms AS terms
-					INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id )
-					WHERE term_taxonomy.taxonomy = '" . $taxonomy . "'
-				"
-				);
-				if ( $result[0]->cnt == 0 || $result[0]->cnt == $result[0]->max ) {
-					continue;
-				}
+		// if ( ! empty( $tags ) ) {
+		// 	foreach ( $tags as $taxonomy ) {
+		// 		$result = $wpdb->get_results(
+		// 			"
+		// 			SELECT count(*) as cnt, max(term_order) as max, min(term_order) as min
+		// 			FROM $wpdb->terms AS terms
+		// 			INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id )
+		// 			WHERE term_taxonomy.taxonomy = '" . $taxonomy . "'
+		// 		"
+		// 		);
+		// 		if ( $result[0]->cnt == 0 || $result[0]->cnt == $result[0]->max ) {
+		// 			continue;
+		// 		}
 
-				$results = $wpdb->get_results(
-					"
-					SELECT terms.term_id
-					FROM $wpdb->terms AS terms
-					INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id )
-					WHERE term_taxonomy.taxonomy = '" . $taxonomy . "'
-					ORDER BY term_order ASC
-				"
-				);
-				foreach ( $results as $key => $result ) {
-					$wpdb->update( $wpdb->terms, [ 'term_order' => $key + 1 ], [ 'term_id' => $result->term_id ] );
-				}
-			}
-		}
+		// 		$results = $wpdb->get_results(
+		// 			"
+		// 			SELECT terms.term_id
+		// 			FROM $wpdb->terms AS terms
+		// 			INNER JOIN $wpdb->term_taxonomy AS term_taxonomy ON ( terms.term_id = term_taxonomy.term_id )
+		// 			WHERE term_taxonomy.taxonomy = '" . $taxonomy . "'
+		// 			ORDER BY term_order ASC
+		// 		"
+		// 		);
+		// 		foreach ( $results as $key => $result ) {
+		// 			$wpdb->update( $wpdb->terms, [ 'term_order' => $key + 1 ], [ 'term_id' => $result->term_id ] );
+		// 		}
+		// 	}
+		// }
 	}
 
 

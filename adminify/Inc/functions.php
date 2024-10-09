@@ -102,7 +102,7 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
     $admin_menu = [];
 
     foreach ($menu as $key => $item) {
-        
+
         if (is_array($menu_options)) {
             if (isset($menu_options[$item[2]])) {
                 $optiongroup = $menu_options[$item[2]];
@@ -110,7 +110,7 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
                 if (!empty($optiongroup['hidden_for'])) {
 
                     $disabled_for = jltwp_adminify_menu_roles($optiongroup['hidden_for']);
-                    
+
                     if (\WPAdminify\Inc\Utils::restricted_for($disabled_for)) {
                         continue;
                     }
@@ -184,6 +184,7 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
                     : maybe_network_admin_url($sub_slug);
                 }
 
+                // Wrong Menu/Submenu Links
                 // Support for White Label Plugin Url
                 if ('white-label' === $sub_slug) {
                     $sub_url = admin_url('options-general.php?page=white-label');

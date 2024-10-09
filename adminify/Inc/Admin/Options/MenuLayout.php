@@ -517,7 +517,7 @@ class MenuLayout extends AdminSettingsModel {
 							'https://wpadminify.com/kb/admin-menu',
 							'',
 							'https://www.facebook.com/groups/jeweltheme',
-							'https://wpadminify.com/support/'
+							\WPAdminify\Inc\Admin\AdminSettings::support_url()
 						),
 					],
 					[

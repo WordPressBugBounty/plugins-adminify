@@ -30,14 +30,14 @@ if (!class_exists('Frames')) {
 
             // Reload the page after plugin activation/deactivation
             if ( isset( $_GET['activate'] ) || isset( $_GET['activate-multi'] ) || isset( $_GET['deactivate'] ) || isset( $_GET['deactivate-multi'] ) ) {
-                $this->custom_plugin_change_reload();
+                self::custom_plugin_change_reload();
             }
         }
 
-        function custom_plugin_change_reload() {
+        static function custom_plugin_change_reload() {
             ?>
             <script type="text/javascript">
-                window.parent && window.parent.location.reload();
+                parent.location.reload();
             </script>
             <?php
         }

@@ -1,4 +1,22 @@
 == Changelog ==
+= 4.0.1.7 (9-10-2024) =
+* Added: Taxonomy Duplicator Added
+* Added: "URL Path" Custom Admin Columns for Post Types added on "Productivity>Custom Admin Columns"
+* Fixed: Typo fixed on Security, Productity Section
+* Fixed: Admin Columns > "Comment ID" not working
+* Fixed: Admin Columns > "Taxonomy ID" not working
+* Update: Freemius Library Updated
+* Fixed: WooCommerce "Add Product" and "Edit Product" frame issue
+* Updated: Admin Favicon not working issue updated
+* Added: Taxonomy Clone Option added for Categories, Taxonomies etc
+* Fixed: Performance Options not working issue fixed
+* Fixed: Frontend Gutenberg script issue fixed
+* Fixed: Security Bugs for SVG upload files issue fixed
+* Updated: Edit Post, Page, Product on Gutenberg and other page builders
+* Removed: Admin bar top preloader removed
+* Updated: Admin Footer "WP Memory Limit" updated
+
+
 = 4.0.1.6.1 (16-09-2024) =
 * Update: Minor udpate
 

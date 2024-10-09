@@ -4,7 +4,7 @@ Tags: Custom Dashboard, White Label WordPress,  Media Folders, Admin Columns, Lo
 Requires at least: 4.0
 Tested up to: 6.6.2
 Requires PHP: 5.3
-Stable tag: 4.0.1.6.1
+Stable tag: 4.0.1.7
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,13 +45,39 @@ Say goodbye to the one-size-fits-all Dashboard and embrace a personalized enviro
 * **Login Redirects:** Redirect users to specific pages after login or logout, customizing the user experience and enforcing security measures.
 * **Admin Menu Editor:** Rearrange and create custom menu, with role-based visibility, for advanced WordPress Dashboard Customization.
 * **Custom Admin Pages:** Create custom admin pages for both top-level or sub-level menu configuration with support for popular page builders like Gutenberg, Elementor, Bricks, Oxygen, and Divi.
-* **Dashboard & Welcome Widget:** Add custom dashboard widgets with varied content options and control their visibility based on user roles.
+* **Dashboard Widget Customizer:** Add custom dashboard widgets with varied content options and control their visibility based on user roles.
 * **Quick Floating Menu:** Create accessible floating menus with customizable icons and URLs, enhancing navigation and user experience.
 * **WordPress Post Duplicator:** Easily duplicate posts, pages, or custom post types, streamlining content creation.
 * **Disable Comments for WordPress:** Manage comment form fields and disable links to reduce spam, ensuring a cleaner commenting experience.
 * **Post Type Order:** Order posts, pages, or custom post types with drag-and-drop functionality, keeping content organized.
 * **Menu Duplicator for WordPress:** Duplicate entire menus or specific items to simplify menu management.
 * **Dashboard Custom CSS / JS:** Apply custom CSS and JS for specific devices, pages, or posts to create a custom WordPress dashboard.
+
+### Who is WP Adminify for?
+WP Adminify can provide value to anyone looking to increase productivity through dashboard customization. However, the plugin is especially suited for users who need specific admin panel modifications or customizations. Below are some ideal users of WP Adminify.
+
+## Agencies looking for client dashboard customization
+
+* **Client Dashboard:** Customize and brand the dashboard for clients.
+* **Admin Menu Editor:** Create custom menus for easier client navigation.
+* **Login Customizer:** Personalize login screens to match client branding.
+
+## For users needing admin panel customization
+
+* **Admin Menu Editor:** Create custom admin menus and improve user workflow.
+* **Custom Post Status Colors:** Set distinct post status background colors to differentiate at a glance.
+* **Widget Customizer:** Tailor the dashboard with custom widgets.
+
+## For users needing redirect URL and admin redirect customization
+
+* **Redirect URL After Login:** Direct users to the right pages upon login.
+* **Admin Page Redirect:** Redirect admin users to custom pages based on their roles.
+
+## For users focused on productivity
+
+* **Quick Access Links:** Set up easy navigation through custom admin menus.
+* **Bulk Actions:** Disable comments, reorder menus, or clean up media files quickly.
+* **Media Folders:** Easily organize and manage media files for faster content management.
 
 
 >[Upgrade to WP Adminify Pro](https://wpadminify.com/pricing/)
@@ -68,6 +94,7 @@ WP Adminify Pro is a premium custom dashboard plugin that offers advanced featur
 * **Admin Favicon:** Create a custom tab icon for your client dashboard, enhancing brand recognition.
 * **Schedule Dark Mode:** Automatically switch between light and dark mode based on your preference or time of day.
 * **Post Status Background Colors Customization:** Easily differentiate post statuses with custom background colors for better organization.
+* **Login Customizer:** Create your own unique custom login pages that stand out and convey brand authority.
 
 ==Dashboard Menu Editor
 
@@ -97,9 +124,9 @@ WP Adminify Pro is a premium custom dashboard plugin that offers advanced featur
 
 [Live Demo](https://demo.wpadminify.com/) | [Docs](https://wpadminify.com/docs)  | [Request Feature](https://wpadminify.com/contact/) | [Upgrade Pro](https://wpadminify.com/pricing/)
 
-==WP Adminify v4.0 Addons
+==WP Adminify V4.0 Addons
 
-With the release of WP Adminify v4.0, we’ve made a few massive changes to the structure of the plugin. We’ve removed several features and turned them into their standalone plugins(Addons). This will allow users to only use the ones they need selectively which helps overall plugin performance and speed.
+With the release of WP Adminify V4.0, we’ve made a few massive changes to the structure of the plugin. We’ve removed several features and turned them into their standalone plugins(Addons). This will allow users to only use the ones they need selectively which helps overall plugin performance and speed.
 
 **[Admin Bar Editor:](https://jeweltheme.com/admin-bar-editor)**
 
@@ -143,7 +170,7 @@ Create and manage custom sidebars with the Sidebar Generator addon. Easily assig
 *  Enhanced Productivity: Organize media and posts with media library folders, customize admin columns, create custom menu and admin pages and update your admin tasks.
 *  White Label WordPress Solution: Rebrand the WordPress Dashboard and login screens to reflect your agency or business identity.
 *  User Role Management: Fine-tune user roles and capabilities with upcoming features for precise access control.
-*  Advanced Dashboard Widgets Control: Add and manage custom dashboard widgets to display the content that matters most.
+*  Advanced Dashboard Custom Widgets: Add and manage custom dashboard widgets to display the content that matters most.
 *  Performance Insights: Integrated Google Pagespeed Insights to monitor and enhance your website’s performance.
 *  Security Enhancements:  Customize login URLs and disable comments to protect your site from unauthorized access and spam.
 *  Seamless Integration: Works well with various plugins & themes,  allowing for a cohesive experience across your site management tools.

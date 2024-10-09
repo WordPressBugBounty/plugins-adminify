@@ -6,6 +6,7 @@ use WPAdminify\Inc\Utils;
 use WPAdminify\Inc\Admin\AdminSettings;
 use WPAdminify\Inc\Modules\MenuEditor\MenuEditorAssets;
 use WPAdminify\Inc\Admin\AdminSettingsModel;
+use enshrined\svgSanitize\Sanitizer;
 // no direct access allowed
 if ( !defined( 'ABSPATH' ) ) {
     exit;
@@ -46,6 +47,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
             $this->menu_settings = ( new MenuEditorOptions() )->get();
             $this->options = (array) AdminSettings::get_instance()->get();
             add_filter( 'upload_mimes', [$this, 'custom_icon_mime_types'] );
+            add_filter( 'wp_handle_upload_prefilter', [$this, 'sanitize_svg_file'] );
             add_filter( 'admin_body_class', [$this, 'jltwp_adminify_menu_editor_body_class'] );
             add_filter( 'parent_file', [$this, 'set_menu'], 800 );
             add_filter( 'parent_file', [$this, 'apply_menu'], 900 );
@@ -59,8 +61,36 @@ if ( !class_exists( 'MenuEditor' ) ) {
         }
 
         public function custom_icon_mime_types( $mimes ) {
-            $mimes['svg'] = 'image/svg+xml';
+            if ( current_user_can( 'administrator' ) ) {
+                $mimes['svg'] = 'image/svg+xml';
+            }
             return $mimes;
+        }
+
+        public function sanitize_svg_file( $file ) {
+            // Step 1: Validate File Type
+            $file_type = wp_check_filetype( $file['name'] );
+            // Ensure the file is an SVG
+            if ( $file_type['ext'] === 'svg' ) {
+                // Read the contents of the SVG file
+                $file_contents = file_get_contents( $file['tmp_name'] );
+                // Validate if it's an actual SVG by checking if it contains the <svg> tag
+                if ( strpos( $file_contents, '<svg' ) === false ) {
+                    $file['error'] = 'Invalid SVG file';
+                    return $file;
+                    // Stop further processing if it's not a valid SVG
+                }
+                // Step 2: Sanitize the SVG File
+                $sanitizer = new Sanitizer();
+                $clean_svg = $sanitizer->sanitize( $file_contents );
+                if ( $clean_svg ) {
+                    // Save the sanitized SVG back to the file
+                    file_put_contents( $file['tmp_name'], $clean_svg );
+                } else {
+                    $file['error'] = 'Failed to sanitize the SVG file';
+                }
+            }
+            return $file;
         }
 
         public function filter_attachment( $value ) {
@@ -1153,12 +1183,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
             ?>">
 											<?php 
             $separator_content = Utils::adminify_upgrade_pro( 'Add Separator' );
-            $separator_content = apply_filters(
-                'adminify/menu_editor/add_separator',
-                $separator_content,
-                $name_attr,
-                $separator
-            );
+            $separator_content = apply_filters( 'adminify/menu_editor/add_separator', $name_attr, $separator );
             // Apply the filter
             echo $separator_content;
             ?>
@@ -1503,7 +1528,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
                 'https://wpadminify.com/kb/wordpress-dashboard-menu-editor/',
                 'https://www.youtube.com/playlist?list=PLqpMw0NsHXV-EKj9Xm1DMGa6FGniHHly8',
                 'https://www.facebook.com/groups/jeweltheme',
-                'https://wpadminify.com/support/'
+                \WPAdminify\Inc\Admin\AdminSettings::support_url()
             );
             ?>
 				</div>

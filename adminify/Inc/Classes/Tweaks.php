@@ -40,6 +40,7 @@ class Tweaks extends AdminSettingsModel
 		$this->custom_gravatar   = $this->options['custom_gravatar'];
 
 
+
 		if (!empty($this->security_head['enable_security_head'])) {
 			$this->security_head();
 		}
@@ -834,58 +835,55 @@ class Tweaks extends AdminSettingsModel
 		$performance_data = $this->performance['performance_data'];
 
 		// Remove jQuery Migrate
-		if (!empty($this->performance_data)) {
 
-			// Remove Dashicons from Frontend
-			if (!empty($performance_data) && in_array('dashicons', $performance_data)) {
-				add_action('wp_print_styles', [$this, 'jltwp_adminify_remove_dashicons'], 100);
-			}
+		// Remove Dashicons from Frontend
+		if (!empty($performance_data) && in_array('dashicons', $performance_data)) {
+			add_action('wp_print_styles', [$this, 'jltwp_adminify_remove_dashicons'], 100);
+		}
 
-			/** Remove Version Query Strings from Scripts/Styles */
-			if (!empty($performance_data) && in_array('version_strings', $performance_data)) {
-				add_filter('script_loader_src', [$this, 'remove_script_versions'], 15, 1);
-				add_filter('style_loader_src', [$this, 'remove_script_versions'], 15, 1);
-			}
-
-
-			// Remove Emoji Styles and Scripts
-			if (!empty($performance_data) && in_array('emoji', $performance_data)) {
-				remove_action('wp_head', 'print_emoji_detection_script', 7); // Remove Emoji's Styles and Scripts.
-				remove_action('embed_head', 'print_emoji_detection_script');
-				remove_action('embeded_head', 'print_emoji_detection_script');
-				remove_action('admin_print_scripts', 'print_emoji_detection_script'); // Remove Emoji's Styles and Scripts.
-				remove_action('wp_print_styles', 'print_emoji_styles'); // Remove Emoji's Styles and Scripts.
-				remove_action('admin_print_styles', 'print_emoji_styles'); // Remove Emoji's Styles and Scripts.
-				remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
-				remove_filter('the_content_feed', 'wp_staticize_emoji');
-				remove_filter('comment_text_rss', 'wp_staticize_emoji');
-				add_filter('option_use_smilies', '__return_false');
-				add_filter('emoji_svg_url', '__return_false');
-				add_action('admin_init', [$this, 'remove_admin_emojis']);
-				add_filter('tiny_mce_plugins', [$this, 'disable_emojicons_tinymce']);
-				add_filter('wp_resource_hints', [$this, 'remove_dns_prefetch'], 10, 2);
-			}
+		/** Remove Version Query Strings from Scripts/Styles */
+		if (!empty($performance_data) && in_array('version_strings', $performance_data)) {
+			add_filter('script_loader_src', [$this, 'remove_script_versions'], 15, 1);
+			add_filter('style_loader_src', [$this, 'remove_script_versions'], 15, 1);
+		}
 
 
+		// Remove Emoji Styles and Scripts
+		if (!empty($performance_data) && in_array('emoji', $performance_data)) {
+			remove_action('wp_head', 'print_emoji_detection_script', 7); // Remove Emoji's Styles and Scripts.
+			remove_action('embed_head', 'print_emoji_detection_script');
+			remove_action('embeded_head', 'print_emoji_detection_script');
+			remove_action('admin_print_scripts', 'print_emoji_detection_script'); // Remove Emoji's Styles and Scripts.
+			remove_action('wp_print_styles', 'print_emoji_styles'); // Remove Emoji's Styles and Scripts.
+			remove_action('admin_print_styles', 'print_emoji_styles'); // Remove Emoji's Styles and Scripts.
+			remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+			remove_filter('the_content_feed', 'wp_staticize_emoji');
+			remove_filter('comment_text_rss', 'wp_staticize_emoji');
+			add_filter('option_use_smilies', '__return_false');
+			add_filter('emoji_svg_url', '__return_false');
+			add_action('admin_init', [$this, 'remove_admin_emojis']);
+			add_filter('tiny_mce_plugins', [$this, 'disable_emojicons_tinymce']);
+			add_filter('wp_resource_hints', [$this, 'remove_dns_prefetch'], 10, 2);
+		}
 
-			add_action('wp_default_scripts', [$this, 'remove_wp_default_scripts'], 9999);
-
-			/** Secure method for Defer Parsing of JavaScript moving ALL JS from Header to Footer */
-			if (in_array('defer_parsing_js_footer', $performance_data)) {
-				add_filter('script_loader_tag', [$this, 'defer_parsing_of_js'], 10, 2);
-			}
-
-			/** Browser Cache Expires & GZIP Compression */
-			if (in_array('cache_gzip_compression', $performance_data)) {
-				register_activation_hook(__FILE__, [$this, 'jltwp_adminify_htaccess']);
-			}
 
 
-			// Remove Gravatar Query Strings
-			if (!empty($performance_data) && in_array('gravatar_query_strings', $performance_data)) {
-				add_filter('get_avatar_url', [$this, 'remove_avatar_query_string']);
-			}
+		add_action('wp_default_scripts', [$this, 'remove_wp_default_scripts'], 9999);
 
+		/** Secure method for Defer Parsing of JavaScript moving ALL JS from Header to Footer */
+		if (in_array('defer_parsing_js_footer', $performance_data)) {
+			add_filter('script_loader_tag', [$this, 'defer_parsing_of_js'], 10, 2);
+		}
+
+		/** Browser Cache Expires & GZIP Compression */
+		if (in_array('cache_gzip_compression', $performance_data)) {
+			register_activation_hook(__FILE__, [$this, 'jltwp_adminify_htaccess']);
+		}
+
+
+		// Remove Gravatar Query Strings
+		if (!empty($performance_data) && in_array('gravatar_query_strings', $performance_data)) {
+			add_filter('get_avatar_url', [$this, 'remove_avatar_query_string']);
 		}
 	}
 

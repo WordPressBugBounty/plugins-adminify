@@ -98,7 +98,7 @@ if ( ! class_exists( 'Security' ) ) {
 		public function security_head_fields( &$head_fields ) {
 			$security_head = [
 				'xmlrpc'               => __( 'Disable XML-RPC', 'adminify' ),
-				'generator_wp_version' => __( 'Remove WordPress Generator Version from fornt end', 'adminify' ),
+				'generator_wp_version' => __( 'Remove WordPress Generator Version from front end', 'adminify' ),
 				'rsd'                  => __( 'Remove "<link rel=\'EditURI\'..." from head section', 'adminify' ),
 				'shortlink'            => __( 'Remove "<link rel=\'shortlink\'..." from head section', 'adminify' ),
 				'canonical'            => __( 'Remove &lt;link rel="canonical" href="https://www.site.com/some-url" /&gt; from head section', 'adminify' ),
@@ -198,18 +198,6 @@ if ( ! class_exists( 'Security' ) ) {
 			// $logout_redirects = [];
 			$this->login_register_url_fields($settings_fields);
 			$this->roles_redirect_tabs($login_redirects);
-
-			$redirect_urls[] = [
-				'id'      => 'security_subheading',
-				'type'    => 'subheading',
-				'content' => Utils::adminfiy_help_urls(
-					__('"WordPress" White Label Settings', 'adminify'),
-					'https://wpadminify.com/kb/security/',
-					'',
-					'https://www.facebook.com/groups/jeweltheme',
-					'https://wpadminify.com/support/'
-				)
-			];
 
 			$redirect_urls = [
 				[
@@ -825,17 +813,16 @@ if ( ! class_exists( 'Security' ) ) {
 			$fields = [];
 
 			$fields[] = [
-				'id'      => 'security_sub_heading',
+				'id'      => 'security_subheading',
 				'type'    => 'subheading',
 				'content' => Utils::adminfiy_help_urls(
-					__('<span></span>', 'adminify'),
-					'https://wpadminify.com/kb/disable-admin-notice-in-wordpress-dashboard/',
-					'https://www.youtube.com/playlist?list=PLqpMw0NsHXV-EKj9Xm1DMGa6FGniHHly8',
+					__('"WordPress" White Label Settings', 'adminify'),
+					'https://wpadminify.com/docs/security/',
+					'',
 					'https://www.facebook.com/groups/jeweltheme',
-					'https://wpadminify.com/support/'
-				),
+					\WPAdminify\Inc\Admin\AdminSettings::support_url()
+				)
 			];
-
 
 			$this->security_redirect_urls( $fields );
 			  // $this->security_user_security( $fields );

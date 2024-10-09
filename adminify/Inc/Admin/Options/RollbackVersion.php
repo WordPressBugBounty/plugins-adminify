@@ -122,7 +122,7 @@ class RollbackVersion {
 				'https://wpadminify.com/kb/version-rollback/',
 				'https://www.youtube.com/playlist?list=PLqpMw0NsHXV-EKj9Xm1DMGa6FGniHHly8',
 				'https://www.facebook.com/groups/jeweltheme',
-				'https://wpadminify.com/support/'
+				\WPAdminify\Inc\Admin\AdminSettings::support_url()
 			),
 		];
 

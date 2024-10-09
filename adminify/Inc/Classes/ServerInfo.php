@@ -406,12 +406,22 @@ class ServerInfo
 	 */
 	public function get_wp_memory_usage()
 	{
+		// Get PHP memory limit
+		$php_memory_limit = ini_get('memory_limit');
+
+		// Get WordPress memory limit if defined
+		$wordpress_memory_limit = defined('WP_MEMORY_LIMIT') ? WP_MEMORY_LIMIT : null;
+
+		// Determine the effective memory limit with PHP memory limit taking priority
+		$get_memory_limit = $php_memory_limit ? $php_memory_limit : $wordpress_memory_limit;
+
+
 		// Get WP Memory Limit
-		$get_memory_limit = WP_MEMORY_LIMIT;
-		if ((int) WP_MEMORY_LIMIT > (int) @ini_get('memory_limit')) {
-			// WP Limit can't be greater than Server Limiit
-			$get_memory_limit = @ini_get('memory_limit');
-		}
+		// $get_memory_limit = WP_MEMORY_LIMIT;
+		// if ((int) WP_MEMORY_LIMIT > (int) @ini_get('memory_limit')) {
+		// 	// WP Limit can't be greater than Server Limiit
+		// 	$get_memory_limit = @ini_get('memory_limit');
+		// }
 
 		$memory_limit_convert = $this->convert_memory_size($get_memory_limit);
 		$memory_limit_format  = size_format($memory_limit_convert);

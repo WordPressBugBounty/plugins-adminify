@@ -134,7 +134,7 @@ if ( ! class_exists( 'Customize' ) ) {
 					'https://wpadminify.com/kb/customize/',
 					'',
 					'https://www.facebook.com/groups/jeweltheme',
-					'https://wpadminify.com/support/'
+					\WPAdminify\Inc\Admin\AdminSettings::support_url()
 				),
 			];
 
@@ -671,17 +671,6 @@ if ( ! class_exists( 'Customize' ) ) {
 		public function post_status_bg_colors(&$fields)
 		{
 
-			// $fields[] = [
-			// 	'id'	=> 'post_status_bg_subheading',
-			// 	'type'    => 'subheading',
-			// 	'content' => Utils::adminfiy_help_urls(
-			// 		__('Post Status Background Colors', 'adminify'),
-			// 		'https://wpadminify.com/kb/post-status-background-color/',
-			// 		'https://www.youtube.com/playlist?list=PLqpMw0NsHXV-EKj9Xm1DMGa6FGniHHly8',
-			// 		'https://www.facebook.com/groups/jeweltheme',
-			// 		'https://wpadminify.com/support/'
-			// 	),
-			// ];
 
 			$fields[] = [
 				'id'       => 'post_status_bg_colors',

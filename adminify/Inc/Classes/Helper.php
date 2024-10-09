@@ -139,7 +139,7 @@ class Helper
 
 		// Allowed svg mime type in version 1.2.2.
 		$allowed_mime   = get_allowed_mime_types();
-		$svg_mime_check = isset($allowed_mime['svg']) ? true : false;
+		$svg_mime_check = isset($allowed_mime['svg']);
 
 		if ($svg_mime_check) {
 			$allow_mime = array('svg' => 'image/svg+xml');

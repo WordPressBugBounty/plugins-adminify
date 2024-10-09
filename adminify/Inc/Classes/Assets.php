@@ -189,6 +189,7 @@ class Assets extends AdminSettingsModel
 	{
 		$screen = get_current_screen();
 
+
 		// Register Styles
 		wp_register_style('wp-adminify-admin', WP_ADMINIFY_ASSETS . 'css/wp-adminify' . Utils::assets_ext('.css'), false, WP_ADMINIFY_VER);
 		wp_register_style('wp-adminify-default-ui', WP_ADMINIFY_ASSETS . 'css/wp-adminify-default-ui' . Utils::assets_ext('.css'), false, WP_ADMINIFY_VER);

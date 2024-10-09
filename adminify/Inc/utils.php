@@ -81,7 +81,7 @@ class Utils
 		if (in_array('Super Admin', $restrict_for) || in_array('administrator', $restrict_for)) {
 			return true;
 		}
-		
+
 		// Super Admin for Multisite
 		if (is_super_admin() && is_multisite()) {
 			if (in_array('Super Admin', $restrict_for) || in_array('administrator', $restrict_for)) {

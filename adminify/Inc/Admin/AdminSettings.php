@@ -213,13 +213,25 @@ if ( !class_exists( 'AdminSettings' ) ) {
         public function jltwp_adminify_admin_scripts() {
         }
 
+        public static function get_pro_label() {
+            $is_pro = "";
+            $is_pro = WP_ADMINIFY;
+            return $is_pro;
+        }
+
         public function get_plugin_menu_label() {
-            $plugin_menu_label = WP_ADMINIFY;
+            $plugin_menu_label = self::get_pro_label();
             $saved_data = get_option( $this->prefix );
             if ( !empty( $saved_data['jltwp_adminify_wl_plugin_menu_label'] ) ) {
                 $plugin_menu_label = $saved_data['jltwp_adminify_wl_plugin_menu_label'];
             }
             return $plugin_menu_label;
+        }
+
+        public static function support_url() {
+            $support_url = '';
+            $support_url = 'https://wordpress.org/support/plugin/adminify/#new-topic-0';
+            return $support_url;
         }
 
         public function jltwp_adminify_options() {
@@ -297,7 +309,7 @@ if ( !class_exists( 'AdminSettings' ) ) {
                         'https://wpadminify.com/kb/wp-adminify-options-panel/#adminify-backup',
                         'https://www.youtube.com/playlist?list=PLqpMw0NsHXV-EKj9Xm1DMGa6FGniHHly8',
                         'https://www.facebook.com/groups/jeweltheme',
-                        'https://wpadminify.com/support/'
+                        self::support_url()
                     ),
                 ], [
                     'type'  => 'backup',

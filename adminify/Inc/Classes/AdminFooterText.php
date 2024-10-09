@@ -233,6 +233,7 @@ class AdminFooterText extends AdminSettingsModel
 	 */
 	public function adminify_memory_limit() {
 		$memory_limit = $this->server_info->get_wp_memory_usage();
+
 		$memory_limit = $memory_limit['MemLimitFormat']; ?>
 
 		<div class="adminify-system-info">

@@ -33,6 +33,8 @@ class PostDuplicator
 
 		$this->options = (array) AdminSettings::get_instance()->get();
 
+		new TaxonomyDuplicator();
+
 		// Check Access for User roles
 		add_action('admin_init', [$this, 'adminify_post_duplicator_init']);
 	}

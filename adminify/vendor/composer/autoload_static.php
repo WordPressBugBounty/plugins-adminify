@@ -16,6 +16,10 @@ class ComposerStaticInit8744fc635bac09f8831ffa55e80f863b
     );
 
     public static $prefixLengthsPsr4 = array (
+        'e' => 
+        array (
+            'enshrined\\svgSanitize\\' => 22,
+        ),
         'W' => 
         array (
             'WPAdminify\\Libs\\' => 16,
@@ -28,6 +32,10 @@ class ComposerStaticInit8744fc635bac09f8831ffa55e80f863b
     );
 
     public static $prefixDirsPsr4 = array (
+        'enshrined\\svgSanitize\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/enshrined/svg-sanitize/src',
+        ),
         'WPAdminify\\Libs\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Libs',

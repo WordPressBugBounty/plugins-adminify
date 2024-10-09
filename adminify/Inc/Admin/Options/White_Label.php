@@ -25,7 +25,7 @@ class White_Label extends AdminSettingsModel {
 					'footer_text'       => sprintf(
 						__('<p>Developed by <a href="%1$s" target="_blank" title="WP Adminify by Jewel Theme" target="_blank">%2$s</a></p> <p>Powered by <a target="_blank" href="%3$s">WordPress</a></p>', 'adminify'),
 						esc_url('https://wpadminify.com/'),
-						__('WP Adminify', 'adminify'),
+						\WPAdminify\Inc\Admin\AdminSettings::get_pro_label(),
 						esc_url('https://wordpress.org/')
 					),
 					'admin_footer'	=> [
@@ -40,10 +40,10 @@ class White_Label extends AdminSettingsModel {
 				'adminify'	=> [
 					'plugin_logo'         => [],
 					'plugin_logo_dark'    => [],
-					'plugin_name'         => __('WP Adminify', 'adminify'),
-					'plugin_desc'         => __('Supercharge your WordPress Adminify with <a href="https://wpadminify.com">WP Adminify</a> plugin. It has Professional & Clean UI, White Label, Analytics, Charts, Menu UI, WP Dark Theme, User Roles management, Multisite Support and many more to get amazed.', 'adminify'),
+					'plugin_name'         => \WPAdminify\Inc\Admin\AdminSettings::get_pro_label(),
+					'plugin_desc'         => __('WP Adminify is a powerful plugin that modernizes and customizes your WordPress admin dashboard. It offers a clean, branded interface and advanced menu management features to enhance your admin user experience.', 'adminify'),
 					'author_name'         => 'Jewel Theme',
-					'menu_label'          => WP_ADMINIFY,
+					'menu_label'          => \WPAdminify\Inc\Admin\AdminSettings::get_pro_label(),
 					'plugin_url'          => 'https://wpadminify.com',
 					'row_links'           => false,
 					'remove_action_links' => false,
@@ -81,14 +81,12 @@ class White_Label extends AdminSettingsModel {
 				'https://wpadminify.com/kb/white-label/',
 				'',
 				'https://www.facebook.com/groups/jeweltheme',
-				'https://wpadminify.com/support/'
+				\WPAdminify\Inc\Admin\AdminSettings::support_url()
 			)
 		];
 
 
 		// Check Admin Bar Editor Plugin Activate
-		// if( (!Utils::is_plugin_active('admin-bar/admin-bar.php')) || (!Utils::is_plugin_active('admin-bar-pro/admin-bar.php')) ) {
-		// if( !Utils::is_plugin_active('admin-bar/admin-bar.php') ) {
 		if (! class_exists('\JewelTheme\AdminBarEditor\AdminBarEditor')) {
 			$white_label[] = [
 				'id'         => 'remove_howdy_msg',
@@ -202,7 +200,7 @@ class White_Label extends AdminSettingsModel {
 				'https://wpadminify.com/kb/adminify-white-label/',
 				'https://www.youtube.com/playlist?list=PLqpMw0NsHXV-EKj9Xm1DMGa6FGniHHly8',
 				'https://www.facebook.com/groups/jeweltheme',
-				'https://wpadminify.com/support/'
+				\WPAdminify\Inc\Admin\AdminSettings::support_url()
 			),
 		];
 		$adminify_whl_fields[] = [
