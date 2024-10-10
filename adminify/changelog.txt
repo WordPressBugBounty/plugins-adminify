@@ -1,4 +1,7 @@
 == Changelog ==
+= 4.0.1.8 (10-10-2024) =
+* Updated: Hidden for User Roles for Admin Bar Editor issue updated
+
 = 4.0.1.7 (9-10-2024) =
 * Added: Taxonomy Duplicator Added
 * Added: "URL Path" Custom Admin Columns for Post Types added on "Productivity>Custom Admin Columns"

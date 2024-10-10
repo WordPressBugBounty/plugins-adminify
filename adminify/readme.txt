@@ -4,7 +4,7 @@ Tags: Custom Dashboard, White Label WordPress,  Media Folders, Admin Columns, Lo
 Requires at least: 4.0
 Tested up to: 6.6.2
 Requires PHP: 5.3
-Stable tag: 4.0.1.7
+Stable tag: 4.0.1.8
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 

@@ -356,6 +356,21 @@ if (!class_exists('Admin')) {
 
             // Third, get the parent menu items.
             foreach ($flat_array as $menu_id => $menu) {
+                
+                if( !empty($menu['hidden_for']) ) {
+                    $disable_for = [];
+
+                    foreach($menu['hidden_for'] as $hidden_key => $hidden_user){
+                        $disable_for[$hidden_key] = strtolower($hidden_user['value']);
+
+                    }
+
+                    if (\WPAdminify\Inc\Utils::restricted_for($disable_for)) {
+                        continue;
+                    }
+                }
+
+
                 if (!isset($menu['parent']) || !$menu['parent'] || !isset($flat_array[$menu['parent']])) {
                     $nested_array[$menu_id] = $menu;
 

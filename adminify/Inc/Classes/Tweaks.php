@@ -67,7 +67,8 @@ class Tweaks extends AdminSettingsModel
 			add_filter('avatar_defaults', [$this, 'add_custom_gravatar_image'], 99);
 		}
 
-		if( !Utils::is_plugin_active('admin-bar/admin-bar.php') || !Utils::is_plugin_active('admin-bar-pro/admin-bar.php')){
+		// If Admin bar Editor Plugin not Installed
+		if (! class_exists('\JewelTheme\AdminBarEditor\AdminBarEditor')) {
 			if (!empty($this->options['white_label']['wordpress']['remove_howdy_msg']) || !empty($this->options['white_label']['wordpress']['change_howdy_text'])) {
 				// Change Howdy Text
 				// add_action('admin_bar_menu', [$this, 'remove_from_admin_bar'], 999);
