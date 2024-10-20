@@ -740,7 +740,7 @@ class Tweaks extends AdminSettingsModel
 
 
 	/** Remove Dashicons from Admin Bar for non logged in users **/
-	public function remove_dashicons()
+	public function jltwp_adminify_remove_dashicons()
 	{
 		global $pagenow;
 
@@ -887,14 +887,6 @@ class Tweaks extends AdminSettingsModel
 			add_filter('get_avatar_url', [$this, 'remove_avatar_query_string']);
 		}
 	}
-
-	/** Remove Dashicons from Admin Bar for non logged in users **/
-	public function jltwp_adminify_remove_dashicons()
-	{
-		wp_dequeue_style('dashicons');
-		wp_deregister_style('dashicons');
-	}
-
 
 	/* Remove Gravatar Query Strings */
 	public function remove_avatar_query_string($url)

@@ -665,6 +665,9 @@ html[frame-adminify-app=true] #wpfooter {
   .adminify-toolbar-wrapper .frame-adminify-logo {
     overflow: visible;
   }
+  .adminify-toolbar-wrapper .frame-adminify-logo a .adminify-logo-text {
+    display: none !important;
+  }
   .adminify-toolbar-wrapper .frame-adminify-logo .adminify-mini-logo {
     display: block !important;
   }
@@ -707,13 +710,11 @@ html[frame-adminify-app=true] #wpfooter {
   position: relative;
   overflow-y: scroll;
   overflow-x: hidden;
-  visibility: hidden;
 }
 #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-admin-menu-wrapper .frame-adminify-admin-main-menu {
   width: var(--adminify-menu-width);
   height: calc(100vh - 78px);
   transition: width 0.3s;
-  visibility: visible;
 }
 #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-admin-menu-wrapper .frame-adminify-admin-main-menu ul.frame-adminify-admin-menu {
   padding: var(--adminify-menu-wrapper-padding-top) var(--adminify-menu-wrapper-padding-right) var(--adminify-menu-wrapper-padding-bottom) var(--adminify-menu-wrapper-padding-left);
@@ -991,9 +992,6 @@ html[frame-adminify-app=true] #wpfooter {
 }
 #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-admin-menu-wrapper::-webkit-scrollbar-thumb {
   background-color: #a8a9ac;
-}
-#frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-admin-menu-wrapper:hover {
-  visibility: visible;
 }
 #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap hr.frame-adminify-menu-separator {
   margin: 0;

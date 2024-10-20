@@ -1,4 +1,8 @@
 == Changelog ==
+= 4.0.1.9 (20-10-2024) =
+* Fixed: Remove Dashicons for logged in users issue fixed
+* Fixed: White Label WordPres Pro settings warning issue fixed
+
 = 4.0.1.8 (10-10-2024) =
 * Updated: Hidden for User Roles for Admin Bar Editor issue updated
 
