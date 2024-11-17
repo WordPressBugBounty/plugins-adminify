@@ -134,6 +134,12 @@ class PostDuplicator
 		 * and all the original post data then
 		 */
 		$post = get_post($post_id);
+		if( isset( $_SERVER['HTTP_REFERER']) && str_contains( $_SERVER['HTTP_REFERER'], 'action=adminify_duplicate' )) {
+			$redirect_url = admin_url('edit.php?post_type=' . $post->post_type);
+			wp_safe_redirect($redirect_url);
+
+			exit;
+		}
 
 		if (!$this->user_can_clone($post)) {
 			return;

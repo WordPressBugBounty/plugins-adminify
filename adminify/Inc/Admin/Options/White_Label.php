@@ -44,6 +44,7 @@ class White_Label extends AdminSettingsModel {
 					'plugin_desc'         => __('WP Adminify is a powerful plugin that modernizes and customizes your WordPress admin dashboard. It offers a clean, branded interface and advanced menu management features to enhance your admin user experience.', 'adminify'),
 					'author_name'         => 'Jewel Theme',
 					'menu_label'          => \WPAdminify\Inc\Admin\AdminSettings::get_pro_label(),
+					'menu_icon'          => [],
 					'plugin_url'          => 'https://wpadminify.com',
 					'row_links'           => false,
 					'remove_action_links' => false,
@@ -257,6 +258,17 @@ class White_Label extends AdminSettingsModel {
 			'class'   => $adminify_white_label_class,
 			'title'   => __('Menu Label', 'adminify'),
 			'default' => $this->get_default_field('white_label')['adminify']['menu_label'],
+		];
+		$adminify_whl_fields[] = [
+			'id'           => 'menu_icon',
+			'type'         => 'media',
+			'class'        => $adminify_white_label_class . ' adminify-pro-pointer',
+			'title'        => __('Menu Icon ', 'adminify'),
+			'library'      => 'image',
+			'preview_size' => 'thumbnail',
+			'button_title' => __('Add Menu Icon', 'adminify'),
+			'remove_title' => __('Remove Menu Icon', 'adminify'),
+			'default'      => $this->get_default_field('white_label')['adminify']['menu_icon'],
 		];
 		$adminify_whl_fields[] = [
 			'id'      => 'plugin_url',

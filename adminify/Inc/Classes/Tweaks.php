@@ -844,8 +844,10 @@ class Tweaks extends AdminSettingsModel
 
 		/** Remove Version Query Strings from Scripts/Styles */
 		if (!empty($performance_data) && in_array('version_strings', $performance_data)) {
-			add_filter('script_loader_src', [$this, 'remove_script_versions'], 15, 1);
-			add_filter('style_loader_src', [$this, 'remove_script_versions'], 15, 1);
+			if(!is_admin()){
+				add_filter('script_loader_src', [$this, 'remove_script_versions'], 15, 1);
+				add_filter('style_loader_src', [$this, 'remove_script_versions'], 15, 1);
+			}
 		}
 
 

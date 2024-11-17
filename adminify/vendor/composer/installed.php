@@ -3,7 +3,7 @@
         'name' => 'jeweltheme/wp-adminify',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '8105a60231dda5a50988fdc1756add17da7b06ff',
+        'reference' => '40fc7d91a97ea9d1e4988688df7968ad56f1201b',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'jeweltheme/wp-adminify' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '8105a60231dda5a50988fdc1756add17da7b06ff',
+            'reference' => '40fc7d91a97ea9d1e4988688df7968ad56f1201b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

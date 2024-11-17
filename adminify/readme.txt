@@ -2,9 +2,9 @@
 Contributors: jwthemeltd, litonice13, masteraddons
 Tags: Custom Dashboard, White Label WordPress,  Media Folders, Admin Columns, Login Customizer
 Requires at least: 4.0
-Tested up to: 6.6.2
+Tested up to: 6.7
 Requires PHP: 5.3
-Stable tag: 4.0.2.0
+Stable tag: 4.0.2.1
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 

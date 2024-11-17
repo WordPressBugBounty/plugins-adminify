@@ -200,6 +200,5 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
             }
         }
     }
-
     return $admin_menu;
 }

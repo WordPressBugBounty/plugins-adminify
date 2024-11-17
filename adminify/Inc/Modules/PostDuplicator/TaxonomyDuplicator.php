@@ -66,6 +66,7 @@ class TaxonomyDuplicator {
             wp_die('No taxonomy term to duplicate has been supplied!');
         }
 
+
         // Nonce verification
         if (!wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['_wpnonce'])), 'jltwp_adminify_taxonomy_duplicator_nonce')) {
             return;
@@ -74,6 +75,12 @@ class TaxonomyDuplicator {
         $term_id = (isset($_GET['term']) ? absint($_GET['term']) : absint($_POST['term']));
         $term = get_term($term_id);
 
+        if( isset( $_SERVER['HTTP_REFERER']) && str_contains( $_SERVER['HTTP_REFERER'], 'action=adminify_duplicate_taxonomy' )) {
+			// Redirect to the taxonomy edit page
+            $redirect_url = admin_url('edit-tags.php?taxonomy=' . $term->taxonomy);
+            wp_safe_redirect($redirect_url);
+            exit;
+		}
         if (is_wp_error($term) || !$term) {
             wp_die('Failed to retrieve the original taxonomy term: ' . $term_id);
         }

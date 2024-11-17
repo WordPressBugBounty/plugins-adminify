@@ -73,7 +73,7 @@ if (!class_exists('Admin')) {
                 'ajax_url'  => admin_url('admin-ajax.php'),
                 'security_nonce' => wp_create_nonce('adminify_nonce')
             ];
-            
+
             wp_localize_script( 'frame-adminify--admin', 'WPAdminify', $localize_array_data );
             wp_localize_script( 'frame-adminify--admin', 'WPAdminifyFrameNotAllowedURLs', self::get_not_allowed_urls() );
         }
@@ -186,8 +186,9 @@ if (!class_exists('Admin')) {
 
 
             $admin_bar_menu_data = [];
+
             // Admin Bar Exits
-            if(Utils::is_plugin_active('admin-bar/admin-bar.php')) {
+            if ( Utils::is_plugin_active('admin-bar/admin-bar.php') || Utils::is_plugin_active('admin-bar-pro/admin-bar-pro.php') ) {
                 $admin_bar_items                  = get_option('_jltadminbar_settings');
 
                 if( empty($admin_bar_items) ) return;
@@ -356,7 +357,7 @@ if (!class_exists('Admin')) {
 
             // Third, get the parent menu items.
             foreach ($flat_array as $menu_id => $menu) {
-                
+
                 if( !empty($menu['hidden_for']) ) {
                     $disable_for = [];
 

@@ -166,6 +166,12 @@ if ( !class_exists( 'WP_Adminify' ) ) {
             //database upgrade logic here
             $old_data = get_option( '_wpadminify' );
             update_option( '_wpadminify_backup', $old_data );
+            //  Create term_order collumn in terms table, to support post type order
+            global $wpdb;
+            $check_term_order_column = $wpdb->query( "SHOW COLUMNS FROM {$wpdb->terms} LIKE 'term_order'" );
+            if ( $check_term_order_column == 0 ) {
+                $wpdb->query( "ALTER TABLE {$wpdb->terms} ADD term_order INT( 4 ) NULL DEFAULT '0'" );
+            }
         }
 
         // Deactivation Hook

@@ -1,4 +1,16 @@
 == Changelog ==
+= 4.0.2.1 (17-11-2024) =
+* Updated: Compatibility with AdminBar Editor issue fixed. Thanks to @manojmadushantha, Support URL: https://wordpress.org/support/topic/admin-bar-hidden-rule-not-working-for-other-roles-except-administrator/
+* Updated: Freemius Library updated to latest verison
+* Fixed: Admin bar "New" button and admin bar items hide for rule issue fixed
+* Fixed: WP Adminify white label plugin not working for both adminify and adminify pro plugin issue fixed. Thanks to @jordannabubarcom, Support URL: https://wordpress.org/support/topic/adminify/
+* Fixed: multisite network admin settings page style
+* Fixed: post duplicator creats only one duplicate now
+* Updated: posttype order and taxonomy order ui updated
+* Fixed: admin page not showing issue fixed
+* Fixed: WP Adminify Pro version activation death page error issue fixed. Thanks to @takeofujii, Support URL: https://wordpress.org/support/topic/unable-to-activate-wp-adminify-plugin-after-installation/
+
+
 = 4.0.2.0 (23-10-2024) =
 * Update: Plugin Information popup issue fixed
 

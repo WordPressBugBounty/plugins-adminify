@@ -85,7 +85,7 @@ if ( !class_exists( 'AdminSettings' ) ) {
                 return;
             }
             $classes = 'adminify-status adminify-status--' . esc_attr( $this->message['type'] );
-            printf( esc_html__( '<div class="%1$s"><p>%2$s</p></div>', 'adminify' ), esc_attr( $classes ), wp_kses_post( $this->message['message'] ) );
+            echo '<div class="' . esc_attr( $classes ) . '"><p>' . esc_html__( wp_kses_post( $this->message['message'] ), 'adminify' );
         }
 
         public function network_panel_display() {
@@ -147,9 +147,6 @@ if ( !class_exists( 'AdminSettings' ) ) {
             return (array) apply_filters( 'adminify_clone_blog_option_modules', $clonable_data );
         }
 
-        public function maybe_clone_blog_options() {
-        }
-
         public function get_pagespeed_data( $copy_from ) {
             switch_to_blog( $copy_from );
             global $wpdb;
@@ -205,25 +202,26 @@ if ( !class_exists( 'AdminSettings' ) ) {
             return $this->defaults;
         }
 
-        /**
-         * Admin Settings CSS
-         *
-         * @return void
-         */
-        public function jltwp_adminify_admin_scripts() {
-        }
-
         public static function get_pro_label() {
             $is_pro = "";
             $is_pro = WP_ADMINIFY;
             return $is_pro;
         }
 
+        public function get_plugin_menu_icon() {
+            $menu_icon = WP_ADMINIFY_ASSETS_IMAGE . 'logos/menu-icon-light.svg';
+            $saved_data = get_option( $this->prefix );
+            if ( isset( $saved_data['white_label']['adminify']['menu_icon'] ) && !empty( $saved_data['white_label']['adminify']['menu_icon']['url'] ) ) {
+                $menu_icon = $saved_data['white_label']['adminify']['menu_icon']['url'];
+            }
+            return $menu_icon;
+        }
+
         public function get_plugin_menu_label() {
             $plugin_menu_label = self::get_pro_label();
             $saved_data = get_option( $this->prefix );
-            if ( !empty( $saved_data['jltwp_adminify_wl_plugin_menu_label'] ) ) {
-                $plugin_menu_label = $saved_data['jltwp_adminify_wl_plugin_menu_label'];
+            if ( isset( $saved_data['white_label']['adminify']['menu_label'] ) && !empty( $saved_data['white_label']['adminify']['menu_label'] ) ) {
+                $plugin_menu_label = $saved_data['white_label']['adminify']['menu_label'];
             }
             return $plugin_menu_label;
         }
@@ -251,7 +249,7 @@ if ( !class_exists( 'AdminSettings' ) ) {
                 'menu_title'              => $this->get_plugin_menu_label(),
                 'menu_slug'               => 'wp-adminify-settings',
                 'menu_capability'         => 'manage_options',
-                'menu_icon'               => WP_ADMINIFY_ASSETS_IMAGE . 'logos/menu-icon-light.svg',
+                'menu_icon'               => $this->get_plugin_menu_icon(),
                 'menu_position'           => 30,
                 'menu_hidden'             => false,
                 'menu_parent'             => 'admin.php?page=wp-adminify-settings',
