@@ -1,4 +1,12 @@
 == Changelog ==
+= 4.0.2.2 (19-11-2024) =
+* Added: Support for Squirrly SEO plugin's post metabox active link color overwrite issue.
+* Added: Support for Hotel Booking Lite plugin's calender table height issue.
+* Added: Support for eventon plugin's event type color picker.
+* Fixed: Hide admin notice breaking layout for non admin users dashboard issue.
+* Fixed: Unable to install and activate Addon plugins from adminify plugins setting page issue.
+* Fixed: Adminify plugin support link is not redirecting issue.
+
 = 4.0.2.1 (17-11-2024) =
 * Updated: Compatibility with AdminBar Editor issue fixed. Thanks to @manojmadushantha, Support URL: https://wordpress.org/support/topic/admin-bar-hidden-rule-not-working-for-other-roles-except-administrator/
 * Updated: Freemius Library updated to latest verison

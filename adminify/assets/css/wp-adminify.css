@@ -1254,6 +1254,10 @@ a {
     width: 1.3125rem !important;
   }
 }
+#evo_et1_color .evo_et1_color_circle {
+  border-color: var(--adminify-menu-border);
+}
+
 .adminify-ui .top-header-search-results {
   position: absolute !important;
   top: 49px;
@@ -2010,53 +2014,53 @@ body {
   color: var(--adminify-primary) !important;
   border-color: var(--adminify-primary) !important;
 }
-.adminify-ui .postbox a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui #wpfooter a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui .welcome-panel-column-content a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui .notice a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui .updated a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui .edit-term-notes a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui .wp-list-table tbody th a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui .wp-list-table tbody td a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui .widefat tbody th a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui .widefat tbody td a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui #post-body-content a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui .upload-flash-bypass a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui [action="options.php"] a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui .privacy-settings-body a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui .wpsc-card a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui .updraftplus-top-menu a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui .nav-tab-wrapper a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui #updraft-backupnow-modal a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui .updraft-disk-space-actions a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui .popular-tags a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a),
-.adminify-ui .metabox-prefs a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a) {
+.adminify-ui .postbox a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui #wpfooter a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui .welcome-panel-column-content a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui .notice a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui .updated a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui .edit-term-notes a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui .wp-list-table tbody th a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui .wp-list-table tbody td a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui .widefat tbody th a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui .widefat tbody td a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui #post-body-content a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui .upload-flash-bypass a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui [action="options.php"] a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui .privacy-settings-body a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui .wpsc-card a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui .updraftplus-top-menu a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui .nav-tab-wrapper a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui #updraft-backupnow-modal a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui .updraft-disk-space-actions a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui .popular-tags a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active),
+.adminify-ui .metabox-prefs a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active) {
   outline: none;
   color: var(--adminify-primary) !important;
   -webkit-text-decoration: none;
   text-decoration: none;
 }
-.adminify-ui .postbox a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui #wpfooter a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui .welcome-panel-column-content a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui .notice a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui .updated a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui .edit-term-notes a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui .wp-list-table tbody th a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui .wp-list-table tbody td a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui .widefat tbody th a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui .widefat tbody td a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui #post-body-content a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui .upload-flash-bypass a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui [action="options.php"] a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui .privacy-settings-body a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui .wpsc-card a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui .updraftplus-top-menu a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui .nav-tab-wrapper a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui #updraft-backupnow-modal a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui .updraft-disk-space-actions a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui .popular-tags a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus,
-.adminify-ui .metabox-prefs a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):focus {
+.adminify-ui .postbox a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui #wpfooter a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui .welcome-panel-column-content a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui .notice a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui .updated a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui .edit-term-notes a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui .wp-list-table tbody th a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui .wp-list-table tbody td a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui .widefat tbody th a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui .widefat tbody td a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui #post-body-content a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui .upload-flash-bypass a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui [action="options.php"] a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui .privacy-settings-body a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui .wpsc-card a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui .updraftplus-top-menu a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui .nav-tab-wrapper a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui #updraft-backupnow-modal a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui .updraft-disk-space-actions a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui .popular-tags a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus,
+.adminify-ui .metabox-prefs a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):focus {
   box-shadow: none !important;
 }
 .adminify-ui input[type=text],

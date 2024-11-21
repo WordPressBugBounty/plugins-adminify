@@ -219,13 +219,18 @@ if (!class_exists('Admin')) {
 
 		public function support_menu()
 		{
+			$adminify_ui = AdminSettings::get_instance()->get('admin_ui');
+			$support_url = 'adminify-support';
+			if($adminify_ui ) $support_url = \WPAdminify\Inc\Admin\AdminSettings::support_url();
 			add_submenu_page(
 				'wp-adminify-settings',       // Ex. wp-adminify-settings
 				__('Get Support', 'adminify'),
 				__('Support', 'adminify'),
 				'manage_options',
-				'adminify-support',
-				function() { wp_redirect(\WPAdminify\Inc\Admin\AdminSettings::support_url()); exit; }, // Redirect to external URL
+				$support_url,
+				function() {
+					wp_redirect(\WPAdminify\Inc\Admin\AdminSettings::support_url(), 301, 'adminify'); exit;
+				}, // Redirect to external URL
 				60
 			);
 		}

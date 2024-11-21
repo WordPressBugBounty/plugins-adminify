@@ -5,7 +5,7 @@
  * Description: WP Adminify is a powerful plugin that modernizes and customizes your WordPress admin dashboard. It offers a clean, branded interface and advanced menu management features to enhance your admin user experience.
  * Plugin URI: https://wpadminify.com
  * Author: Jewel Theme
- * Version: 4.0.2.1
+ * Version: 4.0.2.2
  * Author URI: https://wpadminify.com
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
@@ -56,7 +56,7 @@ if ( function_exists( 'jltwp_adminify' ) ) {
                 'type'             => 'plugin',
                 'public_key'       => 'pk_a0ea61beae7126eb845f7e58a03e5',
                 'premium_suffix'   => 'Pro',
-                'has_affiliation'  => 'selected',
+                'affiliation'      => false,
                 'has_addons'       => true,
                 'has_paid_plans'   => true,
                 'is_org_compliant' => false,

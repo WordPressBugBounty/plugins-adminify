@@ -292,8 +292,7 @@ class Assets extends AdminSettingsModel
 
 		}
 
-
-		if ($screen->id === 'wp-adminify_page_wp-adminify-addons-plugins') {
+		if ($screen->id === 'wp-adminify_page_wp-adminify-addons-plugins' || $screen->id === 'wp-adminify-pro_page_wp-adminify-addons-plugins') {
 			// JS Files .
 			wp_enqueue_script('wp-adminify-addons', WP_ADMINIFY_ASSETS . 'admin/js/wp-adminify-addons' . Utils::assets_ext('.js'), array('jquery'), WP_ADMINIFY_VER, true);
 			wp_localize_script(

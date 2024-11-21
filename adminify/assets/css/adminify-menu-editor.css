@@ -1257,6 +1257,10 @@ a {
     width: 1.3125rem !important;
   }
 }
+#evo_et1_color .evo_et1_color_circle {
+  border-color: var(--adminify-menu-border);
+}
+
 .wp-adminify .wp-adminify--menu--editor--container {
   max-width: 85%;
   margin: 0 auto;

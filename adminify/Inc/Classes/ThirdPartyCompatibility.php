@@ -29,6 +29,22 @@ class ThirdPartyCompatibility {
     }
 
     public function jltwp_adminify_plugin_conflicts() {
+        $adminify_ui = AdminSettings::get_instance()->get( 'admin_ui' );
+        if ( !empty( $adminify_ui ) ) {
+            // Motopress Hotel Booking Lite
+            if ( Utils::is_plugin_active( 'motopress-hotel-booking-lite/motopress-hotel-booking.php' ) ) {
+                echo '<style>
+				.wp-adminify.bookings_page_mphb_calendar .widefat thead th,
+				.wp-adminify.bookings_page_mphb_calendar .widefat tfoot th,
+				.wp-adminify.bookings_page_mphb_calendar .widefat tbody td {
+					padding: 0 !important;
+				}
+				.adminify-ui .widefat tbody tr td:first-child {
+					border-left-color: inherit !important;
+				}
+				</style>';
+            }
+        }
         if ( Utils::is_plugin_active( 'squirrly-seo/squirrly.php' ) ) {
             echo '<style>
             .wp-adminify.adminify-ui.block-editor-page .interface-interface-skeleton {
