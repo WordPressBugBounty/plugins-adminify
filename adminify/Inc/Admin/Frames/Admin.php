@@ -100,6 +100,46 @@ if (!class_exists('Admin')) {
                     'query_params' => ['ct_builder' => 'true', 'oxygen_iframe!']
                 ],
                 [
+                    'url' => '*',
+                    'query_params' => ['page' => 'sbi-setup']
+                ],
+                [
+                    'url' => '*',
+                    'query_params' => ['page' => 'sbtt']
+                ],
+                [
+                    'url' => '*',
+                    'query_params' => ['page' => 'cff-setup'] 
+                ],
+                [
+                    'url' => '*',
+                    'query_params' => ['page' => 'rank-math-registration']
+                ],
+                [
+                    'url' => '*',
+                    'query_params' => ['page' => 'googlesitekit-splash']
+                ],
+                [
+                    'url' => '*',
+                    'query_params' => ['page' => 'cff-feed-builder']
+                ],
+                [
+                    'url' => '*',
+                    'query_params' => ['page' => 'sbi-feed-builder']
+                ],
+                [
+                    'url' => '*',
+                    'query_params' => ['page' => 'sbr']
+                ],
+                [
+                    'url' => '*',
+                    'query_params' => ['page' => 'ctf-feed-builder']
+                ],
+                [
+                    'url' => '*',
+                    'query_params' => ['page' => 'sby-feed-builder']
+                ],
+                [
                     'url' => '/wp-admin/post-new.php',
                     'post_type' => ['post', 'page']
                 ],

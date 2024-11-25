@@ -84,9 +84,9 @@ if ( !class_exists( 'WP_Adminify' ) ) {
          * @return array
          */
         public function plugin_action_links( $links ) {
-            $links['settings'] = sprintf( '<a class="adminify-plugin-settings" href="%1$s">%2$s</a>', admin_url( 'admin.php?page=wp-adminify-settings' ), __( 'Settings', 'adminify' ) );
-            $links['pricing'] = sprintf( '<a href="%1$s" class="adminify-upgrade-pro" target="_blank" style="color: orangered;font-weight: bold;">%2$s</a>', 'https://wpadminify.com/pricing', __( 'Upgrade Now', 'adminify' ) );
-            return $links;
+            $links['settings'] = apply_filters( 'adminify_settings_link', sprintf( '<a class="adminify-plugin-settings" href="%1$s">%2$s</a>', admin_url( 'admin.php?page=wp-adminify-settings' ), __( 'Settings', 'adminify' ) ) );
+            $links['pricing'] = apply_filters( 'adminify_upgrade_now_link', sprintf( '<a href="%1$s" class="adminify-upgrade-pro" target="_blank" style="color: orangered;font-weight: bold;">%2$s</a>', 'https://wpadminify.com/pricing', __( 'Upgrade Now', 'adminify' ) ) );
+            return apply_filters( 'adminify_plugin_row_links', $links );
         }
 
         public function jltwp_adminify_plugin_row_meta( $plugin_meta, $plugin_file ) {

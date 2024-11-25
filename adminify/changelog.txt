@@ -1,4 +1,10 @@
 == Changelog ==
+= 4.0.2.3 (25-11-2024) =
+* Updated: Plugin Row Links "Upgrade Now" for Pro version removed
+* Updated: Added support for "Smash Balloon Social Photo Feed – Easy Social Feeds Plugin" setup page to redirect and authorization
+* Updated: Added support for "Rank Math SEO – AI SEO Tools to Dominate SEO Rankings" setup page to redirect and authorization
+* Updated: Added support for "Site Kit by Google – Analytics, Search Console, AdSense, Speed" setup page to redirect and authorization
+
 = 4.0.2.2 (19-11-2024) =
 * Added: Support for Squirrly SEO plugin's post metabox active link color overwrite issue.
 * Added: Support for Hotel Booking Lite plugin's calender table height issue.
