@@ -1,4 +1,9 @@
 == Changelog ==
+= 4.0.2.4 (26-11-2024) =
+* Fixed: Fuctionalities to dismiss module conflict notice in admin panel
+* Fixed: Fuctionalities to dismiss plugin update info notice
+* Fixed: Solved admin menu not expanding in mobile version issue
+
 = 4.0.2.3 (25-11-2024) =
 * Updated: Plugin Row Links "Upgrade Now" for Pro version removed
 * Updated: Added support for "Smash Balloon Social Photo Feed – Easy Social Feeds Plugin" setup page to redirect and authorization

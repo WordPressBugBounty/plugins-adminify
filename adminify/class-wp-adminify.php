@@ -146,12 +146,24 @@ if ( !class_exists( 'WP_Adminify' ) ) {
             $this->jltwp_adminify_load_textdomain();
         }
 
-        // Text Domains
+        /**
+         * Loads the text domain for localization.
+         *
+         * This function sets up the text domain for the WP Adminify plugin,
+         * allowing it to load translation files for the specified locale.
+         * It first attempts to load a custom translation file from the WordPress
+         * languages directory and then loads the default translation file from
+         * the plugin's languages directory.
+         *
+         * @return void
+         */
         public function jltwp_adminify_load_textdomain() {
-            $domain = 'adminify';
-            $locale = apply_filters( 'plugin_locale', get_locale(), $domain );
-            load_textdomain( $domain, WP_LANG_DIR . '/' . $domain . '/' . $domain . '-' . $locale . '.mo' );
-            load_plugin_textdomain( $domain, false, dirname( WP_ADMINIFY_BASE ) . '/languages/' );
+            add_action( 'init', function () {
+                $domain = 'adminify';
+                $locale = apply_filters( 'plugin_locale', get_locale(), $domain );
+                load_textdomain( $domain, WP_LANG_DIR . '/' . $domain . '/' . $domain . '-' . $locale . '.mo' );
+                load_plugin_textdomain( $domain, false, dirname( WP_ADMINIFY_BASE ) . '/languages/' );
+            } );
         }
 
         // Activation Hook

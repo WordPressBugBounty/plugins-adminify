@@ -330,6 +330,10 @@ if ( !class_exists( 'AdminSettings' ) ) {
             return $data;
         }
 
+        public function get_prefix() {
+            return $this->prefix;
+        }
+
     }
 
 }
