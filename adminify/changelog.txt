@@ -1,4 +1,8 @@
 == Changelog ==
+= 4.0.2.6 (4-12-2024) =
+* fixed: external domain will open in new tab
+* Fixed: Added support for external domain as child site.
+
 = 4.0.2.4 (26-11-2024) =
 * Fixed: Fuctionalities to dismiss module conflict notice in admin panel
 * Fixed: Fuctionalities to dismiss plugin update info notice
