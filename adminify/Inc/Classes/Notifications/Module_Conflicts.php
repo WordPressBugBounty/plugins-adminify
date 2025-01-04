@@ -16,7 +16,7 @@ if ( ! class_exists( 'Module_Conflicts' ) ) {
 
         public function __construct()
         {
-            parent::__construct();
+            // parent::__construct();
             add_action('admin_notices', [$this, 'maybe_show_folder_module_notice'], -9999999);
 
             if(is_admin()){
@@ -26,7 +26,7 @@ if ( ! class_exists( 'Module_Conflicts' ) ) {
         }
 
 
-        
+
         /**
          * Dismiss module conflict notice via AJAX.
          *

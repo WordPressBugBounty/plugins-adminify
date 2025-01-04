@@ -672,7 +672,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     }
                     if ( isset( $optiongroup['hidden_for'] ) ) {
                         $disabled_for = $optiongroup['hidden_for'];
-                        if ( $this->is_hidden( $disabled_for ) ) {
+                        if ( !$this->is_hidden( $disabled_for ) ) {
                             $current_menu_item['hidden'] = true;
                         }
                     }
@@ -714,12 +714,16 @@ if ( !class_exists( 'MenuEditor' ) ) {
             $current_name = $current_user->display_name;
             $current_roles = $current_user->roles;
             $all_roles = wp_roles()->get_names();
-            if ( in_array( $current_name, $disabled_for ) ) {
+            $disabled_for_arr = [];
+            foreach ( $disabled_for as $v ) {
+                $disabled_for_arr[] = strtolower( $v );
+            }
+            if ( in_array( $current_roles, $disabled_for_arr ) ) {
                 return true;
             }
             // MULTISITE SUPER ADMIN
             if ( is_super_admin() && is_multisite() ) {
-                if ( in_array( 'Super Admin', $disabled_for ) ) {
+                if ( in_array( 'Super Admin', $disabled_for_arr ) ) {
                     return true;
                 } else {
                     return false;
@@ -727,7 +731,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
             }
             // NORMAL SUPER ADMIN
             if ( $current_user->ID === 1 ) {
-                if ( in_array( 'Super Admin', $disabled_for ) ) {
+                if ( in_array( 'Super Admin', $disabled_for_arr ) ) {
                     return true;
                 } else {
                     return false;
@@ -735,7 +739,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
             }
             foreach ( $current_roles as $role ) {
                 $role_name = $all_roles[$role];
-                if ( in_array( $role_name, $disabled_for ) ) {
+                if ( in_array( $role_name, $disabled_for_arr ) ) {
                     return true;
                 }
             }
@@ -899,9 +903,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
 				<?php 
             foreach ( $this->roles as $role ) {
                 $rolename = $role['name'];
-                if ( 'administrator' == strtolower( $rolename ) ) {
-                    continue;
-                }
+                // if ('administrator' == strtolower($rolename)) {
+                // 	continue;
+                // }
                 $sel = '';
                 if ( in_array( $rolename, $disabled_for ) ) {
                     $sel = 'selected';

@@ -2,9 +2,9 @@
 Contributors: jwthemeltd, litonice13, masteraddons
 Tags: Custom Dashboard, White Label WordPress,  Media Folders, Admin Columns, Login Customizer
 Requires at least: 4.0
-Tested up to: 6.7
+Tested up to: 6.7.1
 Requires PHP: 5.3
-Stable tag: 4.0.2.7
+Stable tag: 4.0.2.8
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -125,7 +125,7 @@ WP Adminify Pro is a premium custom dashboard plugin that offers advanced featur
 * **Disable Automatic Updates Emails:** Stop receiving unwanted emails about WordPress updates.
 * **Disable Login Screen Language Switcher:** Remove the language switcher from the login screen for a streamlined login process.
 * **Disable Embeds:** Prevent content from being embedded from external sources to improve security and performance.
-* **Control Heartbeat API:** Optimize website performance by adjusting the frequency of the heartbeat API or disabling it in specific areas.(Upcoming)
+* **Control Heartbeat API:** Optimize website performance by adjusting the frequency of the heartbeat API or disabling it in specific areas.
 * **Control Revisions:** Prevent database bloat by limiting the number of post revisions saved.(Upcoming)
 
 [Live Demo](https://demo.wpadminify.com/) | [Docs](https://wpadminify.com/docs)  | [Request Feature](https://wpadminify.com/contact/) | [Upgrade Pro](https://wpadminify.com/pricing/)

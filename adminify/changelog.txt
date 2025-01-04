@@ -1,4 +1,10 @@
 == Changelog ==
+= 4.0.2.8 (04-01-2024) =
+* Released: Control Heartbit API Module released
+* Updated: Menu Editor 'hidden_for' roles issue fixed
+* Updated: Plugin Conflict Blank Notice issue fixed
+* Updated: Freemius SDK updated
+
 = 4.0.2.7 (26-11-2024) =
 * fixed: broken link issue
 

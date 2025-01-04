@@ -386,7 +386,7 @@ if (!class_exists('Performance')) {
 			$fields = [];
 
 			$this->disable_embeds( $fields );
-			// $this->control_heartbit_api( $fields );
+			$this->control_heartbit_api( $fields );
 			// $this->control_revisions( $fields );
 			$this->performances( $fields );
             $this->gutenberg_settings($fields);
