@@ -672,7 +672,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     }
                     if ( isset( $optiongroup['hidden_for'] ) ) {
                         $disabled_for = $optiongroup['hidden_for'];
-                        if ( !$this->is_hidden( $disabled_for ) ) {
+                        if ( $this->is_hidden( $disabled_for ) ) {
                             $current_menu_item['hidden'] = true;
                         }
                     }
@@ -712,11 +712,16 @@ if ( !class_exists( 'MenuEditor' ) ) {
             }
             $current_user = wp_get_current_user();
             $current_name = $current_user->display_name;
+            $user_login = $current_user->user_login;
             $current_roles = $current_user->roles;
             $all_roles = wp_roles()->get_names();
             $disabled_for_arr = [];
             foreach ( $disabled_for as $v ) {
                 $disabled_for_arr[] = strtolower( $v );
+            }
+            // Check Username
+            if ( in_array( $current_user->data->user_login, $disabled_for_arr ) ) {
+                return true;
             }
             if ( in_array( $current_roles, $disabled_for_arr ) ) {
                 return true;
@@ -922,17 +927,18 @@ if ( !class_exists( 'MenuEditor' ) ) {
             }
             foreach ( $this->users as $user ) {
                 $username = $user->display_name;
+                $user_login = $user->user_login;
                 $sel = '';
                 if ( in_array( $username, $disabled_for ) ) {
                     $sel = 'selected';
                 }
                 ?>
 					<option value="<?php 
-                echo esc_attr( $username );
+                echo wp_kses_post( $user_login );
                 ?>" <?php 
                 echo esc_attr( $sel );
                 ?>><?php 
-                echo esc_html( $username );
+                echo wp_kses_post( $user_login );
                 ?></option>
 				<?php 
             }
