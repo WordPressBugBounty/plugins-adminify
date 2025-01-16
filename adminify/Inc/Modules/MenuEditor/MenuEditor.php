@@ -674,6 +674,8 @@ if ( !class_exists( 'MenuEditor' ) ) {
                         $disabled_for = $optiongroup['hidden_for'];
                         if ( $this->is_hidden( $disabled_for ) ) {
                             $current_menu_item['hidden'] = true;
+                        } else {
+                            $current_menu_item['hidden'] = false;
                         }
                     }
                 }
@@ -723,7 +725,8 @@ if ( !class_exists( 'MenuEditor' ) ) {
             if ( in_array( $current_user->data->user_login, $disabled_for_arr ) ) {
                 return true;
             }
-            if ( in_array( $current_roles, $disabled_for_arr ) ) {
+            // Check User Role if the role is selected as diable to access the item
+            if ( !empty( array_intersect( $current_roles, $disabled_for_arr ) ) ) {
                 return true;
             }
             // MULTISITE SUPER ADMIN
@@ -742,12 +745,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     return false;
                 }
             }
-            foreach ( $current_roles as $role ) {
-                $role_name = $all_roles[$role];
-                if ( in_array( $role_name, $disabled_for_arr ) ) {
-                    return true;
-                }
-            }
+            return false;
         }
 
         /**
@@ -1182,7 +1180,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
 								<div class='columns'>
 									<?php 
             $upgrade_pro = '';
+            $separator_name_attr = '';
             $upgrade_pro = 'upgrade-pro';
+            $separator_name_attr = Utils::adminify_upgrade_pro( 'Add Separator' );
             ?>
 
 									<div class='column <?php 
@@ -1192,8 +1192,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
             echo esc_attr( $name_attr );
             ?>">
 											<?php 
-            $separator_content = Utils::adminify_upgrade_pro( 'Add Separator' );
-            $separator_content = apply_filters( 'adminify/menu_editor/add_separator', $name_attr, $separator );
+            $separator_content = apply_filters( 'adminify/menu_editor/add_separator', $separator_name_attr, $separator );
             // Apply the filter
             echo $separator_content;
             ?>

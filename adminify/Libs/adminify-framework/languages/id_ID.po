@@ -413,11 +413,11 @@ msgid "You cannot remove more."
 msgstr "Anda tidak dapat menghapus lebih banyak."
 
 #: fields/icon/icon.php:20 fields/icon/icon.php:53
-msgid "Add Icon"
+msgid "Add"
 msgstr "Tambah Ikon"
 
 #: fields/icon/icon.php:21
-msgid "Remove Icon"
+msgid "Remove"
 msgstr "Hapus Ikon"
 
 #: fields/link/link.php:20

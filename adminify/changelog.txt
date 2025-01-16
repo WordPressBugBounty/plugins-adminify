@@ -1,4 +1,14 @@
 == Changelog ==
+= 4.0.3.0 (16-01-2025) =
+* Fixed: Adminify admin menu editor's option hidden for was not working for all roles and users
+* Updated: Body Font dependency with Adminify UI removed, it will work Default UI as well.
+* Fixed: New Tab opening on "WP Adminify" Menu issue fixed
+* Fixed: Adminify admin menu editor's option hidden for was not working for all roles and users
+* Fixed: Admin menu editor not functioning before if adminiy UI is not enabled
+* Fixed: Admin page editor right side box icon button style is broken
+* Feature: "Add Separator" on Admin Menu Editor item ID issue fixed.
+* Feature: Reduce loop while checking permission to serve quickly.
+
 = 4.0.2.9 (08-01-2025) =
 * Updated: Menu Editor 'hidden_for' for User Name issue fixed
 

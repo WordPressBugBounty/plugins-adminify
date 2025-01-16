@@ -5424,11 +5424,11 @@ msgid "Error: Field ID conflict."
 msgstr ""
 
 #: ../lib/adminify-framework/fields/icon/icon.php:20, ../lib/adminify-framework/fields/icon/icon.php:53
-msgid "Add Icon"
+msgid "Add"
 msgstr ""
 
 #: ../lib/adminify-framework/fields/icon/icon.php:21
-msgid "Remove Icon"
+msgid "Remove"
 msgstr ""
 
 #: ../lib/adminify-framework/fields/link/link.php:20

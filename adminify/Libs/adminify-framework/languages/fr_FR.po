@@ -416,11 +416,11 @@ msgid "You cannot remove more."
 msgstr "Vous ne pouvez plus en supprimer."
 
 #: fields/icon/icon.php:20 fields/icon/icon.php:53
-msgid "Add Icon"
+msgid "Add"
 msgstr "Ajouter Icône"
 
 #: fields/icon/icon.php:21
-msgid "Remove Icon"
+msgid "Remove"
 msgstr "Retirer Icône"
 
 #: fields/link/link.php:20

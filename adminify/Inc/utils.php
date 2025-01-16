@@ -73,14 +73,15 @@ class Utils
 		$current_name  = $current_user->display_name;
 		$current_roles = $current_user->roles;
 		// $all_roles     = wp_roles()->get_names();
-
+		
 		if (in_array($current_name, $restrict_for)) {
 			return true;
 		}
-
-		if (in_array('Super Admin', $restrict_for) || in_array('administrator', $restrict_for)) {
-			return true;
-		}
+		
+		// pretty_log('in_array(Super Admin, $restrict_for) || in_array(administrator, $restrict_for)', in_array('Super Admin', $restrict_for) || in_array('administrator', $restrict_for));
+		// if (in_array('Super Admin', $restrict_for) || in_array('administrator', $restrict_for)) {
+		// 	return true;
+		// }
 
 		// Super Admin for Multisite
 		if (is_super_admin() && is_multisite()) {

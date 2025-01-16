@@ -60,22 +60,6 @@ if (!class_exists('Admin')) {
 			$this->disable_gutenberg_editor();
 		}
 
-
-		function submenu_link_new_tab()
-		{
-			add_action('admin_footer', function () {
-?>
-				<script type="text/javascript">
-					jQuery(document).ready(function($) {
-						// Replace 'your-parent-menu-slug' and 'your-submenu-slug' with actual menu slugs
-						$('a.toplevel_page_wp-adminify-settings, a[href="admin.php?page=adminify-support"]').attr('target', '_blank');
-					});
-				</script>
-<?php
-			});
-		}
-
-
 		public function disable_gutenberg_editor()
 		{
 			// Sidebar Widgets Remove
@@ -219,9 +203,12 @@ if (!class_exists('Admin')) {
 
 		public function support_menu()
 		{
-			$adminify_ui = AdminSettings::get_instance()->get('admin_ui');
+			// $this->submenu_link_new_tab();
+			// $adminify_ui = AdminSettings::get_instance()->get('admin_ui');
 			$support_url = 'adminify-support';
-			if($adminify_ui ) $support_url = \WPAdminify\Inc\Admin\AdminSettings::support_url();
+			// if($adminify_ui ) {
+				// $support_urlsss = \WPAdminify\Inc\Admin\AdminSettings::support_url();
+			// }
 			add_submenu_page(
 				'wp-adminify-settings',       // Ex. wp-adminify-settings
 				__('Get Support', 'adminify'),
@@ -229,10 +216,27 @@ if (!class_exists('Admin')) {
 				'manage_options',
 				$support_url,
 				function() {
-					wp_redirect(\WPAdminify\Inc\Admin\AdminSettings::support_url(), 301, 'adminify'); exit;
+					wp_safe_redirect(\WPAdminify\Inc\Admin\AdminSettings::support_url(), 301, 'adminify'); exit;
 				}, // Redirect to external URL
 				60
 			);
 		}
+
+
+		public function submenu_link_new_tab()
+		{
+			add_action('admin_footer', function () {
+?>
+				<script type="text/javascript">
+					jQuery(document).ready(function($) {
+						// Replace 'your-parent-menu-slug' and 'your-submenu-slug' with actual menu slugs
+						// $('a.toplevel_page_wp-adminify-settings a[href="admin.php?page=adminify-support"]').attr('target', '_blank');
+						$('a[href="admin.php?page=adminify-support"]').attr('target', '_blank');
+					});
+				</script>
+<?php
+			});
+		}
+
 	}
 }

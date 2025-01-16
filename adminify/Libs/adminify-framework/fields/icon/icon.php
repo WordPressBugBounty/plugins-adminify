@@ -17,8 +17,8 @@ if ( ! class_exists( 'ADMINIFY_Field_icon' ) ) {
     public function render() {
 
       $args = wp_parse_args( $this->field, array(
-        'button_title' => esc_html__( 'Add Icon', 'adminify' ),
-        'remove_title' => esc_html__( 'Remove Icon', 'adminify' ),
+        'button_title' => esc_html__( 'Add', 'adminify' ),
+        'remove_title' => esc_html__( 'Remove', 'adminify' ),
       ) );
 
       echo $this->field_before();

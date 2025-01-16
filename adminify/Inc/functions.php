@@ -106,12 +106,11 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
         if (is_array($menu_options)) {
             if (isset($menu_options[$item[2]])) {
                 $optiongroup = $menu_options[$item[2]];
-
                 if (!empty($optiongroup['hidden_for'])) {
 
                     $disabled_for = jltwp_adminify_menu_roles($optiongroup['hidden_for']);
 
-                    if (\WPAdminify\Inc\Utils::restricted_for($disabled_for)) {
+                    if (\WPAdminify\Inc\Utils::restrict_for($disabled_for)) {
                         continue;
                     }
                 }

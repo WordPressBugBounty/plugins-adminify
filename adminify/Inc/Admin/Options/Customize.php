@@ -273,7 +273,7 @@ if ( ! class_exists( 'Customize' ) ) {
 				'font_size' 	 => false,
 				'color' 	 	 => false,
 				'default'        => $this->get_default_field('admin_general_google_font'),
-				'dependency' 	 => ['admin_ui', '==', 'true'],
+				// 'dependency' 	 => ['admin_ui', '==', 'true'],
 			];
 
 			$fields[] = [
