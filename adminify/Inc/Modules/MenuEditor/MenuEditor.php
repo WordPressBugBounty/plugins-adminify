@@ -719,7 +719,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
             $all_roles = wp_roles()->get_names();
             $disabled_for_arr = [];
             foreach ( $disabled_for as $v ) {
-                $disabled_for_arr[] = strtolower( $v );
+                $disabled_for_arr[] = jlt_adminify_sluggify_with_underscores( $v );
             }
             // Check Username
             if ( in_array( $current_user->data->user_login, $disabled_for_arr ) ) {

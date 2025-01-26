@@ -1384,6 +1384,16 @@ body.wp-adminify {
   padding: 16px;
 }
 
+.wp-adminify #adminmenu div.wp-menu-image img {
+  max-width: 100%;
+}
+
+#adminmenu div.wp-menu-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .wp-adminify.multisite #adminmenu div.wp-menu-image img, .wp-adminify.network-admin #adminmenu div.wp-menu-image img {
   width: 18px;
   height: 18px;

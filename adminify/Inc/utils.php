@@ -78,7 +78,6 @@ class Utils
 			return true;
 		}
 		
-		// pretty_log('in_array(Super Admin, $restrict_for) || in_array(administrator, $restrict_for)', in_array('Super Admin', $restrict_for) || in_array('administrator', $restrict_for));
 		// if (in_array('Super Admin', $restrict_for) || in_array('administrator', $restrict_for)) {
 		// 	return true;
 		// }

@@ -139,14 +139,14 @@ if (!class_exists('Admin')) {
                     'url' => '*',
                     'query_params' => ['page' => 'sby-feed-builder']
                 ],
-                [
-                    'url' => '/wp-admin/post-new.php',
-                    'post_type' => ['post', 'page']
-                ],
-                [
-                    'url' => '/wp-admin/post.php',
-                    'post_type' => ['post', 'page']
-                ]
+                // [
+                //     'url' => '/wp-admin/post-new.php',
+                //     'post_type' => ['post', 'page']
+                // ],
+                // [
+                //     'url' => '/wp-admin/post.php',
+                //     'post_type' => ['post', 'page']
+                // ]
             ];
 
             return apply_filters( 'adminify_frame_not_allowed_urls', $not_allowed_urls );
@@ -258,7 +258,7 @@ if (!class_exists('Admin')) {
             unset($admin_bar_data_nested['menu-toggle']);
             unset($admin_bar_data_nested['comments']);
 
-
+            $admin_bar_data_nested = jlt_adminify_replaceAmpersandInHref($admin_bar_data_nested);
             $outputter = function () use ($admin_bar_data_nested, $admin_bar_menu_data) {
                 $extra_data = [
                     'data'                => !empty($admin_bar_menu_data) ? $admin_bar_menu_data : array_values($admin_bar_data_nested),
@@ -275,7 +275,6 @@ if (!class_exists('Admin')) {
 
             add_action("admin_footer", $outputter, 0);
             add_action("wp_footer", $outputter, 0);
-
             return $admin_bar_data;
         }
 

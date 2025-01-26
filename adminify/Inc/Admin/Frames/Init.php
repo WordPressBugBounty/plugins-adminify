@@ -33,7 +33,8 @@ if (!class_exists('Init')) {
 
             if ( ! $this->is_allowed() ) {
                 if ( is_iframe() ) {
-                    Frames::custom_plugin_change_reload();
+                    $actual_link = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                    Frames::custom_plugin_change_reload($actual_link);
                 }
                 return;
             }
@@ -51,7 +52,6 @@ if (!class_exists('Init')) {
             $not_allowed_urls = Admin::get_not_allowed_urls();
 
             foreach ( $not_allowed_urls as $url_object ) {
-
                 if ( is_string( $url_object ) ) {
 
                     $is_allowed = true; // Scoped Default allowed
@@ -62,7 +62,6 @@ if (!class_exists('Init')) {
                     $is_allowed = false; // Scoped Default not allowed
 
                     if ( $url_object['url'] !== '*' && $url_object['url'] !== $_SERVER['PHP_SELF'] ) $is_allowed = true; // allowed
-
                     if ( ! $is_allowed && array_key_exists( 'query_params', $url_object ) ) {
                         if ( ! $this->check_query_params( $url_object['query_params'] ) ) $is_allowed = true; // allowed
                     }
@@ -82,11 +81,19 @@ if (!class_exists('Init')) {
         }
 
         function check_query_params($query_params) {
+            // Pattern 1: Both keys and their values should check in $_GET
+            if (array_keys($query_params) === $query_params) {
+                foreach ($query_params as $key => $value) {
+                    if (!isset($_GET[$key]) || $_GET[$key] != $value) {
+                        return false; // Key doesn't exist or the value doesn't match
+                    }
+                }
+                return true; // All keys and values match
+            }
 
-            // Pattern 1: Check for only keys in $_GET, no need to check their values
+            // Pattern 2: Check for only keys in $_GET, no need to check their values
             if (array_values($query_params) === $query_params) {
                 foreach ($query_params as $param) {
-
                     if ( substr($param, -1) === '!' ) {
                         $param = substr($param, 0, -1);
                         if ( isset($_GET[$param]) ) return false; // The key exists in $_GET
@@ -96,16 +103,6 @@ if (!class_exists('Init')) {
 
                 }
                 return true; // All keys exist
-            }
-
-            // Pattern 2: Both keys and their values should check in $_GET
-            if (array_keys($query_params) === $query_params) {
-                foreach ($query_params as $key => $value) {
-                    if (!isset($_GET[$key]) || $_GET[$key] != $value) {
-                        return false; // Key doesn't exist or the value doesn't match
-                    }
-                }
-                return true; // All keys and values match
             }
 
             // Pattern 3: A mix of key existence and key-value matching

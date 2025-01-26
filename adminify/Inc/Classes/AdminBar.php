@@ -233,10 +233,10 @@ class AdminBar extends AdminSettingsModel {
             return;
         }
         // Commented on: 9-6-24
-        // if (!empty($this->adminify_ui)) {
-        // 	wp_enqueue_style('wp-adminify-admin-bar');
-        // 	$this->admin_topbar_loader_css();
-        // }
+        if ( !empty( $this->adminify_ui ) ) {
+            wp_enqueue_style( 'wp-adminify-admin-bar' );
+            $this->admin_topbar_loader_css();
+        }
         wp_localize_script( 'wp-adminify-admin', 'WPAdminify', $this->adminify_create_admin_bar_js_object() );
     }
 

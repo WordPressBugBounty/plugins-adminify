@@ -97,10 +97,18 @@ function jltwp_adminify_menu_roles($user_roles = [])
 }
 
 
+/**
+ * Build admin menu array.
+ *
+ * @param array $menu Menu array.
+ * @param array $submenu Submenu array.
+ * @param array $menu_options Menu options array.
+ *
+ * @return array Admin menu array.
+ */
+
 function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
-
     $admin_menu = [];
-
     foreach ($menu as $key => $item) {
 
         if (is_array($menu_options)) {
@@ -132,7 +140,7 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
         }
 
         $url = '';
-
+        
         $arrParsedUrl = parse_url($menu_slug);
         if (!empty($arrParsedUrl['scheme'])) {
             if ($arrParsedUrl['scheme'] === "http" || $arrParsedUrl['scheme'] === "https") {
@@ -199,5 +207,34 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
             }
         }
     }
+    $admin_menu = jlt_adminify_replaceAmpersandInHref($admin_menu, 'url');
     return $admin_menu;
+}
+
+/**
+* Recursively replace all occurrences of &amp; with & in an array.
+*
+* @see https://wordpress.org/support/topic/automatically-adding-amp-in-url/ 
+* @param array $array The input array to process.
+* @return array The updated array with replacements.
+*/
+function jlt_adminify_replaceAmpersandInHref($array, $indicator='href') {
+
+    foreach ($array as $key => $value) {
+        if (is_array($value)) {
+            // Recursively process child arrays
+            $array[$key] = jlt_adminify_replaceAmpersandInHref($value, $indicator);
+        } elseif ($key === $indicator && is_string($value)) {
+            // Replace &amp; with & in $indicator keys
+            $array[$key] = str_replace('&amp;', '&', $value);
+        }
+    }
+    return $array;
+}
+
+function jlt_adminify_sluggify_with_underscores($string) {
+    $slug = sanitize_title($string);
+    $slug = str_replace('-', '_', $slug);
+    
+    return $slug;
 }

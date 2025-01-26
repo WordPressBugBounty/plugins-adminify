@@ -1,4 +1,12 @@
 == Changelog ==
+= 4.0.3.1 (26-01-2025) =
+* Fixed: WP Adminify admin panel admin bar adding &amp; on url dynamically. Thanks to @mahuabd, Support URL: https://wordpress.org/support/topic/automatically-adding-amp-in-url/
+* Fixed: WP Adminify admin panel admin bar missing other plugins icon
+* Feature: Added preloader for admin panel
+* Feature: Added Adminify UI for Guttenberg editor.
+* Fixed: WP Adminify admin menu custom url and admin page url swicthing issue.
+* Fixed: Admin menu custom menu icon support for Simple Line Icon and FontAwesome Icon.
+
 = 4.0.3.0 (16-01-2025) =
 * Fixed: Adminify admin menu editor's option hidden for was not working for all roles and users
 * Updated: Body Font dependency with Adminify UI removed, it will work Default UI as well.

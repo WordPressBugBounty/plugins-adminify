@@ -34,12 +34,18 @@ if (!class_exists('Frames')) {
             }
         }
 
-        static function custom_plugin_change_reload() {
-            ?>
-            <script type="text/javascript">
-                parent.location.reload();
-            </script>
-            <?php
+        static function custom_plugin_change_reload($actual_link = null) {
+            if (!is_null($actual_link)) {
+                echo "<script type='text/javascript'>
+                console.log(window.location.href);
+                    parent.location.replace('$actual_link');
+                </script>";
+                return; 
+            }else{
+                echo '<script type="text/javascript">
+                    parent.location.reload();
+                </script>';
+            }
         }
 
         public function load_scripts()
