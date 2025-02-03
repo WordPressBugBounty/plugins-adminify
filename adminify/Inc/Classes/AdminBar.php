@@ -20,7 +20,9 @@ class AdminBar extends AdminSettingsModel {
     public function __construct() {
         $this->options = (array) AdminSettings::get_instance()->get();
         $this->adminify_ui = $this->options['admin_ui'];
-        if ( !empty( $this->options['light_dark_mode']['admin_ui_mode'] ) && $this->options['light_dark_mode']['admin_ui_mode'] === 'dark' ) {
+        $global_ui_mode = ( empty( $this->options['light_dark_mode']['admin_ui_mode'] ) ? 'light' : $this->options['light_dark_mode']['admin_ui_mode'] );
+        $current_ui_mode = ( empty( get_user_meta( get_current_user_id(), 'color_mode', true ) ) ? $global_ui_mode : get_user_meta( get_current_user_id(), 'color_mode', true ) );
+        if ( $current_ui_mode === 'dark' ) {
             new DarkModeConflicts();
         }
         // $admin_bar_user_roles = !empty($this->options['admin_bar_user_roles']) ? $this->options['admin_bar_user_roles'] : '';
@@ -63,7 +65,8 @@ class AdminBar extends AdminSettingsModel {
     }
 
     public function jltwp_adminify_dark_mode_switcher_dom() {
-        $color_mode = ( !empty( $this->options['light_dark_mode']['admin_ui_mode'] ) ? $this->options['light_dark_mode']['admin_ui_mode'] : 'light' );
+        $global_color_mode = ( !empty( $this->options['light_dark_mode']['admin_ui_mode'] ) ? $this->options['light_dark_mode']['admin_ui_mode'] : 'light' );
+        $color_mode = ( empty( get_user_meta( get_current_user_id(), 'color_mode', true ) ) ? $global_color_mode : get_user_meta( get_current_user_id(), 'color_mode', true ) );
         $color_var = ( !empty( $this->adminify_ui ) ? 'var(--adminify-menu-text-color)' : '#fff' );
         $adminbar_switcher_icon = '<div id="wp-adminify-color-mode-wrapper">
 			<div class="mode-icon adminify-color-mode-' . esc_attr( $color_mode ) . '-active">
@@ -258,23 +261,23 @@ class AdminBar extends AdminSettingsModel {
         $topbar_wireframe_img = WP_ADMINIFY_ASSETS_IMAGE . 'topbar-wireframe.svg';
         $output_css .= '.js .wp-adminify-topbar-loader{background: url(' . esc_url( $topbar_wireframe_img ) . '); }';
         echo '<style>' . wp_strip_all_tags( $output_css ) . '</style>';
-        ?>
+        $screen = get_current_screen();
+        // Get current screen details
+        if ( isset( $screen->base ) && $screen->base === 'post' ) {
+            ?>
+        <script>
+            window.addEventListener('load', function() {
+                const isFullscreenMode = wp.data.select('core/edit-post').isFeatureActive('fullscreenMode');
 
-		<script>
-			window.addEventListener('load', function() {
-				const isFullscreenMode = wp.data.select('core/edit-post').isFeatureActive('fullscreenMode');
-
-				if (isFullscreenMode) {
-					// wp.data.dispatch('core/edit-post').toggleFeature('fullscreenMode');
-					console.log('yes its it');
-					jQuery('.adminify-top_bar').css({
-						'display': 'none !important'
-					});
-				}
-			});
-		</script>
-
-		<?php 
+                if (isFullscreenMode) {
+                    jQuery('.adminify-top_bar').css({
+                        'display': 'none !important'
+                    });
+                }
+            });
+        </script>
+        <?php 
+        }
     }
 
     /**
@@ -296,6 +299,13 @@ class AdminBar extends AdminSettingsModel {
             }
             // Light/Dark Mode
             if ( $key === 'color_mode' ) {
+                // For User preference
+                $userid = get_current_user_id();
+                $current = get_user_meta( $userid, $key, true );
+                if ( $current !== $value ) {
+                    $state = update_user_meta( $userid, $key, $value );
+                }
+                die;
                 $admin_bar_mode['light_dark_mode']['admin_ui_mode'] = $value;
                 $this->options['schedule_dark_mode']['enable_schedule_dark_mode'] = false;
                 if ( $value == 'system' ) {

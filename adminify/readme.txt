@@ -4,7 +4,7 @@ Tags: Custom Dashboard, White Label WordPress,  Media Folders, Admin Columns, Lo
 Requires at least: 4.0
 Tested up to: 6.7.1
 Requires PHP: 5.3
-Stable tag: 4.0.3.1
+Stable tag: 4.0.3.2
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -128,7 +128,7 @@ WP Adminify Pro is a premium custom dashboard plugin that offers advanced featur
 * **Control Heartbeat API:** Optimize website performance by adjusting the frequency of the heartbeat API or disabling it in specific areas.
 * **Control Revisions:** Prevent database bloat by limiting the number of post revisions saved.(Upcoming)
 
-[Live Demo](https://demo.wpadminify.com/) | [Docs](https://wpadminify.com/docs)  | [Request Feature](https://wpadminify.com/contact/) | [Upgrade Pro](https://wpadminify.com/pricing/)
+[Live Demo](https://demo.pixarlabs.com/?pl-product=adminify) | [Docs](https://wpadminify.com/docs)  | [Request Feature](https://wpadminify.com/contact/) | [Upgrade Pro](https://wpadminify.com/pricing/)
 
 ==WP Adminify V4.0 Addons
 
@@ -198,7 +198,6 @@ If you like our WP Adminify plugin then why not check some other plugins that de
 
 🍡 [Master Accordion:](https://wordpress.org/plugins/wp-awesome-faq/) - If you are a default WordPress user and need a proper accordion plugin then Master Accordion is for you. You can add as much accordion as you need in multiple way.
 
-🏕 [WordPress prettyPhoto:](https://wordpress.org/plugins/prettyphoto/) - This plugin helps you to enable lightbox for your any media file, flash, YouTube, iframes, and ajax. Just enable PreetyPhoto in your desired media file and you are done.
 
 == Frequently Asked Questions ==
 
@@ -218,7 +217,7 @@ Yes. You can access most of the white label features for free.
 No. As it will not load any extra script in your front end, your page speed will not affect by this plugin.
 
 = Is there any way to test Premium Features without Purchasing WP Adminify?
-Yes, you can try our [WP Adminify live demo](https://demo.wpadminify.com/) to play with all features.
+Yes, you can try our [WP Adminify live demo](https://demo.pixarlabs.com/?pl-product=adminify) to play with all features.
 
 = How can I get faster Support? =
 To get faster support, we recommend you to create a support topic in our [WP Adminify Forum](https://wpadminify.com/contact). Our support team will check your question and get back to you with a solution or alternative.

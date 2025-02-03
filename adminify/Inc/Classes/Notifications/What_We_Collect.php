@@ -1,16 +1,18 @@
 <?php
+
 namespace WPAdminify\Inc\Classes\Notifications;
 
 use WPAdminify\Inc\Classes\Notifications\Base\User_Data;
 use WPAdminify\Inc\Classes\Notifications\Model\Notice;
 
-if ( ! class_exists( 'What_We_Collect' ) ) {
+if (! class_exists('What_We_Collect')) {
 	/**
 	 * Class for what we collect
 	 *
 	 * Jewel Theme <support@jeweltheme.com>
 	 */
-	class What_We_Collect extends Notice {
+	class What_We_Collect extends Notice
+	{
 
 
 		use User_Data;
@@ -22,9 +24,10 @@ if ( ! class_exists( 'What_We_Collect' ) ) {
 		 *
 		 * @author Jewel Theme <support@jeweltheme.com>
 		 */
-		public function __construct() {
+		public function __construct()
+		{
 			parent::__construct();
-			add_action( 'wp_ajax_jltwp_adminify_allow_collect', array( $this, 'jltwp_adminify_allow_collect' ) );
+			add_action('wp_ajax_jltwp_adminify_allow_collect', array($this, 'jltwp_adminify_allow_collect'));
 		}
 
 		/**
@@ -32,25 +35,28 @@ if ( ! class_exists( 'What_We_Collect' ) ) {
 		 *
 		 * @author Jewel Theme <support@jeweltheme.com>
 		 */
-		public function jltwp_adminify_allow_collect() {
-			check_ajax_referer( 'jltwp_adminify_allow_collect_nonce' );
+		public function jltwp_adminify_allow_collect()
+		{
+			check_ajax_referer('jltwp_adminify_allow_collect_nonce');
 
-			$email = get_bloginfo( 'admin_email' );
+			$email = get_bloginfo('admin_email');
 
-			$author_obj = get_user_by( 'email', $email );
+			$author_obj = get_user_by('email', $email);
 			$user_id    = $author_obj->ID;
 			$full_name  = $author_obj->display_name;
 
-			$response = $this->get_collect_data( $user_id, array(
+			$response = $this->get_collect_data($user_id, array(
 				'first_name'              => $full_name,
 				'email'                   => '$email',
-			) );
+			));
 
-			if ( ! is_wp_error( $response ) && 200 === $response['response']['code'] && 'OK' === $response['response']['message'] ) {
-				wp_send_json_success( 'Thanks for Allow!' );
-			} else {
-				wp_send_json_error( "Couldn't Collect" );
-			}
+			return $response;
+
+			// if (! is_wp_error($response) && 200 === $response['response']['code'] && 'OK' === $response['response']['message']) {
+			// 	wp_send_json_success('Thanks for Allow!');
+			// } else {
+			// 	wp_send_json_error("Couldn't Collect");
+			// }
 		}
 
 		/**
@@ -58,10 +64,11 @@ if ( ! class_exists( 'What_We_Collect' ) ) {
 		 *
 		 * @author Jewel Theme <support@jeweltheme.com>
 		 */
-		public function set_title() {
+		public function set_title()
+		{
 			printf(
 				'<h4>Wanna get some discount for %1$s? No Worries!! We got you!! give us your email we will send you the discount code?</h4>',
-				esc_html__( 'WP Adminify', 'adminify' )
+				esc_html__('WP Adminify', 'adminify')
 			);
 		}
 
@@ -70,8 +77,9 @@ if ( ! class_exists( 'What_We_Collect' ) ) {
 		 *
 		 * @author Jewel Theme <support@jeweltheme.com>
 		 */
-		public function what_we_collect_link() {
-			echo '<a href="!#" class="wp-adminify-wwc-link">' . esc_html__( 'what we collect', 'adminify' ) . '</a>';
+		public function what_we_collect_link()
+		{
+			echo '<a href="!#" class="wp-adminify-wwc-link">' . esc_html__('what we collect', 'adminify') . '</a>';
 		}
 
 		/**
@@ -79,25 +87,26 @@ if ( ! class_exists( 'What_We_Collect' ) ) {
 		 *
 		 * @author Jewel Theme <support@jeweltheme.com>
 		 */
-		public function notice_content() { ?>
+		public function notice_content()
+		{ ?>
 			<div class="wp-adminify-notice-review-box wp-adminify-wwc">
 				<p>
-				<?php
-				echo sprintf(
-					__( 'Want to help make <strong>%1$s</strong> even more awesome? Allow %1$s to collect non-sensitive diagnostic data and usage information.', 'adminify' ),
-					__( 'WP Adminify', 'adminify' )
-				);
-				?>
-				 (<?php $this->what_we_collect_link(); ?>)</p>
+					<?php
+					echo sprintf(
+						__('Want to help make <strong>%1$s</strong> even more awesome? Allow %1$s to collect non-sensitive diagnostic data and usage information.', 'adminify'),
+						__('WP Adminify', 'adminify')
+					);
+					?>
+					(<?php $this->what_we_collect_link(); ?>)</p>
 				<div class="wp-adminify-wwc-content" style="display:none">
-				<?php echo sprintf(
-					__( 'Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Local or Production Site, IP Address, Site name and url, Your name and email address etc. No sensitive data is tracked. Learn more about our <a href="%1$s" target="_blank">Privacy Policy</a>, how we handle and collects your data.', 'adminify' ),
-					esc_url( 'https://wpadminify.com/privacy-policy' )
-				); ?>
+					<?php echo sprintf(
+						__('Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Local or Production Site, IP Address, Site name and url, Your name and email address etc. No sensitive data is tracked. Learn more about our <a href="%1$s" target="_blank">Privacy Policy</a>, how we handle and collects your data.', 'adminify'),
+						esc_url('https://wpadminify.com/privacy-policy')
+					); ?>
 				</div>
 			</div>
 
-			<?php
+		<?php
 		}
 
 		/**
@@ -105,7 +114,8 @@ if ( ! class_exists( 'What_We_Collect' ) ) {
 		 *
 		 * @author Jewel Theme <support@jeweltheme.com>
 		 */
-		public function plugin_rate_url() {
+		public function plugin_rate_url()
+		{
 			return '#';
 		}
 
@@ -114,15 +124,16 @@ if ( ! class_exists( 'What_We_Collect' ) ) {
 		 *
 		 * @author Jewel Theme <support@jeweltheme.com>
 		 */
-		public function footer_content() {
-			?>
-			<a class="button button-primary allow-button" href="<?php echo esc_url( $this->plugin_rate_url() ); ?>" rel="nofollow" target="_blank">
-				<?php echo esc_html__( 'Allow', 'adminify' ); ?>
+		public function footer_content()
+		{
+		?>
+			<a class="button button-primary allow-button" href="<?php echo esc_url($this->plugin_rate_url()); ?>" rel="nofollow" target="_blank">
+				<?php echo esc_html__('Allow', 'adminify'); ?>
 			</a>
 			<a class="button button-secondary button-reject wp-adminify-notice-dismiss" href="#" rel="nofollow">
-				<?php echo esc_html__( 'No Thanks', 'adminify' ); ?>
+				<?php echo esc_html__('No Thanks', 'adminify'); ?>
 			</a>
-			<?php
+		<?php
 		}
 
 		/**
@@ -130,8 +141,9 @@ if ( ! class_exists( 'What_We_Collect' ) ) {
 		 *
 		 * @author Jewel Theme <support@jeweltheme.com>
 		 */
-		public function intervals() {
-			return array( 0, 7, 10, 15, 20, 15, 25, 30 );
+		public function intervals()
+		{
+			return array(0, 7, 10, 15, 20, 15, 25, 30);
 		}
 
 		/**
@@ -140,9 +152,10 @@ if ( ! class_exists( 'What_We_Collect' ) ) {
 		 * @param [type] $trigger_time .
 		 * @author Jewel Theme <support@jeweltheme.com>
 		 */
-		public function core_script( $trigger_time ) {
-			parent::core_script( $trigger_time );
-			?>
+		public function core_script($trigger_time)
+		{
+			parent::core_script($trigger_time);
+		?>
 
 			<script>
 				jQuery('body').on('click', '.wp-adminify-notice-what_we_collect .wp-adminify-wwc-link', function(e) {
@@ -156,7 +169,7 @@ if ( ! class_exists( 'What_We_Collect' ) ) {
 					}
 				});
 
-				jQuery('body').on('click', '.wp-adminify-notice-what_we_collect .allow-button', function(e) {
+				jQuery('body').on('click', '.wp-adminify-notice-what_we_collect .allow-button, .wp-adminify-notice-what_we_collect .wp-adminify-notice-dismiss', function(e) {
 
 					e.preventDefault();
 
@@ -165,12 +178,12 @@ if ( ! class_exists( 'What_We_Collect' ) ) {
 					noticeWrapper.css('opacity', '0.4').find('button').prop('disabled', true);
 
 					jQuery.ajax({
-							url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
+							url: '<?php echo esc_url(admin_url('admin-ajax.php')); ?>',
 							method: 'POST',
 							crossDomain: true,
 							data: {
 								action: 'jltwp_adminify_allow_collect',
-								_wpnonce: '<?php echo esc_js( wp_create_nonce( 'jltwp_adminify_allow_collect_nonce' ) ); ?>',
+								_wpnonce: '<?php echo esc_js(wp_create_nonce('jltwp_adminify_allow_collect_nonce')); ?>',
 							}
 						})
 						.done(function(response) {
@@ -187,7 +200,7 @@ if ( ! class_exists( 'What_We_Collect' ) ) {
 				});
 			</script>
 
-			<?php
+<?php
 		}
 	}
 }

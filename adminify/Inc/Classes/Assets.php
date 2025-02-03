@@ -23,7 +23,8 @@ class Assets extends AdminSettingsModel
 	public function __construct()
 	{
 		$this->options = (array) AdminSettings::get_instance()->get();
-		$this->dark_mode = !empty($this->options['light_dark_mode']['admin_ui_mode']) ? $this->options['light_dark_mode']['admin_ui_mode'] : 'light';
+		$global_dark_mode = !empty($this->options['light_dark_mode']['admin_ui_mode']) ? $this->options['light_dark_mode']['admin_ui_mode'] : 'light';
+		$this->dark_mode = empty(get_user_meta(get_current_user_id(), 'color_mode', true)) ? $global_dark_mode : get_user_meta(get_current_user_id(), 'color_mode', true);
 		add_action('admin_enqueue_scripts', array($this, 'jltwp_adminify_admin_scripts'), 100);
 		add_action('wp_ajax_jltwp_adminify_addons_install_active', 'jltwp_adminify_addons_install_active');
 
@@ -126,7 +127,6 @@ class Assets extends AdminSettingsModel
 
 	public function header_scripts()
 	{
-
 		if (!empty($this->dark_mode) && $this->dark_mode == 'dark') { ?>
 
 			<script>
@@ -193,7 +193,7 @@ class Assets extends AdminSettingsModel
 		// Register Styles
 		wp_register_style('wp-adminify-admin', WP_ADMINIFY_ASSETS . 'css/wp-adminify' . Utils::assets_ext('.css'), false, WP_ADMINIFY_VER);
 		wp_register_style('wp-adminify-default-ui', WP_ADMINIFY_ASSETS . 'css/wp-adminify-default-ui' . Utils::assets_ext('.css'), false, WP_ADMINIFY_VER);
-		wp_register_style('wp-adminify-admin-bar', WP_ADMINIFY_ASSETS . 'css/admin-bar' . Utils::assets_ext('.css'), false, WP_ADMINIFY_VER);
+		// wp_register_style('wp-adminify-admin-bar', WP_ADMINIFY_ASSETS . 'css/admin-bar' . Utils::assets_ext('.css'), false, WP_ADMINIFY_VER);
 		wp_register_style('wp-adminify-menu-editor', WP_ADMINIFY_ASSETS . 'css/adminify-menu-editor' . Utils::assets_ext('.css'), false, WP_ADMINIFY_VER);
 		// wp_register_style('wp-adminify-dark-mode', WP_ADMINIFY_ASSETS . 'css/dark-mode' . Utils::assets_ext('.css'), false, WP_ADMINIFY_VER);
 		// wp_register_style('wp-adminify-rtl', WP_ADMINIFY_ASSETS . 'css/adminify-rtl' . Utils::assets_ext('.css'), false, WP_ADMINIFY_VER);
@@ -267,6 +267,7 @@ class Assets extends AdminSettingsModel
 				wp_enqueue_style('adminify-fa5-v4-shims', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/v4-shims' . Utils::assets_ext('.css'), array(), '5.15.5', 'all');
 			}
 		}
+		wp_enqueue_style('wp-adminify-simple-line-icons');
 
 		// Load Scripts/Styles only WP Adminify Admin Page
 		if ($screen->id === 'toplevel_page_wp-adminify-settings') {

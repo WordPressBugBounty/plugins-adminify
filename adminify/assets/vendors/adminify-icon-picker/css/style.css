@@ -37,6 +37,7 @@
 }
 .wp-adminify .icon-picker-wrap ul li.select-icon.custom-icon i {
   line-height: 0;
+  min-width: 38px;
 }
 .wp-adminify .icon-picker-wrap ul li.select-icon.custom-icon img {
   max-width: 38px;
@@ -418,16 +419,22 @@
 }
 
 .wp-adminify .aim-modal--icon-preview-wrap #display-custom-icons ul li.selected::after {
-  content: "";
+  font-family: "Dashicons";
+  content: "\f147";
   position: absolute;
   right: -3px;
   top: -2px;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   background-color: var(--adminify-primary);
   background-repeat: no-repeat;
-  background-position: -18px 2px;
   border-radius: 4px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .wp-adminify .aim-modal--icon-preview-wrap #display-custom-icons ul li img {

@@ -1,4 +1,13 @@
 == Changelog ==
+= 4.0.3.2 (02-02-2025) =
+* Fixed: "What we Collect" Admin Notice not closing issue fixed
+* Fixed: "Ask for Rating" Admin Notice not closing issue fixed
+* Removed: Admin Bar CSS loading from WP Adminify removed
+* Feature: Admin panel color mode now under user preference. Thanks to @kingsleychimezie, Support URL:https://wordpress.org/support/topic/light-dark-mode-not-setting-to-specify-users/
+* Fixed: Frontend css broken issue until activate gutenberg style from setting issue, Thanks to @peopleinside, Support URL:https://wordpress.org/support/topic/broke-front-end-website/ 
+* Feature: Added Basic support for "Advanced Access Manager" plugins access restriction over backend menu, Thanks to @peopleinside, Support URL:https://wordpress.org/support/topic/hide-admin-menu-item-for-rules-never-work-as-expected/
+* Fixed: Wrong url for for home while homeurl is different with siteurl
+
 = 4.0.3.1 (26-01-2025) =
 * Fixed: WP Adminify admin panel admin bar adding &amp; on url dynamically. Thanks to @mahuabd, Support URL: https://wordpress.org/support/topic/automatically-adding-amp-in-url/
 * Fixed: WP Adminify admin panel admin bar missing other plugins icon

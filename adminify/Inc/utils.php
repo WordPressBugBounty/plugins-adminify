@@ -163,6 +163,7 @@ class Utils
 		if (!function_exists('wp_get_current_user')) {
 			return false;
 		}
+		
 		$current_user  = wp_get_current_user();
 		$current_name  = $current_user->display_name;
 		$current_roles = $current_user->roles;

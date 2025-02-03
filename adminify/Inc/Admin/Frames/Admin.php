@@ -191,11 +191,39 @@ if (!class_exists('Admin')) {
             $outputter = function () use ($menu) {
 
                 $current_user        = wp_get_current_user();
-
+                $light_dark_mode = $this->options['light_dark_mode'];
+                if( !isset($light_dark_mode['admin_ui_mode']) ) {
+                    $default_light_dark_mode = [
+                        'admin_ui_mode' => 'light',
+                        'admin_ui_logo_type' => 'image_logo',
+                        'admin_ui_light_mode' => [
+                            'admin_ui_light_logo_text' => 'WP Adminify',
+                            'admin_ui_light_logo_text_typo' => array_fill_keys(
+                                ['font-family', 'font-weight', 'font-style', 'font-size', 'letter-spacing', 'color', 'type', 'unit'], ''
+                            ) + ['unit' => 'px'],
+                            'admin_ui_light_logo' => array_fill_keys(['url', 'id', 'width', 'height', 'thumbnail', 'alt', 'title', 'description'], ''),
+                            'light_logo_size' => ['width' => 120, 'height' => 32, 'unit' => 'px'],
+                            'mini_admin_ui_light_logo' => array_fill_keys(['url', 'id', 'width', 'height', 'thumbnail', 'alt', 'title', 'description'], ''),
+                        ],
+                        'admin_ui_dark_mode' => [
+                            'admin_ui_dark_logo_text' => 'WP Adminify',
+                            'admin_ui_dark_logo_text_typo' => array_fill_keys(
+                                ['font-family', 'font-weight', 'font-style', 'font-size', 'letter-spacing', 'color', 'type', 'unit'], ''
+                            ) + ['unit' => 'px'],
+                            'admin_ui_dark_logo' => array_fill_keys(['url', 'id', 'width', 'height', 'thumbnail', 'alt', 'title', 'description'], ''),
+                            'dark_logo_size' => ['width' => 150, 'height' => 45, 'unit' => 'px'],
+                            'mini_admin_ui_dark_logo' => array_fill_keys(['url', 'id', 'width', 'height', 'thumbnail', 'alt', 'title', 'description'], ''),
+                            'schedule_dark_mode' => array_fill_keys(['enable_schedule_dark_mode', 'schedule_dark_mode_type', 'schedule_dark_mode_start_time', 'schedule_dark_mode_end_time'], ''),
+                        ],
+                    ];
+                    $light_dark_mode = array_merge($default_light_dark_mode, $light_dark_mode);
+                }else{
+                    $light_dark_mode['admin_ui_mode'] = empty(get_user_meta(get_current_user_id(), 'color_mode', true)) ? $light_dark_mode['admin_ui_mode'] : get_user_meta(get_current_user_id(), 'color_mode', true);
+                }
                 $menu_settings = [
                     'menu'                     => $menu,
                     'admin_bar_dark_light_btn' => $this->options['admin_bar_dark_light_btn'],
-                    'light_dark_mode'          => $this->options['light_dark_mode'],
+                    'light_dark_mode'          => $light_dark_mode ,
                     'menu_layout_settings'     => $this->options['menu_layout_settings'],
                     'user_info' => [
                         'img'          => get_avatar($current_user->user_email, 72, '', ''),
@@ -263,7 +291,8 @@ if (!class_exists('Admin')) {
                 $extra_data = [
                     'data'                => !empty($admin_bar_menu_data) ? $admin_bar_menu_data : array_values($admin_bar_data_nested),
                     'logout_url'          => wp_logout_url(home_url('/')),
-                    'site_url'            => site_url(),
+                    // 'site_url'            => site_url('/'),
+                    'site_url'            => home_url(),
                     'admin_url'           => admin_url(),
                     'search'              => $this->options['admin_bar_search'],
                     'notification'        => $this->options['admin_bar_notif'],

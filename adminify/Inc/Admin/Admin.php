@@ -76,10 +76,8 @@ if (!class_exists('Admin')) {
 				add_action('wp_enqueue_scripts', [$this, 'remove_backend_gutenberg_scripts'], 20);
 			}
 
-
-
 			// Remove all scripts and styles added by Gutenberg
-			if (!in_array('remove_gutenberg_scripts', $this->options["disable_gutenberg"]['disable_for'])) {
+			if (isset($this->options["disable_gutenberg"]['disable_gutenberg_enable']) && $this->options["disable_gutenberg"]['disable_gutenberg_enable'] && in_array('remove_gutenberg_scripts', $this->options["disable_gutenberg"]['disable_for'])) {
 				add_action('wp_enqueue_scripts', [$this, 'remove_gutenberg_scripts']);
 				remove_action('enqueue_block_assets', 'wp_enqueue_registered_block_scripts_and_styles');
 			}

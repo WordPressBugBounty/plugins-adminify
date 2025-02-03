@@ -238,7 +238,8 @@ if ( !class_exists( 'AdminSettings' ) ) {
             }
             $submenu_position = apply_filters( 'jltwp_adminify_submenu_position', 30 );
             $saved_data = get_option( $this->prefix );
-            $admin_ui_mode = ( empty( $saved_data['light_dark_mode']['admin_ui_mode'] ) ? 'light' : sanitize_text_field( $saved_data['light_dark_mode']['admin_ui_mode'] ) );
+            $global_admin_ui_mode = ( empty( $saved_data['light_dark_mode']['admin_ui_mode'] ) ? 'light' : sanitize_text_field( $saved_data['light_dark_mode']['admin_ui_mode'] ) );
+            $admin_ui_mode = ( empty( get_user_meta( get_current_user_id(), 'color_mode', true ) ) ? $global_admin_ui_mode : get_user_meta( get_current_user_id(), 'color_mode', true ) );
             $light_logo_image_url = WP_ADMINIFY_ASSETS_IMAGE . 'logos/logo-text-light.svg';
             $dark_logo_image_url = WP_ADMINIFY_ASSETS_IMAGE . 'logos/logo-text-dark.svg';
             $plugin_author_name = WP_ADMINIFY_AUTHOR;

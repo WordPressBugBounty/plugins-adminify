@@ -18,11 +18,6 @@ if ( ! class_exists( 'Module_Conflicts' ) ) {
         {
             // parent::__construct();
             add_action('admin_notices', [$this, 'maybe_show_folder_module_notice'], -9999999);
-
-            if(is_admin()){
-                add_action( 'admin_footer', array( $this, 'enqueue_conflict_plugin_admin_scripts' ),99999 );
-                add_action( 'wp_ajax_jltwp_adminify_module_conflicts', array( $this, 'jltwp_adminify_module_conflicts' ) );
-            }
         }
 
 
@@ -155,6 +150,12 @@ if ( ! class_exists( 'Module_Conflicts' ) ) {
                 <?php echo sprintf( wp_kses_post('<p>You are using <strong>%s</strong> plugin, which serve the same purpose as our folder module.</p><p>We have Disabled our <strong>Folder</strong> module, to avoid conflicts.</p>' ), esc_html($result['Name'])); ?>
             </div>
             <?php
+
+
+            if (is_admin()) {
+                add_action('admin_footer', array($this, 'enqueue_conflict_plugin_admin_scripts'), 99999);
+                add_action('wp_ajax_jltwp_adminify_module_conflicts', array($this, 'jltwp_adminify_module_conflicts'));
+            }
         }
 
         /**

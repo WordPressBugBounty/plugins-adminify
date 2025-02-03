@@ -63,6 +63,61 @@ class ThirdPartyCompatibility {
 			}
             </style>';
         }
+        if ( Utils::is_plugin_active( 'advanced-access-manager/aam.php' ) ) {
+            add_filter(
+                'jltwp_adminify_menu_option_compatibility_filter',
+                array($this, 'apply_menu_restrictions_via_filter'),
+                10,
+                2
+            );
+        }
+    }
+
+    public function apply_menu_restrictions_via_filter( $menu_options, $menu ) {
+        $aam_options = get_option( 'aam_access_settings', [] );
+        if ( is_array( $aam_options ) ) {
+            $simplified_aam_option = $this->simplify_aam_menu_restriction( $aam_options );
+            $menu_options = $this->update_aam_menu_option( $menu_options, $simplified_aam_option );
+        }
+        return $menu_options;
+    }
+
+    public function simplify_aam_menu_restriction( $aam_option ) {
+        $simplified_aam_option = [];
+        foreach ( $aam_option['role'] as $role => $aam_role ) {
+            if ( !empty( $aam_role['menu'] ) ) {
+                foreach ( $aam_role['menu'] as $menu_item => $value ) {
+                    if ( !$value ) {
+                        continue;
+                    }
+                    $menu_item = str_replace( 'menu-', '', $menu_item );
+                    if ( !isset( $simplified_aam_option[$menu_item] ) ) {
+                        $simplified_aam_option[$menu_item] = [];
+                    }
+                    $simplified_aam_option[$menu_item][] = $role;
+                }
+            }
+        }
+        return $simplified_aam_option;
+    }
+
+    public function update_aam_menu_option( $menu_options, $simplified_aam_option ) {
+        foreach ( $menu_options as $key => $item ) {
+            // If this menu item is in restricted list, update hidden_for
+            if ( isset( $simplified_aam_option[$key] ) ) {
+                if ( !isset( $item['hidden_for'] ) ) {
+                    $item['hidden_for'] = [];
+                }
+                $item['hidden_for'] = array_merge( $item['hidden_for'], $simplified_aam_option[$key] );
+                $item['hidden_for'] = array_unique( $item['hidden_for'] );
+            }
+            // If submenu exists, apply the function recursively
+            // if (isset($item['submenu']) && is_array($item['submenu'])) {
+            //     $item['submenu'] = update_aam_menu_option($item['submenu'], $simplified_aam_option);
+            // }
+            $menu_options[$key] = $item;
+        }
+        return $menu_options;
     }
 
     public function jltwp_adminify_reset_theme_conflicts() {
