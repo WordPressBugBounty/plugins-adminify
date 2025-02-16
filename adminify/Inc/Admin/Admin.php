@@ -49,6 +49,7 @@ if (!class_exists('Admin')) {
 
 			add_action('admin_menu', array($this, 'support_menu'), 1100);
 			add_action('admin_menu', [$this, 'submenu_link_new_tab']);
+			add_action('plugins_loaded', array($this, 'jltwp_adminify_ajax_data_save'), 999);
 			// jltwp_adminify()->add_filter('support_forum_url', [$this, 'jltwp_adminify_support_forum_url']);
 
 			// Disable deactivation feedback form
@@ -58,6 +59,13 @@ if (!class_exists('Admin')) {
 			jltwp_adminify()->add_filter('show_deactivation_subscription_cancellation', '__return_false');
 
 			$this->disable_gutenberg_editor();
+		}
+
+
+		public function jltwp_adminify_ajax_data_save()
+		{
+			$ajax_data_save = new \WPAdminify\Inc\Classes\Notifications\What_We_Collect();
+			$ajax_data_save->jltwp_adminify_collect_ajax_data();
 		}
 
 		public function disable_gutenberg_editor()
@@ -131,6 +139,7 @@ if (!class_exists('Admin')) {
 		{
 			return WP_ADMINIFY_PATH . '/Libs/freemius-pricing/freemius-pricing.js';
 		}
+
 
 		/**
 		 * WP Adminify: Modules

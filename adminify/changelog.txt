@@ -1,4 +1,25 @@
 == Changelog ==
+= 4.0.3.3 (02-02-2025) =
+* Fixed: Adminify admin bar top secondary menu item show/hide logic not working
+* Fixed: Adminify dashboard widget rule for YouTube videos
+* Fixed: Adminify dashboard widget rule for Vimeo videos
+* Fixed: Adminify admin bar dropdown not closing until clicked on the admin bar
+* Fixed: Adminify dashboard widget design issue for background icon
+* Fixed: Added condition to show line icon in the admin menu while Adminify UI is not enabled
+* Fixed: Added condition to show FontAwesome icon in the admin menu while Adminify UI is not enabled
+* Fixed: Changed custom image icon style for the admin menu while Adminify UI is not enabled
+* Fixed: Added condition to show Simple Line icon in the admin menu while Adminify UI is enabled
+* Fixed: Optimized the previous script for getting the icon
+* Fixed: Post duplicator not working as expected for custom post types and custom user role issue
+* Fixed: Admin menu items not changing if a plugin or function removed.
+* Updated: Freemius SDK version 2.11.0 updated
+* Updated: Adminify UI design for forms
+* Feature: Added support for the Thrive Page Builder
+* Feature: Added support for the LatePoint plugin
+* Feature: Added support for the SureCart plugin
+* Feature: Added support for the SureMembers plugin.
+* Feature: Added support for the SureTrigger plugin.
+
 = 4.0.3.2 (02-02-2025) =
 * Fixed: "What we Collect" Admin Notice not closing issue fixed
 * Fixed: "Ask for Rating" Admin Notice not closing issue fixed

@@ -52,6 +52,18 @@ class ThirdPartyCompatibility {
             }
             </style>';
         }
+        if ( Utils::is_plugin_active( 'surecart / surecart.php' ) || Utils::is_plugin_active( 'suremember/suremember.php' ) ) {
+            if ( !empty( $adminify_ui ) ) {
+                echo '<style>
+							.css-wa3qun,.backdrop-blur-sm {
+								top: 0 !important;
+							}
+							#suremembers-settings-content::before, #sc-settings-content::before{
+									width: 250px !important;
+							}
+						</style>';
+            }
+        }
         if ( Utils::is_plugin_active( 'advanced-database-cleaner-pro/advanced-db-cleaner.php' ) ) {
             echo '<style>
             .wp-adminify.toplevel_page_advanced_db_cleaner #wpbody-content .wp-list-table.widefat td{

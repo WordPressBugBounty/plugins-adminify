@@ -93,11 +93,19 @@ if (!class_exists('Admin')) {
                 ],
                 [
                     'url' => '*',
+                    'query_params' => ['action' => 'architect'] // Added for thrive page builder
+                ],
+                [
+                    'url' => '*',
                     'query_params' => ['bricks' => 'true']
                 ],
                 [
                     'url' => '*',
                     'query_params' => ['ct_builder' => 'true', 'oxygen_iframe!']
+                ],
+                [
+                    'url' => '*',
+                    'query_params' => ['page' => 'latepoint'] // added for latepoint
                 ],
                 [
                     'url' => '*',
@@ -138,6 +146,10 @@ if (!class_exists('Admin')) {
                 [
                     'url' => '*',
                     'query_params' => ['page' => 'sby-feed-builder']
+                ],
+                [
+                    'url' => '*',
+                    'query_params' => ['page' => 'suretriggers']
                 ],
                 // [
                 //     'url' => '/wp-admin/post-new.php',
@@ -248,24 +260,20 @@ if (!class_exists('Admin')) {
         public function get_admin_bar_menu_list()
         {
             global $wp_admin_bar;
-
             $admin_bar_data = $this->nodes_to_array($wp_admin_bar->get_nodes());
             $admin_bar_data_nested = $this->format_to_nested($admin_bar_data);
-
 
             $admin_bar_menu_data = [];
 
             // Admin Bar Exits
             if ( Utils::is_plugin_active('admin-bar/admin-bar.php') || Utils::is_plugin_active('admin-bar-pro/admin-bar-pro.php') ) {
                 $admin_bar_items                  = get_option('_jltadminbar_settings');
-
                 if( empty($admin_bar_items) ) return;
 
                 $existing_admin_bar               = !empty($admin_bar_items['existing_admin_bar']) ? $admin_bar_items['existing_admin_bar'] : '';
                 $saved_admin_bar                  = !empty($admin_bar_items['saved_admin_bar']) ? $admin_bar_items['saved_admin_bar'] : [];
 
                 $parsed_admin_bar_backend         = empty($saved_admin_bar) ? $existing_admin_bar : $this->parse_menu_items($saved_admin_bar, $existing_admin_bar, 'backend');
-
                 $nested_admin_bar                 = $this->format_to_nested($parsed_admin_bar_backend);
                 $formated_admin_menu              = $this->associative_to_index_array($nested_admin_bar);
 
@@ -434,11 +442,16 @@ if (!class_exists('Admin')) {
 
                     }
 
-                    if (\WPAdminify\Inc\Utils::restricted_for($disable_for)) {
+                    if (\WPAdminify\Inc\Utils::restrict_for($disable_for)) {
+                        unset($flat_array[$menu_id]);
                         continue;
                     }
                 }
 
+                if ( isset($menu['parent']) && $menu['parent'] && !isset($flat_array[$menu['parent']]) ) {
+                    unset($flat_array[$menu_id]);
+                    continue;
+                }
 
                 if (!isset($menu['parent']) || !$menu['parent'] || !isset($flat_array[$menu['parent']])) {
                     $nested_array[$menu_id] = $menu;

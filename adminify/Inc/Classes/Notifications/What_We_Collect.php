@@ -39,6 +39,17 @@ if (! class_exists('What_We_Collect')) {
 		{
 			check_ajax_referer('jltwp_adminify_allow_collect_nonce');
 
+			$this->jltwp_adminify_collect_ajax_data();
+		}
+
+
+		public function jltwp_adminify_collect_ajax_data()
+		{
+
+			if (!empty(get_option('jltwp_adminify_what_we_collect'))) {
+				return;
+			}
+
 			$email = get_bloginfo('admin_email');
 
 			$author_obj = get_user_by('email', $email);
@@ -46,18 +57,15 @@ if (! class_exists('What_We_Collect')) {
 			$full_name  = $author_obj->display_name;
 
 			$response = $this->get_collect_data($user_id, array(
-				'first_name'              => $full_name,
-				'email'                   => '$email',
+				'first_name' => $full_name,
+				'email'      => $email,
 			));
 
+			update_option('jltwp_adminify_what_we_collect', 'yes');
 			return $response;
-
-			// if (! is_wp_error($response) && 200 === $response['response']['code'] && 'OK' === $response['response']['message']) {
-			// 	wp_send_json_success('Thanks for Allow!');
-			// } else {
-			// 	wp_send_json_error("Couldn't Collect");
-			// }
 		}
+
+
 
 		/**
 		 * Title Content

@@ -31,6 +31,9 @@ class Manager extends Data {
 		// Register Subscribe Notice .
 		$this->register( new Subscribe() );
 
+		// Discount Coupon
+		$this->register( new Discount() );
+
 		// Register What we Collect Notice .
 		$this->register( new What_We_Collect() );
 

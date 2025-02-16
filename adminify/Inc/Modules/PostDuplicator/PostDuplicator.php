@@ -50,13 +50,17 @@ class PostDuplicator
 		if (empty($post_types) || empty(array_intersect($all_post_types, $post_types))) {
 			return;
 		}
-
+	
 		add_action('admin_action_adminify_duplicate', [$this, 'adminify_duplicate_post_as_draft']);
-		foreach ($post_types as $key => $post_type) {
-			if (in_array($post_type, $all_post_types)) {
-				add_filter($post_type . '_row_actions', [$this, 'jltwp_adminify_duplicator_row_actions'], 10, 2);
-			}
-		}
+		add_filter('post_row_actions', [$this, 'jltwp_adminify_duplicator_row_actions'], 10, 2);
+		add_filter('page_row_actions', [$this, 'jltwp_adminify_duplicator_row_actions'], 10, 2);
+
+
+		// foreach ($post_types as $key => $post_type) {
+		// 	if (in_array($post_type, $all_post_types)) {
+		// 		add_filter($post_type . '_row_actions', [$this, 'jltwp_adminify_duplicator_row_actions'], 10, 2);
+		// 	}
+		// }
 	}
 
 
@@ -92,10 +96,15 @@ class PostDuplicator
 	 */
 	public function jltwp_adminify_duplicator_row_actions($actions, $post)
 	{
-		if (!$this->user_can_clone($post)) {
+		$post_type = $post->post_type;
+		$allowed_post_types = $post_types = $this->options['post_duplicator']['post_types'];
+		if( !in_array($post_type, $allowed_post_types)){
 			return $actions;
 		}
-
+    if (!$this->user_can_clone($post)) {
+			return $actions;
+		}
+		
 		$adminify_duplicate_link = admin_url('admin.php?action=adminify_duplicate&post=' . $post->ID);
 		$adminify_duplicate_link = wp_nonce_url($adminify_duplicate_link, 'jltwp_adminify_post_duplicator_nonce');
 
