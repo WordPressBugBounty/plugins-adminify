@@ -44,7 +44,7 @@ if (!class_exists('Discount')) {
         { ?>
             <div class="wp-adminify-discount-coupons-wrapper notice notice-jltma is-dismissible notice-plugin-discount notice-<?php echo esc_attr($this->color); ?> wp-adminify-notice-<?php echo esc_attr($this->get_id()); ?>">
 
-                <!-- <?php echo esc_url(JLTMA_IMAGE_DIR . 'promo-image.png'); ?>
+                <!-- <?php //echo esc_url(JLTMA_IMAGE_DIR . 'promo-image.png'); ?>
 				https://master-addons.com/pricing-lite/
 
 				<button type="button" class="notice-dismiss wp-adminify-notice-dismiss"></button> -->
@@ -59,10 +59,10 @@ if (!class_exists('Discount')) {
                         Flash Sale
                     </h2>
                     <h3>Notice Content Notice Content Notice Content Notice Content Notice Content Notice Content Notice Content Notice Content </h3>
-                    <img width="70" height="70" src="<?php echo esc_url(JLTMA_IMAGE_DIR . 'promo-image.png'); ?>" alt="<?php esc_attr_e('20% Discount Coupon', 'master-addons'); ?>">
+                    <img width="70" height="70" src="<?php echo esc_url(WP_ADMINIFY_ASSETS_IMAGE . 'promo-image.png'); ?>" alt="<?php esc_attr_e('20% Discount Coupon', 'adminify'); ?>">
                 </div>
             </div>
-<?php
+        <?php
         }
 
 

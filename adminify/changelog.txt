@@ -1,5 +1,8 @@
 == Changelog ==
-= 4.0.3.3 (02-02-2025) =
+= 4.0.3.4 (23-02-2025) =
+* Fixed: Getting fatal error in discount notice. Thanks @peopleinside Support URL:https://wordpress.org/support/topic/undefined-constant-12/
+
+= 4.0.3.3 (18-02-2025) =
 * Fixed: Adminify admin bar top secondary menu item show/hide logic not working
 * Fixed: Adminify dashboard widget rule for YouTube videos
 * Fixed: Adminify dashboard widget rule for Vimeo videos
