@@ -186,18 +186,18 @@ class ThirdPartyCompatibility {
         }
         if ( Utils::is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
             echo '<style>
-			.adminify-ui #woocommerce-embedded-root .woocommerce-layout__header {
+			.adminify-ui #woocommerce-embedded-root .woocommerce-layout__header, .adminify-ui .woocommerce-layout .woocommerce-layout__header {
 				width: 100%;
-        		top: 0;
+				top: 0;
 			}
-			.adminify-ui #woocommerce-embedded-root .woocommerce-layout__header .woocommerce-layout__header-wrapper {
+			.adminify-ui #woocommerce-embedded-root .woocommerce-layout__header .woocommerce-layout__header-wrapper, .adminify-ui .woocommerce-layout .woocommerce-layout__header .woocommerce-layout__header-wrapper  {
 				margin-right: 1rem;
 			}
-            body.woocommerce-page #wpwrap #wpcontent,
-            body.woocommerce-page.woocommerce_page_wc-admin #wpwrap #wpbody-content {
-                overflow-x: unset !important;
-                position: unset !important;
-            }
+			body.woocommerce-page #wpwrap #wpcontent,
+			body.woocommerce-page.woocommerce_page_wc-admin #wpwrap #wpbody-content {
+					overflow-x: unset !important;
+					position: unset !important;
+			}
             </style>';
         }
         if ( Utils::is_plugin_active( 'tinymce-templates/tinymce-templates.php' ) ) {

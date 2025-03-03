@@ -1,4 +1,11 @@
 == Changelog ==
+= 4.0.3.5 (03-03-2025) =
+* Fixed: WooCommerce report and analytics layout issue.
+* Update: Updated Freemius SDK to the latest version.
+* Update: Applied a security patch to enhance the plugin's security.
+* Fixed: Resolved issue where plugin conflict notice was not dismissible.
+* Fixed: made the folder sticky.
+
 = 4.0.3.4 (23-02-2025) =
 * Fixed: Getting fatal error in discount notice. Thanks @peopleinside Support URL:https://wordpress.org/support/topic/undefined-constant-12/
 

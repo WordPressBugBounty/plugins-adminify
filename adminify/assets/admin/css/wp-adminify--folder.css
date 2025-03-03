@@ -9,18 +9,20 @@
   text-decoration: none;
 }
 .wp-adminify .wp-adminify--folder-widget {
-  position: absolute;
-  top: 100px;
+  position: fixed;
+  top: 36px;
   bottom: 0;
   left: 160px;
+  width: -moz-max-content;
+  width: max-content;
   height: -moz-max-content;
   height: max-content;
-  padding: 20px;
-}
-.wp-adminify .wp-adminify--folder-widget .wp-adminify--folder-app {
+  max-height: calc(100vh - 170px);
+  margin: 20px;
   border-radius: 2px;
   border: 1px solid #dedee7;
   background-color: #fff;
+  overflow: hidden;
 }
 .wp-adminify .wp-adminify--folder-widget .wp-adminify--folder-app ul {
   margin: 0;
@@ -185,7 +187,23 @@
 }
 .wp-adminify .wp-adminify--folder-widget .wp-adminify--folder-app ul.folder--lists {
   padding: 16px;
+  padding-right: 4px;
+  margin-right: 4px;
   border-top: 1px solid #dedee7;
+  max-height: calc(100vh - 498px);
+  overflow-y: auto;
+  overflow-x: auto;
+  /* Handle on hover */
+}
+.wp-adminify .wp-adminify--folder-widget .wp-adminify--folder-app ul.folder--lists::-webkit-scrollbar {
+  width: 4px;
+}
+.wp-adminify .wp-adminify--folder-widget .wp-adminify--folder-app ul.folder--lists::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+.wp-adminify .wp-adminify--folder-widget .wp-adminify--folder-app ul.folder--lists::-webkit-scrollbar-thumb:hover {
+  background: transparent;
 }
 .wp-adminify .wp-adminify--folder-widget .wp-adminify--folder-app .folder--lists li.folder--single-root {
   position: relative;

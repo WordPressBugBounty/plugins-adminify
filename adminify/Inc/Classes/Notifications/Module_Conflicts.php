@@ -14,13 +14,29 @@ if ( ! class_exists( 'Module_Conflicts' ) ) {
 
         public $color = 'warning';
 
-        public function __construct()
-        {
-            // parent::__construct();
+        public function __construct() {
             add_action('admin_notices', [$this, 'maybe_show_folder_module_notice'], -9999999);
+            add_action('admin_footer', array($this, 'enqueue_conflict_plugin_admin_scripts'), 99999);
+            add_action('wp_ajax_jltwp_adminify_module_conflicts', [$this, 'jltwp_adminify_module_conflicts']);
         }
 
+        public function jltwp_adminify_check_folder_module_conflict(){
+            $plugins = [
+                'folders/folders.php',
+                'filebird/filebird.php',
+                'real-media-library-lite/index.php',
+                'wicked-folders/wicked-folders.php',
+                'real-category-library-lite/index.php',
+                'wp-media-folders/wp-media-folders.php',
+                'media-library-plus/maxgalleria-media-library.php',
+            ];
+            $result = $this->maybe_conflicted_plugins_active( $plugins );
 
+            if (!$result) {
+                return false;
+            }
+            return $result;
+        }
 
         /**
          * Dismiss module conflict notice via AJAX.
@@ -118,22 +134,10 @@ if ( ! class_exists( 'Module_Conflicts' ) ) {
          */
         public function maybe_show_folder_module_notice()
         {
-            $plugins = [
-                'folders/folders.php',
-                'filebird/filebird.php',
-                'real-media-library-lite/index.php',
-                'wicked-folders/wicked-folders.php',
-                'real-category-library-lite/index.php',
-                'wp-media-folders/wp-media-folders.php',
-                'media-library-plus/maxgalleria-media-library.php',
-            ];
-
-            $result = $this->maybe_conflicted_plugins_active( $plugins );
-
-            if (!$result) {
+            $result = $this->jltwp_adminify_check_folder_module_conflict();
+            if(! $result){
                 return;
             }
-
             $this->jltwp_force_disable_module('folders');
             // Check if the notice has already been dismissed.
             $plugin_exists = get_option('_wpadminify_plugin_conflict');
@@ -152,10 +156,10 @@ if ( ! class_exists( 'Module_Conflicts' ) ) {
             <?php
 
 
-            if (is_admin()) {
-                add_action('admin_footer', array($this, 'enqueue_conflict_plugin_admin_scripts'), 99999);
-                add_action('wp_ajax_jltwp_adminify_module_conflicts', array($this, 'jltwp_adminify_module_conflicts'));
-            }
+            // if (is_admin()) {
+                // add_action('admin_footer', array($this, 'enqueue_conflict_plugin_admin_scripts'), 99999);
+                // add_action('wp_ajax_jltwp_adminify_module_conflicts', array($this, 'jltwp_adminify_module_conflicts'));
+            // }
         }
 
         /**
@@ -163,8 +167,10 @@ if ( ! class_exists( 'Module_Conflicts' ) ) {
          *
          * Enqueue JavaScript that handles the conflict notice dismissal.
          */
-        public function enqueue_conflict_plugin_admin_scripts() { ?>
-
+        public function enqueue_conflict_plugin_admin_scripts() { 
+            if( ! $this->jltwp_adminify_check_folder_module_conflict())  return;
+            
+            ?>
                 <script>
 
                     function jltwp_adminify_notice_action(evt, $this, action_type) {
