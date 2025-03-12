@@ -49,8 +49,13 @@ if ( !class_exists( 'MenuEditor' ) ) {
             add_filter( 'upload_mimes', [$this, 'custom_icon_mime_types'] );
             add_filter( 'wp_handle_upload_prefilter', [$this, 'sanitize_svg_file'] );
             add_filter( 'admin_body_class', [$this, 'jltwp_adminify_menu_editor_body_class'] );
-            add_filter( 'parent_file', [$this, 'set_menu'], 800 );
-            add_filter( 'parent_file', [$this, 'apply_menu'], 900 );
+            // add_filter('parent_file', [$this, 'set_menu'], 800);
+            // add_filter('parent_file', [$this, 'apply_menu'], 900);
+            // add_action('jltwp_adminify_modules_menu_editor_render', [$this, 'jltwp_adminify_modules_menu_editor_render']);
+            if ( apply_filters( 'enable_jltwp_adminify_menu_editor_render', true ) ) {
+                add_filter( 'parent_file', [$this, 'set_menu'], 800 );
+                add_filter( 'parent_file', [$this, 'apply_menu'], 900 );
+            }
             add_action( 'wp_ajax_adminify_save_menu_settings', [$this, 'adminify_save_menu_settings'] );
             add_action( 'wp_ajax_adminify_reset_menu_settings', [$this, 'adminify_reset_menu_settings'] );
             add_action( 'wp_ajax_adminify_export_menu_settings', [$this, 'adminify_export_menu_settings'] );
@@ -321,6 +326,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
                 $optiongroup = [];
                 $order = $key;
                 $separator = 0;
+                $external_link = 0;
                 $icon = null;
                 $hidden_for = [];
                 if ( !empty( $next_menu_item ) && strpos( $next_menu_item[2], 'separator' ) !== false ) {
@@ -335,6 +341,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
                         if ( isset( $optiongroup['separator'] ) ) {
                             $separator = $optiongroup['separator'];
                         }
+                        if ( isset( $optiongroup['external_link'] ) ) {
+                            $external_link = $optiongroup['external_link'];
+                        }
                         if ( !empty( $optiongroup['icon'] ) ) {
                             $icon = $optiongroup['icon'];
                         }
@@ -346,6 +355,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
                 $current_menu_item['order'] = $order;
                 $current_menu_item['hidden_for'] = $hidden_for;
                 $current_menu_item['separator'] = $separator;
+                $current_menu_item['external_link'] = $external_link;
                 // if (empty($this->options['admin_ui'])) {
                 if ( $icon !== null ) {
                     if ( strpos( $icon, 'dashicons ' ) !== false ) {
@@ -381,6 +391,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
                         ( !empty( $menu_s['icon'] ) ? $menu_s['icon'] : '' ),
                         'order' => $menu_s['order'],
                         'separator' => ( !empty( $menu_s['separator'] ) ? $menu_s['separator'] : 0 ),
+                        'external_link' => ( !empty( $menu_s['external_link'] ) ? $menu_s['external_link'] : 0 ),
                         'hidden_for' => ( !empty( $menu_s['hidden_for'] ) ? $menu_s['hidden_for'] : [] )
                     ];
                     // if (empty($this->options['admin_ui'])) {
@@ -400,6 +411,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     if ( !empty( $menu_s['separator'] ) && $menu_s['separator'] == 1 ) {
                         $new_array[4] = $new_array[4] . ' adminify-menu-separator';
                     }
+                    // if (!empty($menu_s['external_link']) && $menu_s['external_link'] == 1) {
+                    // $new_array[4] = $new_array[4] . ' adminify-menu-external_link';
+                    // }
                     $new_array[6] = $menu_icon;
                     // }
                     array_push( $tempmenu, $new_array );
@@ -606,10 +620,13 @@ if ( !class_exists( 'MenuEditor' ) ) {
                             $current_menu_item['link'] = $link;
                         }
                     }
+                    if ( isset( $optiongroup['external_link'] ) ) {
+                        $external_link = $optiongroup['external_link'];
+                    }
                     if ( isset( $optiongroup['hidden_for'] ) ) {
                         $disabled_for = $optiongroup['hidden_for'];
                         if ( $this->is_hidden( $disabled_for ) ) {
-                            $current_menu_item['hidden'] = true;
+                            $current_menu_item['hidden_for'] = true;
                             continue;
                         }
                     }
@@ -619,8 +636,11 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     if ( isset( $submenu_settings[$current_menu_item['key']]['hidden_for'] ) ) {
                         $disabled_for = $submenu_settings[$current_menu_item['key']]['hidden_for'];
                     }
+                    if ( isset( $submenu_settings[$current_menu_item['key']]['external_link'] ) ) {
+                        $external_link = $submenu_settings[$current_menu_item['key']]['external_link'];
+                    }
                     if ( $this->is_hidden( $disabled_for ) ) {
-                        $current_menu_item['hidden'] = true;
+                        $current_menu_item['hidden_for'] = true;
                         continue;
                     }
                 }
@@ -661,6 +681,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
                             $current_menu_item['link'] = $link;
                         }
                     }
+                    if ( isset( $optiongroup['external_link'] ) ) {
+                        $external_link = ( $optiongroup['external_link'] ? $optiongroup['external_link'] : '' );
+                    }
                     if ( isset( $optiongroup['icon'] ) ) {
                         $icon = $optiongroup['icon'];
                         if ( $icon != '' ) {
@@ -673,9 +696,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     if ( isset( $optiongroup['hidden_for'] ) ) {
                         $disabled_for = $optiongroup['hidden_for'];
                         if ( $this->is_hidden( $disabled_for ) ) {
-                            $current_menu_item['hidden'] = true;
+                            $current_menu_item['hidden_for'] = true;
                         } else {
-                            $current_menu_item['hidden'] = false;
+                            $current_menu_item['hidden_for'] = false;
                         }
                     }
                 }
@@ -685,13 +708,16 @@ if ( !class_exists( 'MenuEditor' ) ) {
                         $disabled_for = $this->menu_settings[$current_menu_item[5]]['hidden_for'];
                     }
                     if ( $this->is_hidden( $disabled_for ) ) {
-                        $current_menu_item['hidden'] = true;
+                        $current_menu_item['hidden_for'] = true;
+                    }
+                    if ( isset( $this->menu_settings[$current_menu_item[5]]['external_link'] ) ) {
+                        $external_link = $this->menu_settings[$current_menu_item[5]]['external_link'];
                     }
                 }
             }
             $current_menu_item['order'] = $order;
-            if ( isset( $current_menu_item['hidden'] ) ) {
-                if ( $current_menu_item['hidden'] == true ) {
+            if ( isset( $current_menu_item['hidden_for'] ) ) {
+                if ( $current_menu_item['hidden_for'] === true ) {
                     return false;
                 } else {
                     return $current_menu_item;
@@ -713,37 +739,54 @@ if ( !class_exists( 'MenuEditor' ) ) {
                 return false;
             }
             $current_user = wp_get_current_user();
-            $current_name = $current_user->display_name;
-            $user_login = $current_user->user_login;
             $current_roles = $current_user->roles;
             $all_roles = wp_roles()->get_names();
+            // Normalize disabled_for array
             $disabled_for_arr = [];
             foreach ( $disabled_for as $v ) {
                 $disabled_for_arr[] = jlt_adminify_sluggify_with_underscores( $v );
             }
             // Check Username
-            if ( in_array( $current_user->data->user_login, $disabled_for_arr ) ) {
+            if ( in_array( $current_user->user_login, $disabled_for_arr ) ) {
                 return true;
             }
-            // Check User Role if the role is selected as diable to access the item
-            if ( !empty( array_intersect( $current_roles, $disabled_for_arr ) ) ) {
-                return true;
-            }
-            // MULTISITE SUPER ADMIN
-            if ( is_super_admin() && is_multisite() ) {
-                if ( in_array( 'Super Admin', $disabled_for_arr ) ) {
+            // Check User Roles and Capabilities
+            foreach ( $current_roles as $role ) {
+                $role_obj = get_role( $role );
+                if ( !$role_obj ) {
+                    continue;
+                }
+                // Check if role slug is in disabled array
+                if ( in_array( $role, $disabled_for_arr ) ) {
                     return true;
-                } else {
-                    return false;
+                }
+                // Check if role display name is in disabled array
+                if ( isset( $disabled_for_arr[$role] ) && (in_array( $all_roles[$role], $disabled_for ) || in_array( strtolower( $all_roles[$role] ), array_map( 'strtolower', $disabled_for ) )) ) {
+                    return true;
+                }
+                // Check for custom roles
+                foreach ( $disabled_for as $disabled_item ) {
+                    // Convert role names to match WordPress format
+                    $disabled_role = str_replace( ' ', '_', strtolower( $disabled_item ) );
+                    if ( $role === $disabled_role ) {
+                        return true;
+                    }
                 }
             }
-            // NORMAL SUPER ADMIN
+            // Handle Super Admin specially
+            if ( is_super_admin( $current_user->ID ) ) {
+                if ( in_array( 'Super Admin', $disabled_for_arr ) || in_array( 'super_admin', $disabled_for_arr ) || in_array( 'administrator', $disabled_for_arr ) ) {
+                    return true;
+                }
+                // Super admin sees everything by default unless explicitly disabled
+                return false;
+            }
+            // Special check for user ID 1 (default admin)
             if ( $current_user->ID === 1 ) {
-                if ( in_array( 'Super Admin', $disabled_for_arr ) ) {
+                if ( in_array( 'Super Admin', $disabled_for_arr ) || in_array( 'super_admin', $disabled_for_arr ) || in_array( 'administrator', $disabled_for_arr ) ) {
                     return true;
-                } else {
-                    return false;
                 }
+                return false;
             }
             return false;
         }
@@ -773,14 +816,14 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     if ( isset( $optiongroup['hidden_for'] ) ) {
                         $disabled_for = $optiongroup['hidden_for'];
                         if ( $this->is_hidden( $disabled_for ) ) {
-                            $current_menu_item['hidden'] = true;
+                            $current_menu_item['hidden_for'] = true;
                         }
                     }
                 }
             }
             $current_menu_item['order'] = $order;
-            if ( isset( $current_menu_item['hidden'] ) ) {
-                if ( $current_menu_item['hidden'] == true ) {
+            if ( isset( $current_menu_item['hidden_for'] ) ) {
+                if ( $current_menu_item['hidden_for'] == true ) {
                     return false;
                 } else {
                     return $current_menu_item;
@@ -960,10 +1003,11 @@ if ( !class_exists( 'MenuEditor' ) ) {
             if ( empty( $current_menu_item[2] ) ) {
                 return;
             }
-            $disabled_for = '';
+            // $disabled_for  = '';
             $menu_id = preg_replace( '/[^A-Za-z0-9 ]/', '', $current_menu_item[5] );
             $name = '';
             $link = '';
+            $external_link = '';
             $icon = '';
             $separator = '';
             $disabled_for = [];
@@ -990,6 +1034,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     if ( isset( $optiongroup['separator'] ) ) {
                         $separator = $optiongroup['separator'];
                     }
+                    if ( isset( $optiongroup['external_link'] ) ) {
+                        $external_link = $optiongroup['external_link'];
+                    }
                 }
             }
             $name_attr = $current_menu_item[2];
@@ -1008,6 +1055,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
                 }
                 if ( isset( $current_menu_item['separator'] ) ) {
                     $separator = $current_menu_item['separator'];
+                }
+                if ( isset( $current_menu_item['external_link'] ) ) {
+                    $external_link = $current_menu_item['external_link'];
                 }
             }
             if ( !is_array( $disabled_for ) ) {
@@ -1118,8 +1168,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
 										</div>
 									</div>
 								</div>
+
 								<div class="columns">
-									<div class="column">
+									<!-- <div class="column">
 										<label for="">
 											<?php 
             esc_html_e( 'Change Link', 'adminify' );
@@ -1129,8 +1180,99 @@ if ( !class_exists( 'MenuEditor' ) ) {
             esc_html_e( 'New link', 'adminify' );
             ?>" value="<?php 
             echo esc_attr( ( $name_attr != ltrim( $link, '#' ) ? $link : '' ) );
+            ?>" onchange="checkForLinkTarget(this)" >
+
+										<label for="external_link-<?php 
+            echo esc_attr( $name_attr );
             ?>">
-									</div>
+											<?php 
+            esc_html_e( 'New Window?', 'adminify' );
+            ?>
+											<input class="menu_setting" id="external_link-<?php 
+            echo esc_attr( $name_attr );
+            ?>" name="external_link" type="checkbox" value="0" <?php 
+            checked( (int) $external_link, 1 );
+            ?> disabled>
+											
+										</label>
+										<script>
+											function checkForLinkTarget(inputField) {
+													var checkbox = inputField.closest('.column').querySelector('input[type="checkbox"]');
+													
+													if (inputField.value.trim() !== "") {
+															checkbox.disabled = false; // Enable checkbox if input is not empty
+													} else {
+															checkbox.disabled = true; // Disable checkbox if input is empty
+													}
+											}
+										</script>
+									</div> -->
+
+									<div class="column">
+										<label for="">
+												<?php 
+            esc_html_e( 'Change Link', 'adminify' );
+            ?>
+										</label>
+										<input class="menu_setting" name="link" type="url" 
+												placeholder="<?php 
+            esc_html_e( 'New link', 'adminify' );
+            ?>" 
+												value="<?php 
+            echo esc_attr( ( $name_attr != ltrim( $link, '#' ) ? $link : '' ) );
+            ?>" 
+												oninput="checkForLinkTarget(this)">
+										<div class="new-tab-settings" style="padding-top: 10px;">
+											<label for="external_link-<?php 
+            echo esc_attr( $name_attr );
+            ?>" style="display: flex; align-items: center; gap: 8px;">
+													
+													<input class="menu_setting" id="external_link-<?php 
+            echo esc_attr( $name_attr );
+            ?>" 
+															name="external_link" type="checkbox" value="1" 
+															<?php 
+            checked( (int) $external_link, 1 );
+            ?> disabled  style="margin-top: 0;" >
+															<span><?php 
+            esc_html_e( 'New Window?', 'adminify' );
+            ?></span>
+											</label>
+										</div>
+
+									<script>
+										// Function to validate URL
+										function isValidURL(url) {
+													// Allow absolute URLs (with http:// or https://)
+													var absolutePattern = /^(https?:\/\/)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}.*$/;
+													
+													// Allow relative URLs (starting with "/")
+													var relativePattern = /^\/[a-zA-Z0-9-_\/]+$/;
+
+													return absolutePattern.test(url) || relativePattern.test(url);
+											}
+
+
+										function checkForLinkTarget(inputField) {
+												var checkbox = inputField.closest('.column').querySelector('input[type="checkbox"]');
+
+												if (isValidURL(inputField.value.trim())) {
+														checkbox.disabled = false; // Enable if URL is valid
+												} else {
+														checkbox.disabled = true;  // Disable if invalid
+														checkbox.checked = false;  // Also uncheck if disabled
+												}
+										}
+
+										// Run on page load
+										document.addEventListener("DOMContentLoaded", function() {
+												document.querySelectorAll('.column input[name="link"]').forEach(function(inputField) {
+														checkForLinkTarget(inputField);
+												});
+										});
+									</script>
+								</div>
+
 									<div class="column">
 										<label for="">
 											<?php 
@@ -1343,6 +1485,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
             $name = '';
             $link = '';
             $icon = '';
+            $external_link = '';
             $disabled_for = [];
             $suboptiongroup = [];
             $menu_options = $this->menu_settings;
@@ -1354,6 +1497,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     }
                     if ( isset( $suboptiongroup['link'] ) ) {
                         $link = $suboptiongroup['link'];
+                    }
+                    if ( isset( $suboptiongroup['external_link'] ) ) {
+                        $external_link = $suboptiongroup['external_link'];
                     }
                     if ( isset( $suboptiongroup['icon'] ) ) {
                         $icon = $suboptiongroup['icon'];
@@ -1375,6 +1521,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
                 }
                 if ( isset( $optiongroup['submenu'][$sub_menu_name_attr]['icon'] ) ) {
                     $icon = $optiongroup['submenu'][$sub_menu_name_attr]['icon'];
+                }
+                if ( isset( $optiongroup['submenu'][$sub_menu_name_attr]['external_link'] ) ) {
+                    $external_link = $optiongroup['submenu'][$sub_menu_name_attr]['external_link'];
                 }
             }
             if ( !is_array( $disabled_for ) ) {
@@ -1466,7 +1615,21 @@ if ( !class_exists( 'MenuEditor' ) ) {
             ?></label>
 										<input class="sub_menu_setting" name="link" type="url" placeholder="New link" value="<?php 
             echo esc_attr( ( $sub_menu_name_attr != ltrim( $link, '#' ) ? $link : '' ) );
+            ?>" onchange="checkForLinkTarget(this)" >
+
+										<label for="external_link-<?php 
+            echo esc_attr( $sub_menu_name_attr );
             ?>">
+											<?php 
+            esc_html_e( 'New Window?', 'adminify' );
+            ?>
+											<input class="sub_menu_setting" id="external_link-<?php 
+            echo esc_attr( $sub_menu_name_attr );
+            ?>" name="external_link" type="checkbox" value="0" <?php 
+            checked( (int) $external_link, 1 );
+            ?>disabled />
+											
+										</label>
 									</div>
 									<div class="column">
 										<label for="" style="margin-top:25px">

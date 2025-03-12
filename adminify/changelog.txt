@@ -1,4 +1,13 @@
 == Changelog ==
+= 4.0.3.6 (12-03-2025) =
+* Updated: Added design compatibility for "WPCode – Insert Headers and Footers + Custom Code Snippets – WordPress Code Manager" plugin.
+* Feature: Admin menu items can now be set to open in a new tab. Thanks to @leopoldyys for the request. [Support Thread](https://wordpress.org/support/topic/custom-admin-menu-link-open-at-the-same-page/)
+* Fixed: Resolved submenu hiding issue for custom user roles.
+* Feature: Introduced 'enable_jltwp_adminify_menu_editor_render' filter to manage admin menu editor functionality.
+* Fixed: Menu visibility settings now correctly apply to custom user roles. Thanks to @aschunk for reporting. [Support Thread](https://wordpress.org/support/topic/custom-roles-dont-hide-menu/)
+* Fixed: Dashboard welcome widget design and functionality issues.
+
+
 = 4.0.3.5 (03-03-2025) =
 * Fixed: WooCommerce report and analytics layout issue.
 * Update: Updated Freemius SDK to the latest version.

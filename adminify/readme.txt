@@ -2,9 +2,9 @@
 Contributors: jwthemeltd, litonice13, masteraddons
 Tags: Custom Dashboard, White Label WordPress,  Media Folders, Admin Columns, Login Customizer
 Requires at least: 4.0
-Tested up to: 6.7.1
+Tested up to: 6.7.2
 Requires PHP: 5.3
-Stable tag: 4.0.3.5
+Stable tag: 4.0.3.6
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,6 +13,8 @@ Customize your WordPress dashboard with White label, Media Folders, Admin Menu E
 == Description ==
 
 ### The Best WordPress Custom Dashboard Plugin with White Label, Media Folders, Dark Mode, Login Customizer and so much more!
+
+[Live Demo](https://demo.pixarlabs.com/?pl-product=adminify) | [Docs](https://wpadminify.com/docs)  | [Request Feature](https://wpadminify.com/contact/) | [Upgrade Pro](https://wpadminify.com/pricing/)
 
 Tired of a dull WordPress dashboard? Meet WP Adminify, your solution for a custom WordPress dashboard that transforms your admin experience. With 60+ powerful features, this intuitive plugin lets you create a custom admin panel, custom login pages, improve performance, boost productivity, and improve admin security – all from one intuitive dashboard customizer plugin.
 
@@ -128,7 +130,6 @@ WP Adminify Pro is a premium custom dashboard plugin that offers advanced featur
 * **Control Heartbeat API:** Optimize website performance by adjusting the frequency of the heartbeat API or disabling it in specific areas.
 * **Control Revisions:** Prevent database bloat by limiting the number of post revisions saved.(Upcoming)
 
-[Live Demo](https://demo.pixarlabs.com/?pl-product=adminify) | [Docs](https://wpadminify.com/docs)  | [Request Feature](https://wpadminify.com/contact/) | [Upgrade Pro](https://wpadminify.com/pricing/)
 
 ==WP Adminify V4.0 Addons
 
@@ -223,7 +224,6 @@ Yes, you can try our [WP Adminify live demo](https://demo.pixarlabs.com/?pl-prod
 To get faster support, we recommend you to create a support topic in our [WP Adminify Forum](https://wpadminify.com/contact). Our support team will check your question and get back to you with a solution or alternative.
 
 == Screenshots ==
-
 1. WP Adminify overview
 2. Admin Columns module
 3. Page, Post, Post type, & Media Folders
@@ -235,6 +235,49 @@ To get faster support, we recommend you to create a support topic in our [WP Adm
 9. Disable Comments for WordPress
 
 == Installation ==
-
 1. Upload the Downloaded "adminify.zip" Folder to the `/wp-content/plugins/` directory
 2. Or, UNZIP "adminify.zip" folder and Upload adminify on "wp-content/plugins/" folder via FTP or Copy and Paste on your Local Computer
+
+== Changelog ==
+
+= 4.0.3.6 (12-03-2025) =
+* Updated: Added design compatibility for "WPCode – Insert Headers and Footers + Custom Code Snippets – WordPress Code Manager" plugin.
+* Feature: Admin menu items can now be set to open in a new tab. Thanks to @leopoldyys for the request. [Support Thread](https://wordpress.org/support/topic/custom-admin-menu-link-open-at-the-same-page/)
+* Fixed: Resolved submenu hiding issue for custom user roles.
+* Feature: Introduced 'enable_jltwp_adminify_menu_editor_render' filter to manage admin menu editor functionality.
+* Fixed: Menu visibility settings now correctly apply to custom user roles. Thanks to @aschunk for reporting. [Support Thread](https://wordpress.org/support/topic/custom-roles-dont-hide-menu/)
+* Fixed: Dashboard welcome widget design and functionality issues.
+
+= 4.0.3.5 (03-03-2025) =
+* Fixed: WooCommerce report and analytics layout issue.
+* Update: Updated Freemius SDK to the latest version.
+* Update: Applied a security patch to enhance the plugin's security.
+* Fixed: Resolved issue where plugin conflict notice was not dismissible.
+* Fixed: made the folder sticky.
+
+= 4.0.3.4 (23-02-2025) =
+* Fixed: Getting fatal error in discount notice. Thanks @peopleinside Support URL:https://wordpress.org/support/topic/undefined-constant-12/
+
+= 4.0.3.3 (18-02-2025) =
+* Fixed: Adminify admin bar top secondary menu item show/hide logic not working
+* Fixed: Adminify dashboard widget rule for YouTube videos
+* Fixed: Adminify dashboard widget rule for Vimeo videos
+* Fixed: Adminify admin bar dropdown not closing until clicked on the admin bar
+* Fixed: Adminify dashboard widget design issue for background icon
+* Fixed: Added condition to show line icon in the admin menu while Adminify UI is not enabled
+* Fixed: Added condition to show FontAwesome icon in the admin menu while Adminify UI is not enabled
+* Fixed: Changed custom image icon style for the admin menu while Adminify UI is not enabled
+* Fixed: Added condition to show Simple Line icon in the admin menu while Adminify UI is enabled
+* Fixed: Optimized the previous script for getting the icon
+* Fixed: Post duplicator not working as expected for custom post types and custom user role issue
+* Fixed: Admin menu items not changing if a plugin or function removed.
+* Updated: Freemius SDK version 2.11.0 updated
+* Updated: Adminify UI design for forms
+* Feature: Added support for the Thrive Page Builder
+* Feature: Added support for the LatePoint plugin
+* Feature: Added support for the SureCart plugin
+* Feature: Added support for the SureMembers plugin.
+* Feature: Added support for the SureTrigger plugin.
+
+
+Details [changelog here](https://wpadminify.com/changelog)

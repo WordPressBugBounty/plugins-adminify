@@ -285,8 +285,8 @@ class Assets extends AdminSettingsModel
                 'wp-adminify-menu-editor-script',
                 'WPAdminifyIconPicker',
                 [
-					'main_menu'	=> $main_menus,
-					'sub_menu'	=> $sub_menus,
+							'main_menu'	=> $main_menus,
+							'sub_menu'	=> $sub_menus,
                     // 'is_elementor_active' => Utils::is_plugin_active('elementor/elementor.php'),
                 ]
             );

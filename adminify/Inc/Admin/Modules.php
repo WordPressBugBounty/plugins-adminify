@@ -36,6 +36,7 @@ class Modules extends AdminSettingsModel
 		$this->modules_init();
 	}
 
+
 	/**
 	 * Include Moduels
 	 *
@@ -72,6 +73,7 @@ class Modules extends AdminSettingsModel
 		}
 
 		// new ServerInformation();
+
 		MenuEditor::get_instance();
 
 		// TO DO: Turned Off for future release, after making Network Options stable

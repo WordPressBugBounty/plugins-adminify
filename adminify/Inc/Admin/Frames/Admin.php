@@ -117,7 +117,7 @@ if (!class_exists('Admin')) {
                 ],
                 [
                     'url' => '*',
-                    'query_params' => ['page' => 'cff-setup'] 
+                    'query_params' => ['page' => 'cff-setup']
                 ],
                 [
                     'url' => '*',

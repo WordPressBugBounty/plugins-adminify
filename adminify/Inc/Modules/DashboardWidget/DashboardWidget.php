@@ -39,7 +39,14 @@ class DashboardWidget extends DashboardWidgetModel {
 			}
 
 			// Welcome Panel Initialize
-			add_action( 'admin_init', [ $this, 'jltwp_adminify_welcome_init' ] );
+			if( ! get_user_meta( get_current_user_id(), 'jltwp_adminify_dismissed_welcome_panel', true )){
+				add_action( 'admin_init', [ $this, 'jltwp_adminify_welcome_init' ] );
+			}
+			add_action('admin_init', function() {
+				if (isset($_GET['welcome']) && $_GET['welcome'] == '0') {
+						update_user_meta(get_current_user_id(), 'jltwp_adminify_dismissed_welcome_panel', true);
+				}
+			});
 		}
 	}
 	/**
@@ -71,6 +78,7 @@ class DashboardWidget extends DashboardWidgetModel {
 
 		return $output;
 	}
+
 
 	/**
 	 * Welcome Panel Initialize
@@ -121,7 +129,7 @@ class DashboardWidget extends DashboardWidgetModel {
 			<?php if($latest_wordpress_version >= '6.2'){ ?>
 				<div class="welcome-panel-header">
 					<?php if ( current_user_can( 'edit_theme_options' ) ) { ?>
-					<a class="welcome-panel-close" href="<?php echo esc_url( admin_url( '?welcome=0' ) ); ?>"><?php esc_html_e( 'Dismiss' ); ?></a>
+						<a class="welcome-panel-close" href="<?php echo esc_url( admin_url( '?welcome=0' ) ); ?>"><?php esc_html_e( 'Dismiss' ); ?></a>
 					<?php } ?>
 					<?php $this->render_welcome_template(); ?>
 				</div>
@@ -131,11 +139,12 @@ class DashboardWidget extends DashboardWidgetModel {
 				}
 				.wp-adminify #wpbody-content .adminify-panel-content{
 					margin: auto auto;
-					padding: 50px 100px;
+					padding:0;
 				}
 				.wp-adminify #wpbody-content .welcome-panel-header{
 					padding: 30px !important;
 					max-width: inherit !important;
+					padding-top: 50px !important;
 				}
 			</style>
 			<?php } else{ ?>

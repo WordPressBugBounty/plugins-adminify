@@ -59,6 +59,29 @@ if (!class_exists('Admin')) {
 			jltwp_adminify()->add_filter('show_deactivation_subscription_cancellation', '__return_false');
 
 			$this->disable_gutenberg_editor();
+
+			add_filter('show_admin_bar', [ $this, 'jltwp_adminify_removeAdminBar'], PHP_INT_MAX);
+			add_action('wp_head', [ $this,'jltwp_adminify_remove_header_for_baknd'], PHP_INT_MAX);
+
+		}
+
+		function jltwp_adminify_removeAdminBar($status)
+		{
+			if (!empty($_GET['bknd']) && sanitize_text_field(wp_unslash($_GET['bknd']))) {
+				return false;
+			}
+			return $status;
+		}
+
+		function jltwp_adminify_remove_header_for_baknd() {
+				if (isset($_GET['bknd']) && $_GET['bknd'] == '1') {
+						echo '<script>
+						jQuery(document).ready(function($){
+							$("header").remove();
+							$("footer").remove();
+						})
+					</script>';
+				}
 		}
 
 

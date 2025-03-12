@@ -127,6 +127,7 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
         $menu_title = $item[0];
         $menu_name  = isset($item[5]) ? $item[5] : '';
         $menu_icon  = isset($item[6]) ? $item[6] : '';
+        $external_link = (isset($item['external_link']) && $item['external_link'] == 1 ) ? true: false; 
 
         $menu_hook = get_plugin_page_hook($menu_slug, 'admin.php');
         $menu_file = $menu_slug;
@@ -156,11 +157,16 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
             'name'     => $menu_name,
             'icon'     => $menu_icon,
             'children' => [],
-            'separator' => !empty( $item['separator'] ) ? $item['separator'] : ''
+            'separator' => !empty( $item['separator'] ) ? $item['separator'] : '',
+            'external_link' => $external_link ,
         ];
 
         if (!empty($submenu[$menu_slug])) {
             foreach ($submenu[$menu_slug] as $sub_key => $sub_item) {
+                $external_link = false;
+                if( isset($optiongroup['submenu'][$sub_item[2]])){
+                    $external_link = ($optiongroup['submenu'][$sub_item[2]]['external_link'] == 1)? true : false ;
+                }
                 $sub_slug  = $sub_item[2];
                 $sub_title = $sub_item[0];
                 $sub_name  = isset($sub_item[5]) ? $sub_item[5] : '';
@@ -195,11 +201,12 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
                 }
 
                 $admin_menu[$menu_slug]['children'][$sub_slug] = [
-                    'key'   => $sub_slug,
-                    'title' => $sub_title,
-                    'url'   => $sub_url,
-                    'name'  => $sub_name,
-                    'icon'  => $sub_icon,
+                    'key'               => $sub_slug,
+                    'title'             => $sub_title,
+                    'url'               => $sub_url,
+                    'name'              => $sub_name,
+                    'icon'              => $sub_icon,
+                    'external_link'     => $external_link,
                 ];
             }
         }

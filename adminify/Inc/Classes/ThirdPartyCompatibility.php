@@ -75,6 +75,13 @@ class ThirdPartyCompatibility {
 			}
             </style>';
         }
+        if ( Utils::is_plugin_active( 'insert-headers-and-footers/ihaf.php' ) ) {
+            echo '<style>
+            .wp-adminify .wpcode-code-type-picker, .wp-adminify .wpcode-code-type-picker-backdrop {
+                left: 0;
+            }
+            </style>';
+        }
         if ( Utils::is_plugin_active( 'advanced-access-manager/aam.php' ) ) {
             add_filter(
                 'jltwp_adminify_menu_option_compatibility_filter',
