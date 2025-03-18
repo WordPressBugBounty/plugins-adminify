@@ -704,11 +704,11 @@ if ( !class_exists( 'MenuEditor' ) ) {
                 }
                 $custom_menu = ( isset( $current_menu_item[5] ) ? $current_menu_item[5] : '' );
                 if ( strpos( $custom_menu, 'adminify-custom-menu-' ) !== false ) {
-                    if ( isset( $this->menu_settings[$current_menu_item[5]]['hidden_for'] ) ) {
+                    if ( isset( $this->menu_settings[$current_menu_item[5]]['hidden_for'] ) && !empty( $this->menu_settings[$current_menu_item[5]]['hidden_for'] ) ) {
                         $disabled_for = $this->menu_settings[$current_menu_item[5]]['hidden_for'];
-                    }
-                    if ( $this->is_hidden( $disabled_for ) ) {
-                        $current_menu_item['hidden_for'] = true;
+                        if ( $this->is_hidden( $disabled_for ) ) {
+                            $current_menu_item['hidden_for'] = true;
+                        }
                     }
                     if ( isset( $this->menu_settings[$current_menu_item[5]]['external_link'] ) ) {
                         $external_link = $this->menu_settings[$current_menu_item[5]]['external_link'];
@@ -741,6 +741,11 @@ if ( !class_exists( 'MenuEditor' ) ) {
             $current_user = wp_get_current_user();
             $current_roles = $current_user->roles;
             $all_roles = wp_roles()->get_names();
+            foreach ( $current_roles as $current_role ) {
+                if ( isset( $all_roles[$current_role] ) && in_array( $all_roles[$current_role], $disabled_for ) ) {
+                    return true;
+                }
+            }
             // Normalize disabled_for array
             $disabled_for_arr = [];
             foreach ( $disabled_for as $v ) {
@@ -949,9 +954,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
 				<?php 
             foreach ( $this->roles as $role ) {
                 $rolename = $role['name'];
-                // if ('administrator' == strtolower($rolename)) {
-                // 	continue;
-                // }
+                if ( 'administrator' == strtolower( $rolename ) ) {
+                    continue;
+                }
                 $sel = '';
                 if ( in_array( $rolename, $disabled_for ) ) {
                     $sel = 'selected';

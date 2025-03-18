@@ -4,7 +4,7 @@ Tags: Custom Dashboard, White Label WordPress,  Media Folders, Admin Columns, Lo
 Requires at least: 4.0
 Tested up to: 6.7.2
 Requires PHP: 5.3
-Stable tag: 4.0.3.6
+Stable tag: 4.0.3.7
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -239,6 +239,9 @@ To get faster support, we recommend you to create a support topic in our [WP Adm
 2. Or, UNZIP "adminify.zip" folder and Upload adminify on "wp-content/plugins/" folder via FTP or Copy and Paste on your Local Computer
 
 == Changelog ==
+= 4.0.3.7 (18-03-2025) =
+* Fixed: Menu item not hiding for custom user roles issue.
+* Fixed: Removed "Administrator" role from menu editor hidden for rule selection to clear up confusion.
 
 = 4.0.3.6 (12-03-2025) =
 * Updated: Added design compatibility for "WPCode – Insert Headers and Footers + Custom Code Snippets – WordPress Code Manager" plugin.

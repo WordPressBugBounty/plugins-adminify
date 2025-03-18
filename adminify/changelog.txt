@@ -1,4 +1,8 @@
 == Changelog ==
+= 4.0.3.7 (18-03-2025) =
+* Fixed: Menu item not hiding for custom user roles issue.
+* Fixed: Removed "Administrator" role from menu editor hidden for rule selection to clear up confusion.
+
 = 4.0.3.6 (12-03-2025) =
 * Updated: Added design compatibility for "WPCode – Insert Headers and Footers + Custom Code Snippets – WordPress Code Manager" plugin.
 * Feature: Admin menu items can now be set to open in a new tab. Thanks to @leopoldyys for the request. [Support Thread](https://wordpress.org/support/topic/custom-admin-menu-link-open-at-the-same-page/)

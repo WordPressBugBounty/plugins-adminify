@@ -283,7 +283,7 @@ class White_Label extends AdminSettingsModel {
 		$adminify_whl_fields[] = [
 			'id'         => 'row_links',
 			'title'      => __('Hide All Row Meta Links', 'adminify'),
-			'subtitle'   => __('All Plugin Meta Links will be removed - Upgrade, Opt In, Settings etc', 'adminify'),
+			'subtitle'   => __('All Plugin Meta Links will be removed - Upgrade, Settings etc', 'adminify'),
 			'type'       => 'switcher',
 			'class'      => $adminify_white_label_class,
 			'text_on'    => __('Yes', 'adminify'),
@@ -300,7 +300,7 @@ class White_Label extends AdminSettingsModel {
 			'options' => [
 				'upgrade'          => __('Upgrade', 'adminify'),
 				'activate_license' => __('Activate/Change License', 'adminify'),
-				'opt_in_out'       => __('Opt In/Out', 'adminify'),
+				// 'opt_in_out'       => __('Opt In/Out', 'adminify'),
 				'settings'         => __('Settings', 'adminify'),
 				'account'          => __('Account', 'adminify'),
 			],
