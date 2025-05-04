@@ -109,7 +109,7 @@ function jltwp_adminify_menu_roles($user_roles = [])
 function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
     $admin_menu = [];
     $menu_options = apply_filters('jltwp_adminify_menu_option_compatibility_filter', $menu_options, $menu);
-    
+
     foreach ($menu as $key => $item) {
         if (is_array($menu_options)) {
             if (isset($menu_options[$item[2]])) {
@@ -127,7 +127,7 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
         $menu_title = $item[0];
         $menu_name  = isset($item[5]) ? $item[5] : '';
         $menu_icon  = isset($item[6]) ? $item[6] : '';
-        $external_link = (isset($item['external_link']) && $item['external_link'] == 1 ) ? true: false; 
+        $external_link = (isset($item['external_link']) && $item['external_link'] == 1 ) ? true: false;
 
         $menu_hook = get_plugin_page_hook($menu_slug, 'admin.php');
         $menu_file = $menu_slug;
@@ -138,7 +138,7 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
         }
 
         $url = '';
-        
+
         $arrParsedUrl = parse_url($menu_slug);
         if (!empty($arrParsedUrl['scheme'])) {
             if ($arrParsedUrl['scheme'] === "http" || $arrParsedUrl['scheme'] === "https") {
@@ -195,10 +195,20 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
                 }
 
                 // Wrong Menu/Submenu Links
+
                 // Support for White Label Plugin Url
                 if ('white-label' === $sub_slug) {
                     $sub_url = admin_url('options-general.php?page=white-label');
                 }
+
+                // JetFormBuilder
+                if ('jet-form-builder' === $sub_slug) { $sub_url = admin_url('edit.php?post_type=jet-form-builder'); }
+                if ('jet-form-builder' === $sub_slug) { $sub_url = admin_url('post-new.php?post_type=jet-form-builder'); }
+                if ('jfb-settings' === $sub_slug) { $sub_url = admin_url('edit.php?post_type=jet-form-builder&page=jfb-settings'); }
+                if ('jfb-addons' === $sub_slug) { $sub_url = admin_url('edit.php?post_type=jet-form-builder&page=jfb-addons'); }
+                if ('jfb-payments' === $sub_slug) { $sub_url = admin_url('edit.php?post_type=jet-form-builder&page=jfb-payments'); }
+                if ('jfb-records' === $sub_slug) { $sub_url = admin_url('edit.php?post_type=jet-form-builder&page=jfb-records'); }
+
 
                 $admin_menu[$menu_slug]['children'][$sub_slug] = [
                     'key'               => $sub_slug,
@@ -218,7 +228,7 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
 /**
 * Recursively replace all occurrences of &amp; with & in an array.
 *
-* @see https://wordpress.org/support/topic/automatically-adding-amp-in-url/ 
+* @see https://wordpress.org/support/topic/automatically-adding-amp-in-url/
 * @param array $array The input array to process.
 * @return array The updated array with replacements.
 */
@@ -239,6 +249,6 @@ function jlt_adminify_replaceAmpersandInHref($array, $indicator='href') {
 function jlt_adminify_sluggify_with_underscores($string) {
     $slug = sanitize_title($string);
     $slug = str_replace('-', '_', $slug);
-    
+
     return $slug;
 }

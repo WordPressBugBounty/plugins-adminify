@@ -3,6 +3,7 @@
 namespace WPAdminify\Inc\Admin\Options;
 
 use WPAdminify\Inc\Utils;
+use WPAdminify\Inc\Admin\AdminSettings;
 use WPAdminify\Inc\Admin\AdminSettingsModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 } // Cannot access directly.
 
 class White_Label extends AdminSettingsModel {
+
 
 	public function __construct() {
 		$this->white_label_settings();
@@ -143,6 +145,14 @@ class White_Label extends AdminSettingsModel {
 		$white_label = apply_filters('adminify_settings/wp_white_label', $white_label, $this);
 	}
 
+	public static function jltwp_white_label_options(){
+		$adminify_options = get_option('_wpadminify');
+		if( isset($adminify_options['white_label']) && !empty($adminify_options['white_label']) ){
+			return $adminify_options['white_label'];
+		}else{
+			return [];
+		}
+	}
 	/**
 	 * White Label Settings: White Label Fields
 	 *
@@ -157,7 +167,13 @@ class White_Label extends AdminSettingsModel {
 		$adminify_white_label = [];
 
 		$this->jltwp_wordpress_white_label_fields($wp_white_label);
-		$this->jltwp_adminify_white_label_fields($adminify_white_label);
+
+		$jltwp_white_label_options = self::jltwp_white_label_options();
+		$adminify_white_label_plugin_option_enabled = !empty($jltwp_white_label_options['plugin_option']) ? $jltwp_white_label_options['plugin_option'] : '';
+
+		if(empty($adminify_white_label_plugin_option_enabled)){
+			$this->jltwp_adminify_white_label_fields($adminify_white_label);
+		}
 
 		$white_label[] = [
 			'id'     => 'white_label',

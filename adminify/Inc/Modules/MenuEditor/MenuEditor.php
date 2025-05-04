@@ -322,6 +322,10 @@ if ( !class_exists( 'MenuEditor' ) ) {
             $menu_settings = $this->menu_settings;
             $tempmenu = [];
             foreach ( $thismenu as $key => $current_menu_item ) {
+                if ( $current_menu_item[4] === "wp-menu-separator" ) {
+                    unset($thismenu[$key]);
+                    continue;
+                }
                 $next_menu_item = next( $thismenu );
                 $optiongroup = [];
                 $order = $key;

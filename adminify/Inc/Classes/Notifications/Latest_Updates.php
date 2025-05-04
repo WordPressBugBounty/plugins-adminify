@@ -64,7 +64,7 @@ if (!class_exists('Latest_Updates')) {
 					 */
 
 					'<h3 class="adminify-update-head">' . WP_ADMINIFY . ' <span><small><em>v' . esc_html(WP_ADMINIFY_VER) . '</em></small>' . __(' has some updates..', 'adminify') . '</span></h3><br>', // %3$s
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Admin Bar adding &amp; on url dynamically </span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> JetFormBuilder plugin Urls issue fixed </span><br>', 'adminify'),
 					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Added Adminify UI for Guttenberg editor </span><br>', 'adminify'),
 					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Admin Menu custom url and admin page url swicthing issue </span><br>', 'adminify'),
 					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Admin Menu custom menu icon support for Simple Line Icon and FontAwesome Icon </span><br>', 'adminify'),

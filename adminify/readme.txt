@@ -2,9 +2,9 @@
 Contributors: jwthemeltd, litonice13, masteraddons
 Tags: Custom Dashboard, White Label WordPress,  Media Folders, Admin Columns, Login Customizer
 Requires at least: 4.0
-Tested up to: 6.7.2
-Requires PHP: 5.3
-Stable tag: 4.0.3.7
+Tested up to: 6.8.1
+Requires PHP: 7.4
+Stable tag: 4.0.3.8
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -238,7 +238,15 @@ To get faster support, we recommend you to create a support topic in our [WP Adm
 1. Upload the Downloaded "adminify.zip" Folder to the `/wp-content/plugins/` directory
 2. Or, UNZIP "adminify.zip" folder and Upload adminify on "wp-content/plugins/" folder via FTP or Copy and Paste on your Local Computer
 
+
+
 == Changelog ==
+= 4.0.3.8 (4-05-2025) =
+* Fixed: The menu item restriction by role issue was fixed.
+* Fixed: Links not working issue for "JetFormBuilder — Dynamic Blocks Form Builder" plugin issue fixed.  Thanks to @leopoldyys for the request. [Support Thread](https://wordpress.org/support/topic/jetengine-showing-critical-error-due-to-adminify/)
+* Fixed: Admin panel sidebar menu dividers are not hiding properly issue.
+* UI Update: Admin panel top bar user menu drop down accessibility updated.
+
 = 4.0.3.7 (18-03-2025) =
 * Fixed: Menu item not hiding for custom user roles issue.
 * Fixed: Removed "Administrator" role from menu editor hidden for rule selection to clear up confusion.

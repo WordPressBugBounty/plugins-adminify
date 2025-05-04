@@ -1,4 +1,10 @@
 == Changelog ==
+= 4.0.3.8 (4-05-2025) =
+* Fixed: The menu item restriction by role issue was fixed.
+* Fixed: Links not working issue for "JetFormBuilder — Dynamic Blocks Form Builder" plugin issue fixed.  Thanks to @leopoldyys for the request. [Support Thread](https://wordpress.org/support/topic/jetengine-showing-critical-error-due-to-adminify/)
+* Fixed: Admin panel sidebar menu dividers are not hiding properly issue.
+* UI Update: Admin panel top bar user menu drop down accessibility updated.
+
 = 4.0.3.7 (18-03-2025) =
 * Fixed: Menu item not hiding for custom user roles issue.
 * Fixed: Removed "Administrator" role from menu editor hidden for rule selection to clear up confusion.
