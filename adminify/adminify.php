@@ -5,10 +5,10 @@
  * Description: WP Adminify is a powerful plugin that modernizes and customizes your WordPress admin dashboard. It offers a clean, branded interface and advanced menu management features to enhance your admin user experience.
  * Plugin URI: https://wpadminify.com
  * Author: Jewel Theme
- * Version: 4.0.3.8
+ * Version: 4.0.3.9
  * Author URI: https://wpadminify.com
- * License:     GPL-2.0+
- * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
+ * License:     GPLv3 or later
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: adminify
  * Domain Path: /languages
  *
@@ -50,19 +50,23 @@ if ( function_exists( 'jltwp_adminify' ) ) {
             );
             // WP Adminify
             $jltwp_adminify = fs_dynamic_init( array(
-                'id'               => '7829',
-                'slug'             => 'adminify',
-                'premium_slug'     => 'adminify-pro',
-                'type'             => 'plugin',
-                'public_key'       => 'pk_a0ea61beae7126eb845f7e58a03e5',
-                'premium_suffix'   => 'Pro',
-                'affiliation'      => false,
-                'has_addons'       => true,
-                'has_paid_plans'   => true,
-                'is_org_compliant' => false,
-                'menu'             => ( function_exists( 'get_menu_params__premium_only' ) ? get_menu_params__premium_only() : $jltadminify_menu ),
-                'is_live'          => true,
-                'is_premium'       => false,
+                'id'                  => '7829',
+                'slug'                => 'adminify',
+                'premium_slug'        => 'adminify-pro',
+                'type'                => 'plugin',
+                'public_key'          => 'pk_a0ea61beae7126eb845f7e58a03e5',
+                'premium_suffix'      => 'Premium',
+                'affiliation'         => false,
+                'has_addons'          => true,
+                'has_paid_plans'      => true,
+                'is_org_compliant'    => true,
+                'parallel_activation' => array(
+                    'enabled'                  => true,
+                    'premium_version_basename' => 'adminify-pro/adminify.php',
+                ),
+                'menu'                => ( function_exists( 'get_menu_params__premium_only' ) ? get_menu_params__premium_only() : $jltadminify_menu ),
+                'is_live'             => true,
+                'is_premium'          => false,
             ) );
         }
         return $jltwp_adminify;
@@ -117,7 +121,7 @@ if ( !defined( 'WP_ADMINIFY_URI' ) ) {
     define( 'WP_ADMINIFY_URI', $jltwp_adminify_plugin_data['Plugin URI'] );
 }
 if ( !class_exists( '\\WPAdminify\\WP_Adminify' ) ) {
-    // Autoload
+    // Autoload Files
     require_once __DIR__ . '/vendor/autoload.php';
     // Instantiate WP Adminify Class
     require_once __DIR__ . '/class-wp-adminify.php';

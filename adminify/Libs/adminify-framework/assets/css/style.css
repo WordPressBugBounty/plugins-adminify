@@ -398,7 +398,7 @@
   font-size: 13px;
   line-height: 1.1;
 }
-.adminify-section .adminify-field.adminify-field-color_group.adminify-pro-fieldset > .adminify-fieldset .wp-picker-container, .adminify-section .adminify-field.adminify-pro-pointer .adminify-fieldset {
+.adminify-section .adminify-field.adminify-field-color_group.adminify-pro-fieldset > .adminify-fieldset .wp-picker-container, .adminify-section .adminify-field.adminify-pro-pointer .adminify-fieldset, .adminify-section .adminify-field.adminify-pro-pointer .adminify-checkbox {
   pointer-events: none;
 }
 .adminify-section .adminify-field .adminify-fieldset ul > li > label:has(.adminify-pro-checkbox) {

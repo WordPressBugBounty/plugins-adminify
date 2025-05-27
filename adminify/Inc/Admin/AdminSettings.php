@@ -305,7 +305,7 @@ if ( !class_exists( 'AdminSettings' ) ) {
                     'type'    => 'subheading',
                     'content' => Utils::adminfiy_help_urls(
                         __( 'Backup Config Settings', 'adminify' ),
-                        'https://wpadminify.com/kb/wp-adminify-options-panel/#adminify-backup',
+                        'https://wpadminify.com/docs/adminify/export-import/backup',
                         'https://www.youtube.com/playlist?list=PLqpMw0NsHXV-EKj9Xm1DMGa6FGniHHly8',
                         'https://www.facebook.com/groups/jeweltheme',
                         self::support_url()

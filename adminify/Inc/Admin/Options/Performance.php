@@ -162,16 +162,16 @@ if (!class_exists('Performance')) {
         public function disable_embeds(&$disable_embeds)
         {
             $disable_embeds[] = [
-                'id'      => 'performance_subheading',
+				'id'      => 'performance_subheading',
                 'type'    => 'subheading',
                 'content' => Utils::adminfiy_help_urls(
-                    __('<span></span>', 'adminify'),
-                    'https://wpadminify.com/kb/performance/',
-                    '',
+                    '<span></span>',
+                    'https://wpadminify.com/docs/adminify/performance/disable-embeds',
+                    'https://www.youtube.com/watch?v=xALg4WWZ_bE',
                     'https://www.facebook.com/groups/jeweltheme',
                     \WPAdminify\Inc\Admin\AdminSettings::support_url()
                 ),
-            ];
+			];
 
             $disable_embeds[] = [
                 'id'         => 'disable_embeds',

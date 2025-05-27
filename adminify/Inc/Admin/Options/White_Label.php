@@ -81,8 +81,8 @@ class White_Label extends AdminSettingsModel {
 			'type'    => 'subheading',
 			'content' => Utils::adminfiy_help_urls(
 				__('"WordPress" White Label Settings', 'adminify'),
-				'https://wpadminify.com/kb/white-label/',
-				'',
+				'https://wpadminify.com/docs/adminify/white-label/wordpress-white-label-features',
+				'https://www.youtube.com/watch?v=zDK_MwIcTpc',
 				'https://www.facebook.com/groups/jeweltheme',
 				\WPAdminify\Inc\Admin\AdminSettings::support_url()
 			)
@@ -214,11 +214,12 @@ class White_Label extends AdminSettingsModel {
 			'class'   => 'adminify-mt-10 adminify-agency-plan',
 			'content' => Utils::adminfiy_help_urls(
 				sprintf(__('<span>"WP Adminify" Branding %s</span>', 'adminify'), Utils::adminify_upgrade_pro_badge('Agency or Higher Plan Only')),
-				'https://wpadminify.com/kb/adminify-white-label/',
-				'https://www.youtube.com/playlist?list=PLqpMw0NsHXV-EKj9Xm1DMGa6FGniHHly8',
+				'https://wpadminify.com/docs/adminify/white-label/rebrand-wp-adminify-plugin',
+				'https://www.youtube.com/watch?v=zDK_MwIcTpc',
 				'https://www.facebook.com/groups/jeweltheme',
 				\WPAdminify\Inc\Admin\AdminSettings::support_url()
 			),
+			'dependency' => ['plugin_option', '==', 'false', 'true'],
 		];
 		$adminify_whl_fields[] = [
 			'id'           => 'plugin_logo',
@@ -234,6 +235,7 @@ class White_Label extends AdminSettingsModel {
 			'remove_title' => __('Remove Logo Image', 'adminify'),
 			'default'      => $this->get_default_field( 'white_label')['adminify']['plugin_logo'],
 			'dependency'   => ['admin_ui_mode', '==', 'light', 'true'],
+			'dependency'   => ['plugin_option', '==', 'false', 'true'],
 		];
 		$adminify_whl_fields[] = [
 			'id'           => 'plugin_logo_dark',
@@ -246,34 +248,39 @@ class White_Label extends AdminSettingsModel {
 			'remove_title' => __('Remove Logo Image', 'adminify'),
 			'default'      => $this->get_default_field('white_label')['adminify']['plugin_logo_dark'],
 			'dependency'   => ['admin_ui_mode', '==', 'dark', 'true'],
+			'dependency'   => ['plugin_option', '==', 'false', 'true'],
 		];
 		$adminify_whl_fields[] = [
-			'id'      => 'plugin_name',
-			'type'    => 'text',
-			'class'   => $adminify_white_label_class,
-			'title'   => __('Plugin Name', 'adminify'),
-			'default' => $this->get_default_field('white_label')['adminify']['plugin_name'],
+			'id'         => 'plugin_name',
+			'type'       => 'text',
+			'class'      => $adminify_white_label_class . ' adminify-pro-pointer',
+			'title'      => __('Plugin Name', 'adminify'),
+			'default'    => $this->get_default_field('white_label')['adminify']['plugin_name'],
+			'dependency' => ['plugin_option', '==', 'false', 'true'],
 		];
 		$adminify_whl_fields[] = [
-			'id'      => 'plugin_desc',
-			'type'    => 'textarea',
-			'class'   => $adminify_white_label_class,
-			'title'   => __('Plugin Description', 'adminify'),
-			'default' => $this->get_default_field('white_label')['adminify']['plugin_desc'],
+			'id'         => 'plugin_desc',
+			'type'       => 'textarea',
+			'class'      => $adminify_white_label_class . ' adminify-pro-pointer',
+			'title'      => __('Plugin Description', 'adminify'),
+			'default'    => $this->get_default_field('white_label')['adminify']['plugin_desc'],
+			'dependency' => ['plugin_option', '==', 'false', 'true'],
 		];
 		$adminify_whl_fields[] = [
 			'id'      => 'author_name',
 			'type'    => 'text',
-			'class'   => $adminify_white_label_class,
+			'class'   => $adminify_white_label_class . ' adminify-pro-pointer',
 			'title'   => __('Developer/Agency Name', 'adminify'),
 			'default' => $this->get_default_field('white_label')['adminify']['author_name'],
+			'dependency' => ['plugin_option', '==', 'false', 'true'],
 		];
 		$adminify_whl_fields[] = [
 			'id'      => 'menu_label',
 			'type'    => 'text',
-			'class'   => $adminify_white_label_class,
+			'class'   => $adminify_white_label_class . ' adminify-pro-pointer',
 			'title'   => __('Menu Label', 'adminify'),
 			'default' => $this->get_default_field('white_label')['adminify']['menu_label'],
+			'dependency' => ['plugin_option', '==', 'false', 'true'],
 		];
 		$adminify_whl_fields[] = [
 			'id'           => 'menu_icon',
@@ -285,34 +292,37 @@ class White_Label extends AdminSettingsModel {
 			'button_title' => __('Add Menu Icon', 'adminify'),
 			'remove_title' => __('Remove Menu Icon', 'adminify'),
 			'default'      => $this->get_default_field('white_label')['adminify']['menu_icon'],
+			'dependency' => ['plugin_option', '==', 'false', 'true'],
 		];
 		$adminify_whl_fields[] = [
 			'id'      => 'plugin_url',
 			'type'    => 'text',
-			'class'   => $adminify_white_label_class,
+			'class'   => $adminify_white_label_class . ' adminify-pro-pointer',
 			'title'   => __(
 				'Plugin URL',
 				'adminify'
 			),
 			'default' => $this->get_default_field('white_label')['adminify']['plugin_url'],
+			'dependency' => ['plugin_option', '==', 'false', 'true'],
 		];
 		$adminify_whl_fields[] = [
 			'id'         => 'row_links',
 			'title'      => __('Hide All Row Meta Links', 'adminify'),
 			'subtitle'   => __('All Plugin Meta Links will be removed - Upgrade, Settings etc', 'adminify'),
 			'type'       => 'switcher',
-			'class'      => $adminify_white_label_class,
+			'class'      => $adminify_white_label_class . ' adminify-pro-pointer',
 			'text_on'    => __('Yes', 'adminify'),
 			'text_off'   => __('No', 'adminify'),
 			'text_width' => 80,
 			'default'    => $this->get_default_field('white_label')['adminify']['row_links'],
+			'dependency' => ['plugin_option', '==', 'false', 'true'],
 		];
 		$adminify_whl_fields[] = [
 			'id'      => 'remove_action_links',
 			'title'   => __('Remove Action Links', 'adminify'),
 			'type'    => 'checkbox',
 			'inline'  => true,
-			'class'   => $adminify_white_label_class,
+			'class'   => $adminify_white_label_class . ' adminify-pro-pointer',
 			'options' => [
 				'upgrade'          => __('Upgrade', 'adminify'),
 				'activate_license' => __('Activate/Change License', 'adminify'),
@@ -321,13 +331,13 @@ class White_Label extends AdminSettingsModel {
 				'account'          => __('Account', 'adminify'),
 			],
 			'default'    => $this->get_default_field('white_label')['adminify']['remove_action_links'],
-			'dependency' => ['row_links', '==', 'false', 'true'],
+			'dependency' => ['row_links|plugin_option', '==|==', 'false|false', 'true'],
 		];
 		$adminify_whl_fields[] = [
 			'id'      => 'plugin_option',
 			'type'    => 'checkbox',
-			'class'   => 'adminify-full-width-field adminify-hightlight-field adminify-one-col adminify-mt-6' . $adminify_white_label_class,
-			'label'   => __('Enable Force Disable "White Label" Options: If you enable this option, White Label option will be completely hidden. If you want it back, You have to deactivate and activate plugin to make it work again.', 'adminify'),
+			'class'   => $adminify_white_label_class . ' adminify-full-width-field adminify-hightlight-field adminify-one-col adminify-mt-6 adminify-pro-pointer',
+			'label'   => __('Force Disable White Label (WP Adminify): When enabled, the White Label settings will be completely hidden. To access them again, you\'ll need to deactivate and reactivate WP Adminify Plugin.', 'adminify'),
 			'default' => $this->get_default_field('white_label')['adminify']['plugin_option'],
 		];
 

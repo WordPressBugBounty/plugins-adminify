@@ -514,8 +514,8 @@ class MenuLayout extends AdminSettingsModel {
 						'type'    => 'subheading',
 						'content' => Utils::adminfiy_help_urls(
 							__('Admin Menu Settings', 'adminify' ),
-							'https://wpadminify.com/kb/admin-menu',
-							'',
+							'https://wpadminify.com/docs/adminify/admin-menu/admin-menu-editor',
+							'https://www.youtube.com/watch?v=zbEYlAg91QM',
 							'https://www.facebook.com/groups/jeweltheme',
 							\WPAdminify\Inc\Admin\AdminSettings::support_url()
 						),

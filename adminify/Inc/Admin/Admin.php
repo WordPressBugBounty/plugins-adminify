@@ -44,7 +44,6 @@ if (!class_exists('Admin')) {
 
 
 			// Freemius Hooks
-			jltwp_adminify()->add_filter('freemius_pricing_js_path', array($this, 'jltwp_new_freemius_pricing_js'));
 			jltwp_adminify()->add_filter('plugin_icon', array($this, 'jltwp_adminify_logo_icon'));
 
 			add_action('admin_menu', array($this, 'support_menu'), 1100);
@@ -156,11 +155,6 @@ if (!class_exists('Admin')) {
 		{
 			$logo = WP_ADMINIFY_PATH . '/assets/images/adminify.svg';
 			return $logo;
-		}
-
-		public function jltwp_new_freemius_pricing_js($default_pricing_js_path)
-		{
-			return WP_ADMINIFY_PATH . '/Libs/freemius-pricing/freemius-pricing.js';
 		}
 
 

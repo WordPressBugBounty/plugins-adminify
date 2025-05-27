@@ -130,9 +130,9 @@ if ( ! class_exists( 'Customize' ) ) {
 				'id'      => 'layout_mode_setting_subheading',
 				'type'    => 'subheading',
 				'content' => Utils::adminfiy_help_urls(
-					__('<span></span>', 'adminify'),
-					'https://wpadminify.com/kb/customize/',
-					'',
+					'<span></span>',
+					'https://wpadminify.com/docs/adminify/customize/adminify-ui-templates',
+					'https://www.youtube.com/watch?v=jeWdKbEHYVU',
 					'https://www.facebook.com/groups/jeweltheme',
 					\WPAdminify\Inc\Admin\AdminSettings::support_url()
 				),

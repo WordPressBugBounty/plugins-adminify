@@ -2,6 +2,7 @@
 
 namespace WPAdminify\Inc\Admin\Options;
 
+use WPAdminify\Inc\Classes\Helper;
 use WPAdminify\Inc\Utils;
 use WPAdminify\Inc\Admin\Options\Productivity\Duplicate_Post;
 use WPAdminify\Inc\Admin\Options\Productivity\PostTypesOrder;
@@ -89,9 +90,9 @@ if (!class_exists('Productivity')) {
 				'id'      => 'productivity_sub_heading',
 				'type'    => 'subheading',
 				'content' => Utils::adminfiy_help_urls(
-					__('<span></span>', 'adminify'),
-					'https://wpadminify.com/kb/productivity/',
-					'',
+					'<span></span>',
+					'https://wpadminify.com/docs/adminify/productivity/hide-admin-notices',
+					'https://www.youtube.com/watch?v=49Cd3dYzYHs',
 					'https://www.facebook.com/groups/jeweltheme',
 					\WPAdminify\Inc\Admin\AdminSettings::support_url()
 				),

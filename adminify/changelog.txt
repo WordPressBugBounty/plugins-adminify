@@ -1,4 +1,13 @@
 == Changelog ==
+= 4.0.3.9 (27-05-2025) =
+* Updated: Freemius SDK Updated and Moved on `vendor` directory as per WordPress.org Compliance
+* Removed: Freemius Pricing Package removed
+* Fixed: Adminify Free and Pro Plugin Name issue fixed
+* Fixed: White Label for Agency issue fixed
+* Fixed: WP Admin White Screen issue fixed
+* Fixed: White Label for Agencies improved with Force Disable Option
+
+
 = 4.0.3.8 (4-05-2025) =
 * Fixed: The menu item restriction by role issue was fixed.
 * Fixed: Links not working issue for "JetFormBuilder — Dynamic Blocks Form Builder" plugin issue fixed.  Thanks to @leopoldyys for the request. [Support Thread](https://wordpress.org/support/topic/jetengine-showing-critical-error-due-to-adminify/)
@@ -54,7 +63,7 @@
 * Fixed: "Ask for Rating" Admin Notice not closing issue fixed
 * Removed: Admin Bar CSS loading from WP Adminify removed
 * Feature: Admin panel color mode now under user preference. Thanks to @kingsleychimezie, Support URL:https://wordpress.org/support/topic/light-dark-mode-not-setting-to-specify-users/
-* Fixed: Frontend css broken issue until activate gutenberg style from setting issue, Thanks to @peopleinside, Support URL:https://wordpress.org/support/topic/broke-front-end-website/ 
+* Fixed: Frontend css broken issue until activate gutenberg style from setting issue, Thanks to @peopleinside, Support URL:https://wordpress.org/support/topic/broke-front-end-website/
 * Feature: Added Basic support for "Advanced Access Manager" plugins access restriction over backend menu, Thanks to @peopleinside, Support URL:https://wordpress.org/support/topic/hide-admin-menu-item-for-rules-never-work-as-expected/
 * Fixed: Wrong url for for home while homeurl is different with siteurl
 

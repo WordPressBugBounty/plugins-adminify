@@ -68,7 +68,9 @@ if ( ! class_exists( 'ADMINIFY_Setup' ) ) {
       do_action( 'adminify_init' );
 
       // Setup textdomain
-      self::textdomain();
+      add_action( 'init', function(){
+        self::textdomain();
+      });
 
       add_action( 'after_setup_theme', array( 'ADMINIFY', 'setup' ) );
       add_action( 'init', array( 'ADMINIFY', 'setup' ) );

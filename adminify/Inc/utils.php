@@ -541,42 +541,6 @@ class Utils
 		return $allupdates;
 	}
 
-	public static function adminfiy_help_urls($module_name = '', $docs = '', $youtube = '', $facebook_grp = '', $support = '')
-	{
-		$help_content = '';
-
-		// Modules
-		if (empty($module_name)) {
-			$module_name = '';
-		} else {
-			$module_name = $module_name;
-		}
-
-		$help_content_urls = '';
-
-		// Docs
-		if (!empty($docs)) {
-			$help_content_urls .= '<a class="adminify-tag adminify-tag-purple adminify-docs-url" href="' . esc_url( $docs ) . '" target="_blank"> ' . self::docs_icon() . ' Docs</a>';
-		}
-
-		// youtube
-		if (!empty($youtube)) {
-			$help_content_urls .= '<a class="adminify-tag adminify-tag-danger adminify-video-url" href="' . esc_url( $youtube ) . '" target="_blank">' . self::video_tutorials_icon() . ' Video Tutorial</a>';
-		}
-
-		// facebook_grp
-		if (!empty($facebook_grp)) {
-			$help_content_urls .= '<a class="adminify-tag adminify-tag-primary adminify-fbgroup-url" href="' . esc_url($facebook_grp) . '" target="_blank">' . self::fbgroup_icon() . ' Facebook Group</a>';
-		}
-
-		// Support
-		if ( !empty($support)) {
-			$help_content_urls .= '<a class="adminify-tag adminify-tag-secondary adminify-support-url" href="' . esc_url($support) . '" target="_blank">' . self::support_icon() . ' Support</a>';
-		}
-
-		$help_content = sprintf( __('%1$s <div class="adminify-helps">%2$s</div>', 'adminify' ), $module_name, $help_content_urls );
-		return $help_content;
-	}
 
 	/**
 	 * Upgrade Pro Icon
@@ -1187,6 +1151,43 @@ class Utils
 	public static function check_wp_version( $operator = '>', $version = '6.6' ) {
 		global $wp_version;
 		return version_compare( $wp_version, $version, $operator );
+	}
+
+	public static function adminfiy_help_urls($module_name = '', $docs = '', $youtube = '', $facebook_grp = '', $support = '')
+	{
+		$help_content = '';
+
+		// Modules
+		if (empty($module_name)) {
+			$module_name = '';
+		} else {
+			$module_name = $module_name;
+		}
+
+		$help_content_urls = '';
+
+		// Docs
+		if (!empty($docs)) {
+			$help_content_urls .= '<a class="adminify-tag adminify-tag-purple adminify-docs-url" href="' . esc_url( $docs ) . '" target="_blank"> ' . self::docs_icon() . ' Docs</a>';
+		}
+
+		// youtube
+		if (!empty($youtube)) {
+			$help_content_urls .= '<a class="adminify-tag adminify-tag-danger adminify-video-url" href="' . esc_url( $youtube ) . '" target="_blank">' . self::video_tutorials_icon() . ' Video Tutorial</a>';
+		}
+
+		// facebook_grp
+		if (!empty($facebook_grp)) {
+			$help_content_urls .= '<a class="adminify-tag adminify-tag-primary adminify-fbgroup-url" href="' . esc_url($facebook_grp) . '" target="_blank">' . self::fbgroup_icon() . ' Facebook Group</a>';
+		}
+
+		// Support
+		if ( !empty($support)) {
+			$help_content_urls .= '<a class="adminify-tag adminify-tag-secondary adminify-support-url" href="' . esc_url($support) . '" target="_blank">' . self::support_icon() . ' Support</a>';
+		}
+
+		$help_content = sprintf( '%1$s <div class="adminify-helps">%2$s</div>', $module_name, $help_content_urls );
+		return $help_content;
 	}
 
 }

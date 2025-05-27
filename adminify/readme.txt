@@ -4,9 +4,9 @@ Tags: Custom Dashboard, White Label WordPress,  Media Folders, Admin Columns, Lo
 Requires at least: 4.0
 Tested up to: 6.8.1
 Requires PHP: 7.4
-Stable tag: 4.0.3.8
-License: GPLv2
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Stable tag: 4.0.3.9
+License: GPLv3 or later
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Customize your WordPress dashboard with White label, Media Folders, Admin Menu Editor, Admin Columns, Login Customizer, and much much more!
 
@@ -241,6 +241,14 @@ To get faster support, we recommend you to create a support topic in our [WP Adm
 
 
 == Changelog ==
+= 4.0.3.9 (27-05-2025) =
+* Updated: Freemius SDK Updated and Moved on `vendor` directory as per WordPress.org Compliance
+* Removed: Freemius Pricing Package removed
+* Fixed: Adminify Free and Pro Plugin Name issue fixed
+* Fixed: White Label for Agency issue fixed
+* Fixed: WP Admin White Screen issue fixed
+* Fixed: White Label for Agencies improved with Force Disable Option
+
 = 4.0.3.8 (4-05-2025) =
 * Fixed: The menu item restriction by role issue was fixed.
 * Fixed: Links not working issue for "JetFormBuilder — Dynamic Blocks Form Builder" plugin issue fixed.  Thanks to @leopoldyys for the request. [Support Thread](https://wordpress.org/support/topic/jetengine-showing-critical-error-due-to-adminify/)
@@ -291,4 +299,7 @@ To get faster support, we recommend you to create a support topic in our [WP Adm
 * Feature: Added support for the SureTrigger plugin.
 
 
-Details [changelog here](https://wpadminify.com/changelog)
+Details [changelog here](https://wpadminify.com/changelogs)
+
+
+== Upgrade Notice ==

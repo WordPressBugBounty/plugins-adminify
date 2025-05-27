@@ -3,6 +3,7 @@
 namespace WPAdminify\Inc\Admin\Options;
 
 use WPAdminify\Inc\Utils;
+use WPAdminify\Inc\Classes\Helper;
 use WPAdminify\Inc\Classes\Adminify_Rollback;
 
 if ( ! defined( 'ABSPATH' ) ) {

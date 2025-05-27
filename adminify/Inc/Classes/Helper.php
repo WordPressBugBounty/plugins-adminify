@@ -1,6 +1,7 @@
 <?php
 
 namespace WPAdminify\Inc\Classes;
+use WPAdminify\Inc\Utils;
 
 // no direct access allowed
 if (!defined('ABSPATH')) {
@@ -570,4 +571,6 @@ class Helper
 		}
 		return $icon;
 	}
+
+
 }
