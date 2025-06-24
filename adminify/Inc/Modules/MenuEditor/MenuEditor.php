@@ -326,6 +326,10 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     unset($thismenu[$key]);
                     continue;
                 }
+                if ( !current_user_can( 'administrator' ) && $current_menu_item[2] === 'vc-welcome' ) {
+                    unset($thismenu[$key]);
+                    continue;
+                }
                 $next_menu_item = next( $thismenu );
                 $optiongroup = [];
                 $order = $key;

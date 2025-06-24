@@ -24,6 +24,17 @@ class Folders {
         add_action( 'admin_init', [$this, 'modify_columns_actions'] );
         add_action( 'print_media_templates', [$this, 'modify_media_templates'] );
         add_filter( 'wp_prepare_attachment_for_js', [$this, 'modify_attachment_for_js'] );
+        add_action( 'pre-upload-ui', [$this, 'wp_adminify_select_folder_when_upload'] );
+        add_filter(
+            'attachment_fields_to_edit',
+            [$this, 'wp_adminify_edit_attachment_fields'],
+            25,
+            2
+        );
+        add_action( 'wp_ajax_wp_adminify_assign_media_folder', array($this, 'wp_adminify_handle_folder_assignment') );
+        add_action( 'restrict_manage_posts', [$this, 'wp_adminify_show_folders_in_list_filter'] );
+        add_action( 'add_attachment', [$this, 'wp_adminify_assign_media_folder_to_new_attachment'] );
+        add_action( 'enqueue_block_editor_assets', [$this, 'enqueue_scripts_for_media_uploads'], PHP_INT_MAX );
     }
 
     public function modify_attachment_for_js( $response ) {
@@ -95,8 +106,11 @@ class Folders {
 
     public function is_module_active( $post_type = null ) {
         $current_screen = get_current_screen();
-        if ( empty( $current_screen->base ) || !in_array( $current_screen->base, ['upload', 'edit'] ) ) {
+        if ( empty( $current_screen->base ) || !in_array( $current_screen->base, ['upload', 'edit', 'media'] ) ) {
             return false;
+        }
+        if ( $current_screen->base === 'media' && $current_screen->action === 'add' ) {
+            $post_type = 'attachment';
         }
         if ( empty( $post_type ) ) {
             if ( empty( $post_type = $current_screen->post_type ) ) {
@@ -177,14 +191,31 @@ class Folders {
         );
         $post_type = $current_screen->post_type;
         $post_type_tax = self::get_post_type_taxonomy( $post_type );
+        if ( $current_screen->base === 'media' && $current_screen->action === 'add' ) {
+            $post_type = 'attachment';
+            $post_type_tax = 'media_folder';
+        }
+        $media_folders = get_terms( [
+            'taxonomy'   => 'media_folder',
+            'hide_empty' => false,
+        ] );
+        $media_folders_data = [];
+        foreach ( $media_folders as $media_folder ) {
+            $media_folders_data[$media_folder->term_id] = [
+                'name'    => $media_folder->name,
+                'slug'    => $media_folder->slug,
+                'term_id' => $media_folder->term_id,
+            ];
+        }
         $data = [
-            'adminurl'      => admin_url(),
-            'ajaxurl'       => admin_url( 'admin-ajax.php' ),
-            'post_type'     => $post_type,
-            'nonce'         => wp_create_nonce( '__adminify-folder-secirity__' ),
-            'post_type_tax' => $post_type_tax,
-            'is_pro'        => wp_validate_boolean( jltwp_adminify()->can_use_premium_code__premium_only() ),
-            'pro_notice'    => Utils::adminify_upgrade_pro(),
+            'adminurl'           => admin_url(),
+            'ajaxurl'            => admin_url( 'admin-ajax.php' ),
+            'post_type'          => $post_type,
+            'nonce'              => wp_create_nonce( '__adminify-folder-secirity__' ),
+            'post_type_tax'      => $post_type_tax,
+            'media_folders_data' => $media_folders_data,
+            'is_pro'             => wp_validate_boolean( jltwp_adminify()->can_use_premium_code__premium_only() ),
+            'pro_notice'         => Utils::adminify_upgrade_pro(),
         ];
         $data = array_merge( $data, $this->refreshed_folder_data( $post_type, $post_type_tax ) );
         // Adminify Folder
@@ -208,6 +239,205 @@ class Folders {
             true
         );
         wp_localize_script( 'wp-adminify--folder', 'wp_adminify__folder_data', $data );
+        $inline_script_content = '
+			(function($) {
+				$(document).ready(function() {
+
+					let selectedFolder = null;
+
+					if (typeof wp.media !== "undefined") {
+						const urlParams = new URLSearchParams(window.location.search);
+						const currentFolder = urlParams.get("media_folder");
+						selectedFolder = currentFolder;
+
+						const MediaLibraryTaxonomyFilter = wp.media.view.AttachmentFilters.extend({
+							id: "wp-adminify-media-folder-filter",
+							createFilters: function() {
+								const filters = {};
+								filters.all = {
+									text: "All folders",
+									props: { folders: "" },
+									priority: 10
+								};
+								_.each(window.wp_adminify__folder_data?.media_folders_data || {}, function(value) {
+									filters[value.slug] = {
+										text: value.name,
+										props: { folders: value.slug },
+										priority: 20
+									};
+								});
+								this.filters = filters;
+							},
+							initialize: function() {
+								wp.media.view.AttachmentFilters.prototype.initialize.apply(this, arguments);
+								if (currentFolder) {
+									this.model.set("folders", currentFolder);
+									setTimeout(() => {
+										this.$el.find("select").val(currentFolder);
+									}, 100);
+								}
+							}
+						});
+
+						const AttachmentsBrowser = wp.media.view.AttachmentsBrowser;
+						wp.media.view.AttachmentsBrowser = AttachmentsBrowser.extend({
+							createToolbar: function() {
+								AttachmentsBrowser.prototype.createToolbar.call(this);
+								this.toolbar.set("MediaLibraryTaxonomyFilter", new MediaLibraryTaxonomyFilter({
+									controller: this.controller,
+									model: this.collection.props,
+									priority: -75
+								}).render());
+							}
+						});
+					}
+
+					if (typeof wp.Uploader === "function") {
+						$.extend(wp.Uploader.prototype, {
+							init: function() {
+								selectedFolder = $("#folders").val() || currentFolder;
+
+								$("body").on("change", "#folders", function() {
+									selectedFolder = $(this).val();
+								});
+
+								if (this.uploader) {
+									this.uploader.bind("BeforeUpload", function(up, file) {
+										up.settings.multipart_params = up.settings.multipart_params || {};
+										up.settings.multipart_params.folder_id = selectedFolder;
+									});
+									this.uploader.bind("UploadComplete", function() {
+										if (typeof wp !== "undefined" && wp.media && wp.media.frame) {
+											const frame = wp.media.frame;
+											const state = frame.state();
+											const library = state.get("library");
+
+											if (library) {
+												library.props.set("ignore", Date.now());
+												state.trigger("reset");
+											}
+										}
+									});
+								}
+							}
+						});
+					}
+
+				});
+			})(jQuery);
+		';
+        wp_add_inline_script( 'media-views', $inline_script_content, 'after' );
+    }
+
+    function enqueue_scripts_for_media_uploads() {
+        wp_enqueue_media();
+        wp_enqueue_script( 'media-views' );
+        $post_type = 'attachment';
+        $post_type_tax = 'media_folder';
+        $media_folders = get_terms( [
+            'taxonomy'   => 'media_folder',
+            'hide_empty' => false,
+        ] );
+        $media_folders_data = [];
+        foreach ( $media_folders as $folder ) {
+            $media_folders_data[$folder->term_id] = [
+                'name'    => $folder->name,
+                'slug'    => $folder->slug,
+                'term_id' => $folder->term_id,
+            ];
+        }
+        // Localize the data
+        wp_localize_script( 'media-views', 'wp_adminify__folder_data', [
+            'media_folders_data' => $media_folders_data,
+        ] );
+        $inline_script_content = '
+			(function($) {
+				$(document).ready(function() {
+
+					let selectedFolder = null;
+
+					if (typeof wp.media !== "undefined") {
+						const urlParams = new URLSearchParams(window.location.search);
+						const currentFolder = urlParams.get("media_folder");
+						selectedFolder = currentFolder;
+
+						const MediaLibraryTaxonomyFilter = wp.media.view.AttachmentFilters.extend({
+							id: "wp-adminify-media-folder-filter",
+							createFilters: function() {
+								const filters = {};
+								filters.all = {
+									text: "All folders",
+									props: { folders: "" },
+									priority: 10
+								};
+								_.each(window.wp_adminify__folder_data?.media_folders_data || {}, function(value) {
+									filters[value.slug] = {
+										text: value.name,
+										props: { folders: value.slug },
+										priority: 20
+									};
+								});
+								this.filters = filters;
+							},
+							initialize: function() {
+								wp.media.view.AttachmentFilters.prototype.initialize.apply(this, arguments);
+								if (currentFolder) {
+									this.model.set("folders", currentFolder);
+									setTimeout(() => {
+										this.$el.find("select").val(currentFolder);
+									}, 100);
+								}
+							}
+						});
+
+						const AttachmentsBrowser = wp.media.view.AttachmentsBrowser;
+						wp.media.view.AttachmentsBrowser = AttachmentsBrowser.extend({
+							createToolbar: function() {
+								AttachmentsBrowser.prototype.createToolbar.call(this);
+								this.toolbar.set("MediaLibraryTaxonomyFilter", new MediaLibraryTaxonomyFilter({
+									controller: this.controller,
+									model: this.collection.props,
+									priority: -75
+								}).render());
+							}
+						});
+					}
+
+					if (typeof wp.Uploader === "function") {
+						$.extend(wp.Uploader.prototype, {
+							init: function() {
+								selectedFolder = $("#folders").val() || currentFolder;
+
+								$("body").on("change", "#folders", function() {
+									selectedFolder = $(this).val();
+								});
+
+								if (this.uploader) {
+									this.uploader.bind("BeforeUpload", function(up, file) {
+										up.settings.multipart_params = up.settings.multipart_params || {};
+										up.settings.multipart_params.folder_id = selectedFolder;
+									});
+									this.uploader.bind("UploadComplete", function() {
+										if (typeof wp !== "undefined" && wp.media && wp.media.frame) {
+											const frame = wp.media.frame;
+											const state = frame.state();
+											const library = state.get("library");
+
+											if (library) {
+												library.props.set("ignore", Date.now());
+												state.trigger("reset");
+											}
+										}
+									});
+								}
+							}
+						});
+					}
+
+				});
+			})(jQuery);
+		';
+        wp_add_inline_script( 'media-views', $inline_script_content, 'after' );
     }
 
     public function modify_media_templates() {
@@ -605,6 +835,215 @@ class Folders {
     public function custom_bulk_action( $bulk_actions ) {
         $bulk_actions['move_to_folder'] = __( 'Move to Folder', 'adminify' );
         return $bulk_actions;
+    }
+
+    public function wp_adminify_select_folder_when_upload() {
+        if ( !$this->options['media'] ) {
+            return;
+        }
+        $selected = ( isset( $_GET['media_folder'] ) ? $_GET['media_folder'] : '' );
+        wp_dropdown_categories( array(
+            'show_option_none' => 'Choose folder',
+            'taxonomy'         => 'media_folder',
+            'name'             => 'folder_id',
+            'id'               => 'folders',
+            'orderby'          => 'name',
+            'selected'         => $selected,
+            'hierarchical'     => true,
+            'value_field'      => 'slug',
+            'hide_empty'       => 0,
+        ) );
+    }
+
+    public function wp_adminify_assign_media_folder_to_new_attachment( $post_ID ) {
+        if ( isset( $_POST['folder_id'] ) && !empty( $_POST['folder_id'] ) && $_POST['folder_id'] !== '-1' ) {
+            $term = get_term_by( 'slug', $_POST['folder_id'], 'media_folder' );
+            if ( !$term && is_numeric( $_POST['folder_id'] ) ) {
+                $term = get_term_by( 'id', (int) $_POST['folder_id'], 'media_folder' );
+            }
+            if ( $term && !is_wp_error( $term ) ) {
+                wp_set_object_terms( $post_ID, (int) $term->term_id, 'media_folder' );
+                $post_type = 'attachment';
+                $post_type_tax = $_POST['folder_id'];
+            } else {
+                error_log( 'Media Folder: Could not find term for value "' . $_POST['folder_id'] . '" for attachment ID ' . $post_ID );
+            }
+            $this->refreshed_folder_data( $post_type, $post_type_tax );
+        }
+    }
+
+    public function wp_adminify_edit_attachment_fields( $form_fields, $post ) {
+        if ( !$this->options['media'] ) {
+            return;
+        }
+        $folder_fields = array(
+            'label'        => 'Folders',
+            'show_in_edit' => false,
+            'input'        => 'html',
+            'value'        => '',
+        );
+        $taxonomy_name = 'media_folder';
+        // get the assigned media library folders from the cache
+        $terms = get_the_terms( $post->ID, $taxonomy_name );
+        if ( $terms ) {
+            $folder_fields['value'] = join( ', ', wp_list_pluck( $terms, 'slug' ) );
+        }
+        ob_start();
+        $this->wp_adminify_render_terms_dropdown( $post->ID, $taxonomy_name );
+        $html = ob_get_contents();
+        ob_end_clean();
+        $folder_fields['html'] = $html;
+        $form_fields[$taxonomy_name] = $folder_fields;
+        return $form_fields;
+    }
+
+    public function wp_adminify_render_terms_dropdown( $post_id, $taxonomy ) {
+        $selected_terms = wp_get_object_terms( $post_id, $taxonomy, array(
+            'fields' => 'ids',
+        ) );
+        $selected_term = ( !empty( $selected_terms ) ? $selected_terms[0] : 0 );
+        $terms = get_terms( array(
+            'taxonomy'   => $taxonomy,
+            'hide_empty' => false,
+            'parent'     => 0,
+        ) );
+        echo '<select name="media_folder_select" class="media-folder-select" data-attachment-id="' . $post_id . '">';
+        echo '<option value="">— Select Folder —</option>';
+        if ( !empty( $terms ) && !is_wp_error( $terms ) ) {
+            foreach ( $terms as $term ) {
+                $this->wp_adminify_render_term_option( $term, $selected_term, $taxonomy );
+            }
+        }
+        echo '</select>';
+        $this->wp_adminify_add_folder_script();
+    }
+
+    public function wp_adminify_render_term_option(
+        $term,
+        $selected_term,
+        $taxonomy,
+        $depth = 0
+    ) {
+        $indent = str_repeat( '&nbsp;&nbsp;&nbsp;', $depth );
+        $selected = selected( $term->term_id, $selected_term, false );
+        echo sprintf(
+            '<option value="%s" %s>%s%s</option>',
+            $term->term_id,
+            $selected,
+            $indent,
+            esc_html( $term->name )
+        );
+        // Get children
+        $children = get_terms( array(
+            'taxonomy'   => $taxonomy,
+            'hide_empty' => false,
+            'parent'     => $term->term_id,
+        ) );
+        if ( !empty( $children ) && !is_wp_error( $children ) ) {
+            foreach ( $children as $child ) {
+                $this->wp_adminify_render_term_option(
+                    $child,
+                    $selected_term,
+                    $taxonomy,
+                    $depth + 1
+                );
+            }
+        }
+    }
+
+    public function wp_adminify_add_folder_script() {
+        ?>
+    <script type="text/javascript">
+    jQuery(document).ready(function($) {
+        $('.media-folder-select').on('change', function() {
+            var $select = $(this);
+            var attachment_id = $select.data('attachment-id');
+            var term_id = $select.val();
+            
+            if (!term_id) return;
+            
+            // Store original value in case we need to revert
+            $select.data('prev-value', $select.val());
+            
+            // Show loading indicator
+            var $spinner = $('<span class="spinner is-active"></span>');
+            $select
+                .prop('disabled', true)
+                .after($spinner);
+            
+            $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'wp_adminify_assign_media_folder',
+                    attachment_id: attachment_id,
+                    term_id: term_id,
+                    security: '<?php 
+        echo wp_create_nonce( "wp_adminify_media_folder" );
+        ?>'
+                },
+                success: function(response) {
+                    if (response.success) {
+                    } else {
+                        $select.val($select.data('prev-value'));
+                        console.log('Error: ' + (response.data || 'Failed to update folder'));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $select.val($select.data('prev-value'));
+                    console.log('Error: ' + error);
+                },
+                complete: function() {
+                    // Always clean up
+                    $spinner.remove();
+                    $select.prop('disabled', false);
+                }
+            });
+        });
+    });
+    </script>
+    <?php 
+    }
+
+    public function wp_adminify_handle_folder_assignment() {
+        check_ajax_referer( 'wp_adminify_media_folder', 'security' );
+        $attachment_id = ( isset( $_POST['attachment_id'] ) ? intval( $_POST['attachment_id'] ) : 0 );
+        $term_id = ( isset( $_POST['term_id'] ) ? intval( $_POST['term_id'] ) : 0 );
+        $taxonomy = 'media_folder';
+        if ( !$attachment_id || !$term_id ) {
+            wp_send_json_error( 'Invalid data' );
+        }
+        // First remove all terms from this taxonomy
+        wp_delete_object_term_relationships( $attachment_id, $taxonomy );
+        // Add the new term
+        $result = wp_set_object_terms( $attachment_id, $term_id, $taxonomy );
+        if ( is_wp_error( $result ) ) {
+            wp_send_json_error( $result->get_error_message() );
+        }
+        wp_send_json_success();
+    }
+
+    public function wp_adminify_show_folders_in_list_filter() {
+        global $typenow;
+        if ( !$this->is_module_active() ) {
+            return;
+        }
+        if ( 'attachment' !== $typenow ) {
+            return;
+        }
+        $selected = ( isset( $_GET['media_folder'] ) ? $_GET['media_folder'] : '' );
+        wp_dropdown_categories( array(
+            'show_option_all' => 'All folders',
+            'taxonomy'        => 'media_folder',
+            'name'            => 'folder_id',
+            'id'              => 'wp-adminify-media-folder-filter',
+            'orderby'         => 'name',
+            'selected'        => $selected,
+            'hierarchical'    => true,
+            'value_field'     => 'slug',
+            'depth'           => 3,
+            'hide_empty'      => false,
+        ) );
     }
 
 }

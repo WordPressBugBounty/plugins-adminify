@@ -79,7 +79,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 								'description' => '',
 							],
 							'dashw_type_video_type_youtube' => '',
-							'dashw_type_video_type_vimeo' => '',
+							'dashw_type_video_type_vimeo'   => '',
+							'dashw_type_video_type_iframe'  => '',
 						],
 						'dashw_type_editor'       => '',
 						'dashw_type_icon'         => '',
@@ -546,6 +547,7 @@ if (!class_exists('DashboardWidget_Setttings')) {
 					'self_hosted' => __('Self Hosted ', 'adminify'),
 					'youtube'     => __('Youtube', 'adminify'),
 					'vimeo'       => __('Vimeo', 'adminify'),
+					'iframe'      => __('iFrame', 'adminify'),
 				],
 				'default' => $this->get_default_field('dashboard_widget_types')['dashboard_widgets']['dashw_video']['dashw_type_video_type'],
 			];
@@ -557,6 +559,7 @@ if (!class_exists('DashboardWidget_Setttings')) {
 				'title'   => sprintf(__('Text %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
 				'class'   => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
 				'default' => $this->get_default_field('dashboard_widget_types')['dashboard_widgets']['dashw_video']['dashw_type_video_title'],
+				'dependency' => ['dashw_type_video_type', '!==', 'iframe', true],
 			];
 
 
@@ -589,6 +592,16 @@ if (!class_exists('DashboardWidget_Setttings')) {
 				'validate'   => 'adminify_validate_url',
 				'dependency' => ['dashw_type_video_type', '==', 'vimeo'],
 				'default'    => $this->get_default_field('dashboard_widget_types')['dashboard_widgets']['dashw_video']['dashw_type_video_type_vimeo'],
+			];
+
+			$dashboard_widget_video[] = [
+				'id'         => 'dashw_type_video_type_iframe',
+				'type'       => 'text',
+				'title'      => sprintf(__('iFrame Video URL %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				'class'      => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
+				'validate'   => 'adminify_validate_url',
+				'dependency' => ['dashw_type_video_type', '==', 'iframe'],
+				'default'    => $this->get_default_field('dashboard_widget_types')['dashboard_widgets']['dashw_video']['dashw_type_video_type_iframe'],
 			];
 		}
 
