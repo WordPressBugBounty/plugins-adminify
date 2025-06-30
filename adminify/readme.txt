@@ -4,7 +4,7 @@ Tags: Custom Dashboard, White Label WordPress,  Media Folders, Admin Columns, Lo
 Requires at least: 4.0
 Tested up to: 6.8.1
 Requires PHP: 7.4
-Stable tag: 4.0.4.0
+Stable tag: 4.0.4.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,6 +241,13 @@ To get faster support, we recommend you to create a support topic in our [WP Adm
 
 
 == Changelog ==
+= 4.0.4.2 (30-06-2025) =
+* fix: unwanted notification issue.
+
+= 4.0.4.1 (30-06-2025) =
+* Fix: added subdomain support for admin bar for multisite wordpress
+* Update: Sites will open in new tab now.
+
 = 4.0.4.0 (22-06-2025) =
 * Added: added 'iFrame' option for embedding any video on Dashboard Widgets
 * Added: implemented update features for folder support.

@@ -56,7 +56,7 @@ if (!class_exists('Latest_Updates')) {
 		{
 			if("dismissed" !== get_option('_wpadminify_plugin_update_info_notice', true )){
 				$jltwp_adminify_changelog_message = sprintf(
-					__('%3$s %4$s %5$s %6$s %7$s %8$s <br> <strong>Check Changelogs for </strong> <a href="%1$s" target="__blank">%2$s</a>', 'adminify'),
+					__('%3$s %4$s %5$s <br> <strong>Check Changelogs for </strong> <a href="%1$s" target="__blank">%2$s</a>', 'adminify'),
 					esc_url_raw('https://wpadminify.com/changelogs'),
 					__('More about Updates ', 'adminify'),
 					/** Changelog Items
@@ -64,11 +64,8 @@ if (!class_exists('Latest_Updates')) {
 					 */
 
 					'<h3 class="adminify-update-head">' . WP_ADMINIFY . ' <span><small><em>v' . esc_html(WP_ADMINIFY_VER) . '</em></small>' . __(' has some updates..', 'adminify') . '</span></h3><br>', // %3$s
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Freemius SDK Updated and Moved on `vendor` directory as per WordPress.org Compliance </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Freemius Pricing Package removed </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Adminify Free and Pro Plugin Name issue fixed </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> White Label for Agency issue fixed </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> WP Admin White Screen issue fixed </span><br>', 'adminify')
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Added support for subdomain at admin bar </span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Subdomain sites will open in new tab now. </span><br>', 'adminify'),
 				);
 
 				printf(wp_kses_post($jltwp_adminify_changelog_message));

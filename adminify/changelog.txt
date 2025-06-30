@@ -1,4 +1,11 @@
 == Changelog ==
+= 4.0.4.2 (30-06-2025) =
+* fix: unwanted notification issue.
+
+= 4.0.4.1 (30-06-2025) =
+* Fix: added subdomain support for admin bar for multisite wordpress
+* Update: Sites will open in new tab now.
+
 = 4.0.4.0 (22-06-2025) =
 * Added: added 'iFrame' option for embedding any video on Dashboard Widgets
 * Added: implemented update features for folder support.
