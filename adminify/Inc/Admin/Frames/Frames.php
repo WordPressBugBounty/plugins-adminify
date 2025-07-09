@@ -33,8 +33,12 @@ if (!class_exists('Frames')) {
                 self::custom_plugin_change_reload();
             }
         }
-
+        
         static function custom_plugin_change_reload($actual_link = null) {
+            // if (shortcode_exists('ssa_booking')) {
+            //     return;
+            // } Commented out to avoid issues with shortcode existence check as this plugin using iframe inside it.
+
             if (!is_null($actual_link)) {
                 echo "<script type='text/javascript'>
                     parent.location.replace('$actual_link');

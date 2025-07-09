@@ -759,8 +759,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
             foreach ( $disabled_for as $v ) {
                 $disabled_for_arr[] = jlt_adminify_sluggify_with_underscores( $v );
             }
+            $slugify_user_login = jlt_adminify_sluggify_with_underscores( $current_user->user_login );
             // Check Username
-            if ( in_array( $current_user->user_login, $disabled_for_arr ) ) {
+            if ( in_array( $current_user->user_login, $disabled_for_arr ) || in_array( $slugify_user_login, $disabled_for_arr ) ) {
                 return true;
             }
             // Check User Roles and Capabilities
@@ -983,7 +984,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
                 $username = $user->display_name;
                 $user_login = $user->user_login;
                 $sel = '';
-                if ( in_array( $username, $disabled_for ) ) {
+                if ( in_array( $user_login, $disabled_for ) ) {
                     $sel = 'selected';
                 }
                 ?>

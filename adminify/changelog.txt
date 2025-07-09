@@ -1,4 +1,9 @@
 == Changelog ==
+= 4.0.4.3 (09-07-2025) =
+* fix: Resolved admin menu item show hide rule for selected user was not working properly issue.
+* fix: Resolved new custom menu item hidden for user by default issue.
+* fix: Resolved admin menu item show hide rule not working for certain users issue .
+
 = 4.0.4.2 (30-06-2025) =
 * fix: unwanted notification issue.
 

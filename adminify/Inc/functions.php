@@ -110,7 +110,7 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
     $admin_menu = [];
     $menu_options = apply_filters('jltwp_adminify_menu_option_compatibility_filter', $menu_options, $menu);
 
-    foreach ($menu as $key => $item) {
+    foreach ($menu as $key => $item) { 
         if (is_array($menu_options)) {
             if (isset($menu_options[$item[2]])) {
                 $optiongroup = $menu_options[$item[2]];

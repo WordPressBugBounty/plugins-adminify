@@ -4,7 +4,7 @@ Tags: Custom Dashboard, White Label WordPress,  Media Folders, Admin Columns, Lo
 Requires at least: 4.0
 Tested up to: 6.8.1
 Requires PHP: 7.4
-Stable tag: 4.0.4.2
+Stable tag: 4.0.4.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,6 +241,11 @@ To get faster support, we recommend you to create a support topic in our [WP Adm
 
 
 == Changelog ==
+= 4.0.4.3 (09-07-2025) =
+* fix: Resolved admin menu item show hide rule for selected user was not working properly issue.
+* fix: Resolved new custom menu item hidden for user by default issue.
+* fix: Resolved admin menu item show hide rule not working for certain users issue .
+
 = 4.0.4.2 (30-06-2025) =
 * fix: unwanted notification issue.
 
