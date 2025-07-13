@@ -50,6 +50,14 @@
   left: auto !important;
   right: 1rem;
 }
+.wp-adminify.rtl .adminify-toolbar-wrapper .adminify-toolbar .adminify-admin-bar-top-secondary .wp-adminify--user--account .wp-adminify--user--wrapper {
+  left: 0;
+  right: auto;
+}
+.wp-adminify.rtl .adminify-toolbar-wrapper .adminify-toolbar .adminify-admin-bar-top-secondary .wp-adminify--user--account .wp-adminify--user--wrapper::before {
+  right: auto !important;
+  left: 16px !important;
+}
 .wp-adminify.rtl #wp-adminify--circle--menu {
   right: auto !important;
   left: 2rem;

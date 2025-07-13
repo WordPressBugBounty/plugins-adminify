@@ -4,7 +4,7 @@ Tags: Custom Dashboard, White Label WordPress,  Media Folders, Admin Columns, Lo
 Requires at least: 4.0
 Tested up to: 6.8.1
 Requires PHP: 7.4
-Stable tag: 4.0.4.3
+Stable tag: 4.0.4.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -223,6 +223,9 @@ Yes, you can try our [WP Adminify live demo](https://demo.pixarlabs.com/?pl-prod
 = How can I get faster Support? =
 To get faster support, we recommend you to create a support topic in our [WP Adminify Forum](https://wpadminify.com/contact). Our support team will check your question and get back to you with a solution or alternative.
 
+= How can I report security bugs? =
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/wordpress/plugin/adminify/vdp)
+
 == Screenshots ==
 1. WP Adminify overview
 2. Admin Columns module
@@ -241,6 +244,10 @@ To get faster support, we recommend you to create a support topic in our [WP Adm
 
 
 == Changelog ==
+= 4.0.4.4 (13-07-2025) =
+* Improvement: UI improvements.
+* fix: RTL style issue on user account menu in topbar is fixed.
+
 = 4.0.4.3 (09-07-2025) =
 * fix: Resolved admin menu item show hide rule for selected user was not working properly issue.
 * fix: Resolved new custom menu item hidden for user by default issue.
@@ -293,27 +300,6 @@ To get faster support, we recommend you to create a support topic in our [WP Adm
 
 = 4.0.3.4 (23-02-2025) =
 * Fixed: Getting fatal error in discount notice. Thanks @peopleinside Support URL:https://wordpress.org/support/topic/undefined-constant-12/
-
-= 4.0.3.3 (18-02-2025) =
-* Fixed: Adminify admin bar top secondary menu item show/hide logic not working
-* Fixed: Adminify dashboard widget rule for YouTube videos
-* Fixed: Adminify dashboard widget rule for Vimeo videos
-* Fixed: Adminify admin bar dropdown not closing until clicked on the admin bar
-* Fixed: Adminify dashboard widget design issue for background icon
-* Fixed: Added condition to show line icon in the admin menu while Adminify UI is not enabled
-* Fixed: Added condition to show FontAwesome icon in the admin menu while Adminify UI is not enabled
-* Fixed: Changed custom image icon style for the admin menu while Adminify UI is not enabled
-* Fixed: Added condition to show Simple Line icon in the admin menu while Adminify UI is enabled
-* Fixed: Optimized the previous script for getting the icon
-* Fixed: Post duplicator not working as expected for custom post types and custom user role issue
-* Fixed: Admin menu items not changing if a plugin or function removed.
-* Updated: Freemius SDK version 2.11.0 updated
-* Updated: Adminify UI design for forms
-* Feature: Added support for the Thrive Page Builder
-* Feature: Added support for the LatePoint plugin
-* Feature: Added support for the SureCart plugin
-* Feature: Added support for the SureMembers plugin.
-* Feature: Added support for the SureTrigger plugin.
 
 
 Details [changelog here](https://wpadminify.com/changelogs)
