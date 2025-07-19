@@ -47,7 +47,8 @@ class AdminFooterText extends AdminSettingsModel
 		/** Admin Footer */
 		add_filter('update_footer', [$this, 'jltwp_adminify_change_admin_footer'], 10, 3);
 
-		add_filter( 'admin_footer_text', '__return_false' );
+		add_filter( 'admin_footer_text', '__return_false', 999 );
+		add_filter( 'update_footer', '__return_false', 999 );
 
 		$this->server_info = new ServerInfo();
 	}

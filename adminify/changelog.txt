@@ -1,4 +1,8 @@
 == Changelog ==
+= 4.0.4.5 (19-07-2025) =
+* Improved: Admin Footer Text issue with Elementor, Fluent Forms, Fluent Support, Fluent CRM, Fluent SMTP plugin issue fixed
+* Fixed: RTL CSS issue for Addons page issue fixed
+
 = 4.0.4.4 (13-07-2025) =
 * Improvement: UI improvements.
 * fix: RTL style issue on user account menu in topbar is fixed.
