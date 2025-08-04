@@ -4,7 +4,7 @@ Tags: Custom Dashboard, White Label WordPress,  Media Folders, Admin Columns, Lo
 Requires at least: 4.0
 Tested up to: 6.8.2
 Requires PHP: 7.4
-Stable tag: 4.0.4.5
+Stable tag: 4.0.4.6
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -244,6 +244,14 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+= 4.0.4.6 (04-08-2025) =
+* Update: Added addons plugin installer step into Adminify setup wizard 
+* Improvement: UX Improved for adminify UI
+
+= 4.0.4.5 (19-07-2025) =
+* Improved: Admin Footer Text issue with Elementor, Fluent Forms, Fluent Support, Fluent CRM, Fluent SMTP plugin issue fixed
+* Fixed: RTL CSS issue for Addons page issue fixed
+
 = 4.0.4.4 (13-07-2025) =
 * Improvement: UI improvements.
 * fix: RTL style issue on user account menu in topbar is fixed.

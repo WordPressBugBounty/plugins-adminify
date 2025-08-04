@@ -64,8 +64,8 @@ if (!class_exists('Latest_Updates')) {
 					 */
 
 					'<h3 class="adminify-update-head">' . WP_ADMINIFY . ' <span><small><em>v' . esc_html(WP_ADMINIFY_VER) . '</em></small>' . __(' has some updates..', 'adminify') . '</span></h3><br>', // %3$s
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Ui Improvement. </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Style issue fixed for RTL languages </span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list">Added addons plugin installer step into Adminify setup wizard </span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> UX Improved for adminify UI </span><br>', 'adminify'),
 					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Security update . </span><br>', 'adminify'),
 				);
 

@@ -47,6 +47,116 @@ if (!class_exists('Addons')) {
             add_action('wp_ajax_jltwp_adminify_addons_upgrade_plugin', array($this, 'jltwp_adminify_addons_upgrade_plugin'));
             add_action('wp_ajax_jltwp_adminify_addons_activate_plugin', array($this, 'jltwp_adminify_addons_activate_plugin'));
             add_action('plugins_loaded', array($this, 'maybe_replace_addons_path'), 1000); // 1000 is important
+            add_action( 'rest_api_init', array( $this , 'jltwp_adminify_addons_rest_routes') );
+        }
+
+        public function jltwp_adminify_addons_rest_routes() {
+            register_rest_route('adminify/v1', '/get-addons-list', array(
+                'methods'             => 'GET',
+                'callback'            => [$this, 'jltwp_adminify_get_addons_plugins_list'],
+                // 'permission_callback' => [$this, 'adminify_is_admin_user'],
+                'permission_callback' => '__return_true',
+            ));
+
+            register_rest_route('adminify/v1', '/install-addons', array(
+                'methods'             => 'POST',
+                'callback'            => [$this, 'jltwp_adminify_install_addons'],
+                'permission_callback' => [$this, 'adminify_verify_nonce_and_permissions'],
+            ));
+        }
+
+        public function adminify_is_admin_user() {
+            return current_user_can('manage_options');
+        }
+
+        public function adminify_verify_nonce_and_permissions() {
+            // Check user
+            if ( ! current_user_can('manage_options') ) {
+                return new WP_Error('forbidden', 'You are not allowed to do this.', array('status' => 403));
+            }
+
+            // Check nonce from header
+            $nonce = $_SERVER['HTTP_X_WP_NONCE'] ?? '';
+            if ( ! wp_verify_nonce($nonce, 'wp_rest') ) {
+                return new WP_Error('rest_cookie_invalid_nonce', __('Invalid nonce.'), array('status' => 403));
+            }
+            if ( is_multisite() && ! is_super_admin() ) {
+                return new WP_Error('not_allowed', 'Super admin only on multisite.', array('status' => 403));
+            }
+
+            return true;
+        }
+
+
+        public function jltwp_adminify_get_addons_plugins_list() {
+            $plugins = $this->plugins_list;
+            unset($plugins['master-addons']);
+            $all_plugins = get_plugins();
+            $active_plugins = get_option('active_plugins');
+            foreach( $plugins as $slug => $plugin){
+                foreach ($all_plugins as $plugin_file => $plugin_data) {
+                    if (strpos($plugin_file, $slug) !== false) {
+                        $plugins[$slug]["status"] = 'installed';
+
+                        if (in_array($plugin_file, $active_plugins)) {
+                            $plugins[$slug]["status"] = 'activated';
+                        }
+                        break;
+                    }
+                }
+                if( !isset($plugins[$slug]["status"])) $plugins[$slug]["status"] = 'not-installed';
+    
+            }
+
+            return rest_ensure_response($plugins);
+            
+        }
+
+
+        public function jltwp_adminify_install_addons( $request ) {
+            $addons = $request->get_param('addons'); 
+            if ( empty($addons) || !is_array($addons) ) {
+                return new WP_Error('no_addons', 'No addons were selected.', array('status' => 400));
+            }
+
+            $plugins_list = $this->jltwp_adminify_get_addons_plugins_list()->data;
+            foreach( $addons as $key => $plugin ){
+                if($plugins_list[$plugin]['status'] == "activated") continue;
+                if($plugins_list[$plugin]['status'] == "installed") {
+                    $this->jltwp_adminify_activate_plugin_by_slug($plugin);
+                    continue;
+                }
+                $params = [
+                    'request_type' => 'rest',
+                    'plugin' => $plugins_list[$plugin]['download_link'],
+                ];
+
+                $this->jltwp_adminify_addons_upgrade_plugin($params);
+            }
+            
+            return rest_ensure_response(['message' => 'Addons installed', 'addons' => $addons]);
+        }
+
+        function jltwp_adminify_activate_plugin_by_slug($slug) {
+            $plugin_path = WP_PLUGIN_DIR . '/' . $slug;
+
+            if (!is_dir($plugin_path)) {
+                return;
+            }
+
+            $plugin_files = glob("$plugin_path/*.php");
+            if (!$plugin_files || empty($plugin_files)) {
+                return;
+            }
+
+            $main_plugin_file = basename($plugin_files[0]);
+            $plugin_relative_path = $slug . '/' . $main_plugin_file;
+
+            if (is_plugin_active($plugin_relative_path)) {
+                return;
+            }
+
+            activate_plugin($plugin_relative_path);
         }
 
         public function maybe_replace_addons_path() {
@@ -547,9 +657,9 @@ if (!class_exists('Addons')) {
          *
          * @author Jewel Theme <support@jeweltheme.com>
          */
-        public function jltwp_adminify_addons_upgrade_plugin()
+        public function jltwp_adminify_addons_upgrade_plugin( $params = null )
         {
-            if (empty($_POST['plugin'])) {
+            if ($params == null && empty($_POST['plugin'])) {
                 return;
             }
 
@@ -559,46 +669,58 @@ if (!class_exists('Addons')) {
                 require_once ABSPATH . 'wp-admin/includes/class-wp-ajax-upgrader-skin.php';
                 require_once ABSPATH . 'wp-admin/includes/class-plugin-upgrader.php';
 
-                $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
-
-                if (!wp_verify_nonce($nonce, 'jltwp_adminify_addons_nonce')) {
-                    wp_send_json_error(array('mess' => __('Nonce is invalid', 'adminify')));
+                if($params == null){
+                    $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
+    
+                    if (!wp_verify_nonce($nonce, 'jltwp_adminify_addons_nonce')) {
+                        wp_send_json_error(array('mess' => __('Nonce is invalid', 'adminify')));
+                    }
+                    $plugin = sanitize_text_field(wp_unslash($_POST['plugin']));
+                }else{
+                    $plugin =  $params['plugin'];
                 }
 
                 // if ((is_multisite() && !is_network_admin()) || !current_user_can('install_plugins')) {
                 //     wp_send_json_error(array('mess' => __('Invalid access', 'adminify')));
                 // }
-
-                $plugin = sanitize_text_field(wp_unslash($_POST['plugin']));
-
+                
                 $plugin_slug = $this->get_the_plugin_slug( $plugin );
 
                 if ( ! array_key_exists( $plugin_slug, $this->plugins_list) ) {
                     wp_send_json_error(array('mess' => __('Invalid plugin', 'adminify')));
                 }
-
-                $type     = isset($_POST['type']) ? sanitize_text_field(wp_unslash($_POST['type'])) : 'install';
+                
+                if($params == null){
+                    $type     = isset($_POST['type']) ? sanitize_text_field(wp_unslash($_POST['type'])) : 'install';
+                }else{
+                    $type     = 'install';
+                }
                 $skin     = new \WP_Ajax_Upgrader_Skin();
                 $upgrader = new \Plugin_Upgrader($skin);
 
                 if ('install' === $type) {
 
                     $result = $upgrader->install($plugin);
+                    if ($params == null){
+                        if (empty($result) || empty($upgrader->result)) {
+                            wp_send_json_error(
+                                array(
+                                    'mess' => 'Something is wrong',
+                                )
+                            );
+                        }
 
-                    if (empty($result) || empty($upgrader->result)) {
-                        wp_send_json_error(
-                            array(
-                                'mess' => 'Something is wrong',
-                            )
-                        );
-                    }
-
-                    if (is_wp_error($result)) {
-                        wp_send_json_error(
-                            array(
-                                'mess' => $result->get_error_message(),
-                            )
-                        );
+                        if (is_wp_error($result)) {
+                            wp_send_json_error(
+                                array(
+                                    'mess' => $result->get_error_message(),
+                                )
+                            );
+                        }
+                    }else{
+                        if(empty($result) || empty($upgrader->result)){
+                            return;
+                        }
                     }
 
                     $plugins = get_plugins('/' . $upgrader->result['destination_name']);
@@ -611,68 +733,80 @@ if (!class_exists('Addons')) {
                         $install_status = \install_plugin_install_status($plugin_data);
 
                         $active_plugin  = activate_plugin($install_status['file']);
-
-                        if (is_wp_error($active_plugin)) {
-                            wp_send_json_error(
-                                array(
-                                    'mess' => $active_plugin->get_error_message(),
-                                )
-                            );
-                        } else {
-                            wp_send_json_success(
-                                array(
-                                    'mess' => __('Install success', 'adminify'),
-                                )
-                            );
+                        
+                        if ($params == null){
+                            if (is_wp_error($active_plugin)) {
+                                wp_send_json_error(
+                                    array(
+                                        'mess' => $active_plugin->get_error_message(),
+                                    )
+                                );
+                            } else {
+                                wp_send_json_success(
+                                    array(
+                                        'mess' => __('Install success', 'adminify'),
+                                    )
+                                );
+                            }
                         }
                     } else {
+                        if ($params == null){
+                            wp_send_json_error(
+                                array(
+                                    'mess' => 'Error',
+                                )
+                            );
 
-                        wp_send_json_error(
-                            array(
-                                'mess' => 'Error',
-                            )
-                        );
+                        }
                     }
                 } else {
 
                     $is_active = is_plugin_active($plugin);
                     $result = $upgrader->upgrade($plugin);
 
-                    if ( empty($result) || is_wp_error($result) ) {
-                        wp_send_json_error(
-                            array(
-                                'mess' => is_wp_error($result) ? $result->get_error_message() : __('Couldn\'t upgrade', 'adminify')
-                            )
-                        );
+                    if ($params == null){
+                        if ( empty($result) || is_wp_error($result) ) {
+                            wp_send_json_error(
+                                array(
+                                    'mess' => is_wp_error($result) ? $result->get_error_message() : __('Couldn\'t upgrade', 'adminify')
+                                )
+                            );
+                        }
                     }
 
                     $active_status = activate_plugin($plugin);
 
-                    if ( empty($active_status) || is_wp_error($active_status) ) {
-                        wp_send_json_error(
+                    if ($params == null){
+                        if ( empty($active_status) || is_wp_error($active_status) ) {
+                            wp_send_json_error(
+                                array(
+                                    'mess' => is_wp_error($result) ? $result->get_error_message() : __('Activation Failed', 'adminify')
+                                )
+                            );
+                        }
+
+                        wp_send_json_success(
                             array(
-                                'mess' => is_wp_error($result) ? $result->get_error_message() : __('Activation Failed', 'adminify')
+                                'mess'   => __('Update success', 'adminify'),
+                                'active' => true,
                             )
                         );
                     }
-
-                    wp_send_json_success(
+                }
+                
+            } catch (\Exception $ex) {
+                if ($params == null){
+                    wp_send_json_error(
                         array(
-                            'mess'   => __('Update success', 'adminify'),
-                            'active' => true,
+                            'mess' => __('Error exception.', 'adminify'),
+                            array(
+                                'error' => $ex,
+                            ),
                         )
                     );
                 }
-            } catch (\Exception $ex) {
-                wp_send_json_error(
-                    array(
-                        'mess' => __('Error exception.', 'adminify'),
-                        array(
-                            'error' => $ex,
-                        ),
-                    )
-                );
             }
         }
+        
     }
 }

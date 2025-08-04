@@ -150,12 +150,13 @@ class Adminify_Setup_Wizard {
 					'admin_ui_light_logo' => [
 						'url' => $this->options['light_dark_mode']['admin_ui_light_mode']['admin_ui_light_logo']['url']
 					],
-					'admin_ui_light_logo_text' => $this->options['light_dark_mode']['admin_ui_light_mode']['admin_ui_light_logo_text'],
+					'admin_ui_light_logo_text' => $this->options['light_dark_mode']['admin_ui_light_mode']['admin_ui_light_logo_text'] ?? '',
 				],
 				'footer_text'				=> $this->options['white_label']['wordpress']['footer_text'],
 			],
 			'images'   			=> WP_ADMINIFY_ASSETS_IMAGE,
 			'wpnonce'  			=> wp_create_nonce('jltwp_adminify_sw'),
+			'rest_nonce'    => wp_create_nonce('wp_rest')
 		];
 
 		wp_localize_script('wp-adminify-sw-setup', 'adminify_setup_wizard_data', $adminify_data);

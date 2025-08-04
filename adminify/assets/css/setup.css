@@ -15,7 +15,7 @@
 .wp-adminify-multi-step-wrapper .wp-adminify-multi-step {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   margin-top: 24px;
 }
 .wp-adminify-multi-step-wrapper .wp-adminify-multi-step .wp-adminify-step {
@@ -72,6 +72,81 @@
   height: 2px;
   border-radius: 2px;
   background-color: #dedee7;
+}
+.wp-adminify-multi-step-wrapper .adminify-install-addons-plugins {
+  position: relative;
+}
+.wp-adminify-multi-step-wrapper .adminify-install-addons-plugins .choose-addons ul.plugins-list {
+  margin-top: 32px;
+  gap: 16px;
+  display: flex;
+  flex-direction: column;
+}
+.wp-adminify-multi-step-wrapper .adminify-install-addons-plugins .choose-addons ul.plugins-list li.plugin.plugin-item {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.wp-adminify-multi-step-wrapper .adminify-install-addons-plugins .choose-addons ul.plugins-list li.plugin.plugin-item label {
+  display: flex;
+  gap: 16px;
+  cursor: pointer;
+}
+.wp-adminify-multi-step-wrapper .adminify-install-addons-plugins .choose-addons ul.plugins-list li.plugin.plugin-item label input {
+  width: 16px;
+  margin-top: 0;
+  padding: 0;
+}
+.wp-adminify-multi-step-wrapper .adminify-install-addons-plugins .choose-addons ul.plugins-list li.plugin.plugin-item label .logo {
+  align-self: center;
+}
+.wp-adminify-multi-step-wrapper .adminify-install-addons-plugins .choose-addons ul.plugins-list li.plugin.plugin-item label .logo img {
+  width: 32px;
+}
+.wp-adminify-multi-step-wrapper .adminify-install-addons-plugins .choose-addons ul.plugins-list li.plugin.plugin-item label .details .description {
+  font-size: 12px;
+}
+.wp-adminify-multi-step-wrapper .adminify-install-addons-plugins .choose-addons ul.plugins-list li.plugin.plugin-item.activated .details .name {
+  color: green;
+}
+.wp-adminify-multi-step-wrapper .adminify-install-addons-plugins .choose-addons ul.plugins-list li.plugin.plugin-item.installed .details .name {
+  color: rgba(58, 58, 233, 0.7882352941);
+}
+.wp-adminify-multi-step-wrapper .adminify-install-addons-plugins .choose-addons .loading-wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 99999;
+  background: rgba(255, 255, 255, 0.17);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5.4px);
+  -webkit-backdrop-filter: blur(5.4px);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+}
+.wp-adminify-multi-step-wrapper .adminify-install-addons-plugins .choose-addons .wp-adminify-loading {
+  pointer-events: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 3px solid #ccddee;
+  border-top-color: red;
+  animation: ani1 1s ease infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.3s;
+}
+@keyframes ani1 {
+  0% {
+    transform: rotate(0turn);
+  }
+  100% {
+    transform: rotate(1turn);
+  }
 }
 .wp-adminify-multi-step-wrapper .wp-adminify-multi-step-action {
   display: flex;
