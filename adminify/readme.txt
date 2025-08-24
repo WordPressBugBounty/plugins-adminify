@@ -4,7 +4,7 @@ Tags: Custom Dashboard, White Label WordPress,  Media Folders, Admin Columns, Lo
 Requires at least: 4.0
 Tested up to: 6.8.2
 Requires PHP: 7.4
-Stable tag: 4.0.4.6
+Stable tag: 4.0.4.8
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -244,6 +244,12 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+= 4.0.4.8 (24-08-2025) =
+* Improve: UI improvement.
+
+= 4.0.4.7 (24-08-2025) =
+* Compatibility: Shopengine and Metabox Plugin Compatibility issue fixed
+
 = 4.0.4.6 (04-08-2025) =
 * Update: Added addons plugin installer step into Adminify setup wizard 
 * Improvement: UX Improved for adminify UI

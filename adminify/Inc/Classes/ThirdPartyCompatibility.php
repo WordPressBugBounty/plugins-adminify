@@ -90,6 +90,30 @@ class ThirdPartyCompatibility {
                 2
             );
         }
+        if ( Utils::is_plugin_active( 'meta-box/meta-box.php' ) ) {
+            echo '<style>
+				.adminify-ui .og.mb {
+							left: 0;
+					}
+				</style>';
+        }
+        if ( Utils::is_plugin_active( 'shopengine/shopengine.php' ) ) {
+            global $pagenow;
+            // e.g. "edit.php"
+            $post_type = ( isset( $_GET['post_type'] ) ? sanitize_key( $_GET['post_type'] ) : '' );
+            // Build the slug
+            $slug = ( $post_type ? "{$pagenow}?post_type={$post_type}" : $pagenow );
+            // Example usage:
+            if ( $slug === 'edit.php?post_type=shopengine-template' ) {
+                echo '<style>
+								#wpfooter {
+										position: inherit !important;
+										display: flex;
+										flex-direction: column-reverse;
+								}
+						</style>';
+            }
+        }
     }
 
     public function apply_menu_restrictions_via_filter( $menu_options, $menu ) {
