@@ -168,6 +168,7 @@ class ThirdPartyCompatibility {
         if ( $pagenow == 'wp-login.php' || $pagenow == 'wp-register.php' || $pagenow == 'customize.php' ) {
             return;
         }
+        $screen = get_current_screen();
         $theme = wp_get_theme();
         // Neve WordPress Theme
         if ( 'Neve' == $theme->name || 'Neve' == $theme->parent_theme ) {
@@ -321,6 +322,17 @@ class ThirdPartyCompatibility {
                     padding: 0;
                 }
             </style>';
+        }
+        if ( Utils::is_plugin_active( 'email-template-customizer-for-woo/email-template-customizer-for-woo.php' ) ) {
+            if ( $screen->id === 'edit-viwec_template' ) {
+                echo '<style>
+								#wpfooter{
+									position: relative !important;
+									display: flex;
+									flex-direction: column-reverse;
+								}
+							</style>';
+            }
         }
         // Third Party localize script
         wp_localize_script( 'wp-adminify-admin', 'WPAdminify_ThirdParty', $this->thirdparty_create_js_object() );

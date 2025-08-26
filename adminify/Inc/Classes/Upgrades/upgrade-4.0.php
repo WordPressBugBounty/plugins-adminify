@@ -58,7 +58,7 @@ class Upgrade_v4_0 extends Upgrade{
   {
     check_ajax_referer('jltwp_adminify_upgrade_v4_0_db_nonce', 'security');
 
-    $old_data = get_option('_wpadminify_backup');
+    $old_data = get_option('_wpadminify_backup', []);
 
     // Google Page Speed Backup
     if ( !empty($old_data['google_pagepseed_api_key']) ) {

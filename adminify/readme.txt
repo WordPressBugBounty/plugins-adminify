@@ -4,7 +4,7 @@ Tags: Custom Dashboard, White Label WordPress,  Media Folders, Admin Columns, Lo
 Requires at least: 4.0
 Tested up to: 6.8.2
 Requires PHP: 7.4
-Stable tag: 4.0.4.8
+Stable tag: 4.0.4.9
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -244,6 +244,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+= 4.0.4.9 (26-08-2025) =
+* Improve: database upgrade issue.
+* Compatibility: Added Plugin compatibility support for "Email Template Customizer for WooCommerce" plugin.
+
 = 4.0.4.8 (24-08-2025) =
 * Improve: UI improvement.
 

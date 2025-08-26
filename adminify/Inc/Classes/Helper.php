@@ -416,7 +416,13 @@ class Helper
 	 */
 	public static function wp_kses_custom($content)
 	{
-		$allowed_tags = wp_kses_allowed_html('post');
+		/**
+		 * the context can be different 
+		 * The context for which to retrieve tags. Allowed values are 'post', 'strip', 'data', 'entities', or the name of a field filter such as 'pre_user_description', or an array of allowed HTML elements and attributes.
+		 * the post means here it will return all the tags that are allowed in post such as a, p, strong, em etc
+		*/
+		$allowed_tags = wp_kses_allowed_html('post'); // Details : https://developer.wordpress.org/reference/functions/wp_kses_allowed_html/
+		if( !is_array($allowed_tags) ) $allowed_tags = [];
 
 		$custom_tags = array(
 			'select'         => self::wp_kses_atts_map(array('class', 'id', 'style', 'width', 'height', 'title', 'data', 'name', 'autofocus', 'disabled', 'multiple', 'required', 'size')),
