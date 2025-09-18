@@ -97,6 +97,17 @@ class ThirdPartyCompatibility {
 					}
 				</style>';
         }
+        if ( Utils::is_plugin_active( 'wp-security-audit-log/wp-security-audit-log.php' ) ) {
+            echo '<script>
+				jQuery(document).ready(function($) {
+					$("body.wp-adminify.adminify-ui ul.frame-adminify-admin-menu li a .frame-adminify-menu-item-name").find("style").remove();
+
+					setInterval(function() {
+						$("body.wp-adminify.adminify-ui ul.frame-adminify-admin-menu li a .frame-adminify-menu-item-name").find("style").remove();
+					}, 1000);
+				});
+			</script>';
+        }
         if ( Utils::is_plugin_active( 'shopengine/shopengine.php' ) ) {
             global $pagenow;
             // e.g. "edit.php"
@@ -194,6 +205,55 @@ class ThirdPartyCompatibility {
 					display: none !important;
 				}
             </style>';
+        }
+        // BrightHub theme compatibility fix
+        if ( 'BrightHub' == $theme->name || 'BrightHub' == $theme->parent_theme ) {
+            echo '<style>
+				body.wp-adminify.adminify-ui.wp-theme-brighthub #wpadminbar,
+				body.wp-adminify.adminify-ui.wp-theme-brighthub #adminmenumain{
+					display: none !important;
+				}
+				.adminify-toolbar-wrapper .adminify-toolbar ul.adminify-top-menu li.adminify-top-menu-item{
+					display: flex;
+					width: auto;
+					justify-content: center;
+					align-items: center;
+				}
+			</style>';
+            echo '<script>
+				document.addEventListener("DOMContentLoaded", function() {
+					document.documentElement.setAttribute("frame-adminify-app", "true");
+
+					var iframe = document.querySelector(".adminify-frame-wrapper iframe");
+					if (iframe) {
+						iframe.addEventListener("load", function() {
+							try {
+								iframe.contentDocument.documentElement.setAttribute("frame-adminify-iframe", "true");
+							} catch(e) {
+								console.log("Could not access iframe content");
+							}
+						});
+
+						try {
+							if (iframe.contentDocument && iframe.contentDocument.documentElement) {
+								iframe.contentDocument.documentElement.setAttribute("frame-adminify-iframe", "true");
+							}
+						} catch(e) {
+							// Cross-origin restrictions might prevent access
+						}
+					}
+				});
+				document.addEventListener("DOMContentLoaded", function() {
+					var menuItems = document.querySelectorAll(".wp-adminify.adminify-ui .adminify-toolbar-wrapper .adminify-toolbar .adminify-top-menu li");
+					menuItems.forEach(function(item) {
+						var link = item.querySelector("a");
+						var divInLink = item.querySelector("a > div");
+						if (link && divInLink) {
+							link.textContent = divInLink.textContent;
+						}
+					});
+				});
+			</script>';
         }
         // Third Party Plugin CSS Conflict
         // $jltwp_adminify_plugin_conflict_css = '';
@@ -329,6 +389,17 @@ class ThirdPartyCompatibility {
 								#wpfooter{
 									position: relative !important;
 									display: flex;
+									flex-direction: column-reverse;
+								}
+							</style>';
+            }
+        }
+        if ( Utils::is_plugin_active( 'woocommerce-orders-tracking/woocommerce-orders-tracking.php' ) ) {
+            if ( $screen->id === 'woocommerce_page_wc-orders' ) {
+                echo '<style>
+								#wpfooter{
+									position: relative !important;
+									display: block !important;
 									flex-direction: column-reverse;
 								}
 							</style>';

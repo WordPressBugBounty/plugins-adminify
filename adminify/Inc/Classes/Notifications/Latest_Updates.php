@@ -56,7 +56,7 @@ if (!class_exists('Latest_Updates')) {
 		{
 			if("dismissed" !== get_option('_wpadminify_plugin_update_info_notice', true )){
 				$jltwp_adminify_changelog_message = sprintf(
-					__('%3$s %4$s %5$s %6$s <br> <strong>Check Changelogs for </strong> <a href="%1$s" target="__blank">%2$s</a>', 'adminify'),
+					__('%3$s %4$s %5$s %6$s %7$s <br> <strong>Check Changelogs for </strong> <a href="%1$s" target="__blank">%2$s</a>', 'adminify'),
 					esc_url_raw('https://wpadminify.com/changelogs'),
 					__('More about Updates ', 'adminify'),
 					/** Changelog Items
@@ -65,8 +65,9 @@ if (!class_exists('Latest_Updates')) {
 
 					'<h3 class="adminify-update-head">' . WP_ADMINIFY . ' <span><small><em>v' . esc_html(WP_ADMINIFY_VER) . '</em></small>' . __(' has some updates..', 'adminify') . '</span></h3><br>', // %3$s
 					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list">Fixed upgrader issue </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Metabox Plugin Compatibility Issue fixed </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Added Plugin compatibility support for "Email Template Customizer for WooCommerce" plugin. </span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Compatibility: Added Plugin compatibility support for "BrightHub" Premium wordpress theme.</span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Compatibility: Added Plugin compatibility support for "WP Activity Log" plugin. </span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Compatibility: Added Plugin compatibility support for "WooCommerce Orders Tracking" plugin. </span><br>', 'adminify'),
 				);
 
 				printf(wp_kses_post($jltwp_adminify_changelog_message));

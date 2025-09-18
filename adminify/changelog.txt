@@ -1,4 +1,10 @@
 == Changelog ==
+
+= 4.0.5.0 (18-09-2025) =
+* Compatibility: Added Plugin compatibility support for "BrightHub" Premium wordpress theme .
+* Compatibility: Added Plugin compatibility support for "WP Activity Log" plugin.
+* Compatibility: Added Plugin compatibility support for "WooCommerce Orders Tracking" plugin.
+
 = 4.0.4.9 (26-08-2025) =
 * Improve: database upgrade issue.
 * Compatibility: Added Plugin compatibility support for "Email Template Customizer for WooCommerce" plugin.
@@ -461,7 +467,7 @@
 * Fixed: Adminbar & Menu Settings default options value saving to DB issue is fixed.
 * Fixed: welcome header link color issue fixed for v6.1.
 * Fixed: Dashboard menu hover color issue fixed in Dark mode.
-* Fixed: Woocommerce menu hide after scroll issue fixed
+* Fixed: WooCommerce menu hide after scroll issue fixed
 * Fixed: Adminbar items alignment issue fixed
 * New: Sticky option added to AdminBar settings.
 
@@ -541,7 +547,7 @@
 * New: UpdraftPlus Backup/Restore plugin dark mode supported
 * New: "Menu Editor" - Drag & Drop Custom Icon uploader added.
 * Fixed: Newtork Admin Sites Text visibility issue
-* Fixed: Woocommerce admin bar style issue fixed
+* Fixed: WooCommerce admin bar style issue fixed
 * Fixed: Dashboard parent menu active style (rounded) style issue
 * Fixed: Screen options radio checkbox checked color issue fixed on dark mode
 * Fixed: Media library single item button padding isue
@@ -602,7 +608,7 @@
 * Fixed: "Welcome widget" displaying by user roles issue fixed
 * Fixed: "Welcome widget" right side extra space issue fixed
 * Fixed: "Menu Settings" Active Menu Style > classic/rounded both style issue fixed
-* Fixed: "Woocommerce" admin page top bar style conflict issue fixed
+* Fixed: "WooCommerce" admin page top bar style conflict issue fixed
 * Fixed: Admin Page editor button 'view admin page/ add admin page' style issue fixed
 * Update: Tweaks: Check If Plugins is active for Options
 * Update: WP Adminify Options 'Light/Dark Mode' renamed to 'Logo Options'
@@ -871,5 +877,3 @@ existing Activated Folder Plugin
 
 = 1.0.0 (18-02-2021)=
 * Initial Release
-
-== Upgrade Notice ==
