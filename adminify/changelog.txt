@@ -1,5 +1,13 @@
 == Changelog ==
 
+= 4.0.5.2 (21-09-2025) =
+* UI Improvement: Improved UI for Adminify settings. 
+
+= 4.0.5.1 (21-09-2025) =
+* Compatibility: Added Plugin compatibility support for "WPBakery visual page builder" Premium wordpress Plugin .
+* UI Improvement: Improved UI for dark light mode switcher.
+* Fix: Console warning fixed for light dark mode switcher.
+
 = 4.0.5.0 (18-09-2025) =
 * Compatibility: Added Plugin compatibility support for "BrightHub" Premium wordpress theme .
 * Compatibility: Added Plugin compatibility support for "WP Activity Log" plugin.

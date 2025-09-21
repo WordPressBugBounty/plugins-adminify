@@ -405,6 +405,13 @@ class ThirdPartyCompatibility {
 							</style>';
             }
         }
+        if ( Utils::is_plugin_active( 'js_composer/js_composer.php' ) ) {
+            echo '<style>
+				.adminify-ui .vc_dropdown-list-item p{
+					color: #fff;
+				}
+			</style>';
+        }
         // Third Party localize script
         wp_localize_script( 'wp-adminify-admin', 'WPAdminify_ThirdParty', $this->thirdparty_create_js_object() );
     }

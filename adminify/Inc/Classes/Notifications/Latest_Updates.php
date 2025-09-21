@@ -64,10 +64,10 @@ if (!class_exists('Latest_Updates')) {
 					 */
 
 					'<h3 class="adminify-update-head">' . WP_ADMINIFY . ' <span><small><em>v' . esc_html(WP_ADMINIFY_VER) . '</em></small>' . __(' has some updates..', 'adminify') . '</span></h3><br>', // %3$s
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list">Fixed upgrader issue </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Compatibility: Added Plugin compatibility support for "BrightHub" Premium wordpress theme.</span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Compatibility: Added Plugin compatibility support for "WP Activity Log" plugin. </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> Compatibility: Added Plugin compatibility support for "WooCommerce Orders Tracking" plugin. </span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list">Compatibility: Added Plugin compatibility support for "WPBakery visual page builder" Premium wordpress Plugin</span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> UI Improvement: Improved UI for dark light mode switcher.</span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list">Fix: Console warning fixed for light dark mode switcher.</span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> UI Improvement: Improved UI for Adminify settings. </span><br>', 'adminify'),
 				);
 
 				printf(wp_kses_post($jltwp_adminify_changelog_message));
