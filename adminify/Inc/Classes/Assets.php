@@ -127,6 +127,11 @@ class Assets extends AdminSettingsModel
 
 	public function header_scripts()
 	{
+		// Skip on excluded pages
+		if ( $this->should_skip_adminify_scripts() ) {
+			return;
+		}
+
 		if (!empty($this->dark_mode) && $this->dark_mode == 'dark') { ?>
 
 			<script>
@@ -174,19 +179,74 @@ class Assets extends AdminSettingsModel
 	// Google Fonts
 	function jltwp_adminify_google_fonts_url()
 	{
-		$font_url    = '';
-		$font_family = !empty($this->options['admin_general_google_font']['font-family']) ? ($this->options['admin_general_google_font']['font-family']) : 'Nunito Sans:300,400,600,700,800';
+		$font_family = !empty($this->options['admin_general_google_font']['font-family']) ? ($this->options['admin_general_google_font']['font-family']) : '';
 
-		if ('off' !== _x('on', 'Google font: on or off', 'adminify')) {
-			$font_url = add_query_arg('family', urlencode($font_family), '//fonts.googleapis.com/css');
+		if (empty($font_family)) {
+			return '';
 		}
 
-		return $font_url;
+		// Get local font instance
+		$local_fonts = GoogleFontsLocal::get_instance();
+
+		// Check if local font exists, if not download it
+		if (!$local_fonts->is_font_local($font_family)) {
+			$font_weights = !empty($this->options['admin_general_google_font']['font-weight']) ? $this->options['admin_general_google_font']['font-weight'] : '400';
+			$local_fonts->download_font($font_family, $font_weights);
+		}
+
+		// Return local font URL
+		return $local_fonts->get_local_font_url($font_family);
+	}
+
+	/**
+	 * Check if current page should skip Adminify scripts
+	 * Handles root, subdirectory, subdomain, and multisite installations
+	 *
+	 * @return bool True if scripts should be skipped
+	 */
+	private function should_skip_adminify_scripts() {
+		global $pagenow;
+
+		// Pages where Adminify scripts should not load
+		$excluded_pages = [
+			'customize.php',
+			'wp-login.php',
+			'wp-register.php',
+		];
+
+		// Check global $pagenow
+		if ( in_array( $pagenow, $excluded_pages, true ) ) {
+			return true;
+		}
+
+		// Fallback: Check PHP_SELF for subdirectory WordPress installs
+		// Normalize path by extracting just the filename
+		$php_self = $_SERVER['PHP_SELF'] ?? '';
+		$current_file = basename( $php_self );
+
+		if ( in_array( $current_file, $excluded_pages, true ) ) {
+			return true;
+		}
+
+		// Additional check using REQUEST_URI for edge cases
+		$request_uri = $_SERVER['REQUEST_URI'] ?? '';
+		foreach ( $excluded_pages as $page ) {
+			if ( strpos( $request_uri, '/' . $page ) !== false ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 
 	public function jltwp_adminify_admin_scripts()
 	{
+		// Skip loading scripts on excluded pages (customize.php, login, etc.)
+		if ( $this->should_skip_adminify_scripts() ) {
+			return;
+		}
+
 		$screen = get_current_screen();
 
 
@@ -200,10 +260,12 @@ class Assets extends AdminSettingsModel
 		// wp_register_style('wp-adminify-responsive', WP_ADMINIFY_ASSETS . 'css/adminify-responsive' . Utils::assets_ext('.css'), false, WP_ADMINIFY_VER);
 		// wp_register_style('wp-adminify-animate', WP_ADMINIFY_ASSETS . 'vendors/animatecss/animate' . Utils::assets_ext('.css'), false, WP_ADMINIFY_VER);
 		wp_register_style('wp-adminify-tokenize2', WP_ADMINIFY_ASSETS . 'vendors/tokenize/tokenize2' . Utils::assets_ext('.css'), false, WP_ADMINIFY_VER);
+		wp_register_style('wp-adminify-select2', WP_ADMINIFY_ASSETS . 'vendors/select2/select2' . Utils::assets_ext('.css'), false, WP_ADMINIFY_VER);
 
 
 		// Register Scripts
 		wp_register_script('wp-adminify-tokenize2', WP_ADMINIFY_ASSETS . 'vendors/tokenize/tokenize2.min.js', array('jquery'), WP_ADMINIFY_VER, false);
+		wp_register_script('wp-adminify-select2', WP_ADMINIFY_ASSETS . 'vendors/select2/select2.min.js', array('jquery'), WP_ADMINIFY_VER, true);
 		wp_register_script('wp-adminify-admin', WP_ADMINIFY_ASSETS . 'admin/js/wp-adminify' . Utils::assets_ext('.js'), array('jquery'), WP_ADMINIFY_VER, true);
 
 		// wp_register_script('wp-adminify-realtime-server', WP_ADMINIFY_ASSETS . 'js/adminify-realtime-server.js', array('jquery'), WP_ADMINIFY_VER, true);
@@ -246,13 +308,69 @@ class Assets extends AdminSettingsModel
 		wp_enqueue_script('wp-adminify--dark-mode');
 
 
+		// Get local fonts data for frontend - download if not exists
+		$local_fonts = GoogleFontsLocal::get_instance();
+		$local_fonts_urls = [];
+
+		// Process body font
+		if (!empty($this->options['admin_general_google_font']['font-family'])) {
+			$font_family = $this->options['admin_general_google_font']['font-family'];
+			$font_weight = !empty($this->options['admin_general_google_font']['font-weight']) ? $this->options['admin_general_google_font']['font-weight'] : '400';
+
+			// Check if local font exists, if not download it
+			if (!$local_fonts->is_font_local($font_family)) {
+				$local_fonts->download_font($font_family, $font_weight);
+			}
+
+			$local_url = $local_fonts->get_local_font_url($font_family);
+			if ($local_url) {
+				$local_fonts_urls['body'] = $local_url;
+			}
+		}
+
+		// Process light mode logo font
+		if (!empty($this->options['light_dark_mode']['admin_ui_light_mode']['admin_ui_light_logo_text_typo']['font-family'])) {
+			$font_family = $this->options['light_dark_mode']['admin_ui_light_mode']['admin_ui_light_logo_text_typo']['font-family'];
+			$font_weight = !empty($this->options['light_dark_mode']['admin_ui_light_mode']['admin_ui_light_logo_text_typo']['font-weight']) ? $this->options['light_dark_mode']['admin_ui_light_mode']['admin_ui_light_logo_text_typo']['font-weight'] : '400';
+
+			if (!$local_fonts->is_font_local($font_family)) {
+				$local_fonts->download_font($font_family, $font_weight);
+			}
+
+			$local_url = $local_fonts->get_local_font_url($font_family);
+			if ($local_url) {
+				$local_fonts_urls['light_logo'] = $local_url;
+			}
+		}
+
+		// Process dark mode logo font
+		if (!empty($this->options['light_dark_mode']['admin_ui_dark_mode']['admin_ui_dark_logo_text_typo']['font-family'])) {
+			$font_family = $this->options['light_dark_mode']['admin_ui_dark_mode']['admin_ui_dark_logo_text_typo']['font-family'];
+			$font_weight = !empty($this->options['light_dark_mode']['admin_ui_dark_mode']['admin_ui_dark_logo_text_typo']['font-weight']) ? $this->options['light_dark_mode']['admin_ui_dark_mode']['admin_ui_dark_logo_text_typo']['font-weight'] : '400';
+
+			if (!$local_fonts->is_font_local($font_family)) {
+				$local_fonts->download_font($font_family, $font_weight);
+			}
+
+			$local_url = $local_fonts->get_local_font_url($font_family);
+			if ($local_url) {
+				$local_fonts_urls['dark_logo'] = $local_url;
+			}
+		}
+
+		$local_fonts_data = [
+			'base_url' => $local_fonts->get_folder_url(),
+			'urls' => $local_fonts_urls,
+		];
+
 		$localize_array_data = [
 			'admin_ajax'  => admin_url('admin-ajax.php'),
 			'settings'    => [
 				'adminify_ui' => !empty($this->options['admin_ui']) ? true : false
 			],
 			'admin_nonce' => wp_create_nonce('adminify_nonce'),
-			'is_pro'      => (class_exists('\\WPAdminify\\Pro\\Adminify_Pro') && !empty(\WPAdminify\Pro\Adminify_Pro::is_premium())) ? true : false
+			'is_pro'      => (class_exists('\\WPAdminify\\Pro\\Adminify_Pro') && !empty(\WPAdminify\Pro\Adminify_Pro::is_premium())) ? true : false,
+			'local_fonts' => $local_fonts_data
 		];
 
 		// Scripts Enqueue
@@ -268,30 +386,6 @@ class Assets extends AdminSettingsModel
 			}
 		}
 		wp_enqueue_style('wp-adminify-simple-line-icons');
-
-		// Load Scripts/Styles only WP Adminify Admin Page
-		if ($screen->id === 'toplevel_page_wp-adminify-settings') {
-			// Admin Notice Dismiss
-			// $this->jltwp_adminify_admin_script();
-
-			global $menu, $submenu;
-			$set_menu = new \WPAdminify\Inc\Modules\MenuEditor\MenuEditor();
-			$main_menus = $set_menu->sort_menu_settings($menu);
-			$sub_menus = $set_menu->sort_sub_menu_settings( $main_menus, $submenu );
-
-			// Menu Editor
-			wp_enqueue_script('wp-adminify-menu-editor-script');
-            wp_localize_script(
-                'wp-adminify-menu-editor-script',
-                'WPAdminifyIconPicker',
-                [
-							'main_menu'	=> $main_menus,
-							'sub_menu'	=> $sub_menus,
-                    // 'is_elementor_active' => Utils::is_plugin_active('elementor/elementor.php'),
-                ]
-            );
-
-		}
 
 		if ($screen->id === 'wp-adminify_page_wp-adminify-addons-plugins' || $screen->id === 'wp-adminify-pro_page_wp-adminify-addons-plugins') {
 			// JS Files .

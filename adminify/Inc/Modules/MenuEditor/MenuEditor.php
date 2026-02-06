@@ -62,6 +62,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
             add_action( 'wp_ajax_adminify_import_menu_settings', [$this, 'adminify_import_menu_settings'] );
             add_action( 'wp_ajax_adminify_file_upload', [$this, 'adminify_file_upload_callback'] );
             add_action( 'wp_ajax_adminify_load_custom_icons', [$this, 'adminify_load_custom_icons_callback'] );
+            add_action( 'wp_ajax_adminify_search_users', [$this, 'adminify_search_users_callback'] );
             new MenuEditorAssets();
         }
 
@@ -104,6 +105,13 @@ if ( !class_exists( 'MenuEditor' ) ) {
         }
 
         public function adminify_load_custom_icons_callback() {
+            // Security check - verify nonce and capability
+            check_ajax_referer( 'adminify-menu-editor-security-nonce', 'security' );
+            if ( !current_user_can( 'manage_options' ) ) {
+                wp_send_json_error( array(
+                    'message' => __( 'You do not have permission to perform this action.', 'adminify' ),
+                ) );
+            }
             $result['images'] = null;
             $query = get_posts( [
                 'post_type'   => 'attachment',
@@ -120,6 +128,11 @@ if ( !class_exists( 'MenuEditor' ) ) {
         public function adminify_file_upload_callback() {
             $result['status'] = false;
             check_ajax_referer( 'adminify-menu-editor-security-nonce', 'security' );
+            if ( !current_user_can( 'manage_options' ) ) {
+                wp_send_json_error( array(
+                    'message' => __( 'You do not have permission to perform this action.', 'adminify' ),
+                ) );
+            }
             $upload_dir = wp_upload_dir();
             $targeted_dir = $upload_dir['basedir'] . '/adminify-custom-icons';
             if ( !is_dir( $targeted_dir ) ) {
@@ -170,6 +183,71 @@ if ( !class_exists( 'MenuEditor' ) ) {
             ];
         }
 
+        /**
+         * AJAX callback to search users for Select2
+         * Uses 'fields' parameter for optimized database query performance
+         */
+        public function adminify_search_users_callback() {
+            check_ajax_referer( 'adminify-menu-editor-security-nonce', 'security' );
+            if ( !current_user_can( 'manage_options' ) ) {
+                wp_send_json_error( array(
+                    'message' => __( 'You do not have permission to perform this action.', 'adminify' ),
+                ) );
+            }
+            $search = ( isset( $_GET['search'] ) ? sanitize_text_field( wp_unslash( $_GET['search'] ) ) : '' );
+            // If no search term or less than 3 chars, return first 3 users
+            if ( strlen( $search ) < 3 ) {
+                $args = array(
+                    'number'  => 3,
+                    'orderby' => 'ID',
+                    'order'   => 'DESC',
+                    'fields'  => array('ID', 'user_login', 'display_name'),
+                );
+                $users = get_users( $args );
+                $results = array();
+                foreach ( $users as $user ) {
+                    $results[] = array(
+                        'id'   => $user->user_login,
+                        'text' => $user->user_login . ' (' . $user->display_name . ')',
+                    );
+                }
+                // Get total user count efficiently
+                $user_count = count_users();
+                $total_users = $user_count['total_users'];
+                wp_send_json( array(
+                    'results'     => $results,
+                    'pagination'  => array(
+                        'more' => $total_users > 3,
+                    ),
+                    'total_users' => $total_users,
+                ) );
+                return;
+            }
+            // Search users when 3+ characters typed
+            $args = array(
+                'search'         => '*' . $search . '*',
+                'search_columns' => array('user_login', 'user_email', 'display_name'),
+                'number'         => 20,
+                'orderby'        => 'display_name',
+                'order'          => 'ASC',
+                'fields'         => array('ID', 'user_login', 'display_name'),
+            );
+            $users = get_users( $args );
+            $results = array();
+            foreach ( $users as $user ) {
+                $results[] = array(
+                    'id'   => $user->user_login,
+                    'text' => $user->user_login . ' (' . $user->display_name . ')',
+                );
+            }
+            wp_send_json( array(
+                'results'    => $results,
+                'pagination' => array(
+                    'more' => false,
+                ),
+            ) );
+        }
+
         // Menu Editor Body Class
         public function jltwp_adminify_menu_editor_body_class( $classes ) {
             $classes .= ' adminify_menu_editor ';
@@ -212,6 +290,11 @@ if ( !class_exists( 'MenuEditor' ) ) {
 
         public function adminify_save_menu_settings() {
             if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'adminify-menu-editor-security-nonce', 'security' ) > 0 ) {
+                if ( !current_user_can( 'manage_options' ) ) {
+                    wp_send_json_error( array(
+                        'message' => __( 'You do not have permission to perform this action.', 'adminify' ),
+                    ) );
+                }
                 $options = wp_kses_post_deep( wp_unslash( $_POST['options'] ) );
                 $options = $this->clean_ajax_input( $options );
                 if ( $options == '' || !is_array( $options ) ) {
@@ -242,6 +325,11 @@ if ( !class_exists( 'MenuEditor' ) ) {
          */
         public function adminify_reset_menu_settings() {
             if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'adminify-menu-editor-security-nonce', 'security' ) > 0 ) {
+                if ( !current_user_can( 'manage_options' ) ) {
+                    wp_send_json_error( array(
+                        'message' => __( 'You do not have permission to perform this action.', 'adminify' ),
+                    ) );
+                }
                 update_option( $this->prefix, [] );
                 $menu_editor_options = get_option( $this->prefix );
                 if ( !$menu_editor_options ) {
@@ -266,6 +354,11 @@ if ( !class_exists( 'MenuEditor' ) ) {
          */
         public function adminify_export_menu_settings() {
             if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'adminify-menu-editor-security-nonce', 'security' ) > 0 ) {
+                if ( !current_user_can( 'manage_options' ) ) {
+                    wp_send_json_error( array(
+                        'message' => __( 'You do not have permission to perform this action.', 'adminify' ),
+                    ) );
+                }
                 $menu_editor_options = get_option( $this->prefix );
                 echo json_encode( $menu_editor_options );
             }
@@ -279,6 +372,11 @@ if ( !class_exists( 'MenuEditor' ) ) {
          */
         public function adminify_import_menu_settings() {
             if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'adminify-menu-editor-security-nonce', 'security' ) > 0 ) {
+                if ( !current_user_can( 'manage_options' ) ) {
+                    wp_send_json_error( array(
+                        'message' => __( 'You do not have permission to perform this action.', 'adminify' ),
+                    ) );
+                }
                 $new_options = wp_kses_post_deep( $_POST['settings'] );
                 if ( $new_options == '' || !is_array( $new_options ) ) {
                     $message = __( 'No options supplied to save', 'adminify' );
@@ -389,6 +487,20 @@ if ( !class_exists( 'MenuEditor' ) ) {
             }
             if ( is_array( $menu_settings ) && !array_key_exists( 0, $menu_settings ) ) {
                 foreach ( $menu_settings as $key => $menu_s ) {
+                    // Skip if $menu_s is not an array
+                    if ( !is_array( $menu_s ) ) {
+                        continue;
+                    }
+                    // Ensure required keys exist with defaults
+                    $menu_s = wp_parse_args( $menu_s, [
+                        'name'          => '',
+                        'link'          => '',
+                        'icon'          => '',
+                        'order'         => 0,
+                        'separator'     => 0,
+                        'external_link' => 0,
+                        'hidden_for'    => [],
+                    ] );
                     $new_array = [
                         $menu_s['name'],
                         'read',
@@ -889,8 +1001,6 @@ if ( !class_exists( 'MenuEditor' ) ) {
          */
         public function render_menu_editor() {
             global $wp_roles;
-            $users = get_users();
-            $this->users = $users;
             $this->roles = $wp_roles->roles;
             if ( $this->menu && is_array( $this->menu ) ) {
                 foreach ( $this->menu as $menu_item ) {
@@ -909,23 +1019,6 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     }
                 }
                 $this->render_add_new_menu_item();
-                ?>
-				<script>
-					jQuery(function($) {
-
-						$('.adminify-menu-settings').tokenize2({
-							placeholder: '<?php 
-                esc_html_e( 'Select roles or users', 'adminify' );
-                ?>'
-						});
-
-						$('.adminify-menu-settings').on('tokenize:select', function() {
-							$(this).tokenize2().trigger('tokenize:search', [$(this).tokenize2().input.val()]);
-						});
-
-					});
-				</script>
-			<?php 
             }
         }
 
@@ -942,24 +1035,14 @@ if ( !class_exists( 'MenuEditor' ) ) {
         public function generate_user_rules_select_field( $menu_id, $disabled_for, $menu_type = 'menu' ) {
             ob_start();
             ?>
-			<select class="adminify-menu-settings <?php 
-            echo $menu_type;
+			<select class="adminify-menu-settings adminify-user-role-select <?php 
+            echo esc_attr( $menu_type );
             ?>_setting" name="hidden_for" id="<?php 
             echo esc_attr( $menu_id );
             ?>-user-role-types" multiple>
-				<?php 
-            $sel = '';
-            // if (in_array('Super Admin', $disabled_for)) {
-            // 	$sel = 'selected';
-            // }
-            ?>
-
-				<!-- <option value="Super Admin" <?php 
-            // echo esc_attr($sel);
-            ?>><?php 
-            // esc_html_e('Super Admin', 'adminify');
-            ?></option> -->
-
+				<optgroup label="<?php 
+            esc_attr_e( 'Roles', 'adminify' );
+            ?>">
 				<?php 
             foreach ( $this->roles as $role ) {
                 $rolename = $role['name'];
@@ -980,24 +1063,38 @@ if ( !class_exists( 'MenuEditor' ) ) {
                 ?></option>
 				<?php 
             }
-            foreach ( $this->users as $user ) {
-                $username = $user->display_name;
-                $user_login = $user->user_login;
-                $sel = '';
-                if ( in_array( $user_login, $disabled_for ) ) {
-                    $sel = 'selected';
-                }
-                ?>
-					<option value="<?php 
-                echo wp_kses_post( $user_login );
-                ?>" <?php 
-                echo esc_attr( $sel );
-                ?>><?php 
-                echo wp_kses_post( $user_login );
-                ?></option>
+            ?>
+				</optgroup>
+
+				<optgroup label="<?php 
+            esc_attr_e( 'Users', 'adminify' );
+            ?>" class="adminify-users-optgroup">
 				<?php 
+            // Only include pre-selected users in HTML (AJAX will populate dropdown)
+            foreach ( $disabled_for as $item ) {
+                // Check if this is a user (not a role)
+                $is_role = false;
+                foreach ( $this->roles as $role ) {
+                    if ( $role['name'] === $item ) {
+                        $is_role = true;
+                        break;
+                    }
+                }
+                if ( !$is_role ) {
+                    $user = get_user_by( 'login', $item );
+                    if ( $user ) {
+                        ?>
+							<option value="<?php 
+                        echo esc_attr( $user->user_login );
+                        ?>" selected><?php 
+                        echo esc_html( $user->user_login . ' (' . $user->display_name . ')' );
+                        ?></option>
+							<?php 
+                    }
+                }
             }
             ?>
+				</optgroup>
 			</select>
 		<?php 
             return ob_get_clean();
@@ -1169,7 +1266,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
             echo esc_attr( $current_menu_item[2] );
             ?>">
 											<?php 
-            esc_html_e( 'Hidden For Rules', 'adminify' );
+            esc_html_e( 'Hidden For Roles or Users', 'adminify' );
             ?>
 										</label>
 
@@ -1303,7 +1400,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
             if ( !empty( $icon ) ) {
                 if ( preg_match( '/http(s?)\\:\\/\\//i', $icon ) ) {
                     $image = explode( ',', $icon );
-                    echo '<i class=""><img src=' . esc_url( $image[1] ) . ' ></i>';
+                    echo '<i class=""><img width="24" height="24" src=' . esc_url( $image[1] ) . ' ></i>';
                 } else {
                     ?>
 															<i class="<?php 
@@ -1314,7 +1411,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
             } else {
                 $adminify_icon = WP_ADMINIFY_ASSETS_IMAGE . 'logos/menu-icon.svg';
                 if ( empty( $icons[$default_icons] ) ) {
-                    echo '<i class=""><img src=' . esc_url( $adminify_icon ) . ' ></i>';
+                    echo '<i class=""><img width="24" height="24" src=' . esc_url( $adminify_icon ) . ' ></i>';
                 } else {
                     ?>
 															<i class="<?php 
@@ -1455,34 +1552,13 @@ if ( !class_exists( 'MenuEditor' ) ) {
 								</div>
 								<div class="column">
 									<label for=""><?php 
-            esc_html_e( 'Hidden For Rules', 'adminify' );
+            esc_html_e( 'Hidden For Roles or Users', 'adminify' );
             ?></label>
 
 									<div class="select is-small">
 										<?php 
             echo $this->generate_user_rules_select_field( $menu_id, $disabled_for );
             ?>
-
-										<script>
-											jQuery('#<?php 
-            echo esc_attr( $menu_id );
-            ?> #<?php 
-            echo esc_attr( $menu_id );
-            ?>-user-role-types').tokenize2({
-												placeholder: '<?php 
-            esc_html_e( 'Select roles or users', 'adminify' );
-            ?>'
-											});
-											jQuery(document).ready(function($) {
-												$('#<?php 
-            echo esc_attr( $menu_id );
-            ?> #<?php 
-            echo esc_attr( $menu_id );
-            ?>-user-role-types').on('tokenize:select', function(container) {
-													$(this).tokenize2().trigger('tokenize:search', [$(this).tokenize2().input.val()]);
-												});
-											})
-										</script>
 									</div>
 								</div>
 							</div>
@@ -1589,36 +1665,13 @@ if ( !class_exists( 'MenuEditor' ) ) {
 									</div>
 									<div class="column">
 										<label for=""><?php 
-            esc_html_e( 'Hidden For Rules', 'adminify' );
+            esc_html_e( 'Hidden For Roles or Users', 'adminify' );
             ?></label>
 
 										<div class="select is-small">
-
 											<?php 
             echo $this->generate_user_rules_select_field( $menu_id, $disabled_for, 'sub_menu' );
             ?>
-
-											<script>
-												jQuery('#wp-adminify-sub-menu-<?php 
-            echo esc_attr( $menu_id );
-            ?> #<?php 
-            echo esc_attr( $menu_id );
-            ?>-user-role-types').tokenize2({
-													placeholder: '<?php 
-            esc_html_e( 'Select roles or users', 'adminify' );
-            ?>'
-												});
-												jQuery(document).ready(function($) {
-													$('#wp-adminify-sub-menu-<?php 
-            echo esc_attr( $menu_id );
-            ?> #<?php 
-            echo esc_attr( $menu_id );
-            ?>-user-role-types').on('tokenize:select', function(container) {
-														$(this).tokenize2().trigger('tokenize:search', [$(this).tokenize2().input.val()]);
-													});
-												})
-											</script>
-
 										</div>
 									</div>
 								</div>

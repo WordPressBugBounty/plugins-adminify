@@ -383,6 +383,7 @@ class Helper
 				'btn_color'        => '#CC22FF',
 				'notice'           => '',
 				'notice_timestamp' => '',
+				'show_for_premium' => 'false',
 			),
 			$data
 		);

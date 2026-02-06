@@ -44,7 +44,7 @@ class Utils
 
 
 	/**
-	 * Check hidden for rules or not
+	 * Check hidden for roles or not
 	 *
 	 * @param [type] $value
 	 *

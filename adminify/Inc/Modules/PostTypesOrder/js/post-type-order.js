@@ -19,7 +19,7 @@
                 {
                     action: "update_post_types_order",
                     order: $("#adminify-pto-media #sortable").sortable("serialize"),
-                    adminify_media_sort_nonce: $("#adminify_media_sort_nonce").val(),
+                    security: adminify_pto.nonce,
                 },
                 function () {
                     $("#adminify-ajax-response").html(
@@ -68,11 +68,12 @@
             $.post(ajaxurl, {
                 action: "update_post_types_order",
                 order: $("#the-list").sortable("serialize"),
+                security: adminify_pto.nonce,
             });
         },
     });
-    
-    
+
+
     $("#the-list").disableSelection();
 
     // Taxonomy Order
@@ -92,6 +93,7 @@
             $.post(ajaxurl, {
                 action: "update_post_types_taxonomy_order",
                 order: $("#the-list").sortable("serialize"),
+                security: adminify_pto.nonce,
             });
         },
     });
@@ -133,6 +135,7 @@
             $.post(ajaxurl, {
                 action: "update_post_types_order_sites",
                 order: $("#the-list").sortable("serialize"),
+                security: adminify_pto.nonce,
             });
         },
     });

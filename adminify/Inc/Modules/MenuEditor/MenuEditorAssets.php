@@ -43,11 +43,11 @@ class MenuEditorAssets extends AdminSettingsModel
 
             // Enqueue Styles
             wp_enqueue_style('wp-adminify-icon-picker');
-            wp_enqueue_style('wp-adminify-tokenize2');
+            wp_enqueue_style('wp-adminify-select2');
             wp_enqueue_style('wp-adminify-menu-editor');
 
             // Enqueue Scripts
-            wp_enqueue_script('wp-adminify-tokenize2');
+            wp_enqueue_script('wp-adminify-select2');
             wp_enqueue_script('wp-adminify-icon-picker');
             wp_enqueue_script('wp-adminify-menu-editor');
 
@@ -222,6 +222,33 @@ class MenuEditorAssets extends AdminSettingsModel
         .jltma-disabled{
             pointer-events: none;
             opacity       : 0.4;
+        }
+        .select2-option-disabled{
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .select2-container--default .select2-results__option[aria-disabled=true]{
+            background: none !important;
+            color: inherit;
+            opacity: 0.5!important;
+        }
+        .select2-search-hint{
+            color: #999;
+            font-style: italic;
+        }
+        select[name="hidden_for"].select2-hidden-accessible{
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0,0,0,0) !important;
+            border: 0 !important;
+        }
+        .adminify_sub_menu_item .select2-container,
+        .adminify_menu_item .select2-container{
+            width: 100% !important;
         }';
 
         // Combine the values from above and minifiy them.

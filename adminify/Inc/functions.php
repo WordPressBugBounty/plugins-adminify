@@ -209,6 +209,17 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
                 if ('jfb-payments' === $sub_slug) { $sub_url = admin_url('edit.php?post_type=jet-form-builder&page=jfb-payments'); }
                 if ('jfb-records' === $sub_slug) { $sub_url = admin_url('edit.php?post_type=jet-form-builder&page=jfb-records'); }
 
+                // WP Adminify Support - open in new tab
+                if ('adminify-support' === $sub_slug) {
+                    $sub_url = \WPAdminify\Inc\Admin\AdminSettings::support_url();
+                    $external_link = true;
+                }
+
+                // WP Adminify Pricing/Upgrade - open in new tab
+                if ('wp-adminify-settings-pricing' === $sub_slug) {
+                    $sub_url = 'https://wpadminify.com/pricing';
+                    $external_link = true;
+                }
 
                 $admin_menu[$menu_slug]['children'][$sub_slug] = [
                     'key'               => $sub_slug,
@@ -221,6 +232,85 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
             }
         }
     }
+
+    // Elementor 3rd-level flyout menu integration
+    // Grabs Quick Start, Settings, Tools, Role Manager, etc. from Elementor's sidebar navigation
+    // Wrapped in Throwable catch so any Elementor API change degrades gracefully
+    try {
+        $elementor_flyout_class = '\Elementor\Modules\EditorOne\Classes\Menu_Data_Provider';
+
+        if (class_exists($elementor_flyout_class)) {
+            $elementor_menu_key = isset($admin_menu['elementor-home']) ? 'elementor-home' :
+                                 (isset($admin_menu['elementor']) ? 'elementor' : null);
+
+            if ($elementor_menu_key && isset($admin_menu[$elementor_menu_key]['children']['elementor'])
+                && method_exists($elementor_flyout_class, 'instance')
+            ) {
+                $menu_data_provider = $elementor_flyout_class::instance();
+
+                // Try known method names in order: current API → known alternates
+                $flyout_items = [];
+                $method_candidates = [
+                    'get_third_level_data'  => ['editor_flyout'], // Current Elementor API
+                    'get_editor_flyout_data' => [],               // Legacy / alternate
+                    'get_level3_items'       => [],               // Fallback
+                ];
+
+                foreach ($method_candidates as $method => $args) {
+                    if (!method_exists($menu_data_provider, $method)) {
+                        continue;
+                    }
+
+                    $result = call_user_func_array([$menu_data_provider, $method], $args);
+
+                    if (is_array($result)) {
+                        // Normalize: result might wrap items under an 'items' key or be the array itself
+                        $flyout_items = isset($result['items']) && is_array($result['items'])
+                            ? $result['items']
+                            : $result;
+                    }
+                    break;
+                }
+
+                if (!empty($flyout_items)) {
+                    $flyout_children = [];
+
+                    foreach ($flyout_items as $item) {
+                        if (!is_array($item)) {
+                            continue;
+                        }
+
+                        // Flexible key mapping — tolerate renamed fields
+                        $slug  = $item['slug'] ?? ($item['id'] ?? '');
+                        $label = $item['label'] ?? ($item['title'] ?? '');
+                        $url   = $item['url'] ?? ($item['link'] ?? '');
+
+                        if (empty($slug) || empty($label)) {
+                            continue;
+                        }
+
+                        $flyout_children[$slug] = [
+                            'key'             => $slug,
+                            'title'           => $label,
+                            'url'             => $url,
+                            'icon'            => $item['icon'] ?? '',
+                            'name'            => '',
+                            'is_flyout_child' => true,
+                            'external_link'   => false,
+                        ];
+                    }
+
+                    if (!empty($flyout_children)) {
+                        $admin_menu[$elementor_menu_key]['children']['elementor']['children'] = $flyout_children;
+                        $admin_menu[$elementor_menu_key]['children']['elementor']['has_flyout_children'] = true;
+                    }
+                }
+            }
+        }
+    } catch (\Throwable $e) {
+        // Silently degrade — menu renders without flyout items
+    }
+
     $admin_menu = jlt_adminify_replaceAmpersandInHref($admin_menu, 'url');
     return $admin_menu;
 }

@@ -110,7 +110,7 @@ class OutputCSS
 		if (!empty($this->options['devtools_tabs']['custom_js'])) {
 			echo "\n<!-- Start of WP Adminify - Admin Area Custom JS -->\n";
 			echo "<script>\n";
-			echo wp_strip_all_tags($this->options['devtools_tabs']['custom_js']);
+			echo html_entity_decode($this->options['devtools_tabs']['custom_js']);
 			echo "\n</script>";
 			echo "\n<!-- /End of WP Adminify - Admin Area Custom JS -->\n";
 		}

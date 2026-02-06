@@ -25,7 +25,8 @@ if (!class_exists('Addons_Plugins')) {
             add_action('admin_enqueue_scripts', [$this, 'add_addons_thickbox']);
         }
 
-        public function add_addons_thickbox () {
+        public function add_addons_thickbox()
+        {
             add_thickbox();
         }
 
@@ -92,27 +93,28 @@ if (!class_exists('Addons_Plugins')) {
 
                     foreach ($data_array as $plugin_data) {
 
-                        $plugins_data[ $plugin_data['slug'] ] = $plugin_data;
+                        $plugins_data[$plugin_data['slug']] = $plugin_data;
 
-                        if ( str_contains( $plugin_data['download_link'], 'downloads.wordpress.org' ) ) {
+                        if (str_contains($plugin_data['download_link'], 'downloads.wordpress.org')) {
 
-                            require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
+                            require_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
 
-                            $plugin_info = \plugins_api( 'plugin_information', array( 'slug' => $plugin_data['slug'] ) );
-                            $plugins_data[ $plugin_data['slug'] ]['version'] = $plugin_info->version;
-
+                            $plugin_info = \plugins_api('plugin_information', array('slug' => $plugin_data['slug']));
+                            if (is_wp_error($plugin_info)) {
+                                unset($plugins_data[$plugin_data['slug']]);
+                                continue;
+                            }
+                            $plugins_data[$plugin_data['slug']]['version'] = $plugin_info->version;
                         } else {
 
-                            if ( ! isset( $plugin_data['version'] ) ) {
-                                unset( $plugins_data[ $plugin_data['slug'] ] );
+                            if (! isset($plugin_data['version'])) {
+                                unset($plugins_data[$plugin_data['slug']]);
                                 continue;
                             }
 
-                            $download_link = add_query_arg( 'version', $plugin_data['version'], $plugin_data['download_link'] );
-                            $plugins_data[ $plugin_data['slug'] ]['download_link'] = $download_link;
-
+                            $download_link = add_query_arg('version', $plugin_data['version'], $plugin_data['download_link']);
+                            $plugins_data[$plugin_data['slug']]['download_link'] = $download_link;
                         }
-
                     }
 
                     // Get plugins data from API and cache it
@@ -149,7 +151,7 @@ if (!class_exists('Addons_Plugins')) {
             add_submenu_page(
                 'wp-adminify-settings',       // Ex. wp-adminify-settings /  edit.php?post_type=page .
                 __('Addons', 'adminify'),
-                sprintf( '<span class="adminify-addons-text">%s</span>', __( 'Addons', 'adminify' ) ),
+                sprintf('<span class="adminify-addons-text">%s</span>', __('Addons', 'adminify')),
                 'manage_options',
                 'wp-adminify-addons-plugins',
                 array($this, 'render_addons_plugins'),

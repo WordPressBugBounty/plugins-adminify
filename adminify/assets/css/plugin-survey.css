@@ -1,6 +1,6 @@
-/*!****************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-3.use[3]!./dev/scss/plugin-survey.scss ***!
-  \****************************************************************************************************************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!./dev/scss/plugin-survey.scss ***!
+  \****************************************************************************************************************************************************************************************************************************************************/
 .wp-adminify-deactivate-survey-modal {
   pointer-events: none;
   opacity: 0;
@@ -114,8 +114,7 @@ form.wp-adminify-deactivate-form-wrapper {
   transition: opacity 0.3s;
   position: fixed;
   top: 0;
-  -webkit-backdrop-filter: blur(1px);
-          backdrop-filter: blur(1px);
+  backdrop-filter: blur(1px);
   left: 0;
   right: 0;
   bottom: 0;

@@ -41,11 +41,9 @@ class ServerInformation {
 
 			// Refresh Debug Log
 			add_action( 'wp_ajax_jltwp_adminify_error_log_content_refresh', [ $this, 'jltwp_adminify_error_log_content_refresh' ] );
-			add_action( 'wp_ajax_nopriv_jltwp_adminify_error_log_content_refresh', [ $this, 'jltwp_adminify_error_log_content_refresh' ] );
 
 			// Clear Debug Log
 			add_action( 'wp_ajax_jltwp_adminify_error_log_content_clear', [ $this, 'jltwp_adminify_error_log_content_clear' ] );
-			add_action( 'wp_ajax_nopriv_jltwp_adminify_error_log_content_clear', [ $this, 'jltwp_adminify_error_log_content_clear' ] );
 		}
 	}
 
@@ -433,6 +431,11 @@ class ServerInformation {
 	// Refresh Button Ajax
 	public function jltwp_adminify_error_log_content_refresh() {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'adminify-error-logs-security-nonce', 'security' ) > 0 ) {
+			// Security check - only administrators can access error logs
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'adminify' ) ) );
+			}
+
 			if ( ! empty( $_POST['command'] ) ) {
 				$action = sanitize_key( $_POST['command'] );
 
@@ -459,6 +462,11 @@ class ServerInformation {
 
 	public function jltwp_adminify_error_log_content_clear() {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'adminify-error-logs-security-nonce', 'security' ) > 0 ) {
+			// Security check - only administrators can clear error logs
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'adminify' ) ) );
+			}
+
 			if ( ! empty( $_POST['command'] ) ) {
 				$file_content = '';
 				$action       = sanitize_key( $_POST['command'] );

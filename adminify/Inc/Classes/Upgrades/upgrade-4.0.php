@@ -58,6 +58,11 @@ class Upgrade_v4_0 extends Upgrade{
   {
     check_ajax_referer('jltwp_adminify_upgrade_v4_0_db_nonce', 'security');
 
+    // Security check - only administrators can run database upgrades
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error(array('message' => __('You do not have permission to perform this action.', 'adminify')));
+    }
+
     $old_data = get_option('_wpadminify_backup', []);
 
     // Google Page Speed Backup

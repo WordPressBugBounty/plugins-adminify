@@ -10,6 +10,7 @@ use WPAdminify\Inc\Classes\Feedback;
 use WPAdminify\Inc\Admin\AdminSettings;
 use WPAdminify\Inc\Classes\Pro_Upgrade;
 use WPAdminify\Inc\Classes\Addons_Plugins;
+use WPAdminify\Inc\Classes\GoogleFontsLocal;
 use WPAdminify\Inc\Classes\Notifications\Notifications;
 // No, Direct access Sir !!!
 if ( !defined( 'ABSPATH' ) ) {
@@ -29,8 +30,12 @@ if ( !class_exists( 'WP_Adminify' ) ) {
             add_filter( 'plugin_action_links_' . WP_ADMINIFY_BASE, array($this, 'plugin_action_links') );
             add_filter( 'network_admin_plugin_action_links_' . WP_ADMINIFY_BASE, array($this, 'plugin_action_links') );
             add_filter( 'admin_body_class', array($this, 'jltwp_adminify_body_class'), 99 );
-            add_action( 'plugins_loaded', array($this, 'jltwp_is_plugin_row_meta') );
-            add_action( 'plugins_loaded', array($this, 'jltwp_adminify_include_files') );
+            // Load textdomain and include files on init for WP 6.7+ compatibility
+            // Textdomain must be loaded before files that use translations
+            // Priority order: 0=textdomain, 1=include files (registers options), 5=framework setup
+            add_action( 'init', array($this, 'jltwp_adminify_load_textdomain'), 0 );
+            add_action( 'init', array($this, 'jltwp_adminify_include_files'), 1 );
+            add_action( 'init', array($this, 'jltwp_is_plugin_row_meta'), 1 );
             $is_finished = get_option( 'jltwp_adminify_setup_wizard_ran' );
             if ( !empty( $is_finished ) || $is_finished != '1' ) {
                 if ( apply_filters( 'jltwp_adminify_show_setup_wizard', true ) ) {
@@ -42,7 +47,7 @@ if ( !class_exists( 'WP_Adminify' ) ) {
         }
 
         function jltwp_adminify_pricing_url( $pricing_url ) {
-            $pricing_url = 'https://jeweltheme.com';
+            $pricing_url = 'https://wpadminify.com/pricing';
             return $pricing_url;
         }
 
@@ -132,6 +137,8 @@ if ( !class_exists( 'WP_Adminify' ) ) {
             new Notifications();
             new Pro_Upgrade();
             new Addons_Plugins();
+            // Initialize Google Fonts Local early to catch option updates
+            GoogleFontsLocal::get_instance();
         }
 
         public function jltwp_adminify_init() {
@@ -142,8 +149,6 @@ if ( !class_exists( 'WP_Adminify' ) ) {
                 $old_data = get_option( '_wpadminify' );
                 update_option( '_wpadminify_backup', $old_data );
             }
-            // Load Text Domain
-            $this->jltwp_adminify_load_textdomain();
         }
 
         /**
@@ -158,12 +163,10 @@ if ( !class_exists( 'WP_Adminify' ) ) {
          * @return void
          */
         public function jltwp_adminify_load_textdomain() {
-            add_action( 'init', function () {
-                $domain = 'adminify';
-                $locale = apply_filters( 'plugin_locale', get_locale(), $domain );
-                load_textdomain( $domain, WP_LANG_DIR . '/' . $domain . '/' . $domain . '-' . $locale . '.mo' );
-                load_plugin_textdomain( $domain, false, dirname( WP_ADMINIFY_BASE ) . '/languages/' );
-            } );
+            $domain = 'adminify';
+            $locale = apply_filters( 'plugin_locale', get_locale(), $domain );
+            load_textdomain( $domain, WP_LANG_DIR . '/' . $domain . '/' . $domain . '-' . $locale . '.mo' );
+            load_plugin_textdomain( $domain, false, dirname( WP_ADMINIFY_BASE ) . '/languages/' );
         }
 
         // Activation Hook
@@ -171,6 +174,9 @@ if ( !class_exists( 'WP_Adminify' ) ) {
             $current_adminify_version = get_option( 'wp_adminify_version', null );
             if ( get_option( 'jltwp_adminify_activation_time' ) === false ) {
                 update_option( 'jltwp_adminify_activation_time', strtotime( 'now' ) );
+            }
+            if ( "dismissed" === get_option( '_wpadminify_plugin_update_info_notice', true ) ) {
+                update_option( '_wpadminify_plugin_update_info_notice', '' );
             }
             if ( is_null( $current_adminify_version ) ) {
                 update_option( 'wp_adminify_version', self::VERSION );

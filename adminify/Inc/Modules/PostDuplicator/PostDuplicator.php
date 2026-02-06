@@ -147,7 +147,7 @@ class PostDuplicator
 			$redirect_url = admin_url('edit.php?post_type=' . $post->post_type);
 			wp_safe_redirect($redirect_url);
 
-			exit;
+			// exit;
 		}
 
 		if (!$this->user_can_clone($post)) {

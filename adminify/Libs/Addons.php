@@ -54,8 +54,7 @@ if (!class_exists('Addons')) {
             register_rest_route('adminify/v1', '/get-addons-list', array(
                 'methods'             => 'GET',
                 'callback'            => [$this, 'jltwp_adminify_get_addons_plugins_list'],
-                // 'permission_callback' => [$this, 'adminify_is_admin_user'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => [$this, 'adminify_is_admin_user'],
             ));
 
             register_rest_route('adminify/v1', '/install-addons', array(
@@ -587,9 +586,10 @@ if (!class_exists('Addons')) {
                     wp_send_json_error(array('mess' => __('Nonce is invalid', 'adminify')));
                 }
 
-                // if ((is_multisite() && !is_network_admin()) || !current_user_can('install_plugins')) {
-                //     wp_send_json_error(array('mess' => __('Invalid access', 'adminify')));
-                // }
+                // Security check - only administrators can activate plugins
+                if (!current_user_can('activate_plugins')) {
+                    wp_send_json_error(array('mess' => __('You do not have permission to perform this action.', 'adminify')));
+                }
 
                 $plugin = sanitize_text_field(wp_unslash($_POST['plugin']));
                 $plugin_links = array_values(wp_list_pluck($this->plugins_list, 'slug'));
@@ -671,7 +671,7 @@ if (!class_exists('Addons')) {
 
                 if($params == null){
                     $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
-    
+
                     if (!wp_verify_nonce($nonce, 'jltwp_adminify_addons_nonce')) {
                         wp_send_json_error(array('mess' => __('Nonce is invalid', 'adminify')));
                     }
@@ -680,10 +680,11 @@ if (!class_exists('Addons')) {
                     $plugin =  $params['plugin'];
                 }
 
-                // if ((is_multisite() && !is_network_admin()) || !current_user_can('install_plugins')) {
-                //     wp_send_json_error(array('mess' => __('Invalid access', 'adminify')));
-                // }
-                
+                // Security check - only administrators can install plugins
+                if (!current_user_can('install_plugins')) {
+                    wp_send_json_error(array('mess' => __('You do not have permission to perform this action.', 'adminify')));
+                }
+
                 $plugin_slug = $this->get_the_plugin_slug( $plugin );
 
                 if ( ! array_key_exists( $plugin_slug, $this->plugins_list) ) {

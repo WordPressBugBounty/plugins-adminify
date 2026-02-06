@@ -125,6 +125,115 @@ class ThirdPartyCompatibility {
 						</style>';
             }
         }
+        if ( Utils::is_plugin_active( 'breeze/breeze.php' ) ) {
+            echo '<script>
+				jQuery(document).ready(function($) {
+					
+					const iframe = document.getElementById("frame-adminify-app--iframe");
+
+					const fileBtn = document.getElementById("adminify-top-menu-breeze-purge-file-group");
+					const objectCacheBtn = document.getElementById("adminify-top-menu-breeze-purge-object-cache-group");
+
+					if( fileBtn ) {
+						fileBtn.addEventListener("click", function (e) {
+							handleClickBreezeBtn("#wp-admin-bar-breeze-purge-file-group");
+						});
+					}
+
+					if( objectCacheBtn ) {
+						objectCacheBtn.addEventListener("click", function (e) {
+							handleClickBreezeBtn("#wp-admin-bar-breeze-purge-object-cache-group");
+						});
+					}
+
+					function handleClickBreezeBtn(selector) {
+						try {
+							const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+							
+							// Find and click the button
+							const button = iframeDoc.querySelector(selector);
+							if (button) {
+								button.click();
+							}
+						} catch (error) {
+							console.error("Cannot access iframe content:", error);
+						}
+					}
+				});
+			</script>';
+        }
+        // Redis Object Cache plugin compatibility
+        if ( Utils::is_plugin_active( 'redis-cache/redis-cache.php' ) ) {
+            $nonce = wp_create_nonce();
+            $ajaxurl = esc_url( admin_url( 'admin-ajax.php' ) );
+            $flushingText = __( 'Flushing cache...', 'redis-cache' );
+            echo '<script>
+				jQuery(document).ready(function($) {
+					const flushBtn = document.getElementById("adminify-top-menu-redis-cache-flush");
+					const parentMenu = document.getElementById("adminify-top-menu-redis-cache");
+
+					if (flushBtn) {
+						const flushLink = flushBtn.querySelector("a");
+
+						flushBtn.addEventListener("click", async function(e) {
+							e.preventDefault();
+							e.stopPropagation();
+
+							if (!flushLink) return;
+
+							// Store original text
+							const originalText = flushLink.textContent || flushLink.innerText;
+
+							// Close dropdown and show flushing text on parent menu
+							const parentLink = parentMenu ? parentMenu.querySelector("a") : null;
+							const parentOriginalHTML = parentLink ? parentLink.innerHTML : null;
+
+							if (parentLink) {
+								parentLink.innerHTML = "' . esc_js( $flushingText ) . '";
+							}
+
+							// Close dropdown
+							const dropdown = flushBtn.closest(".adminify-dropdown");
+							if (dropdown) {
+								dropdown.classList.remove("show");
+							}
+
+							try {
+								const data = new FormData();
+								data.append("action", "roc_flush_cache");
+								data.append("nonce", "' . esc_js( $nonce ) . '");
+
+								const response = await fetch("' . $ajaxurl . '", {
+									method: "POST",
+									body: data,
+								});
+
+								const resultText = await response.text();
+
+								// Show result text
+								if (parentLink) {
+									parentLink.innerHTML = resultText;
+								}
+
+								// Reset to original after 3 seconds
+								setTimeout(function() {
+									if (parentLink && parentOriginalHTML) {
+										parentLink.innerHTML = parentOriginalHTML;
+									}
+								}, 3000);
+
+							} catch (error) {
+								console.error("Object cache could not be flushed:", error);
+								// Reset on error
+								if (parentLink && parentOriginalHTML) {
+									parentLink.innerHTML = parentOriginalHTML;
+								}
+							}
+						});
+					}
+				});
+			</script>';
+        }
     }
 
     public function apply_menu_restrictions_via_filter( $menu_options, $menu ) {
@@ -308,6 +417,10 @@ class ThirdPartyCompatibility {
                 body.wp-adminify-admin-bar.admin-bar #e-admin-top-bar-root .e-admin-top-bar{
                     padding-left: 20px;
                 }
+
+								body.adminify-ui.e-has-sidebar-navigation #wpwrap #wpcontent #editor-one-top-bar > header {
+									top: 0!important;
+								}
             </style>';
         }
         if ( Utils::is_plugin_active( 'one-click-demo-import/one-click-demo-import.php' ) ) {

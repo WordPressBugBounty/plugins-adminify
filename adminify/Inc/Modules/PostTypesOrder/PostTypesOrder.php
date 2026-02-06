@@ -272,6 +272,13 @@ class PostTypesOrder extends AdminSettingsModel {
 
 
 	public function adminify_pto_update_order() {
+		// Security check - verify nonce and capability
+		check_ajax_referer( 'adminify-pto-security-nonce', 'security' );
+
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'adminify' ) ) );
+		}
+
 		global $wpdb;
 		$data = [];
 		parse_str( sanitize_text_field( wp_unslash( $_POST['order'] ) ), $data );
@@ -337,6 +344,13 @@ class PostTypesOrder extends AdminSettingsModel {
 	}
 
 	public function adminify_pto_update_taxonomy() {
+		// Security check - verify nonce and capability
+		check_ajax_referer( 'adminify-pto-security-nonce', 'security' );
+
+		if ( ! current_user_can( 'manage_categories' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'adminify' ) ) );
+		}
+
 		global $wpdb;
 
 		parse_str( sanitize_text_field( wp_unslash( $_POST['order'] ) ), $data );
@@ -416,6 +430,9 @@ class PostTypesOrder extends AdminSettingsModel {
 			wp_enqueue_script( 'jquery' );
 			wp_enqueue_script( 'jquery-ui-sortable' );
 			wp_enqueue_script( 'wp-adminify-post-type-order', WP_ADMINIFY_URL . 'Inc/Modules/PostTypesOrder/js/post-type-order.js', [ 'jquery' ], WP_ADMINIFY_VER, true );
+			wp_localize_script( 'wp-adminify-post-type-order', 'adminify_pto', array(
+				'nonce' => wp_create_nonce( 'adminify-pto-security-nonce' ),
+			) );
 		}
 	}
 
@@ -625,6 +642,13 @@ class PostTypesOrder extends AdminSettingsModel {
 	}
 
 	public function adminify_pto_update_sites() {
+		// Security check - verify nonce and capability
+		check_ajax_referer( 'adminify-pto-security-nonce', 'security' );
+
+		if ( ! current_user_can( 'manage_sites' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'adminify' ) ) );
+		}
+
 		global $wpdb;
 
 		parse_str( sanitize_text_field( wp_unslash( $_POST['order'] ) ), $data );

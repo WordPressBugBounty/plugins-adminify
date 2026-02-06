@@ -44,10 +44,6 @@ if (!class_exists('Discount')) {
         { ?>
             <div class="wp-adminify-discount-coupons-wrapper notice notice-jltma is-dismissible notice-plugin-discount notice-<?php echo esc_attr($this->color); ?> wp-adminify-notice-<?php echo esc_attr($this->get_id()); ?>">
 
-                <!-- <?php //echo esc_url(JLTMA_IMAGE_DIR . 'promo-image.png'); ?>
-				https://master-addons.com/pricing-lite/
-
-				<button type="button" class="notice-dismiss wp-adminify-notice-dismiss"></button> -->
                 <div class="wp-adminify-subscribe-content">
                     <h2>
                         Notice Content, Coupon Code: <?php echo esc_attr($this->coupon_code); ?>

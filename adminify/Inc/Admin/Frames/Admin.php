@@ -276,7 +276,6 @@ if (!class_exists('Admin')) {
                 $parsed_admin_bar_backend         = empty($saved_admin_bar) ? $existing_admin_bar : $this->parse_menu_items($saved_admin_bar, $existing_admin_bar, 'backend');
                 $nested_admin_bar                 = $this->format_to_nested($parsed_admin_bar_backend);
                 $formated_admin_menu              = $this->associative_to_index_array($nested_admin_bar);
-
                 $remove_admin_menu = [];
                 foreach ($formated_admin_menu as $key => $value) {
                     if($value['id'] === 'wp-logo' || $value['id'] === 'site-name'|| $value['id'] === 'updates'|| $value['id'] === 'menu-toggle'|| $value['id'] === 'comments') {
@@ -284,8 +283,15 @@ if (!class_exists('Admin')) {
                     }
                     $remove_admin_menu[$key] = $value;
                 }
-
+                
                 $admin_bar_menu_data = $this->nodes_to_array_for_admin_bar($remove_admin_menu);
+                foreach($admin_bar_menu_data as $key => $value){
+                    if( array_key_exists($value['id'],$admin_bar_data_nested)){
+                        $value['href'] = $admin_bar_data_nested[$value['id']]['href'];
+                        $value = $this->return_original_admin_bar_item_url($value, $admin_bar_data_nested[$value['id']]);
+                    }
+                    $admin_bar_menu_data[$key] = $value;
+                }
             }
 
             unset($admin_bar_data_nested['wp-logo']);
@@ -295,6 +301,19 @@ if (!class_exists('Admin')) {
             unset($admin_bar_data_nested['comments']);
 
             $admin_bar_data_nested = jlt_adminify_replaceAmpersandInHref($admin_bar_data_nested);
+
+            // WP Adminify Pricing/Upgrade - open in new tab
+            if (isset($admin_bar_data_nested['wp-adminify-settings']['submenu'])) {
+                foreach ($admin_bar_data_nested['wp-adminify-settings']['submenu'] as $key => &$bar_item) {
+                    if (isset($bar_item['href']) && strpos($bar_item['href'], 'wp-adminify-settings-pricing') !== false) {
+                        $bar_item['href'] = 'https://wpadminify.com/pricing';
+                        $bar_item['meta']['target'] = '_blank';
+                        break;
+                    }
+                }
+                unset($bar_item);
+            }
+
             $outputter = function () use ($admin_bar_data_nested, $admin_bar_menu_data) {
                 $extra_data = [
                     'data'                => !empty($admin_bar_menu_data) ? $admin_bar_menu_data : array_values($admin_bar_data_nested),
@@ -313,6 +332,20 @@ if (!class_exists('Admin')) {
             add_action("admin_footer", $outputter, 0);
             add_action("wp_footer", $outputter, 0);
             return $admin_bar_data;
+        }
+
+        public function return_original_admin_bar_item_url( $value ,$admin_bar_data_nested ){
+            if( array_key_exists('submenu',$value) ){
+                foreach($value['submenu'] as $submenuKey => $submenuItem){
+                    $submenuId = $submenuItem['id'] ?? null;
+                    if( $submenuId && isset($admin_bar_data_nested['submenu'][$submenuId]) ){
+                        $submenuItem = $this->return_original_admin_bar_item_url($submenuItem, $admin_bar_data_nested['submenu'][$submenuId]);
+                        $submenuItem['href'] = $admin_bar_data_nested['submenu'][$submenuId]['href'] ?? $submenuItem['href'];
+                    }
+                    $value['submenu'][$submenuKey] = $submenuItem;
+                }
+            }
+            return $value;
         }
 
         public function adminify_adminbar_localize_script(){

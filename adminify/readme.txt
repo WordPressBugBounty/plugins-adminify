@@ -2,9 +2,9 @@
 Contributors: jwthemeltd, litonice13, masteraddons
 Tags: white label WordPress, custom dashboard, admin menu editor, login customizer, admin columns
 Requires at least: 5.0
-Tested up to: 6.8.2
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 4.0.5.2
+Stable tag: 4.1.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -16,7 +16,7 @@ Transform your WordPress admin into a fully white-labeled, organized client dash
 
 Ever wondered how to modify the default WordPress admin dashboard? **WP Adminify** is the most suitable **White Label WordPress** plugin and **Admin Menu Editor** solution on the market, specifically developed for **WordPress agencies**, **freelance developers**, and **power users**. This all-in-one **WordPress admin customizer** plugin offers you to completely **rebrand the WordPress dashboard**, transform the user experience, and create a **branded client dashboard** for your customers or personal websites. With over 60 powerful features, WP Adminify gives you control over **customizing your WordPress dashboard**, from the login screen to the smallest admin menu item, dramatically boosting **productivity** and enhancing **security**.
 
-[➡️ See Live Demo](https://demo.pixarlabs.com/?pl-product=adminify) | [📖 Read Comprehensive Documentation](https://wpadminify.com/docs) | [⚡ Upgrade to WP Adminify Pro](https://wpadminify.com/pricing/)
+⚡ [Upgrade to WP Adminify Pro](https://wpadminify.com/pricing/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)  | 📖 [Documentation](https://wpadminify.com/docs?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)  | ➡️ [Live Demo](https://demo.pixarlabs.com/?pl-product=adminify)
 
 **🎬 Video Overview: See WP Adminify in Action**
 
@@ -24,19 +24,19 @@ Ever wondered how to modify the default WordPress admin dashboard? **WP Adminify
 
 = Why WP Adminify is the Best WordPress Dashboard Customizer =
 
-*   ✅  **Complete White Label WordPress Solution:** Remove every trace of WordPress branding. **Rebrand the admin panel** with your own logo, change admin menu labels, customize the admin footer text, replace the "Howdy" text, and create a fully **white labeled WordPress** experience that presents your agency as the platform provider.
+*   ✅  **[Complete White Label WordPress Solution](https://wpadminify.com/features/white-label?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify):** Remove every trace of WordPress branding. **Rebrand the admin panel** with your own logo, change admin menu labels, customize the admin footer text, replace the "Howdy" text, and create a fully **white labeled WordPress** experience that presents your agency as the platform provider.
 
-*   ✅  **Powerful Drag & Drop Admin Menu Editor:** The most intuitive **Admin Menu Editor** available. Visually rearrange, rename, add new menu items, hide unnecessary elements, and create a **custom admin menu** structure with role-based visibility rules. Simplify navigation for clients and prevent them from accessing complex areas like themes and plugins.
+*   ✅  **[Powerful Drag & Drop Admin Menu Editor](https://wpadminify.com/features/admin-menu-editor?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify):** The most intuitive **Admin Menu Editor** available. Visually rearrange, rename, add new menu items, hide unnecessary elements, and create a **custom admin menu** structure with role-based visibility rules. Simplify navigation for clients and prevent them from accessing complex areas like themes and plugins.
 
-*   ✅  **Custom Login Page Designer (Login Customizer):** Extend your **white label WordPress** strategy to the login screen. Our **Login Customizer** module (Loginfy) allows you to design a stunning **custom login screen** with background images, custom logos, form styling, animations, and custom CSS. Make a powerful first impression with a **branded login page**.
+*   ✅  **[Custom Login Page Designer](https://wpadminify.com/loginfy?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify) (Login Customizer):** Extend your **white label WordPress** strategy to the login screen. Our **Login Customizer** module (Loginfy) allows you to design a stunning **custom login screen** with background images, custom logos, form styling, animations, and custom CSS. Make a powerful first impression with a **branded login page**.
 
-*   ✅  **Unmatched WordPress Dashboard Customization:** Choose from multiple modern **UI templates** (Light, Dark, Modern) to instantly transform your **WordPress admin dashboard**. Enable **dark mode** for WordPress, schedule light/dark mode switching, and customize colors and fonts to create a truly **custom WordPress dashboard**.
+*   ✅  **[WordPress Dashboard Customization](https://wpadminify.com/features/dashboard-customization?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify):** Choose from multiple modern **UI templates** (Light, Dark, Modern) to instantly transform your **WordPress admin dashboard**. Enable **dark mode** for WordPress, schedule light/dark mode switching, and customize colors and fonts to create a truly **custom WordPress dashboard**.
 
-*   ✅ **Advanced Productivity Boosters:**  Organize your entire **media library with folders** and subfolders, **replace media files** without changing URLs (upcoming), hide annoying **admin notices**, remove the **welcome panel**, **duplicate posts and pages**, and add **custom dashboard widgets** for RSS feeds or client information.
+*   ✅ **[Advanced Productivity Features](https://wpadminify.com/features/productivity?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify):**  Organize your entire **media library with folders** and subfolders, **replace media files** without changing URLs (upcoming), hide annoying **admin notices**, remove the **welcome panel**, **duplicate posts and pages**, and add **custom dashboard widgets** for RSS feeds or client information.
 
-*  ✅ **Security & Hardening Tools:** Harden your WordPress security. **Change the login URL** from `/wp-admin` to something unique, set custom **login redirects** and **logout redirects** based on user roles, **disable comments** globally across your site, disable XML-RPC, restrict REST API access, and clean up unnecessary scripts from the `<head>` section.
+*  ✅ **[Security Tools](https://wpadminify.com/features/security?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify):** Harden your WordPress security. **Change the login URL** from `/wp-admin` to something unique, set custom **login redirects** and **logout redirects** based on user roles, **disable comments** globally across your site, disable XML-RPC, restrict REST API access, and clean up unnecessary scripts from the `<head>` section.
 
-*   **✅ Admin Columns Editor:** Gain complete control over your post and page list views. This powerful addon allows you to **customize admin columns**, add new columns for custom fields (ACF, MetaBox, Pods), remove default columns, and make columns sortable and filterable. Perfect for managing WooCommerce products, orders, and any custom post type efficiently.
+*   **✅ [Admin Columns Editor](https://wpadminify.com/admin-columns-editor?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify):** Gain complete control over your post and page list views. This powerful addon allows you to **customize admin columns**, add new columns for custom fields (ACF, MetaBox, Pods), remove default columns, and make columns sortable and filterable. Perfect for managing WooCommerce products, orders, and any custom post type efficiently.
 
 = Detailed Feature Breakdown =
 
@@ -135,6 +135,9 @@ Not at all. WP Adminify provides an intuitive, point-and-click interface. No cod
 = How do I get support? =
 Our dedicated support team is ready to help. Pro users get priority support. [Contact us here](https://wpadminify.com/contact).
 
+= Where do I report security bugs found in this plugin? =
+Please report security bugs found in the source code of the undefined plugin through the [Patchstack Vulnerability Disclosure  Program](https://patchstack.com/database/vdp/e46a7f01-9fee-4047-9d43-2c4de76b2c7d). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+
 == Screenshots ==
 
 1. The main WP Adminify settings panel - The control center for all your customization.
@@ -146,27 +149,95 @@ Our dedicated support team is ready to help. Pro users get priority support. [Co
 7. The module settings page showing various addons like Activity Logs.
 
 == Changelog ==
+= 4.1.0 (03-02-2026) =
+* Fixed: Addons install issue fixed.
+* Fixed: Adminify update notice was not hiding issue fixed.
+* Fixed: "Ctrl/cmd + click" to open new window issue fixed.
+* Fixed: Subdomain with same origin click to open new window issue fixed.
+* Fixed: An issue where clearing the cache via the Redis Object Cache plugin incorrectly triggered a redirect to its settings page.
 
-= 4.0.5.2 (21-09-2025) =
-* UI Improvement: Improved UI for Adminify settings.
+= 4.0.9.3 (02-02-2026) =
+* Fixed: Admin bar image extra large issue fixed.
+* Fixed: ShortPixel Image Optimizer plugin open new tab issue fixed.
 
-= 4.0.5.1 (21-09-2025) =
-* Compatibility: Added Plugin compatibility support for "WPBakery visual page builder" Premium wordpress Plugin .
-* UI Improvement: Improved UI for dark light mode switcher.
-* Fix: Console warning fixed for light dark mode switcher.
+= 4.0.9.2 (29-01-2026) =
+* Fixed: Adminify submenu pricing button style issue fixed.
+* Fixed: Custom Javascript code parse error issue fixed.
 
-= 4.0.5.0 (18-09-2025) =
-* Compatibility: Added Plugin compatibility support for "BrightHub" Premium wordpress theme .
-* Compatibility: Added Plugin compatibility support for "WP Activity Log" plugin.
-* Compatibility: Added Plugin compatibility support for "WooCommerce Orders Tracking" plugin.
+= 4.0.9.1 (28-01-2026) =
+* Fixed: Latest Elementor Update Conflict fixed.
 
-= 4.0.4.9 (26-08-2025) =
-* Improve: database upgrade issue.
-* Compatibility: Added Plugin compatibility support for "Email Template Customizer for WooCommerce" plugin.
+= 4.0.8 (26-01-2026) =
+* Added: Folder module add Media Library popup.
+* Updated: Folder module UI updated.
+* Fixed: Elementor Third level sidebar menu issue fixed.
 
-= 4.0.4.8 (24-08-2025) =
-* Improve: UI improvement.
-**➡️ [View Full Changelog](https://wpadminify.com/changelogs)**
+= 4.0.7.8 (20-01-2026) =
+* Security: Security updated.
+
+= 4.0.7.7 (14-01-2026) =
+* Fixed: WP Dashboard Notes plugin "+ Add Note" button trigger issue fixed.
+* Fixed: Admin bar menu some anchor tag mouse cursor style issue fixed.
+
+= 4.0.7.5 (13-01-2026) =
+* Fixed: Vertical & Horizontal Menu style broken issue fixed.
+* Fixed: User Avatar square border style issue fixed.
+* Fixed: WP Adminify > Support menu link issue fixed.
+* Fixed: Setup Wizard Install Addons Plugins infinite loading issue fixed.
+
+= 4.0.7.4 (12-01-2026) =
+* Fixed: User profile manu top right has wrong z-index visibility issue fixed.
+* Improved: Admin Menu Editor select2 field css improved.
+
+= 4.0.7.3 (11-01-2026) =
+* Fixed: Masteriyo plugin click submenu infinite loading bar issue fixed.
+* Added: Frame loading spinner add.
+* Improved: Admin Menu Editor Roles & Users show separately & optimize users search.
+
+= 4.0.7.2 (08-01-2026) =
+* Fixed: Admin pages notice hidden issue fixed.
+
+= 4.0.7.1 (07-01-2026) =
+* Added: Patchstack Vulnerability FAQ added.
+
+= 4.0.7 (07-01-2026) =
+* Fixed: Admin menu icon size & Custom icons list not showing issue fixed.
+* Fixed: Hestia Theme customize screen not working issue fixed.
+* Security: Vulnerability security issue fixed.
+
+= 4.0.6.1 (13-12-2025) =
+* Fixed: Post Duplicator issue fixed.
+* Fixed: Fixed an issue where overwriting plugins resulted in a blank screen.
+* Improve: Use system fonts as a fallback in font-family.
+
+= 4.0.6 (11-12-2025) =
+* Fixed: "Translation loading for the <code>adminify</code> domain was triggered too early" - Text domain issue fixed.
+* Fixed: Text logo font-family issue fixed.
+* Fixed: Admin bar URL issue fixed.
+* Fixed: "Breeze – WordPress Cache Plugin" Purge internal & object cache issue fixed.
+* Fixed: "GDPR compliant" with Google Font issue checked and fixed
+
+
+= 4.0.5.6 (27-11-2025) =
+* Fixed: Adminify Pro Upgrade notice showing in whole dashboard
+* Fixed: Pro upgrade notice showing even the campaign is ended.
+* Updated: SDK Version for better usability and security.
+
+
+= 4.0.5.5 (12-10-2025) =
+* Fixed: Admin bar menu submenu links.
+* Fixed: support url for adminify dashboard.
+
+= 4.0.5.4 (09-10-2025) =
+* Fixed: Admin bar link was unresponsive.
+* Fixed: Admin menu was unresponsive while no title.
+
+= 4.0.5.3 (06-10-2025) =
+* UI Improvement: Improved UI for Adminify Admin Notice.
+* Security Upgrade: Security updated.
+
+
+**➡️ [View Full Changelog](https://wpadminify.com/changelogs?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)**
 
 == Upgrade Notice ==
 
@@ -174,4 +245,4 @@ Our dedicated support team is ready to help. Pro users get priority support. [Co
 Compatibility updated for WPBakery visual page builder, WP Activity Log, WooCommerce plugins and UI Improvement for Light dark mode switcher.
 
 = 4.0.5.0 =
-Better WooCommerce Compatibility, WP Activity Log compatibility, and many more ➡️ [Upgrade Now](https://wpadminify.com/pricing)
+Better WooCommerce Compatibility, WP Activity Log compatibility, and many more ➡️ [Upgrade Now](https://wpadminify.com/pricing?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)

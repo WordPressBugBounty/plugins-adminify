@@ -239,11 +239,43 @@ if (!class_exists('Admin')) {
 				__('Support', 'adminify'),
 				'manage_options',
 				$support_url,
-				function() {
-					wp_safe_redirect(\WPAdminify\Inc\Admin\AdminSettings::support_url(), 301, 'adminify'); exit;
-				}, // Redirect to external URL
+				[$this, 'support_menu_redirect'],
 				60
 			);
+
+			// Hook into admin_init to handle the redirect early, before any output
+			add_action('admin_init', [$this, 'handle_support_redirect']);
+		}
+
+		/**
+		 * Handle support menu redirect
+		 * This method is called when the support page would normally load
+		 */
+		public function support_menu_redirect()
+		{
+			// This function body will never execute because we redirect in admin_init
+			// But it needs to exist as the callback
+		}
+
+		/**
+		 * Handle the actual redirect in admin_init before any output
+		 */
+		public function handle_support_redirect()
+		{
+			if (isset($_GET['page']) && $_GET['page'] === 'adminify-support') {
+				$redirect_url = \WPAdminify\Inc\Admin\AdminSettings::support_url();
+
+				// Add the URLs to the allowed redirect hosts filter
+				add_filter('allowed_redirect_hosts', function($hosts) {
+					$hosts[] = 'wpadminify.com';
+					$hosts[] = 'wordpress.org';
+					return $hosts;
+				});
+
+				// Use wp_redirect for external URLs instead of wp_safe_redirect
+				wp_redirect($redirect_url, 301);
+				exit;
+			}
 		}
 
 
@@ -253,8 +285,6 @@ if (!class_exists('Admin')) {
 ?>
 				<script type="text/javascript">
 					jQuery(document).ready(function($) {
-						// Replace 'your-parent-menu-slug' and 'your-submenu-slug' with actual menu slugs
-						// $('a.toplevel_page_wp-adminify-settings a[href="admin.php?page=adminify-support"]').attr('target', '_blank');
 						$('a[href="admin.php?page=adminify-support"]').attr('target', '_blank');
 					});
 				</script>

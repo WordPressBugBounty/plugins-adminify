@@ -347,6 +347,12 @@ class AdminBar extends AdminSettingsModel {
      */
     public function adminify_all_search() {
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'adminify-admin-bar-security-nonce', 'security' ) > 0 ) {
+            // Security check - only users who can edit posts should access admin search
+            if ( !current_user_can( 'edit_posts' ) ) {
+                wp_send_json_error( array(
+                    'message' => __( 'You do not have permission to perform this action.', 'adminify' ),
+                ) );
+            }
             $search_text = '';
             if ( !empty( $_POST['search'] ) ) {
                 $search_text = sanitize_text_field( wp_unslash( $_POST['search'] ) );

@@ -1,4 +1,88 @@
 == Changelog ==
+= 4.1.0 (03-02-2026) =
+* Fixed: Addons install issue fixed.
+* Fixed: Adminify update notice was not hiding issue fixed.
+* Fixed: "Ctrl/cmd + click" to open new window issue fixed.
+* Fixed: Subdomain with same origin click to open new window issue fixed.
+* Fixed: An issue where clearing the cache via the Redis Object Cache plugin incorrectly triggered a redirect to its settings page.
+
+= 4.0.9.3 (02-02-2026) =
+* Fixed: Admin bar image extra large issue fixed.
+* Fixed: ShortPixel Image Optimizer plugin open new tab issue fixed.
+
+= 4.0.9.2 (29-01-2026) =
+* Fixed: Adminify submenu pricing button style issue fixed.
+* Fixed: Custom Javascript code parse error issue fixed.
+
+= 4.0.9.1 (28-01-2026) =
+* Fixed: Latest Elementor Update Conflict fixed.
+
+= 4.0.8 (26-01-2026) =
+* Added: Folder module add Media Library popup.
+* Updated: Folder module UI updated.
+* Fixed: Elementor Third level sidebar menu issue fixed.
+
+= 4.0.7.8 (20-01-2026) =
+* Security: Security updated.
+
+= 4.0.7.7 (14-01-2026) =
+* Fixed: WP Dashboard Notes plugin "+ Add Note" button trigger issue fixed.
+* Fixed: Admin bar menu some anchor tag mouse cursor style issue fixed.
+
+= 4.0.7.5 (13-01-2026) =
+* Fixed: Vertical & Horizontal Menu style broken issue fixed.
+* Fixed: User Avatar square border style issue fixed.
+* Fixed: WP Adminify > Support menu link issue fixed.
+* Fixed: Setup Wizard Install Addons Plugins infinite loading issue fixed.
+
+= 4.0.7.4 (12-01-2026) =
+* Fixed: User profile manu top right has wrong z-index visibility issue fixed.
+* Improved: Admin Menu Editor select2 field css improved.
+
+= 4.0.7.3 (11-01-2026) =
+* Fixed: Masteriyo plugin click submenu infinite loading bar issue fixed.
+* Added: Frame loading spinner add.
+* Improved: Admin Menu Editor Roles & Users show separately & optimize users search.
+
+= 4.0.7.2 (08-01-2026) =
+* Fixed: Admin pages notice hidden issue fixed.
+
+= 4.0.7.1 (07-01-2026) =
+* Added: Patchstack Vulnerability FAQ added.
+
+= 4.0.7 (07-01-2026) =
+* Fixed: Admin menu icon size & Custom icons list not showing issue fixed.
+* Fixed: Hestia Theme customize screen not working issue fixed.
+* Security: Vulnerability security issue fixed.
+
+= 4.0.6.1 (13-12-2025) =
+* Fixed: Post Duplicator issue fixed.
+* Fixed: Fixed an issue where overwriting plugins resulted in a blank screen.
+* Improve: Use system fonts as a fallback in font-family.
+
+= 4.0.6 (11-12-2025) =
+* Fixed: "Translation loading for the <code>adminify</code> domain was triggered too early" - Text domain issue fixed.
+* Fixed: Text logo font-family issue fixed.
+* Fixed: Admin bar URL issue fixed.
+* Fixed: "Breeze – WordPress Cache Plugin" Purge internal & object cache issue fixed.
+* Fixed: "GDPR compliant" with Google Font issue checked and fixed.
+
+= 4.0.5.6 (27-11-2025) =
+* Fixed: Adminify Pro Upgrade notice showing in whole dashboard
+* Fixed: Pro upgrade notice showing even the campaign is ended.
+* Updated: SDK Version for better usability and security.
+
+= 4.0.5.5 (12-10-2025) =
+* Fixed: Admin bar menu submenu links.
+* Fixed: support url for adminify dashboard.
+
+= 4.0.5.4 (09-10-2025) =
+* Fixed: Admin bar link was unresponsive.
+* Fixed: Admin menu was unresponsive while no title.
+
+= 4.0.5.3 (06-10-2025) =
+* UI Improvement: Improved UI for Adminify Admin Notice.
+* Security Upgrade: Security updated.
 
 = 4.0.5.2 (21-09-2025) =
 * UI Improvement: Improved UI for Adminify settings. 
@@ -842,7 +926,7 @@ existing Activated Folder Plugin
 * Fixed: Only "Schedule Dark Mode" Heading was showing, not showing "Enable Schedule Dark Mode" by default. It's needed to switch on "Dark Mode" to see the options. Fixed this bug also
 * Fixed: WooCommerce "Order, Customer, Products" items with columns not showing issue fixed.
 * Updated: By Default some Menu Icons which consists with svg icons or images aren't showing properly, this issue has been fixed
-* Fixed: Menu Editor 'Hidden for Rules' dropdown selection not working properly.
+* Fixed: Menu Editor 'Hidden for Roles' dropdown selection not working properly.
 * Fixed: Dashboard Widget "Real-time Server Details" uptime counter and progressbar not working issue fixed
 
 

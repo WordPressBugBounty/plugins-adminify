@@ -33,6 +33,11 @@ class Adminify_Setup_Wizard {
 	public function adminify_drag_and_drop_image_callback() {
 		check_ajax_referer('jltwp_adminify_sw');
 
+		// Security check - only administrators can upload images via wizard
+		if (!current_user_can('manage_options')) {
+			wp_send_json_error(__('You do not have permission to perform this action.', 'adminify'));
+		}
+
 		$data_source = empty($_POST['settings']) ? [] : (array) wp_kses_post_deep(wp_unslash($_POST['settings']));
 
 		$base64_image = $data_source['image_data'];
@@ -85,6 +90,11 @@ class Adminify_Setup_Wizard {
 
 	public function wpadminify_save_wizard_data() {
 		check_ajax_referer('jltwp_adminify_sw');
+
+		// Security check - only administrators can save wizard settings
+		if (!current_user_can('manage_options')) {
+			wp_send_json_error(__('You do not have permission to perform this action.', 'adminify'));
+		}
 
 		$settings = empty($_POST['settings']) ? [] : (array) wp_kses_post_deep(wp_unslash($_POST['settings']));
 
