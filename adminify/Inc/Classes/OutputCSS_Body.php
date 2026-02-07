@@ -18,7 +18,8 @@ class OutputCSS_Body {
     public function __construct() {
         $this->options = (array) AdminSettings::get_instance()->get();
         $this->adminify_ui = Utils::check_modules( $this->options['admin_ui'] );
-        add_action( 'admin_enqueue_scripts', [$this, 'jltwp_adminify_admin_ui_preset_vars'] );
+        add_action( 'admin_enqueue_scripts', [$this, 'jltwp_adminify_admin_ui_preset_vars_enqueue'] );
+        add_action( 'admin_head', [$this, 'jltwp_adminify_admin_ui_preset_vars_styles'] );
     }
 
     /**
@@ -377,7 +378,31 @@ class OutputCSS_Body {
         return $light_logo_css . $dark_logo_css;
     }
 
-    public function jltwp_adminify_admin_ui_preset_vars() {
+    /**
+     * Enqueue scripts for admin UI preset vars
+     */
+    public function jltwp_adminify_admin_ui_preset_vars_enqueue() {
+        global $pagenow;
+        if ( $pagenow == 'wp-login.php' || $pagenow == 'wp-register.php' || $pagenow == 'customize.php' ) {
+            return;
+        }
+        // CSS for Adminify UI
+        if ( !empty( $this->options['admin_ui'] ) ) {
+            wp_enqueue_script(
+                'adminify-theme-presetter',
+                WP_ADMINIFY_ASSETS . 'admin/js/wp-adminify-theme-presetter.js',
+                ['jquery'],
+                null,
+                true
+            );
+            wp_localize_script( 'adminify-theme-presetter', 'adminify_preset_themes', Utils::get_theme_presets() );
+        }
+    }
+
+    /**
+     * Output styles in admin_head to avoid headers already sent issues
+     */
+    public function jltwp_adminify_admin_ui_preset_vars_styles() {
         global $pagenow;
         if ( $pagenow == 'wp-login.php' || $pagenow == 'wp-register.php' || $pagenow == 'customize.php' ) {
             return;
@@ -446,14 +471,6 @@ class OutputCSS_Body {
             // 	}
             // }
             printf( '<style>body.wp-adminify{%s}</style>', wp_strip_all_tags( $preset_style ) );
-            wp_enqueue_script(
-                'adminify-theme-presetter',
-                WP_ADMINIFY_ASSETS . 'admin/js/wp-adminify-theme-presetter.js',
-                ['jquery'],
-                null,
-                true
-            );
-            wp_localize_script( 'adminify-theme-presetter', 'adminify_preset_themes', Utils::get_theme_presets() );
         } else {
             printf( '<style>body.wp-adminify{%s}</style>', wp_strip_all_tags( $this->jltwp_adminify_output_styles() ) );
         }

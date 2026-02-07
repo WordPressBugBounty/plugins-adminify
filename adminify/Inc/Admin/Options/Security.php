@@ -17,6 +17,47 @@ if ( ! class_exists( 'Security' ) ) {
 
 		public function __construct() {
 			$this->tweak_settings();
+			add_action('admin_footer', [$this, 'redirect_url_auto_fill_script']);
+		}
+
+		/**
+		 * Auto-fill New Register URL placeholder based on New Login URL
+		 */
+		public function redirect_url_auto_fill_script() {
+			$screen = get_current_screen();
+			if (!$screen || strpos($screen->id, 'wp-adminify') === false) {
+				return;
+			}
+			?>
+			<script>
+			jQuery(document).ready(function($) {
+				// Find the login URL and register URL fields
+				var $loginField = $('input[data-depend-id="new_login_url"]');
+				var $registerField = $('input[data-depend-id="new_register_url"]');
+
+				if ($loginField.length && $registerField.length) {
+					// Update placeholder when login URL changes (not actual value)
+					$loginField.on('input change', function() {
+						var loginValue = $(this).val().trim();
+
+						if (loginValue) {
+							// Update placeholder to suggest the register URL format
+							$registerField.attr('placeholder', loginValue + '/?action=register');
+						} else {
+							// Reset to default placeholder
+							$registerField.attr('placeholder', 'wp-login.php?action=register');
+						}
+					});
+
+					// Also update placeholder on page load if login has value
+					var initialLogin = $loginField.val().trim();
+					if (initialLogin) {
+						$registerField.attr('placeholder', initialLogin + '/?action=register');
+					}
+				}
+			});
+			</script>
+			<?php
 		}
 
 		protected function get_defaults() {
@@ -68,20 +109,18 @@ if ( ! class_exists( 'Security' ) ) {
 							'new_register_url'     => '',
 							'new_logout_url'       => '',
 							'login_redirects'      => [
-								'user_types' 		=> 'user_role',
-								'redirect_user' 	=> 'user_role',
-								'redirect_role' 	=> '',
-								'redirect_cap' 		=> '',
-								'redirect_url' 		=> '',
-								// 'redirect_order' 	=> 10,
+								'user_types'    => '',
+								'redirect_user' => '',
+								'redirect_role' => '',
+								'redirect_cap'  => '',
+								'redirect_url'  => '',
 							],
 							'logout_redirects'	 => [
-								'user_types' 		=> 'user_role',
-								'redirect_user' 	=> 'user_role',
-								'redirect_role' 	=> '',
-								'redirect_cap' 		=> '',
-								'redirect_url' 		=> '',
-								// 'redirect_order' 	=> 10,
+								'user_types'    => '',
+								'redirect_user' => '',
+								'redirect_role' => '',
+								'redirect_cap'  => '',
+								'redirect_url'  => '',
 							]
 						],
 					],
@@ -279,8 +318,8 @@ if ( ! class_exists( 'Security' ) ) {
 				'type'        => 'text',
 				'class'       => 'new-login-url new-register-url',
 				'title'       => __('New Register URL', 'adminify'),
-				'subtitle'    => __('Enable <a href="' . admin_url('options-general.php#users_can_register') . '"><b>Membership: "Anyone can register"</b></a> checkbox from Settings.', 'adminify'),
-				'desc'        => __('Change the Register URL, to setup the custom designed registration page.', 'adminify'),
+				'subtitle'    => __('Use default registration: leave empty.', 'adminify'),
+				'desc'        => __('For default enable <strong>"Membership: Anyone can register"</strong> in <a href="' . admin_url('options-general.php#users_can_register') . '" style="color: var(--adminify-primary);">Settings → General.</a> To use custom registration: Create a Page, then paste its permalink here (e.g. /register).', 'adminify'),
 				'placeholder' => 'wp-login.php?action=register',
 				'before'      => \get_site_url() . '/',
 				// 'after'       => '/',
@@ -417,8 +456,8 @@ if ( ! class_exists( 'Security' ) ) {
 				'type'        => 'text',
 				'class'       => 'new-login-url',
 				'title'       => __('Redirect URL', 'adminify'),
-				// 'before'      => \get_site_url() . '/',
-				'desc'        => __('Note: Full URL here. Change the URL for a User or User Roles.', 'adminify'),
+				'placeholder' => __('e.g., my-dashboard or https://example.com/page', 'adminify'),
+				'desc'        => __('Enter a page slug (e.g., my-dashboard) or full URL. For multisite, use full URLs for cross-site redirects.', 'adminify'),
 				'default'     => $this->get_default_field('redirect_urls_fields')['redirect_urls_options']['redirect_urls_tabs']['login_redirects']['redirect_url'],
 			];
 
@@ -494,8 +533,8 @@ if ( ! class_exists( 'Security' ) ) {
 				'type'        => 'text',
 				'class'       => 'new-login-url',
 				'title'       => __('Redirect URL', 'adminify'),
-				'before'      => \get_site_url() . '/',
-				'desc'        => __('Change the URL for a User or User Roles.', 'adminify'),
+				'placeholder' => __('e.g., goodbye or https://example.com/page', 'adminify'),
+				'desc'        => __('Enter a page slug (e.g., goodbye) or full URL. For multisite, use full URLs for cross-site redirects.', 'adminify'),
 				'default'     => $this->get_default_field('redirect_urls_fields')['redirect_urls_options']['redirect_urls_tabs']['logout_redirects']['redirect_url'],
 			];
 

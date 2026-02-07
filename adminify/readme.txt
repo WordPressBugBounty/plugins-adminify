@@ -4,7 +4,7 @@ Tags: white label WordPress, custom dashboard, admin menu editor, login customiz
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 4.1.0
+Stable tag: 4.1.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -149,6 +149,16 @@ Please report security bugs found in the source code of the undefined plugin thr
 7. The module settings page showing various addons like Activity Logs.
 
 == Changelog ==
+= 4.1.1 (07-02-2026) =
+* Fixed: Custom Register URL now properly loads registration form.
+* Fixed: Register URL with query strings no longer gets trailing slash appended.
+* Fixed: URL generation issue where "http://" was incorrectly added before query parameters.
+* Fixed: Multisite registration page now loads correctly with custom register URL.
+* Fixed: Login/Logout Redirect fields default values causing PHP undefined array key warnings.
+* Fixed: Login/Logout Redirect fields showing incorrect pre-selected values on new entries.
+* Improved: New Register URL field placeholder auto-updates based on New Login URL input.
+* Improved: Latest Upgrade notice add notify me & don't show again option.
+
 = 4.1.0 (03-02-2026) =
 * Fixed: Addons install issue fixed.
 * Fixed: Adminify update notice was not hiding issue fixed.
@@ -216,25 +226,6 @@ Please report security bugs found in the source code of the undefined plugin thr
 * Fixed: Admin bar URL issue fixed.
 * Fixed: "Breeze – WordPress Cache Plugin" Purge internal & object cache issue fixed.
 * Fixed: "GDPR compliant" with Google Font issue checked and fixed
-
-
-= 4.0.5.6 (27-11-2025) =
-* Fixed: Adminify Pro Upgrade notice showing in whole dashboard
-* Fixed: Pro upgrade notice showing even the campaign is ended.
-* Updated: SDK Version for better usability and security.
-
-
-= 4.0.5.5 (12-10-2025) =
-* Fixed: Admin bar menu submenu links.
-* Fixed: support url for adminify dashboard.
-
-= 4.0.5.4 (09-10-2025) =
-* Fixed: Admin bar link was unresponsive.
-* Fixed: Admin menu was unresponsive while no title.
-
-= 4.0.5.3 (06-10-2025) =
-* UI Improvement: Improved UI for Adminify Admin Notice.
-* Security Upgrade: Security updated.
 
 
 **➡️ [View Full Changelog](https://wpadminify.com/changelogs?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)**

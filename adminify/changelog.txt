@@ -1,4 +1,14 @@
 == Changelog ==
+= 4.1.1 (07-02-2026) =
+* Fixed: Custom Register URL now properly loads registration form.
+* Fixed: Register URL with query strings no longer gets trailing slash appended.
+* Fixed: URL generation issue where "http://" was incorrectly added before query parameters.
+* Fixed: Multisite registration page now loads correctly with custom register URL.
+* Fixed: Login/Logout Redirect fields default values causing PHP undefined array key warnings.
+* Fixed: Login/Logout Redirect fields showing incorrect pre-selected values on new entries.
+* Improved: New Register URL field placeholder auto-updates based on New Login URL input.
+* Improved: Latest Upgrade notice add notify me & don't show again option.
+
 = 4.1.0 (03-02-2026) =
 * Fixed: Addons install issue fixed.
 * Fixed: Adminify update notice was not hiding issue fixed.

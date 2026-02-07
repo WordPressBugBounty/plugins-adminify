@@ -42,8 +42,12 @@ if (!class_exists('Addons')) {
 
             $this->includes();
 
-            add_action('admin_menu', array($this, 'admin_menu'), 1000);
-            // add_action('network_admin_menu', array($this, 'admin_menu'), $this->menu_order);
+            // Show Addons menu only on network admin for multisite, or on regular admin for single site
+            if ( is_multisite() ) {
+                add_action('network_admin_menu', array($this, 'admin_menu'), 1000);
+            } else {
+                add_action('admin_menu', array($this, 'admin_menu'), 1000);
+            }
             add_action('wp_ajax_jltwp_adminify_addons_upgrade_plugin', array($this, 'jltwp_adminify_addons_upgrade_plugin'));
             add_action('wp_ajax_jltwp_adminify_addons_activate_plugin', array($this, 'jltwp_adminify_addons_activate_plugin'));
             add_action('plugins_loaded', array($this, 'maybe_replace_addons_path'), 1000); // 1000 is important

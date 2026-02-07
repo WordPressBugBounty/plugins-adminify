@@ -47,6 +47,7 @@ if (!class_exists('Admin')) {
 			jltwp_adminify()->add_filter('plugin_icon', array($this, 'jltwp_adminify_logo_icon'));
 
 			add_action('admin_menu', array($this, 'support_menu'), 1100);
+			add_action('network_admin_menu', array($this, 'support_menu'), 1100);
 			add_action('admin_menu', [$this, 'submenu_link_new_tab']);
 			add_action('plugins_loaded', array($this, 'jltwp_adminify_ajax_data_save'), 999);
 			// jltwp_adminify()->add_filter('support_forum_url', [$this, 'jltwp_adminify_support_forum_url']);

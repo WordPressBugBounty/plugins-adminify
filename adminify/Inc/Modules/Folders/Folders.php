@@ -332,6 +332,10 @@ class Folders {
     }
 
     function enqueue_scripts_for_media_uploads() {
+        // Skip on customizer - not needed there
+        // if ( is_customize_preview() || ( function_exists( 'get_current_screen' ) && get_current_screen() && get_current_screen()->base === 'customize' ) ) {
+        // 	return;
+        // }
         wp_enqueue_media();
         wp_enqueue_script( 'media-views' );
         wp_enqueue_script( 'wp-dom-ready' );

@@ -260,23 +260,13 @@ class AdminBar extends AdminSettingsModel {
         $output_css = '';
         $topbar_wireframe_img = WP_ADMINIFY_ASSETS_IMAGE . 'topbar-wireframe.svg';
         $output_css .= '.js .wp-adminify-topbar-loader{background: url(' . esc_url( $topbar_wireframe_img ) . '); }';
-        echo '<style>' . wp_strip_all_tags( $output_css ) . '</style>';
+        // Use wp_add_inline_style instead of echo to prevent "headers already sent" errors
+        wp_add_inline_style( 'wp-adminify-admin-bar', wp_strip_all_tags( $output_css ) );
         $screen = get_current_screen();
         // Get current screen details
         if ( isset( $screen->base ) && $screen->base === 'post' ) {
-            ?>
-        <script>
-            window.addEventListener('load', function() {
-                const isFullscreenMode = wp.data.select('core/edit-post').isFeatureActive('fullscreenMode');
-
-                if (isFullscreenMode) {
-                    jQuery('.adminify-top_bar').css({
-                        'display': 'none !important'
-                    });
-                }
-            });
-        </script>
-        <?php 
+            $inline_script = "window.addEventListener('load', function() {\n\t\t\t\tconst isFullscreenMode = wp.data.select('core/edit-post').isFeatureActive('fullscreenMode');\n\t\t\t\tif (isFullscreenMode) {\n\t\t\t\t\tjQuery('.adminify-top_bar').css({\n\t\t\t\t\t\t'display': 'none !important'\n\t\t\t\t\t});\n\t\t\t\t}\n\t\t\t});";
+            wp_add_inline_script( 'wp-adminify-admin', $inline_script );
         }
     }
 
