@@ -82,7 +82,7 @@ if (!class_exists('Latest_Updates')) {
 
 			if("dismissed" !== $forever_notice){
 				$jltwp_adminify_changelog_message = sprintf(
-					__('%3$s %4$s %5$s %6$s %7$s %8$s %9$s %10$s %11$s <br> <strong>Check Changelogs for </strong> <a href="%1$s" target="__blank">%2$s</a>', 'adminify'),
+					__('%3$s %4$s %5$s %6$s %7$s <br> <strong>Check Changelogs for </strong> <a href="%1$s" target="__blank">%2$s</a>', 'adminify'),
 					esc_url_raw('https://wpadminify.com/changelogs'),
 					__('More about Updates ', 'adminify'),
 					/** Changelog Items
@@ -91,14 +91,10 @@ if (!class_exists('Latest_Updates')) {
 
 					'<h3 class="adminify-update-head">' . WP_ADMINIFY . ' <span><small><em>v' . esc_html(WP_ADMINIFY_VER) . '</em></small>' . __(' has some updates..', 'adminify') . '</span></h3><br>', // %3$s
 					// changelogs
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Custom Register URL now properly loads registration form. </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Register URL with query strings no longer gets trailing slash appended. </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> URL generation issue where "http://" was incorrectly added before query parameters. </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Multisite registration page now loads correctly with custom register URL. </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Login/Logout Redirect fields default values causing PHP undefined array key warnings. </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Login/Logout Redirect fields showing incorrect pre-selected values on new entries. </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> New Register URL field placeholder auto-updates based on New Login URL input. </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> Latest Upgrade notice add notify me & don\'t show again option. </span><br>', 'adminify')
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Feature:</strong> Infinite Scroll for Media Library page support add. </span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> Folder Module sticky style for Media Library page. </span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> FileBird, Folders, Real Media Library etc plugin with Adminify Folder Module auto hide issue fixed. </span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Admin Bar secondary menu click to navigate issue fixed. </span><br>', 'adminify')
 				);
 				printf(wp_kses_post($jltwp_adminify_changelog_message));
 			}

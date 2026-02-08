@@ -4,7 +4,7 @@ Tags: white label WordPress, custom dashboard, admin menu editor, login customiz
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 4.1.1
+Stable tag: 4.1.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -149,6 +149,12 @@ Please report security bugs found in the source code of the undefined plugin thr
 7. The module settings page showing various addons like Activity Logs.
 
 == Changelog ==
+= 4.1.2 (08-02-2026) =
+* Feature: Infinite Scroll for Media Library page support add.
+* Improved: Folder Module sticky style for Media Library page.
+* Fixed: FileBird, Folders, Real Media Library etc plugin with Adminify Folder Module auto hide issue fixed.
+* Fixed: Admin Bar secondary menu click to navigate issue fixed.
+
 = 4.1.1 (07-02-2026) =
 * Fixed: Custom Register URL now properly loads registration form.
 * Fixed: Register URL with query strings no longer gets trailing slash appended.

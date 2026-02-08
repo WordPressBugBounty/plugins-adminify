@@ -35,6 +35,26 @@ class Folders {
         add_action( 'restrict_manage_posts', [$this, 'wp_adminify_show_folders_in_list_filter'] );
         add_action( 'add_attachment', [$this, 'wp_adminify_assign_media_folder_to_new_attachment'] );
         add_action( 'enqueue_block_editor_assets', [$this, 'enqueue_scripts_for_media_uploads'], PHP_INT_MAX );
+        // add_action( 'customize_controls_print_footer_scripts', [ $this, 'add_adminify_body_class' ] );
+        // add_action( 'customize_controls_enqueue_scripts', [ $this, 'enqueue_scripts_for_media_uploads' ], PHP_INT_MAX );
+        // Elementor editor support
+        // add_action( 'elementor/editor/footer', [ $this, 'add_adminify_body_class' ] );
+        // add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'enqueue_scripts_for_media_uploads' ], PHP_INT_MAX );
+    }
+
+    /**
+     * Add wp-adminify class to body
+     * Required for folder widget CSS to work in media modal (Elementor, Customizer, etc.)
+     */
+    public function add_adminify_body_class() {
+        if ( !(bool) $this->options['media'] ) {
+            return;
+        }
+        ?>
+		<script>
+			document.body.classList.add('wp-adminify');
+		</script>
+		<?php 
     }
 
     public function modify_attachment_for_js( $response ) {
@@ -408,7 +428,7 @@ class Folders {
         ] );
         // Add full folder data (folders, hierarchy, counts)
         $data = array_merge( $data, $this->refreshed_folder_data( $post_type, $post_type_tax ) );
-        // Localize the data to multiple script handles (like FileBird approach)
+        // Localize the data to multiple script handles
         // This ensures data is available in different contexts
         wp_localize_script( 'wp-adminify--folder', 'wp_adminify__folder_data', $data );
         wp_localize_script( 'wp-dom-ready', 'wp_adminify__folder_data', $data );

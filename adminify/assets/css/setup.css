@@ -5,6 +5,13 @@
 /*!**********************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!./dev/admin/modules/setup-wizard/index.scss (1) ***!
   \**********************************************************************************************************************************************************************************************************************************************************************/
+body.wp-adminify {
+  --adminify-primary: #3a3ae9;
+  --adminify-preset-background: #f0f0f1;
+  --adminify-text-color: #fff;
+  --adminify-input-bg: #f1f1f3;
+}
+
 .wp-adminify-multi-step-wrapper {
   width: 100%;
 }
@@ -250,6 +257,13 @@
 .wp-adminify-file-uploader:has(.adminify-img-draging) {
   border-color: #3a3ae9;
   border-color: var(--adminify-primary);
+}
+
+body.wp-adminify {
+  --adminify-primary: #3a3ae9;
+  --adminify-preset-background: #f0f0f1;
+  --adminify-text-color: #fff;
+  --adminify-input-bg: #f1f1f3;
 }
 
 .wp-adminify-tabs-wrapper ul {

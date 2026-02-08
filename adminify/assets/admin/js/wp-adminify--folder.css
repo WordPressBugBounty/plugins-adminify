@@ -1,6 +1,13 @@
 /*!*************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!./dev/admin/modules/folder/folder.scss ***!
   \*************************************************************************************************************************************************************************************************************************************************************/
+body.wp-adminify {
+  --adminify-primary: #3a3ae9;
+  --adminify-preset-background: #f0f0f1;
+  --adminify-text-color: #fff;
+  --adminify-input-bg: #f1f1f3;
+}
+
 /*
 * Useable Mixin
 */
@@ -15,10 +22,14 @@
   gap: 16px;
 }
 .wp-adminify #wp-adminify--folder-app {
+  height: -webkit-fill-available;
+  position: relative;
   padding-bottom: 65px;
   margin-top: 8px;
 }
 .wp-adminify .wp-adminify--folder-widget {
+  position: sticky;
+  top: 48px;
   flex-shrink: 0;
   width: 280px;
   min-height: calc(100vh - 32px);
@@ -167,6 +178,8 @@
   font-weight: 500;
   line-height: 20px;
   color: #48455f;
+  outline: none;
+  box-shadow: none;
 }
 .wp-adminify .wp-adminify--folder-widget .wp-adminify--folder-app .folder--stats li.active {
   background-color: #f4f4fa;
@@ -294,6 +307,8 @@
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: #fff;
+  outline: none;
+  box-shadow: none;
 }
 .wp-adminify .wp-adminify--folder-widget .wp-adminify--folder-app .folder--lists li.folder--single-root .wp-adminify--folder-row > a .wp-adminify--name {
   font-size: 14px;
@@ -1098,6 +1113,9 @@ body.adminify--items-dragging .folder--stats li > a.adminify-drop-hover .dashico
   background-color: #e0e0e0;
 }
 
+#wp-media-modal .media-frame-menu-heading {
+  display: none !important;
+}
 #wp-media-modal .media-frame-title, #wp-media-modal .media-frame-router, #wp-media-modal .media-frame-content, #wp-media-modal .media-frame-toolbar {
   margin-left: 296px;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1121,6 +1139,49 @@ body.adminify--items-dragging .folder--stats li > a.adminify-drop-hover .dashico
 }
 #wp-media-modal.adminify-folder-collapsed .media-frame-menu {
   width: 56px;
+}
+
+.wp-adminify.elementor-editor-active .folder--actions input[type=checkbox], .wp-adminify.elementor-editor-active .folder--lists input[type=checkbox] {
+  -moz-appearance: none;
+       appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  border: 1px solid #dedee7;
+  border-radius: 3px;
+  background-color: #fff;
+  cursor: pointer;
+  margin: 0;
+  position: relative;
+}
+.wp-adminify.elementor-editor-active .folder--actions input[type=checkbox]::before, .wp-adminify.elementor-editor-active .folder--lists input[type=checkbox]::before {
+  content: none !important;
+}
+.wp-adminify.elementor-editor-active .folder--actions input[type=checkbox]:checked, .wp-adminify.elementor-editor-active .folder--lists input[type=checkbox]:checked {
+  background-color: var(--adminify-primary, var(--adminify-primary));
+  border-color: var(--adminify-primary, var(--adminify-primary));
+}
+.wp-adminify.elementor-editor-active .folder--actions input[type=checkbox]:checked::after, .wp-adminify.elementor-editor-active .folder--lists input[type=checkbox]:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 3px !important;
+  width: 4px;
+  height: 8px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.wp-adminify.elementor-editor-active ul.folder--lists {
+  max-height: calc(100vh - 400px) !important;
+}
+.wp-adminify.elementor-editor-active #wp-media-modal .media-frame-title, .wp-adminify.elementor-editor-active #wp-media-modal .media-frame-router, .wp-adminify.elementor-editor-active #wp-media-modal .media-frame-content, .wp-adminify.elementor-editor-active #wp-media-modal .media-frame-toolbar {
+  margin-left: 100px !important;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.wp-adminify.elementor-editor-active #wp-media-modal.adminify-folder-collapsed .media-frame-title, .wp-adminify.elementor-editor-active #wp-media-modal.adminify-folder-collapsed .media-frame-router, .wp-adminify.elementor-editor-active #wp-media-modal.adminify-folder-collapsed .media-frame-content, .wp-adminify.elementor-editor-active #wp-media-modal.adminify-folder-collapsed .media-frame-toolbar {
+  margin-left: -148px !important;
 }
 
 .wp-adminify--folder-widget {

@@ -1,4 +1,10 @@
 == Changelog ==
+= 4.1.2 (08-02-2026) =
+* Feature: Infinite Scroll for Media Library page support add.
+* Improved: Folder Module sticky style for Media Library page.
+* Fixed: FileBird, Folders, Real Media Library etc plugin with Adminify Folder Module auto hide issue fixed.
+* Fixed: Admin Bar secondary menu click to navigate issue fixed.
+
 = 4.1.1 (07-02-2026) =
 * Fixed: Custom Register URL now properly loads registration form.
 * Fixed: Register URL with query strings no longer gets trailing slash appended.

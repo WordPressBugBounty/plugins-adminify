@@ -84,6 +84,13 @@
  * ---------------------------------------------------------
  *
  */
+body.wp-adminify {
+  --adminify-primary: #3a3ae9;
+  --adminify-preset-background: #f0f0f1;
+  --adminify-text-color: #fff;
+  --adminify-input-bg: #f1f1f3;
+}
+
 /*
 * Useable Mixin
 */
@@ -748,6 +755,13 @@
     gap: 12px;
   }
 }
+body.wp-adminify {
+  --adminify-primary: #3a3ae9;
+  --adminify-preset-background: #f0f0f1;
+  --adminify-text-color: #fff;
+  --adminify-input-bg: #f1f1f3;
+}
+
 /*
 * Useable Mixin
 */
@@ -3065,6 +3079,13 @@
     transform: rotate(360deg) translateX(-6px) rotate(-360deg);
   }
 }
+body.wp-adminify {
+  --adminify-primary: #3a3ae9;
+  --adminify-preset-background: #f0f0f1;
+  --adminify-text-color: #fff;
+  --adminify-input-bg: #f1f1f3;
+}
+
 /**
  * 10. Helper
  */
@@ -3193,6 +3214,13 @@
 .adminify-fa5-shims .adminify .fab {
   font-family: "FontAwesome";
   font-style: normal;
+}
+
+body.wp-adminify {
+  --adminify-primary: #3a3ae9;
+  --adminify-preset-background: #f0f0f1;
+  --adminify-text-color: #fff;
+  --adminify-input-bg: #f1f1f3;
 }
 
 /**
@@ -4425,6 +4453,13 @@ span.flatpickr-weekday {
     transform: translate3d(0, 0, 0);
   }
 }
+body.wp-adminify {
+  --adminify-primary: #3a3ae9;
+  --adminify-preset-background: #f0f0f1;
+  --adminify-text-color: #fff;
+  --adminify-input-bg: #f1f1f3;
+}
+
 .wp-adminify-two-columns {
   display: flex;
   flex-wrap: wrap;

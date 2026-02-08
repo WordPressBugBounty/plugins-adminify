@@ -38,7 +38,7 @@ class Manager extends Data {
 		$this->register( new What_We_Collect() );
 
 		// Module_Conflicts
-		$this->register( new Module_Conflicts() );
+		// $this->register( new Module_Conflicts() );
 
 		// Register Upgrade_Notice Notice for managing all notices .
 		$this->register( new Upgrade_Notice() );
