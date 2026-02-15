@@ -4,7 +4,7 @@ Tags: white label WordPress, custom dashboard, admin menu editor, login customiz
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 4.1.2
+Stable tag: 4.1.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -16,7 +16,7 @@ Transform your WordPress admin into a fully white-labeled, organized client dash
 
 Ever wondered how to modify the default WordPress admin dashboard? **WP Adminify** is the most suitable **White Label WordPress** plugin and **Admin Menu Editor** solution on the market, specifically developed for **WordPress agencies**, **freelance developers**, and **power users**. This all-in-one **WordPress admin customizer** plugin offers you to completely **rebrand the WordPress dashboard**, transform the user experience, and create a **branded client dashboard** for your customers or personal websites. With over 60 powerful features, WP Adminify gives you control over **customizing your WordPress dashboard**, from the login screen to the smallest admin menu item, dramatically boosting **productivity** and enhancing **security**.
 
-⚡ [Upgrade to WP Adminify Pro](https://wpadminify.com/pricing/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)  | 📖 [Documentation](https://wpadminify.com/docs?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)  | ➡️ [Live Demo](https://demo.pixarlabs.com/?pl-product=adminify)
+⚡ [Upgrade to WP Adminify Pro](https://wpadminify.com/pricing/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)  | 📖 [Documentation](https://wpadminify.com/docs?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)  | ➡️ [Live Demo](https://demo.pixarlabs.com/?pl-product=adminify) | [Support](https://wpadminify.com/contact) 
 
 **🎬 Video Overview: See WP Adminify in Action**
 
@@ -42,7 +42,7 @@ Ever wondered how to modify the default WordPress admin dashboard? **WP Adminify
 
 WP Adminify is packed with features designed for every aspect of **WordPress admin customization**.
 
-🎨  **White Label WordPress & Dashboard UI Customization**
+[White Label WordPress](https://wpadminify.com/features/white-label?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify) & Dashboard UI Customization
 
 *   **White Label Admin Area:** Replace the WordPress logo in the admin bar and menu. Upload a custom favicon for the admin area. Change the "WordPress" name in the title tag.
 *   **Custom Admin Footer Text:** Remove the "Thank you for creating with WordPress" text and replace it with your own branded footer text, links, or copyright information.
@@ -50,7 +50,7 @@ WP Adminify is packed with features designed for every aspect of **WordPress adm
 *   **Light and Dark Mode:** Offer users a choice or enable auto-scheduling. Set independent logos for light and dark modes for a seamless **white label** experience.
 *  **Custom CSS and JavaScript:** For developers who need ultimate control, add your own custom CSS to style every element of the admin area or custom JavaScript to modify functionality, all without touching theme files.
 
-🧩 **Advanced Admin Menu Editor**
+[Advanced Admin Menu Editor](https://wpadminify.com/docs/adminify/admin-menu/admin-menu-editor?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)
 
 *   **Visual Drag & Drop Interface:** Intuitively manage your admin menu. Drag to reorder menu items, drag submenus to create top-level menus, or drag items out to hide them completely.
 *   **Create Custom Menu Items:** Add new menu items that link to internal admin pages, external URLs, or custom admin pages created with page builders.
@@ -58,7 +58,7 @@ WP Adminify is packed with features designed for every aspect of **WordPress adm
 *   **Custom Icons for Menu Items:** Assign custom Dashicons or upload your own SVG icons to any menu item for improved visual recognition and branding.
 *   **Separators and Dividers:** Add custom separators to group menu items logically and improve the navigation structure.
 
-🔐 **Login Customizer (Loginfy)**
+[Login Customizer (Loginfy)](https://wpadminify.com/loginfy?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)
 
 *   **Custom Login Logo:** Upload a custom logo for your login screen that matches your client's brand.
 *   **Background Customization:** Set a background image, background color, gradient, or slideshow for the login page.
@@ -66,14 +66,14 @@ WP Adminify is packed with features designed for every aspect of **WordPress adm
 *   **Button Styling:** Change the login button's color, hover color, and text to match your brand identity.
 *   **Custom CSS:** For pixel-perfect control, add custom CSS to the login page to override any style.
 
-📁 **Media Library Folders & Management**
+[Media Library Folders & Management](https://wpadminify.com/features/wordpress-media-folder?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)
 
 *   **Drag & Drop Folders:** Finally, organize your media library! Create folders and subfolders and simply drag and drop files into them. This is essential for sites with thousands of images.
 *   **Folder-Based Filtering:** Quickly find files by browsing through your folder structure instead of scrolling through an endless list.
 *   **Bulk Move Files:** Select multiple files and move them to a new folder in one action.
 *  👉  **Media Replace Feature: (upcoming)** A groundbreaking productivity tool. Replace any existing image or file in the media library while retaining its URL, file ID, and date. This is critical for SEO (prevents broken links) and for quickly updating images without needing to find and replace them in every post.
 
-**⚙️ Productivity & Admin Management Tools**
+[Productivity & Admin Management Tools](https://wpadminify.com/features/disable-admin-notices?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)
 
 *   **Admin Notices Manager:** Disable all promotional and update notification nags from WordPress core and third-party plugins. Clean your dashboard and create a focused Admin Panel.
 *   **Remove Welcome Panel:** Instantly remove the default "Welcome to WordPress" panel from the dashboard.
@@ -81,7 +81,7 @@ WP Adminify is packed with features designed for every aspect of **WordPress adm
 *   **Duplicate Posts, Pages, & CPTs:** Add a "Duplicate" action to the post list for any post type, allowing you to clone content with a single click.
 *   **Custom Dashboard Widgets:** Add, remove, or modify widgets on the WordPress dashboard. Add custom text widgets, RSS feed widgets, or iframe widgets to display relevant information for you or your clients.
 
-**🛡️ Security & Performance Optimization**
+[Security & Performance Optimization](https://wpadminify.com/features/url-redirection?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)
 
 *   **Change Login URL:** Increase your security by changing the default WordPress login URL (`wp-login.php` or `/wp-admin`) to a custom slug of your choice, helping to prevent brute force attacks.
 *   **Login Redirects & Logout Redirects:** Control exactly where users are sent after they login or logout based on their specific user role. Send customers to their account page, admins to the dashboard, etc.
@@ -90,7 +90,7 @@ WP Adminify is packed with features designed for every aspect of **WordPress adm
 *   **Disable Embeds:** Disable WordPress oEmbeds to improve security and prevent external sites from embedding your content without permission.
 *   **Clean Up Head Section:** Remove unnecessary code like RSS feed links, RSD (Really Simple Discovery) links, WLW Manifest, shortlink, generator tag, and emoji scripts to reduce bloat and improve security.
 
-**📊 Admin Columns Pro Editor**
+[Admin Columns Pro Editor](https://wpadminify.com/admin-columns-editor?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify) 
 
 *   **Add/Remove/Reorder Columns:** Take full control of the list views for posts, pages, and all custom post types. Add new columns for any data point, remove unnecessary columns, and reorder them to match your workflow.
 *   **Custom Field Support:** Display values from Advanced Custom Fields (ACF), MetaBox, Pods, and other custom field plugins directly in your admin list tables.
@@ -149,6 +149,10 @@ Please report security bugs found in the source code of the undefined plugin thr
 7. The module settings page showing various addons like Activity Logs.
 
 == Changelog ==
+= 4.1.3 (15-02-2026) =
+* Fixed: Media Library popup folder module RTL support issue fixed.
+* Fixed: Resolved an issue where certain sidebar submenus were not displaying correctly when using the Adminify UI.
+
 = 4.1.2 (08-02-2026) =
 * Feature: Infinite Scroll for Media Library page support add.
 * Improved: Folder Module sticky style for Media Library page.

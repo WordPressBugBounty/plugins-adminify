@@ -126,6 +126,8 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
         $menu_slug  = $item[2];
         $menu_title = $item[0];
         $menu_name  = isset($item[5]) ? $item[5] : '';
+        // Use unique key for custom menu items instead of link URL
+        $menu_key_id = (!empty($menu_name) && strpos($menu_name, 'adminify-custom-menu-') !== false) ? $menu_name : $menu_slug;
         $menu_icon  = isset($item[6]) ? $item[6] : '';
         $external_link = (isset($item['external_link']) && $item['external_link'] == 1 ) ? true: false;
 
@@ -150,8 +152,8 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
                 : maybe_network_admin_url($menu_slug);
         }
 
-        $admin_menu[$menu_slug] = [
-            'key'      => $menu_slug,
+        $admin_menu[$menu_key_id] = [
+            'key'      => $menu_key_id,
             'title'    => $menu_title,
             'url'      => $url,
             'name'     => $menu_name,
@@ -163,11 +165,16 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
 
         if (!empty($submenu[$menu_slug])) {
             foreach ($submenu[$menu_slug] as $sub_key => $sub_item) {
-                $external_link = false;
-                if( isset($optiongroup['submenu'][$sub_item[2]])){
-                    $external_link = ($optiongroup['submenu'][$sub_item[2]]['external_link'] == 1)? true : false ;
-                }
                 $sub_slug  = $sub_item[2];
+                // Use unique key for custom submenu items instead of link URL
+                $sub_key_id = isset($sub_item['key']) ? $sub_item['key'] : $sub_slug;
+                $external_link = false;
+                // Look up external_link setting using unique key first, then fall back to slug
+                if( isset($optiongroup['submenu'][$sub_key_id])){
+                    $external_link = ($optiongroup['submenu'][$sub_key_id]['external_link'] == 1) ? true : false;
+                } elseif( isset($optiongroup['submenu'][$sub_slug])){
+                    $external_link = ($optiongroup['submenu'][$sub_slug]['external_link'] == 1) ? true : false;
+                }
                 $sub_title = $sub_item[0];
                 $sub_name  = isset($sub_item[5]) ? $sub_item[5] : '';
                 $sub_icon  = isset($sub_item[6]) ? $sub_item[6] : '';
@@ -221,8 +228,8 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
                     $external_link = true;
                 }
 
-                $admin_menu[$menu_slug]['children'][$sub_slug] = [
-                    'key'               => $sub_slug,
+                $admin_menu[$menu_key_id]['children'][$sub_key_id] = [
+                    'key'               => $sub_key_id,
                     'title'             => $sub_title,
                     'url'               => $sub_url,
                     'name'              => $sub_name,

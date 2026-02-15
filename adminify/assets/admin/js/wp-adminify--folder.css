@@ -981,6 +981,73 @@ body.wp-adminify {
   border-right: none;
   border-left: 1px solid #dedee7;
 }
+.wp-adminify.rtl .wp-adminify--folder-widget .wp-adminify--folder-app .folder--search input {
+  padding: 6px 16px 6px 32px;
+}
+.wp-adminify.rtl .wp-adminify--folder-widget .wp-adminify--folder-app ul.folder--lists {
+  padding-right: 16px;
+  padding-left: 4px;
+  margin-right: 0;
+  margin-left: 4px;
+}
+.wp-adminify.rtl .wp-adminify--folder-widget .wp-adminify--folder-app .folder--lists li.folder--single-root {
+  padding-left: 0;
+  padding-right: 8px;
+}
+.wp-adminify.rtl .wp-adminify--folder-widget .wp-adminify--folder-app .folder--lists li.folder--single-root::after {
+  left: auto;
+  right: 0;
+}
+.wp-adminify.rtl .wp-adminify--folder-widget .wp-adminify--folder-app .folder--lists li.folder--single-root::before {
+  left: auto;
+  right: 0;
+  border-left: none;
+  border-right: 1px dashed #c0c0c0;
+}
+.wp-adminify.rtl .wp-adminify--folder-widget .wp-adminify--folder-app .folder--lists .folder--sub-lists {
+  margin-left: 0;
+  margin-right: 8px;
+}
+.wp-adminify.rtl .wp-adminify--folder-widget .wp-adminify--folder-app .folder--lists .folder--sub-lists::before {
+  left: auto;
+  right: 0;
+  border-left: none;
+  border-right: 1px dashed #c0c0c0;
+}
+.wp-adminify.rtl .wp-adminify--folder-widget .wp-adminify--folder-app .folder--lists .folder--sub-lists li.folder--single-root {
+  padding-left: 0;
+  padding-right: 8px;
+}
+.wp-adminify.rtl .wp-adminify--folder-widget .wp-adminify--folder-app .folder--lists .folder--sub-lists li.folder--single-root::before {
+  border-left: none;
+  border-right: 1px dashed #c0c0c0;
+}
+.wp-adminify.rtl .wp-adminify--popup-area .wp-adminify--popup-close {
+  right: auto !important;
+  left: 16px;
+}
+.wp-adminify.rtl .wp-adminify--popup-area h3 {
+  padding-right: 0 !important;
+  padding-left: 40px;
+}
+.wp-adminify.rtl .wp-adminify--popup-area .popup--delete-folder h3,
+.wp-adminify.rtl .wp-adminify--popup-area .popup--move-to-folder h3 {
+  padding-left: 0;
+}
+.wp-adminify.rtl .wp-adminify--popup-area .popup--new-folder__name > div:first-child,
+.wp-adminify.rtl .wp-adminify--popup-area .popup--new-folder__color > div:first-child {
+  text-align: right;
+}
+.wp-adminify.rtl .wp-adminify--popup-area .popup--new-folder__name input,
+.wp-adminify.rtl .wp-adminify--popup-area .popup--new-folder__color input {
+  text-align: right;
+}
+.wp-adminify.rtl .wp-adminify--popup-area .wp-adminify--colors {
+  justify-content: flex-start;
+}
+.wp-adminify.rtl .wp-adminify--popup-area .adminify-save-folder {
+  justify-content: flex-start;
+}
 
 .adminify-drag-helper {
   position: fixed !important;
@@ -1141,6 +1208,30 @@ body.adminify--items-dragging .folder--stats li > a.adminify-drop-hover .dashico
   width: 56px;
 }
 
+.rtl #wp-media-modal .media-frame-title, .rtl #wp-media-modal .media-frame-router, .rtl #wp-media-modal .media-frame-content, .rtl #wp-media-modal .media-frame-toolbar {
+  margin-left: 0;
+  margin-right: 296px;
+  transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.rtl #wp-media-modal .media-frame-menu {
+  left: auto;
+  right: 0;
+}
+.rtl #wp-media-modal.adminify-folder-collapsed .media-frame-title, .rtl #wp-media-modal.adminify-folder-collapsed .media-frame-router, .rtl #wp-media-modal.adminify-folder-collapsed .media-frame-content, .rtl #wp-media-modal.adminify-folder-collapsed .media-frame-toolbar {
+  margin-left: 0;
+  margin-right: 56px;
+}
+
+.rtl .wp-adminify.elementor-editor-active #wp-media-modal .media-frame-title, .rtl .wp-adminify.elementor-editor-active #wp-media-modal .media-frame-router, .rtl .wp-adminify.elementor-editor-active #wp-media-modal .media-frame-content, .rtl .wp-adminify.elementor-editor-active #wp-media-modal .media-frame-toolbar {
+  margin-left: 0 !important;
+  margin-right: 100px !important;
+  transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.rtl .wp-adminify.elementor-editor-active #wp-media-modal.adminify-folder-collapsed .media-frame-title, .rtl .wp-adminify.elementor-editor-active #wp-media-modal.adminify-folder-collapsed .media-frame-router, .rtl .wp-adminify.elementor-editor-active #wp-media-modal.adminify-folder-collapsed .media-frame-content, .rtl .wp-adminify.elementor-editor-active #wp-media-modal.adminify-folder-collapsed .media-frame-toolbar {
+  margin-left: 0 !important;
+  margin-right: -148px !important;
+}
+
 .wp-adminify.elementor-editor-active .folder--actions input[type=checkbox], .wp-adminify.elementor-editor-active .folder--lists input[type=checkbox] {
   -moz-appearance: none;
        appearance: none;
@@ -1262,4 +1353,19 @@ body.adminify--items-dragging .folder--stats li > a.adminify-drop-hover .dashico
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
   border-left: 6px solid gray;
+}
+
+.rtl .wp-adminify--folder-widget .wp-adminify--sidebar-toggle {
+  right: auto;
+  left: -14px;
+}
+.rtl .wp-adminify--folder-widget.is-collapsed .wp-adminify--sidebar-toggle {
+  right: auto;
+  left: 6px;
+}
+.rtl .wp-adminify--folder-widget.is-collapsed .wp-adminify--sidebar-toggle::after {
+  right: auto;
+  left: -6px;
+  border-left: none;
+  border-right: 6px solid gray;
 }
