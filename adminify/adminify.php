@@ -5,7 +5,7 @@
  * Description: WP Adminify is a powerful plugin that modernizes and customizes your WordPress admin dashboard. It offers a clean, branded interface and advanced menu management features to enhance your admin user experience.
  * Plugin URI: https://wpadminify.com
  * Author: Jewel Theme
- * Version: 4.1.3
+ * Version: 4.1.4
  * Author URI: https://wpadminify.com
  * License:     GPLv3 or later
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -131,7 +131,7 @@ if ( class_exists( '\\WPAdminify\\WP_Adminify' ) ) {
     register_activation_hook( WP_ADMINIFY_FILE, array('\\WPAdminify\\WP_Adminify', 'jltwp_adminify_activation_hook') );
     register_deactivation_hook( WP_ADMINIFY_FILE, array('\\WPAdminify\\WP_Adminify', 'jltwp_adminify_deactivation_hook') );
 }
-if ( class_exists( '\\WPAdminify\\Inc\\Modules\\ActivityLogs\\Inc\\DB_Table' ) ) {
-    register_activation_hook( WP_ADMINIFY_FILE, ['\\WPAdminify\\Inc\\Modules\\ActivityLogs\\Inc\\DB_Table', 'activation_hook'] );
-    register_uninstall_hook( WP_ADMINIFY_FILE, ['\\WPAdminify\\Inc\\Modules\\ActivityLogs\\Inc\\DB_Table', 'deactivation_hook'] );
+if ( class_exists( '\\JLTAdminify\\Modules\\ActivityLogs\\Inc\\ActivityLogs\\Inc\\DB_Table' ) ) {
+    register_activation_hook( WP_ADMINIFY_FILE, ['\\JLTAdminify\\Modules\\ActivityLogs\\Inc\\ActivityLogs\\Inc\\DB_Table', 'activation_hook'] );
+    register_uninstall_hook( WP_ADMINIFY_FILE, ['\\JLTAdminify\\Modules\\ActivityLogs\\Inc\\ActivityLogs\\Inc\\DB_Table', 'deactivation_hook'] );
 }

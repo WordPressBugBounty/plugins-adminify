@@ -4,7 +4,7 @@ Tags: white label WordPress, custom dashboard, admin menu editor, login customiz
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 4.1.3
+Stable tag: 4.1.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -149,93 +149,369 @@ Please report security bugs found in the source code of the undefined plugin thr
 7. The module settings page showing various addons like Activity Logs.
 
 == Changelog ==
-= 4.1.3 (15-02-2026) =
-* Fixed: Media Library popup folder module RTL support issue fixed.
-* Fixed: Resolved an issue where certain sidebar submenus were not displaying correctly when using the Adminify UI.
 
-= 4.1.2 (08-02-2026) =
-* Feature: Infinite Scroll for Media Library page support add.
-* Improved: Folder Module sticky style for Media Library page.
-* Fixed: FileBird, Folders, Real Media Library etc plugin with Adminify Folder Module auto hide issue fixed.
-* Fixed: Admin Bar secondary menu click to navigate issue fixed.
+= WP Adminify - 4.1.4 (09-03-2026) =
+* Added: Media Folder organization now works inside the Elementor editor's media picker — find and organize your images without leaving the page customization screen.
+* Added: Classic Editor users can now browse and use media folders directly from the media insert popup in the WordPress admin panel.
+* Added: The WordPress Customizer page now supports media folder organization, making it easier to pick the right file while customizing your site.
+* Fixed: Resolved an issue where the Media Folder module was not appearing correctly for custom post types created by WP Adminify Pro.
 
-= 4.1.1 (07-02-2026) =
-* Fixed: Custom Register URL now properly loads registration form.
-* Fixed: Register URL with query strings no longer gets trailing slash appended.
-* Fixed: URL generation issue where "http://" was incorrectly added before query parameters.
-* Fixed: Multisite registration page now loads correctly with custom register URL.
-* Fixed: Login/Logout Redirect fields default values causing PHP undefined array key warnings.
-* Fixed: Login/Logout Redirect fields showing incorrect pre-selected values on new entries.
-* Improved: New Register URL field placeholder auto-updates based on New Login URL input.
-* Improved: Latest Upgrade notice add notify me & don't show again option.
+= WP Adminify - 4.1.3 (15-02-2026) =
+* Fixed: Media Library folder module in the popup now displays correctly for right-to-left (RTL) language WordPress admin panel users.
+* Fixed: Certain sidebar submenu items were not displaying correctly when using the WP Adminify custom admin panel UI — now fully resolved.
 
-= 4.1.0 (03-02-2026) =
-* Fixed: Addons install issue fixed.
-* Fixed: Adminify update notice was not hiding issue fixed.
-* Fixed: "Ctrl/cmd + click" to open new window issue fixed.
-* Fixed: Subdomain with same origin click to open new window issue fixed.
-* Fixed: An issue where clearing the cache via the Redis Object Cache plugin incorrectly triggered a redirect to its settings page.
+= WP Adminify - 4.1.2 (08-02-2026) =
+* Feature: The WordPress Media Library page now supports infinite scroll, letting you browse all your uploaded files without clicking through pages.
+* Improved: The folder panel in the WordPress Media Library is now sticky, staying visible as you scroll through your media files in the admin panel.
+* Fixed: Compatibility issue resolved — third-party media folder plugins (such as FileBird, Folders, and Real Media Library) no longer auto-hide when WP Adminify's folder module is active in the admin panel.
+* Fixed: Clicking items in the Admin Bar secondary menu now correctly navigates to the intended page within the WordPress admin panel.
 
-= 4.0.9.3 (02-02-2026) =
-* Fixed: Admin bar image extra large issue fixed.
-* Fixed: ShortPixel Image Optimizer plugin open new tab issue fixed.
+= WP Adminify - 4.1.1 (07-02-2026) =
+* Fixed: The custom WordPress login registration URL now correctly loads the full registration form without any issues.
+* Fixed: Query strings in the custom registration URL no longer get an unwanted trailing slash added, ensuring clean and accurate admin login URLs.
+* Fixed: A URL generation issue where the protocol was being incorrectly inserted before query parameters in the WordPress admin panel has been resolved.
+* Fixed: Multisite WordPress registration pages now load correctly when a custom register URL is configured in the admin panel settings.
+* Fixed: Login and logout redirect fields no longer trigger PHP warnings for new installations using default values in the WordPress admin customization panel.
+* Fixed: Login and logout redirect fields now correctly show the expected pre-selected values for new entries in the admin panel.
+* Improved: The new Register URL field placeholder now auto-updates based on the custom Login URL you enter, making WordPress admin panel setup more intuitive.
+* Improved: The upgrade notification now includes "Notify Me" and "Don't Show Again" options for a cleaner, less intrusive WordPress admin dashboard experience.
 
-= 4.0.9.2 (29-01-2026) =
-* Fixed: Adminify submenu pricing button style issue fixed.
-* Fixed: Custom Javascript code parse error issue fixed.
+= WP Adminify - 4.1.0 (03-02-2026) =
+* Fixed: Addon plugin installation from the WP Adminify panel now works correctly without errors.
+* Fixed: The WP Adminify update notice was not dismissing properly — now resolved for a cleaner WordPress admin dashboard experience.
+* Fixed: Using Ctrl/Cmd + Click to open WordPress admin panel links in a new browser window now works as expected.
+* Fixed: Links within subdomains sharing the same origin now correctly open in a new tab from the WordPress admin bar.
+* Fixed: Clearing cache via the Redis Object Cache plugin no longer incorrectly redirects to its settings page in the WordPress admin panel.
 
-= 4.0.9.1 (28-01-2026) =
-* Fixed: Latest Elementor Update Conflict fixed.
+= WP Adminify - 4.0.9.3 (02-02-2026) =
+* Fixed: The admin bar profile image was displaying at an unusually large size in the WordPress admin panel — now correctly sized.
+* Fixed: ShortPixel Image Optimizer plugin links no longer incorrectly open in a new tab from the WordPress admin bar.
 
-= 4.0.8 (26-01-2026) =
-* Added: Folder module add Media Library popup.
-* Updated: Folder module UI updated.
-* Fixed: Elementor Third level sidebar menu issue fixed.
+= WP Adminify - 4.0.9.2 (29-01-2026) =
+* Fixed: Pricing button styling in the WP Adminify submenu is now displayed correctly in the WordPress admin panel.
+* Fixed: Custom JavaScript code entered through the WordPress admin customization panel no longer causes parse errors.
 
-= 4.0.7.8 (20-01-2026) =
-* Security: Security updated.
+= WP Adminify - 4.0.9.1 (28-01-2026) =
+* Fixed: Resolved a conflict with the latest Elementor update that was affecting the WordPress admin panel layout.
 
-= 4.0.7.7 (14-01-2026) =
-* Fixed: WP Dashboard Notes plugin "+ Add Note" button trigger issue fixed.
-* Fixed: Admin bar menu some anchor tag mouse cursor style issue fixed.
+= WP Adminify - 4.0.8 (26-01-2026) =
+* Added: The media folder module now works inside the WordPress Media Library popup, letting you stay organized without leaving your current admin panel screen.
+* Updated: The folder module interface in the WordPress admin panel has been refreshed with an improved, more modern visual design.
+* Fixed: Third-level sidebar menu items in Elementor now display correctly when using the WP Adminify custom admin panel UI.
 
-= 4.0.7.5 (13-01-2026) =
-* Fixed: Vertical & Horizontal Menu style broken issue fixed.
-* Fixed: User Avatar square border style issue fixed.
-* Fixed: WP Adminify > Support menu link issue fixed.
-* Fixed: Setup Wizard Install Addons Plugins infinite loading issue fixed.
+= WP Adminify - 4.0.7.8 (20-01-2026) =
+* Security: General security improvements applied to the WordPress admin panel customization plugin.
 
-= 4.0.7.4 (12-01-2026) =
-* Fixed: User profile manu top right has wrong z-index visibility issue fixed.
-* Improved: Admin Menu Editor select2 field css improved.
+= WP Adminify - 4.0.7.7 (14-01-2026) =
+* Fixed: The "+ Add Note" button in the WP Dashboard Notes plugin now works correctly alongside the WP Adminify WordPress admin panel.
+* Fixed: Some admin bar menu items were showing an incorrect mouse cursor style — now corrected in the WordPress admin panel.
 
-= 4.0.7.3 (11-01-2026) =
-* Fixed: Masteriyo plugin click submenu infinite loading bar issue fixed.
-* Added: Frame loading spinner add.
-* Improved: Admin Menu Editor Roles & Users show separately & optimize users search.
+= WP Adminify - 4.0.7.5 (13-01-2026) =
+* Fixed: Vertical and horizontal WordPress admin menu styles that were displaying incorrectly have been fully restored.
+* Fixed: User avatar square border styling in the WordPress admin panel has been corrected.
+* Fixed: The WP Adminify support menu link in the admin panel now redirects to the correct support page.
+* Fixed: The Setup Wizard's "Install Addons" step was stuck in an infinite loading loop — now resolved for a smooth WordPress admin onboarding experience.
 
-= 4.0.7.2 (08-01-2026) =
-* Fixed: Admin pages notice hidden issue fixed.
+= WP Adminify - 4.0.7.4 (12-01-2026) =
+* Fixed: The user profile dropdown menu in the top-right corner of the WordPress admin panel had a display layering issue — now fixed.
+* Improved: CSS styling for the Select2 dropdown field inside the Admin Menu Editor has been refined for a cleaner admin panel experience.
 
-= 4.0.7.1 (07-01-2026) =
-* Added: Patchstack Vulnerability FAQ added.
+= WP Adminify - 4.0.7.3 (11-01-2026) =
+* Fixed: Clicking submenus inside the Masteriyo LMS plugin no longer triggers an infinite loading bar in the WordPress admin panel.
+* Added: A loading spinner now appears inside the admin panel frame for a smoother, more polished page transition experience.
+* Improved: The Admin Menu Editor now displays Roles and Users in separate sections, with an optimized search tool for easier user management in the WordPress admin panel.
 
-= 4.0.7 (07-01-2026) =
-* Fixed: Admin menu icon size & Custom icons list not showing issue fixed.
-* Fixed: Hestia Theme customize screen not working issue fixed.
-* Security: Vulnerability security issue fixed.
+= WP Adminify - 4.0.7.2 (08-01-2026) =
+* Fixed: Admin panel notices were being incorrectly hidden on certain WordPress admin pages — they now display as expected.
 
-= 4.0.6.1 (13-12-2025) =
-* Fixed: Post Duplicator issue fixed.
-* Fixed: Fixed an issue where overwriting plugins resulted in a blank screen.
-* Improve: Use system fonts as a fallback in font-family.
+= WP Adminify - 4.0.7 (07-01-2026) =
+* Fixed: Admin menu icon size and the custom icon selection list were not displaying properly in the WordPress admin panel — now fully resolved.
+* Fixed: The Hestia Theme's WordPress Customizer screen was not functioning correctly alongside WP Adminify — now fixed.
 
-= 4.0.6 (11-12-2025) =
-* Fixed: "Translation loading for the <code>adminify</code> domain was triggered too early" - Text domain issue fixed.
-* Fixed: Text logo font-family issue fixed.
-* Fixed: Admin bar URL issue fixed.
-* Fixed: "Breeze – WordPress Cache Plugin" Purge internal & object cache issue fixed.
-* Fixed: "GDPR compliant" with Google Font issue checked and fixed
+= WP Adminify - 4.0.6.1 (13-12-2025) =
+* Fixed: The Post Duplicator feature in the WordPress admin panel now works reliably across all post types.
+* Fixed: Overwriting plugins via the WordPress admin panel no longer causes a blank white screen error.
+* Improved: System fonts are now used as a fallback in the admin panel font styling for better cross-environment compatibility.
+
+= WP Adminify - 4.0.6 (11-12-2025) =
+* Fixed: A WordPress text domain loading issue that was triggering a PHP warning in the admin panel has been resolved.
+* Fixed: Text logo font-family styling now displays correctly in the WordPress admin customization panel.
+* Fixed: An admin bar URL formatting issue in the WordPress admin panel has been corrected.
+* Fixed: The Breeze – WordPress Cache Plugin purge cache buttons now function correctly alongside WP Adminify.
+* Fixed: Google Fonts usage in WP Adminify has been reviewed and confirmed to be fully GDPR compliant.
+
+= WP Adminify - 4.0.5.6 (27-11-2025) =
+* Fixed: The Pro upgrade notice was incorrectly appearing across the entire WordPress admin dashboard — now only shown in the appropriate settings area.
+* Fixed: The promotional upgrade notice was still appearing in the admin panel after the campaign had already ended — now properly hidden.
+* Updated: Freemius SDK updated for improved usability and better compatibility with the WordPress admin panel.
+
+= WP Adminify - 4.0.5.5 (12-10-2025) =
+* Fixed: Admin bar submenu links in the WordPress admin panel were not navigating correctly — now resolved.
+* Fixed: The support page URL in the WP Adminify admin dashboard panel has been corrected.
+
+= WP Adminify - 4.0.5.4 (09-10-2025) =
+* Fixed: Admin bar links in the WordPress admin panel were unresponsive — clicking now works as expected.
+* Fixed: Admin menu items with no assigned title were causing the entire WordPress admin panel menu to become unresponsive — now fixed.
+
+= WP Adminify - 4.0.5.3 (06-10-2025) =
+* Improved: The WP Adminify admin notice design has been refreshed with a cleaner, more modern look throughout the WordPress admin panel.
+* Security: General security improvements applied to the WordPress admin customization plugin.
+
+= WP Adminify - 4.0.5.2 (21-09-2025) =
+* Improved: The overall UI design of the WP Adminify settings panel has been polished for a smoother and more visually consistent WordPress admin experience.
+
+= WP Adminify - 4.0.5.1 (21-09-2025) =
+* Compatibility: Added full admin panel compatibility support for the WPBakery Visual Page Builder premium WordPress plugin.
+* Improved: The light/dark mode switcher design in the WordPress admin panel has been updated with a cleaner, more intuitive appearance.
+* Fixed: A browser console warning related to the light/dark mode switcher in the admin panel has been resolved.
+
+= WP Adminify - 4.0.5.0 (18-09-2025) =
+* Compatibility: Added WordPress admin panel compatibility for the BrightHub premium WordPress theme.
+* Compatibility: Added WordPress admin panel compatibility for the WP Activity Log plugin.
+* Compatibility: Added WordPress admin panel compatibility for the WooCommerce Orders Tracking plugin.
+
+= WP Adminify - 4.0.4.9 (26-08-2025) =
+* Improved: The admin panel upgrade process now runs more smoothly, with better handling during plugin updates.
+* Compatibility: Added WordPress admin panel compatibility for the Email Template Customizer for WooCommerce plugin.
+
+= WP Adminify - 4.0.4.8 (24-08-2025) =
+* Improved: General user interface enhancements applied across the WordPress admin customization panel.
+
+= WP Adminify - 4.0.4.7 (24-08-2025) =
+* Fixed: Compatibility issues with the ShopEngine and MetaBox plugins in the WordPress admin panel have been resolved.
+
+= WP Adminify - 4.0.4.6 (04-08-2025) =
+* Added: The WP Adminify Setup Wizard now includes a dedicated step to install recommended addon plugins directly from the WordPress admin panel.
+* Improved: Overall user experience of the WP Adminify admin panel interface has been enhanced for a more guided and intuitive setup.
+
+= WP Adminify - 4.0.4.5 (19-07-2025) =
+* Fixed: Admin Footer Text customization was conflicting with Elementor, Fluent Forms, Fluent Support, Fluent CRM, and Fluent SMTP plugins — now fully resolved in the WordPress admin panel.
+* Fixed: RTL layout issue on the Addons page within the WordPress admin panel has been corrected.
+
+= WP Adminify - 4.0.4.4 (13-07-2025) =
+* Improved: General UI refinements applied across the WordPress admin customization panel for a more polished experience.
+* Fixed: RTL styling issue on the user account menu in the WordPress admin top bar has been corrected.
+
+= WP Adminify - 4.0.4.3 (09-07-2025) =
+* Fixed: Admin menu item show/hide rules for selected users were not being applied correctly — now working as expected in the WordPress admin panel.
+* Fixed: Newly created custom menu items were being hidden for regular users by default — this has been corrected in the admin panel Menu Editor.
+* Fixed: Admin menu visibility rules were not consistently applying for certain users — now fully resolved across all roles.
+
+= WP Adminify - 4.0.4.2 (30-06-2025) =
+* Fixed: An unwanted notification that was appearing incorrectly in the WordPress admin panel has been removed.
+
+= WP Adminify - 4.0.4.1 (30-06-2025) =
+* Fixed: The WordPress admin bar now correctly supports subdomain-based multisite WordPress networks.
+* Updated: Sites in the multisite network now open in a new tab when clicked from the WordPress admin bar for a better management workflow.
+
+= WP Adminify - 4.0.4.0 (22-06-2025) =
+* Added: WordPress admin dashboard widgets now support iFrame embedding, allowing you to display any video or web content directly on your custom admin dashboard.
+* Added: Folder update support implemented — you can now rename and update existing folders in the WordPress admin panel for better media organization.
+* Updated: Folder support now works inside the WordPress media uploader, making file selection and organization easier from any admin panel screen.
+
+= WP Adminify - 4.0.3.9 (27-05-2025) =
+* Updated: Freemius SDK updated and relocated in compliance with WordPress.org plugin submission guidelines.
+* Removed: Freemius pricing package references removed from the WP Adminify admin panel for a cleaner user experience.
+* Fixed: Plugin name conflict between WP Adminify Free and WP Adminify Pro in the WordPress admin panel has been resolved.
+* Fixed: The White Label feature for agencies now works correctly and displays consistently throughout the WordPress admin panel.
+* Fixed: A blank white screen issue occurring in the WordPress admin panel after activation has been resolved.
+* Fixed: The White Label for Agencies feature has been improved with an added Force Disable option for full control over branding in the admin panel.
+
+= WP Adminify - 4.0.3.8 (04-05-2025) =
+* Fixed: Admin menu item visibility restrictions by user role now apply correctly in the WordPress admin panel.
+* Fixed: Links in the JetFormBuilder – Dynamic Blocks Form Builder plugin were not working correctly alongside WP Adminify — now resolved.
+* Fixed: Admin panel sidebar menu dividers were not hiding properly — now functioning correctly in the WordPress admin menu.
+* Updated: The user account dropdown menu in the WordPress admin top bar has improved accessibility and click interaction.
+
+= WP Adminify - 4.0.3.7 (18-03-2025) =
+* Fixed: Menu items set to be hidden for custom user roles now correctly disappear from the WordPress admin panel navigation.
+* Fixed: The Administrator role has been removed from the admin menu editor's "hidden for" role selector to avoid confusion when setting up menu visibility rules in the admin panel.
+
+= WP Adminify - 4.0.3.6 (12-03-2025) =
+* Updated: Added admin panel design compatibility for the WPCode – Insert Headers and Footers + Custom Code Snippets plugin.
+* Feature: Admin menu items in the WordPress admin panel can now be individually set to open in a new tab — giving you full control over navigation behavior.
+* Fixed: Submenu hiding rules for custom user roles now work correctly and consistently in the WordPress admin panel.
+* Feature: Added a new developer hook to programmatically control the admin menu editor rendering, giving developers greater flexibility over WordPress admin panel customization.
+* Fixed: Menu visibility settings now correctly apply to all custom user roles in the WordPress admin panel.
+* Fixed: Dashboard welcome widget design and functionality issues have been resolved.
+
+= WP Adminify - 4.0.3.5 (03-03-2025) =
+* Fixed: WooCommerce reports and analytics page layout issues within the WordPress admin panel have been resolved.
+* Updated: Freemius SDK updated to the latest version for improved compatibility.
+* Updated: General security improvements applied to the WordPress admin customization plugin.
+* Fixed: The plugin conflict notice in the WordPress admin panel can now be properly dismissed.
+* Fixed: The media folder panel is now sticky in the WordPress admin panel, staying in view as you browse through your files.
+
+= WP Adminify - 4.0.3.4 (23-02-2025) =
+* Fixed: A fatal error in the discount notice area of the WordPress admin panel has been resolved.
+
+= WP Adminify - 4.0.3.3 (18-02-2025) =
+* Fixed: Admin bar secondary menu item show/hide logic in the WordPress admin panel was not applying correctly — now working as expected.
+* Fixed: WordPress admin dashboard widget display rules for YouTube and Vimeo videos are now functioning correctly.
+* Fixed: The admin bar dropdown menu was not closing when clicking elsewhere — it now dismisses properly in the WordPress admin panel.
+* Fixed: Dashboard widget background icon design issue has been corrected in the WordPress admin customization panel.
+* Fixed: Line icons, FontAwesome icons, and custom image icons in the WordPress admin menu now display correctly regardless of whether the WP Adminify custom UI is enabled.
+* Fixed: Post Duplicator now works correctly for custom post types and custom user roles in the WordPress admin panel.
+* Fixed: WordPress admin menu items now update properly when a plugin or function is removed from the site.
+* Updated: WP Adminify settings panel forms have been redesigned for a cleaner, more modern admin panel experience.
+* Feature: Added full WordPress admin panel compatibility for the Thrive Page Builder.
+* Feature: Added full WordPress admin panel compatibility for the LatePoint, SureCart, SureMembers, and SureTrigger plugins.
+
+= WP Adminify - 4.0.3.2 (02-02-2025) =
+* Fixed: Admin panel notices ("What We Collect" and "Ask for Rating") were not dismissing correctly — now they close as expected in the WordPress admin dashboard.
+* Feature: The WordPress admin panel color mode (light/dark) is now saved per user, allowing each team member to set their own display preference independently.
+* Fixed: Frontend CSS was breaking for sites that hadn't enabled Gutenberg block editor styles from the admin panel settings — now loading correctly.
+* Feature: Added basic admin panel support for the Advanced Access Manager plugin's backend menu access restrictions.
+* Fixed: The WordPress home URL now resolves correctly in the admin panel when it differs from the site URL.
+
+= WP Adminify - 4.0.3.1 (26-01-2025) =
+* Fixed: An issue where the WordPress admin panel was automatically appending extra characters to admin bar URLs has been resolved.
+* Fixed: Missing plugin icons in the WordPress admin bar have been restored.
+* Feature: An animated preloader has been added to the WordPress admin panel for a more polished and professional loading experience.
+* Feature: WP Adminify's custom admin panel UI is now available for the Gutenberg block editor, bringing a consistent, branded look to the WordPress editor screen.
+* Fixed: Custom URL and standard admin page URL were switching unexpectedly inside the admin menu — now stable.
+* Fixed: Custom admin menu icon support for Simple Line Icons and FontAwesome now works correctly in the WordPress admin panel.
+
+= WP Adminify - 4.0.3.0 (16-01-2025) =
+* Fixed: The admin menu editor's "hidden for" option was not applying correctly across all roles and users in the WordPress admin panel — now fully functional.
+* Updated: Body font customization now works independently of the WP Adminify UI setting, applying even on the default WordPress admin panel layout.
+* Fixed: The WP Adminify admin menu no longer unintentionally opens in a new tab.
+* Fixed: The Admin Menu Editor now works correctly even when the WP Adminify custom UI is not enabled, supporting the standard WordPress admin panel layout.
+* Fixed: The right-side icon button style in the Admin Pages editor was displaying incorrectly — now fixed in the admin panel.
+* Feature: The "Add Separator" option in the Admin Menu Editor now works correctly and consistently across all panel configurations.
+* Improved: Permission check process has been optimized for faster WordPress admin panel loading and a more responsive experience.
+
+= WP Adminify - 4.0.2.9 (08-01-2025) =
+* Updated: Admin Menu Editor user-based visibility rules now apply correctly by username in the WordPress admin panel.
+
+= WP Adminify - 4.0.2.8 (04-01-2025) =
+* Released: WordPress Heartbeat API Control module is now available, letting you manage and optimize background admin panel activity to improve server performance.
+* Updated: Admin Menu Editor role-based visibility rules now work correctly across all custom roles in the WordPress admin panel.
+* Updated: A blank plugin conflict notice appearing in the WordPress admin panel has been resolved.
+* Updated: Freemius SDK updated for improved compatibility and performance.
+
+= WP Adminify - 4.0.2.7 (26-11-2024) =
+* Fixed: A broken internal link in the WordPress admin panel has been corrected.
+
+= WP Adminify - 4.0.2.4 (26-11-2024) =
+* Fixed: The module conflict notice in the WordPress admin panel can now be properly dismissed.
+* Fixed: The plugin update information notice in the admin panel can now be dismissed correctly.
+* Fixed: The WordPress admin menu was not expanding properly on mobile devices — now fully responsive.
+
+= WP Adminify - 4.0.2.3 (25-11-2024) =
+* Updated: "Upgrade Now" link removed from the plugin row in the WordPress admin panel for a cleaner, less intrusive interface.
+* Updated: Added WordPress admin panel redirect and authorization flow support for the Smash Balloon Social Photo Feed plugin setup page.
+* Updated: Added WordPress admin panel redirect and authorization flow support for the Rank Math SEO plugin setup page.
+* Updated: Added WordPress admin panel redirect and authorization flow support for the Site Kit by Google plugin setup page.
+
+= WP Adminify - 4.0.2.2 (19-11-2024) =
+* Added: Admin panel compatibility for the Squirrly SEO plugin's post metabox active link color conflict.
+* Added: Admin panel compatibility for the Hotel Booking Lite plugin's calendar table height display issue.
+* Added: Admin panel compatibility for the EventOn plugin's event type color picker.
+* Fixed: Hiding admin notices was incorrectly breaking the WordPress admin dashboard layout for non-administrator users — now resolved.
+* Fixed: Installing and activating addon plugins from the WP Adminify settings panel now works without errors.
+* Fixed: The WP Adminify support link in the admin panel now redirects to the correct support destination.
+
+= WP Adminify - 4.0.2.1 (17-11-2024) =
+* Updated: Admin Bar Editor compatibility improved — visibility rules now apply correctly for non-administrator user roles in the WordPress admin panel.
+* Updated: Freemius library updated to the latest version.
+* Fixed: Admin bar items and the "New" button now correctly hide based on role-based visibility rules configured in the WordPress admin panel.
+* Fixed: The White Label plugin feature now works correctly for both WP Adminify Free and WP Adminify Pro.
+* Fixed: Multisite network admin settings page styling in the WordPress admin panel has been corrected.
+* Fixed: Post Duplicator now correctly creates only one duplicate copy per action in the admin panel.
+* Updated: Post type order and taxonomy order interfaces in the WordPress admin panel have been visually refreshed.
+* Fixed: Certain WordPress admin pages that were not displaying correctly are now fully restored.
+* Fixed: A fatal error that occurred when activating WP Adminify Pro for the first time has been resolved.
+
+= WP Adminify - 4.0.2.0 (23-10-2024) =
+* Fixed: The plugin information popup in the WordPress admin panel was displaying incorrectly — now resolved.
+
+= WP Adminify - 4.0.1.9 (20-10-2024) =
+* Fixed: The option to remove Dashicons for logged-in users now works correctly in the WordPress admin panel.
+* Fixed: A PHP warning related to the White Label WordPress Pro settings in the admin panel has been resolved.
+
+= WP Adminify - 4.0.1.8 (10-10-2024) =
+* Updated: The Admin Bar Editor's "hidden for user roles" visibility feature has been updated to apply more reliably across all role configurations in the WordPress admin panel.
+
+= WP Adminify - 4.0.1.7 (09-10-2024) =
+* Added: Taxonomy Duplicator — you can now clone categories, tags, and custom taxonomies directly from the WordPress admin panel in one click.
+* Added: A "URL Path" column option has been added to Custom Admin Columns for all post types under Productivity settings in the admin panel.
+* Fixed: Various text typos corrected throughout the Security and Productivity sections of the WordPress admin customization panel.
+* Fixed: "Comment ID" and "Taxonomy ID" custom admin columns were not displaying data — now working correctly in the admin panel.
+* Updated: Freemius library updated to the latest version.
+* Fixed: WooCommerce "Add Product" and "Edit Product" page frame display issue in the WordPress admin panel has been resolved.
+* Updated: Admin area favicon feature has been updated and now displays correctly across all admin panel screens.
+* Added: Taxonomy Clone option added — duplicate entire category or taxonomy trees with a single action from the WordPress admin panel.
+* Fixed: Performance options in the WP Adminify admin panel settings were not saving correctly — now resolved.
+* Fixed: Gutenberg block editor script loading issue on the frontend has been fixed.
+* Updated: The editing experience for posts, pages, and products in Gutenberg and other page builders has been improved within the WordPress admin panel.
+* Updated: Admin Footer "WP Memory Limit" display has been updated for better accuracy in the admin panel footer.
+
+= WP Adminify - 4.0.1.6.1 (16-09-2024) =
+* Updated: Minor improvements and stability fixes applied to the WordPress admin panel.
+
+= WP Adminify - 4.0.1.6 (15-09-2024) =
+* Fixed: Admin Menu Editor separator item was triggering a PHP warning — now resolved.
+* Fixed: "Hidden for Roles" visibility rules in the WordPress admin menu editor now apply correctly across all configured roles.
+* Fixed: Custom icon support for submenu items adjusted to comply with WordPress admin panel standards.
+* Fixed: The icon picker on the Admin Pages section was not working — now fully functional in the admin panel.
+* Fixed: Rounded menu item line-height styling issue in the WordPress admin panel has been corrected.
+* Updated: User info color customization in the admin panel now applies and saves correctly.
+* Updated: Text logo and mini mode logo no longer overlap in the WordPress admin panel header area.
+* Updated: Admin Pages now fully supports Elementor, Beaver Builder, Divi, and Brizy page builders for custom admin panel page creation.
+* Fixed: "Add Separator" option in the admin menu editor now works correctly for both Free and Pro versions.
+* Updated: Admin footer text display warning in the WordPress admin panel has been resolved.
+
+= WP Adminify - 4.0.1.5 (11-09-2024) =
+* Fixed: Scheduled dark mode setting in the WordPress admin panel was triggering a PHP warning — now fixed.
+* Fixed: The account URL link from the Plugins page in the WordPress admin panel now navigates to the correct destination.
+* Updated: Several text label typos corrected across multiple areas of the WordPress admin customization panel.
+* Updated: The "Add Separator" feature in the admin menu editor now works correctly for both Free and Pro users.
+
+= WP Adminify - 4.0.1.4 (02-09-2024) =
+* Added: Dashboard Welcome Widget added — personalize the WordPress admin dashboard with a custom greeting message for your users or clients.
+* Added: "Reset Section" option added to individual settings areas in the WP Adminify admin panel, making it easy to restore defaults for any section.
+* Fixed: A duplicate WP Adminify menu item that was appearing in the WordPress admin panel has been removed.
+* Fixed: Pre-defined template scripts for Custom CSS and JS in the admin panel frontend are now loading correctly.
+* Fixed: Blank entries in the Admin Menu Editor no longer appear in the WordPress admin panel navigation.
+* Fixed: Horizontal menu display issue in the WordPress admin panel has been corrected.
+
+= WP Adminify - 4.0.1.3 (01-09-2024) =
+* Updated: Addon activation button text in the WP Adminify admin panel has been updated for better clarity.
+* Updated: The Setup Wizard in the WordPress admin panel has been improved for a smoother and more guided onboarding experience.
+* Fixed: Disable Comments feature was not correctly applying to selected post types in the admin panel — now working as expected.
+* Fixed: Admin bar menu items were not hiding correctly from the admin panel settings — now properly controlled.
+* Fixed: Extra unwanted spacing on WooCommerce pages in the WordPress admin panel has been removed.
+* Fixed: Full-screen mode for the Edit Post, Edit Page, and WordPress Customizer screens now works correctly with WP Adminify active.
+* Fixed: An unnecessary preloader appearing on certain admin panel pages has been removed.
+* Fixed: Full-screen mode is now correctly supported for Brizy, Elementor, Beaver Builder, SiteOrigin, Visual Composer, Bricks, and Oxygen page builders when using the WordPress admin panel.
+
+= WP Adminify - 4.0.1.2 (26-08-2024) =
+* Fixed: Coupon code redemption in the WP Adminify admin panel was not working — now fully resolved.
+
+= WP Adminify - 4.0.1.1 (25-08-2024) =
+* Updated: Admin Pages menu display issue in the WordPress admin panel has been corrected.
+
+= WP Adminify - 4.0.1 (24-08-2024) =
+* Updated: Plugin upgrade migration process resolved for a seamless transition when updating WP Adminify in the WordPress admin panel.
+* Updated: Image display issue in the WordPress admin panel has been corrected.
+
+= WP Adminify - 4.0 (24-08-2024) =
+* Added: Screen Tab and Help Tab removal options added — clean up the WordPress admin panel by hiding unwanted tabs from the top of admin screens.
+* Added: Bricks Builder support for Admin Pages — create fully custom WordPress admin panel pages using the Bricks page builder.
+* Added: Option to show or hide the "Howdy" greeting message in the WordPress admin bar — a quick win for a cleaner, white-labeled admin panel.
+* Added: "Menu Width" customization option added to the WordPress Admin Menu Settings for precise layout control.
+* Added: Custom Favicon support for the WordPress admin area — set your own branded icon for the browser tab when inside the admin panel.
+* Removed: Duplicate "Comments Form URL" field removed from the admin panel settings for a cleaner configuration experience.
+* Added: Option to disable the Gutenberg block editor and remove its frontend scripts, giving you a lighter and faster WordPress admin panel.
+* Added: Option to remove the jQuery Migrate script from the WordPress admin back-end for improved panel performance.
+* Added: Username Changer feature added under Security settings for quick WordPress user management from the admin panel.
+* Added: Login Attempt Limiter added under Security settings to help protect your WordPress admin login panel from unauthorized access.
+* Updated: "Remove All Feeds" and "Redirect All Feeds" options have been merged into a single, cleaner toggle in the admin panel settings.
+* Added: "Disable Embeds" option added under the Performance settings section of the WordPress admin panel.
+* Added: Media Library Infinite Scroll option added for a smoother, pagination-free file browsing experience in the WordPress admin panel.
+* Removed: Unused third-party icon libraries removed (Icon Moon, Themify Icons, Elementor Icons, Pe Icon 7 Stroke) for a leaner, faster WordPress admin panel experience.
+* Updated: Admin Menu Editor has been moved to WP Adminify > Menu for better organization and easier access within the WordPress admin panel.
 
 
 **➡️ [View Full Changelog](https://wpadminify.com/changelogs?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)**

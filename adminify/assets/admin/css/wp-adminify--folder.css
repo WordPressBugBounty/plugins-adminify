@@ -192,7 +192,7 @@ body.wp-adminify {
   padding-right: 4px;
   margin-right: 4px;
   border-top: 1px solid #dedee7;
-  max-height: calc(100vh - 380px);
+  max-height: calc(100vh - 424px);
   overflow-y: auto;
   overflow-x: auto;
   /* Handle on hover */
@@ -1180,14 +1180,14 @@ body.adminify--items-dragging .folder--stats li > a.adminify-drop-hover .dashico
   background-color: #e0e0e0;
 }
 
-#wp-media-modal .media-frame-menu-heading {
+#wp-media-modal.wp-adminify-has-folders .media-frame-menu-heading {
   display: none !important;
 }
-#wp-media-modal .media-frame-title, #wp-media-modal .media-frame-router, #wp-media-modal .media-frame-content, #wp-media-modal .media-frame-toolbar {
+#wp-media-modal.wp-adminify-has-folders .media-frame-title, #wp-media-modal.wp-adminify-has-folders .media-frame-router, #wp-media-modal.wp-adminify-has-folders .media-frame-content, #wp-media-modal.wp-adminify-has-folders .media-frame-toolbar {
   margin-left: 296px;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-#wp-media-modal .media-frame-menu {
+#wp-media-modal.wp-adminify-has-folders .media-frame-menu {
   bottom: auto;
   bottom: initial;
   display: block !important;
@@ -1195,39 +1195,127 @@ body.adminify--items-dragging .folder--stats li > a.adminify-drop-hover .dashico
   width: 296px;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-#wp-media-modal .media-frame-menu .media-menu {
+#wp-media-modal.wp-adminify-has-folders .media-frame-menu .media-menu {
   padding-top: 15px !important;
 }
-#wp-media-modal .wp-adminify--modal-folder-container .wp-adminify--folder-widget {
+#wp-media-modal.wp-adminify-has-folders .wp-adminify--modal-folder-container .wp-adminify--folder-widget {
   margin: auto;
 }
-#wp-media-modal.adminify-folder-collapsed .media-frame-title, #wp-media-modal.adminify-folder-collapsed .media-frame-router, #wp-media-modal.adminify-folder-collapsed .media-frame-content, #wp-media-modal.adminify-folder-collapsed .media-frame-toolbar {
+#wp-media-modal.wp-adminify-has-folders .wp-adminify--modal-pro-notice {
+  position: relative;
+  margin: 20px 14px;
+  padding: 28px 20px 24px;
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+#wp-media-modal.wp-adminify-has-folders .wp-adminify--modal-pro-notice .wp-adminify--modal-pro-notice-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #f04438;
+  padding: 0;
+  transition: background-color 0.15s ease;
+}
+#wp-media-modal.wp-adminify-has-folders .wp-adminify--modal-pro-notice .wp-adminify--modal-pro-notice-close:hover {
+  background-color: #fee2e2;
+}
+#wp-media-modal.wp-adminify-has-folders .wp-adminify--modal-pro-notice .wp-adminify--modal-pro-notice-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  border: 1.5px solid var(--adminify-primary);
+  color: var(--adminify-primary);
+}
+#wp-media-modal.wp-adminify-has-folders .wp-adminify--modal-pro-notice h4 {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e1e1e;
+  line-height: 1.4;
+}
+#wp-media-modal.wp-adminify-has-folders .wp-adminify--modal-pro-notice p {
+  margin: 0 0 20px 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #6b7280;
+}
+#wp-media-modal.wp-adminify-has-folders .wp-adminify--modal-pro-notice .wp-adminify--modal-pro-notice-actions {
+  display: flex;
+  justify-content: center;
+}
+#wp-media-modal.wp-adminify-has-folders .wp-adminify--modal-pro-notice .wp-adminify--modal-pro-btn {
+  display: inline-block;
+  padding: 9px 24px;
+  background-color: var(--adminify-primary);
+  color: #fff;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  box-shadow: 0 2px 6px rgba(58, 58, 233, 0.25);
+  transition: all 0.15s ease;
+}
+#wp-media-modal.wp-adminify-has-folders .wp-adminify--modal-pro-notice .wp-adminify--modal-pro-btn:hover {
+  filter: brightness(0.9);
+  box-shadow: 0 4px 10px rgba(58, 58, 233, 0.35);
+  transform: translateY(-1px);
+  color: #fff;
+}
+#wp-media-modal.wp-adminify-has-folders .wp-adminify--modal-pro-notice .wp-adminify--modal-pro-btn:active {
+  transform: translateY(0);
+}
+#wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-title, #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-router, #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-content, #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-toolbar {
   margin-left: 56px;
 }
-#wp-media-modal.adminify-folder-collapsed .media-frame-menu {
+#wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-menu {
   width: 56px;
 }
 
-.rtl #wp-media-modal .media-frame-title, .rtl #wp-media-modal .media-frame-router, .rtl #wp-media-modal .media-frame-content, .rtl #wp-media-modal .media-frame-toolbar {
+.wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders .media-frame-title, .wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders .media-frame-router, .wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders .media-frame-content, .wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders .media-frame-toolbar {
+  margin-left: 100px !important;
+}
+.wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-title, .wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-router, .wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-content, .wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-toolbar {
+  margin-left: 56px !important;
+}
+
+.rtl #wp-media-modal.wp-adminify-has-folders .media-frame-title, .rtl #wp-media-modal.wp-adminify-has-folders .media-frame-router, .rtl #wp-media-modal.wp-adminify-has-folders .media-frame-content, .rtl #wp-media-modal.wp-adminify-has-folders .media-frame-toolbar {
   margin-left: 0;
   margin-right: 296px;
   transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.rtl #wp-media-modal .media-frame-menu {
+.rtl #wp-media-modal.wp-adminify-has-folders .media-frame-menu {
   left: auto;
   right: 0;
 }
-.rtl #wp-media-modal.adminify-folder-collapsed .media-frame-title, .rtl #wp-media-modal.adminify-folder-collapsed .media-frame-router, .rtl #wp-media-modal.adminify-folder-collapsed .media-frame-content, .rtl #wp-media-modal.adminify-folder-collapsed .media-frame-toolbar {
+.rtl #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-title, .rtl #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-router, .rtl #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-content, .rtl #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-toolbar {
   margin-left: 0;
   margin-right: 56px;
 }
 
-.rtl .wp-adminify.elementor-editor-active #wp-media-modal .media-frame-title, .rtl .wp-adminify.elementor-editor-active #wp-media-modal .media-frame-router, .rtl .wp-adminify.elementor-editor-active #wp-media-modal .media-frame-content, .rtl .wp-adminify.elementor-editor-active #wp-media-modal .media-frame-toolbar {
+.rtl .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders .media-frame-title, .rtl .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders .media-frame-router, .rtl .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders .media-frame-content, .rtl .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders .media-frame-toolbar {
   margin-left: 0 !important;
   margin-right: 100px !important;
   transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.rtl .wp-adminify.elementor-editor-active #wp-media-modal.adminify-folder-collapsed .media-frame-title, .rtl .wp-adminify.elementor-editor-active #wp-media-modal.adminify-folder-collapsed .media-frame-router, .rtl .wp-adminify.elementor-editor-active #wp-media-modal.adminify-folder-collapsed .media-frame-content, .rtl .wp-adminify.elementor-editor-active #wp-media-modal.adminify-folder-collapsed .media-frame-toolbar {
+.rtl .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-title, .rtl .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-router, .rtl .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-content, .rtl .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-toolbar {
   margin-left: 0 !important;
   margin-right: -148px !important;
 }
@@ -1265,13 +1353,13 @@ body.adminify--items-dragging .folder--stats li > a.adminify-drop-hover .dashico
   transform: rotate(45deg);
 }
 .wp-adminify.elementor-editor-active ul.folder--lists {
-  max-height: calc(100vh - 400px) !important;
+  max-height: calc(100vh - 482px) !important;
 }
-.wp-adminify.elementor-editor-active #wp-media-modal .media-frame-title, .wp-adminify.elementor-editor-active #wp-media-modal .media-frame-router, .wp-adminify.elementor-editor-active #wp-media-modal .media-frame-content, .wp-adminify.elementor-editor-active #wp-media-modal .media-frame-toolbar {
+.wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders .media-frame-title, .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders .media-frame-router, .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders .media-frame-content, .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders .media-frame-toolbar {
   margin-left: 100px !important;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.wp-adminify.elementor-editor-active #wp-media-modal.adminify-folder-collapsed .media-frame-title, .wp-adminify.elementor-editor-active #wp-media-modal.adminify-folder-collapsed .media-frame-router, .wp-adminify.elementor-editor-active #wp-media-modal.adminify-folder-collapsed .media-frame-content, .wp-adminify.elementor-editor-active #wp-media-modal.adminify-folder-collapsed .media-frame-toolbar {
+.wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-title, .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-router, .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-content, .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-toolbar {
   margin-left: -148px !important;
 }
 
