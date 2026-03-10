@@ -2142,7 +2142,7 @@ body {
   border-color: var(--adminify-primary) !important;
   box-shadow: 0 0 0 1px var(--adminify-primary) !important;
 }
-.adminify-ui label:not(.wpsc-boost-migration-button label):not(.wprf-input-label):not(.swift-btn) {
+.adminify-ui label:not(.wpsc-boost-migration-button label):not(.wprf-input-label):not(.swift-btn):not(.rkt-disabled) {
   font-size: 13px !important;
   font-weight: 500 !important;
   line-height: 20px !important;
@@ -2186,16 +2186,20 @@ body {
   border-radius: 4px;
   background-color: #fff;
 }
-.adminify-ui input[type=checkbox]::before {
-  filter: brightness(0) invert(1);
-}
 .adminify-ui input[type=checkbox]:focus {
   box-shadow: none !important;
   border-color: #dedee7 !important;
 }
+.adminify-ui input[type=checkbox]:disabled {
+  background: #dedee7;
+  opacity: 0.7;
+}
 .adminify-ui input[type=checkbox]:checked {
   border-color: #dedee7 !important;
-  background-color: var(--adminify-primary);
+  background-color: var(--adminify-primary) !important;
+}
+.adminify-ui input[type=checkbox]:checked::before {
+  filter: brightness(0) invert(1);
 }
 .adminify-ui input[type=radio]::before {
   background-color: var(--adminify-primary);
