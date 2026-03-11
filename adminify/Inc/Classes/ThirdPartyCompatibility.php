@@ -518,6 +518,40 @@ class ThirdPartyCompatibility {
 							</style>';
             }
         }
+        // Divi Theme - "Edit With Divi" link should reload parent page instead of iframe
+        if ( 'Divi' == $theme->name || 'Divi' == $theme->parent_theme ) {
+            echo '<script>
+				document.addEventListener("DOMContentLoaded", function() {
+					var iframe = document.getElementById("frame-adminify-app--iframe");
+					if (!iframe) return;
+
+					function handleDiviLinks(iframeDoc) {
+						var diviLinks = iframeDoc.querySelectorAll("a[href*=\\"et_fb=1\\"], a.et_pb_toggle_builder_wrapper, a[href*=\\"page=et_divi_options\\"]");
+						diviLinks.forEach(function(link) {
+							link.addEventListener("click", function(e) {
+								e.preventDefault();
+								e.stopPropagation();
+								window.top.location.href = link.href;
+							});
+						});
+					}
+
+					iframe.addEventListener("load", function() {
+						try {
+							var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+							handleDiviLinks(iframeDoc);
+
+							var observer = new MutationObserver(function() {
+								handleDiviLinks(iframeDoc);
+							});
+							observer.observe(iframeDoc.body, { childList: true, subtree: true });
+						} catch(e) {
+							console.log("Divi compatibility: Cannot access iframe content");
+						}
+					});
+				});
+			</script>';
+        }
         if ( Utils::is_plugin_active( 'js_composer/js_composer.php' ) ) {
             echo '<style>
 				.adminify-ui .vc_dropdown-list-item p{

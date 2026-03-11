@@ -1,4 +1,7 @@
 == Changelog ==
+= WP Adminify - 4.1.6 (11-03-2026) =
+* Fixed: Divi Theme page builder not reloading issue fixed in Adminify UI.
+
 = WP Adminify - 4.1.5 (10-03-2026) =
 * Fixed: WP Rocket plugin CSS issue with Gutenberg Editor checkbox in Adminify UI.
 

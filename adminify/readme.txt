@@ -4,7 +4,7 @@ Tags: white label WordPress, custom dashboard, admin menu editor, login customiz
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 4.1.5
+Stable tag: 4.1.6
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -149,6 +149,9 @@ Please report security bugs found in the source code of the undefined plugin thr
 7. The module settings page showing various addons like Activity Logs.
 
 == Changelog ==
+= WP Adminify - 4.1.6 (11-03-2026) =
+* Fixed: Divi Theme page builder not reloading issue fixed in Adminify UI.
+
 = WP Adminify - 4.1.5 (10-03-2026) =
 * Fixed: WP Rocket plugin CSS issue with Gutenberg Editor checkbox in Adminify UI.
 
