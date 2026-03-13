@@ -266,7 +266,7 @@ if (!class_exists('Admin')) {
             $admin_bar_menu_data = [];
 
             // Admin Bar Exits
-            if ( Utils::is_plugin_active('admin-bar/admin-bar.php') || Utils::is_plugin_active('admin-bar-pro/admin-bar-pro.php') ) {
+            if ( Utils::is_plugin_active('admin-bar/admin-bar.php') ) {
                 $admin_bar_items                  = get_option('_jltadminbar_settings');
                 if( empty($admin_bar_items) ) return;
 

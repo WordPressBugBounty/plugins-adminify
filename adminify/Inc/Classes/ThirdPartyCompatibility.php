@@ -551,6 +551,16 @@ class ThirdPartyCompatibility {
 					});
 				});
 			</script>';
+            echo '<style>
+				#adminify-top-menu-et-builder-shortcode-framework,
+				#adminify-top-menu-et-builder-shortcode-framework-loaded,
+				#adminify-top-menu-et-builder-shortcode-framework-option,
+				#adminify-top-menu-et-builder-shortcode-framework-constant,
+				#adminify-top-menu-et-builder-shortcode-framework-hook,
+				#adminify-top-menu-et-builder-shortcode-framework-constant-value {
+					display: none;
+				}
+			</style>';
         }
         if ( Utils::is_plugin_active( 'js_composer/js_composer.php' ) ) {
             echo '<style>

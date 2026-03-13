@@ -1440,6 +1440,47 @@ body.wp-adminify {
   align-items: center;
 }
 
+#adminmenu #adminify-wp-menu-search {
+  padding: 2px 4px;
+  margin-bottom: 4px;
+}
+#adminmenu #adminify-wp-menu-search .adminify-wp-menu-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+#adminmenu #adminify-wp-menu-search .adminify-wp-menu-search-icon {
+  flex-shrink: 0;
+  color: #94a3b8;
+  width: 16px;
+  height: 16px;
+}
+#adminmenu #adminify-wp-menu-search .adminify-wp-menu-search-input {
+  width: 100%;
+  border: 1px solid transparent;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.4;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+#adminmenu #adminify-wp-menu-search .adminify-wp-menu-search-input::-moz-placeholder {
+  color: #94a3b8;
+}
+#adminmenu #adminify-wp-menu-search .adminify-wp-menu-search-input::placeholder {
+  color: #94a3b8;
+}
+#adminmenu #adminify-wp-menu-search .adminify-wp-menu-search-input:focus {
+  border: none !important;
+  box-shadow: none !important;
+}
+
 .wp-adminify.multisite #adminmenu div.wp-menu-image img, .wp-adminify.network-admin #adminmenu div.wp-menu-image img {
   width: 18px;
   height: 18px;

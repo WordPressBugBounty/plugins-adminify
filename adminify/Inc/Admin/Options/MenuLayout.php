@@ -26,6 +26,7 @@ class MenuLayout extends AdminSettingsModel {
 				'menu_hover_submenu'    => 'two_step',
 				'icon_style'            => 'classic',
 				'menu_mode'             => 'classic',
+				'menu_search'						=> false,
 				'horz_menu_type'        => 'both',
 				'horz_dropdown_icon'    => true,
 				'horz_toplinks'         => false,
@@ -99,6 +100,19 @@ class MenuLayout extends AdminSettingsModel {
 			'class'      => 'adminify-one-col',
 			'content'    => Utils::adminify_upgrade_pro( 'Horizontal Menu Requires "Adminify UI" Enabled from "Customize" Tab ' ),
 			'dependency' => [ 'admin_ui|layout_type', '!=|==', 'true|horizontal', 'true' ],
+		];
+
+		$settings_tab[] = [
+			'id'         => 'menu_search',
+			'type'       => 'switcher',
+			'title'    	 => sprintf(__('Menu Search %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+			'class'      => 'adminify-pro-fieldset adminify-pro-notice',
+			'label'      => __( 'Enable or Disable Menu Search on Admin Menu', 'adminify' ),
+			'text_on'    => __( 'Enable', 'adminify' ),
+			'text_off'   => __( 'Disable', 'adminify' ),
+			'text_width' => 100,
+			'default'    => $this->get_default_field( 'menu_layout_settings' )['menu_search'],
+			'dependency' => [ 'layout_type', '==', 'vertical', 'true' ],
 		];
 
 		$settings_tab[] = [

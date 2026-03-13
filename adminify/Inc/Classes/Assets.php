@@ -366,7 +366,8 @@ class Assets extends AdminSettingsModel
 		$localize_array_data = [
 			'admin_ajax'  => admin_url('admin-ajax.php'),
 			'settings'    => [
-				'adminify_ui' => !empty($this->options['admin_ui']) ? true : false
+				'adminify_ui'  => !empty($this->options['admin_ui']) ? true : false,
+				'menu_search'  => !empty($this->options['menu_layout_settings']['menu_search']) ? true : false,
 			],
 			'admin_nonce' => wp_create_nonce('adminify_nonce'),
 			'is_pro'      => (class_exists('\\WPAdminify\\Pro\\Adminify_Pro') && !empty(\WPAdminify\Pro\Adminify_Pro::is_premium())) ? true : false,

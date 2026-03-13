@@ -811,6 +811,45 @@ body.wp-adminify {
   transition: all 0.3s;
   padding-right: 3px;
 }
+#frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-menu-search {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  margin: 4px;
+  background: #fff;
+  background: var(--adminify-menu-bg, #fff);
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+#frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-menu-search .frame-adminify-menu-search-icon {
+  flex-shrink: 0;
+  color: #94a3b8;
+  width: 16px;
+  height: 16px;
+}
+#frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-menu-search .frame-adminify-menu-search-input {
+  width: 100%;
+  border: 1px solid transparent;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  color: #334155;
+  color: var(--adminify-menu-text-color, #334155);
+  line-height: 1.4;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+#frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-menu-search .frame-adminify-menu-search-input::-moz-placeholder {
+  color: #94a3b8;
+}
+#frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-menu-search .frame-adminify-menu-search-input::placeholder {
+  color: #94a3b8;
+}
+#frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-menu-search .frame-adminify-menu-search-input:focus {
+  border: none !important;
+  box-shadow: none !important;
+}
 #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap ul {
   margin: 0;
 }
