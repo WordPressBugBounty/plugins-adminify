@@ -82,7 +82,7 @@ if (!class_exists('Latest_Updates')) {
 
 			if("dismissed" !== $forever_notice){
 				$jltwp_adminify_changelog_message = sprintf(
-					__('%3$s %4$s %5$s %6$s <br> <strong>Check Changelogs for </strong> <a href="%1$s" target="__blank">%2$s</a>', 'adminify'),
+					__('%3$s %4$s <br> <strong>Check Changelogs for </strong> <a href="%1$s" target="__blank">%2$s</a>', 'adminify'),
 					esc_url_raw('https://wpadminify.com/changelogs'),
 					__('More about Updates ', 'adminify'),
 					/** Changelog Items
@@ -91,9 +91,7 @@ if (!class_exists('Latest_Updates')) {
 
 					'<h3 class="adminify-update-head">' . WP_ADMINIFY . ' <span><small><em>v' . esc_html(WP_ADMINIFY_VER) . '</em></small>' . __(' has some updates..', 'adminify') . '</span></h3><br>', // %3$s
 					// changelogs
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Added:</strong> Admin Menu Search feature added. </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Resolved the white screen issue that occurred when installing and activating Admin Bar Editor Pro addons. </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Divi Theme with Adminify UI Topbar Menu show unnecessary Divi Theme menu showing issue fixed. </span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Some menu items are not hidden issue Fixed (ex: Yoast SEO). </span><br>', 'adminify'),
 				);
 				printf(wp_kses_post($jltwp_adminify_changelog_message));
 			}

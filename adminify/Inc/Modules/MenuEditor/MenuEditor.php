@@ -400,6 +400,35 @@ if ( !class_exists( 'MenuEditor' ) ) {
         }
 
         /**
+         * Find menu settings for a given slug.
+         * Some plugins (e.g. Yoast SEO) register different top-level menu slugs
+         * depending on user capabilities. The admin sees slug 'wpseo_dashboard'
+         * but the editor sees 'wpseo_tools'. This method handles that mismatch
+         * by falling back to checking if the slug appears as a submenu key.
+         *
+         * @param string $slug The menu slug to look up.
+         * @return array|null The matching settings array, or null if not found.
+         */
+        public function find_menu_settings_by_slug( $slug ) {
+            // Direct match
+            if ( isset( $this->menu_settings[$slug] ) ) {
+                return $this->menu_settings[$slug];
+            }
+            // Fallback: check if this slug is a submenu of any saved parent menu
+            if ( is_array( $this->menu_settings ) ) {
+                foreach ( $this->menu_settings as $parent_slug => $parent_settings ) {
+                    if ( !is_array( $parent_settings ) || !isset( $parent_settings['submenu'] ) || !is_array( $parent_settings['submenu'] ) ) {
+                        continue;
+                    }
+                    if ( isset( $parent_settings['submenu'][$slug] ) ) {
+                        return $parent_settings;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /**
          * Get menu items
          *
          * @param [type] $parent_file
@@ -439,8 +468,16 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     $separator = 1;
                 }
                 if ( is_array( $menu_settings ) ) {
+                    // Direct slug match first, then fallback for dynamic-slug plugins (e.g. Yoast SEO)
                     if ( isset( $menu_settings[$current_menu_item[2]] ) ) {
                         $optiongroup = $menu_settings[$current_menu_item[2]];
+                    } else {
+                        $fallback = $this->find_menu_settings_by_slug( $current_menu_item[2] );
+                        if ( $fallback !== null ) {
+                            $optiongroup = $fallback;
+                        }
+                    }
+                    if ( !empty( $optiongroup ) ) {
                         if ( isset( $optiongroup['order'] ) ) {
                             $order = $optiongroup['order'];
                         }
@@ -786,8 +823,16 @@ if ( !class_exists( 'MenuEditor' ) ) {
             $optiongroup = [];
             $order = $key;
             if ( is_array( $this->menu_settings ) ) {
+                // Direct slug match first, then fallback for dynamic-slug plugins (e.g. Yoast SEO)
                 if ( isset( $this->menu_settings[$current_menu_item[2]] ) ) {
                     $optiongroup = $this->menu_settings[$current_menu_item[2]];
+                } else {
+                    $fallback = $this->find_menu_settings_by_slug( $current_menu_item[2] );
+                    if ( $fallback !== null ) {
+                        $optiongroup = $fallback;
+                    }
+                }
+                if ( !empty( $optiongroup ) ) {
                     if ( isset( $optiongroup['name'] ) ) {
                         $name = $optiongroup['name'];
                         if ( $name != '' ) {
@@ -836,12 +881,17 @@ if ( !class_exists( 'MenuEditor' ) ) {
                 }
             }
             $current_menu_item['order'] = $order;
+            // Check hidden_for: boolean true means hide, array means check via is_hidden
             if ( isset( $current_menu_item['hidden_for'] ) ) {
                 if ( $current_menu_item['hidden_for'] === true ) {
                     return false;
-                } else {
-                    return $current_menu_item;
+                } elseif ( is_array( $current_menu_item['hidden_for'] ) && !empty( $current_menu_item['hidden_for'] ) ) {
+                    // Fallback: hidden_for is still an array (settings lookup may have missed it)
+                    if ( $this->is_hidden( $current_menu_item['hidden_for'] ) ) {
+                        return false;
+                    }
                 }
+                return $current_menu_item;
             } else {
                 return $current_menu_item;
             }

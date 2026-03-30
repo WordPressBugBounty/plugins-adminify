@@ -1,4 +1,7 @@
 == Changelog ==
+= WP Adminify - 4.1.8 (30-03-2026) =
+* Fixed: Some menu items are not hidden issue Fixed (ex: Yoast SEO).
+
 = WP Adminify - 4.1.7 (13-03-2026) =
 * Added: Admin Menu Search feature added.
 * Fixed: Resolved the white screen issue that occurred when installing and activating Admin Bar Editor Pro addons.
