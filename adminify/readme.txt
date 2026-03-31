@@ -4,7 +4,7 @@ Tags: white label WordPress, custom dashboard, admin menu editor, login customiz
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 4.1.8
+Stable tag: 4.1.9
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -149,6 +149,11 @@ Please report security bugs found in the source code of the undefined plugin thr
 7. The module settings page showing various addons like Activity Logs.
 
 == Changelog ==
+= WP Adminify - 4.1.9 (31-03-2026) =
+* Fixed: WP Dashboard Notes plugin not create "+ add notes" issue fixed.
+* Fixed: Folder Module style broken issue fixed.
+* Fixed: Folder Module second time not loading on the elementor issue fixed.
+
 = WP Adminify - 4.1.8 (30-03-2026) =
 * Fixed: Some menu items are not hidden issue Fixed (ex: Yoast SEO).
 

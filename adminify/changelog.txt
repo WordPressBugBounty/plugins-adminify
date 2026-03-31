@@ -1,4 +1,9 @@
 == Changelog ==
+= WP Adminify - 4.1.9 (31-03-2026) =
+* Fixed: WP Dashboard Notes plugin not create "+ add notes" issue fixed.
+* Fixed: Folder Module style broken issue fixed.
+* Fixed: Folder Module second time not loading on the elementor issue fixed.
+
 = WP Adminify - 4.1.8 (30-03-2026) =
 * Fixed: Some menu items are not hidden issue Fixed (ex: Yoast SEO).
 

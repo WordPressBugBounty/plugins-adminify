@@ -1288,9 +1288,15 @@ body.adminify--items-dragging .folder--stats li > a.adminify-drop-hover .dashico
 #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-menu {
   width: 56px;
 }
+#wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame:not(.hide-menu) .media-frame-menu {
+  width: 200px !important;
+}
+#wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame:not(.hide-menu) .media-frame-title, #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame:not(.hide-menu) .media-frame-router, #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame:not(.hide-menu) .media-frame-content, #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame:not(.hide-menu) .media-frame-toolbar {
+  margin-left: 0 !important;
+}
 
-.wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders .media-frame-title, .wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders .media-frame-router, .wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders .media-frame-content, .wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders .media-frame-toolbar {
-  margin-left: 100px !important;
+.wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders .media-frame:not(.hide-menu) .media-frame-title, .wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders .media-frame:not(.hide-menu) .media-frame-router, .wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders .media-frame:not(.hide-menu) .media-frame-content, .wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders .media-frame:not(.hide-menu) .media-frame-toolbar {
+  margin-left: 100px;
 }
 .wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-title, .wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-router, .wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-content, .wp-adminify-classic-editor #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-toolbar {
   margin-left: 56px !important;
@@ -1359,8 +1365,13 @@ body.adminify--items-dragging .folder--stats li > a.adminify-drop-hover .dashico
   margin-left: 100px !important;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-title, .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-router, .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-content, .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame-toolbar {
-  margin-left: -148px !important;
+.wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders .media-frame.hide-menu .media-frame-title, .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders .media-frame.hide-menu .media-frame-router, .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders .media-frame.hide-menu .media-frame-content, .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders .media-frame.hide-menu .media-frame-toolbar {
+  margin-left: 296px !important;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame.hide-menu .media-frame-title, .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame.hide-menu .media-frame-router, .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame.hide-menu .media-frame-content, .wp-adminify.elementor-editor-active #wp-media-modal.wp-adminify-has-folders.adminify-folder-collapsed .media-frame.hide-menu .media-frame-toolbar {
+  margin-left: 56px !important;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .wp-adminify--folder-widget {
