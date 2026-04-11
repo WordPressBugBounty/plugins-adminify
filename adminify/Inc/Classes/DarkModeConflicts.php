@@ -23,6 +23,7 @@ class DarkModeConflicts
     public function __construct()
     {
         add_action('admin_enqueue_scripts', array($this, 'jltwp_adminify_darkmode_scripts'), 100);
+        add_action( 'enqueue_block_editor_assets', array($this, "jltwp_gutenberg_block_editor_darkmode_assets"));
     }
 
     public function jltwp_adminify_darkmode_scripts()
@@ -393,5 +394,25 @@ class DarkModeConflicts
         $dark_mode_style = preg_replace('/\s*([{}|:;,])\s+/', '$1', $dark_mode_style);
         $dark_mode_style = preg_replace('/\s\s+(.*)/', '$1', $dark_mode_style);
         wp_add_inline_style('wp-adminify-admin', wp_strip_all_tags($dark_mode_style));
+    }
+
+    /**
+     * Gutenberg Block Editor Dark Mode CSS
+     */
+    function jltwp_gutenberg_block_editor_darkmode_assets () {
+        wp_register_style('wp-adminify-gutenberg-dark', false);
+        wp_enqueue_style('wp-adminify-gutenberg-dark');
+
+        // $parent_selector = 'body.wp-adminify.adminify-dark-mode';
+        $parent_selector = 'body.wp-adminify';
+
+        $dark_mode_style = "$parent_selector .components-modal__content .components-text, 
+            $parent_selector .components-popover__content .components-text { color: black!important; }
+            $parent_selector .block-editor-block-inspector .components-tools-panel { border-top-color: #e0e0e0; }
+            $parent_selector .admin-ui-navigable-region .components-panel__header > div > button { color: black; }
+            $parent_selector .editor-sidebar__panel .editor-post-card-panel__header svg, 
+            $parent_selector .commands-command-menu__container .commands-command-menu__header svg { fill: black; }
+        ";
+        wp_add_inline_style('wp-adminify-gutenberg-dark', wp_strip_all_tags($dark_mode_style));
     }
 }

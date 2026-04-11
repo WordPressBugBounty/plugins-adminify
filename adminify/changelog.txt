@@ -1,4 +1,7 @@
 == Changelog ==
+= WP Adminify - 4.1.10 (11-04-2026) =
+* Fixed: Gutenberg block editor some Dark Mode style issue fixed.
+
 = WP Adminify - 4.1.9 (31-03-2026) =
 * Fixed: WP Dashboard Notes plugin not create "+ add notes" issue fixed.
 * Fixed: Folder Module style broken issue fixed.
