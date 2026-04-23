@@ -1,4 +1,8 @@
 == Changelog ==
+= WP Adminify - 4.1.11 (23-04-2026) =
+* Fixed: Folder Module with conflict customizer page not loading issue fixed.
+* Fixed: Admin Pages Meta Boxes issue fixed.
+
 = WP Adminify - 4.1.10 (11-04-2026) =
 * Fixed: Gutenberg block editor some Dark Mode style issue fixed.
 

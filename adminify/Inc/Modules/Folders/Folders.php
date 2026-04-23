@@ -43,23 +43,27 @@ class Folders {
 	
 		add_action( 'pre-upload-ui', [ $this, 'wp_adminify_select_folder_when_upload' ] );
 
-		add_filter( 'attachment_fields_to_edit', [$this, 'wp_adminify_edit_attachment_fields'], 25, 2 );
 		add_action('wp_ajax_wp_adminify_assign_media_folder', array($this, 'wp_adminify_handle_folder_assignment'));
 
 		add_action( 'restrict_manage_posts', [$this, 'wp_adminify_show_folders_in_list_filter'] );
 
 		add_action( 'add_attachment', [$this ,'wp_adminify_assign_media_folder_to_new_attachment'] );
 
-		add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_scripts_for_media_uploads' ], PHP_INT_MAX );
-		add_action( 'customize_controls_print_footer_scripts', [ $this, 'add_adminify_body_class' ] );
-		add_action( 'customize_controls_enqueue_scripts', [ $this, 'enqueue_scripts_for_media_uploads' ], PHP_INT_MAX );
+		if ( ! empty( $this->options['media'] )) {
+			add_filter( 'attachment_fields_to_edit', [$this, 'wp_adminify_edit_attachment_fields'], 25, 2 );
 
-		// Elementor editor support
-		add_action( 'elementor/editor/footer', [ $this, 'add_adminify_body_class' ] );
-		add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'enqueue_scripts_for_media_uploads' ], PHP_INT_MAX );
+			add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_scripts_for_media_uploads' ], PHP_INT_MAX );
+			add_action( 'customize_controls_print_footer_scripts', [ $this, 'add_adminify_body_class' ] );
+			add_action( 'customize_controls_enqueue_scripts', [ $this, 'enqueue_scripts_for_media_uploads' ], PHP_INT_MAX );
+	
+			// Elementor editor support
+			add_action( 'elementor/editor/footer', [ $this, 'add_adminify_body_class' ] );
+			add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'enqueue_scripts_for_media_uploads' ], PHP_INT_MAX );
+	
+			// Classic editor support (post/page/CPT edit screens without Gutenberg)
+			add_action( 'admin_enqueue_scripts', [ $this, 'maybe_enqueue_for_classic_editor' ], PHP_INT_MAX );
+		}
 
-		// Classic editor support (post/page/CPT edit screens without Gutenberg)
-		add_action( 'admin_enqueue_scripts', [ $this, 'maybe_enqueue_for_classic_editor' ], PHP_INT_MAX );
 
 	}
 
@@ -67,10 +71,6 @@ class Folders {
 	 * Enqueue folder scripts for classic editor (non-Gutenberg) post edit screens
 	 */
 	public function maybe_enqueue_for_classic_editor( $hook ) {
-		if ( ! (bool) $this->options['media'] ) {
-			return;
-		}
-
 		// Only on post edit screens
 		if ( ! in_array( $hook, [ 'post.php', 'post-new.php' ], true ) ) {
 			return;
@@ -95,9 +95,6 @@ class Folders {
 	 * Required for folder widget CSS to work in media modal (Elementor, Customizer, etc.)
 	 */
 	public function add_adminify_body_class() {
-		if ( ! (bool) $this->options['media'] ) {
-			return;
-		}
 		?>
 		<script>
 			document.body.classList.add('wp-adminify');
@@ -1043,9 +1040,6 @@ class Folders {
 
 	
 	public function wp_adminify_edit_attachment_fields($form_fields, $post) {
-		if ( ! $this->options['media'] ) {
-			return;
-		}
     $folder_fields = array(
         'label' => 'Folders',
         'show_in_edit' => false,
