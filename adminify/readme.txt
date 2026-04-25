@@ -4,7 +4,7 @@ Tags: white label WordPress, custom dashboard, admin menu editor, login customiz
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 4.1.11
+Stable tag: 4.1.12
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -149,6 +149,11 @@ Please report security bugs found in the source code of the undefined plugin thr
 7. The module settings page showing various addons like Activity Logs.
 
 == Changelog ==
+= WP Adminify - 4.1.12 (25-04-2026) =
+* Fixed: Gutenberg Editor page system dark mode color issue fixed.
+* Fixed: Dashboard Dark/Light toggle default logo color issue fixed.
+* Fixed: Header Modify warning issue fixed.
+
 = WP Adminify - 4.1.11 (23-04-2026) =
 * Fixed: Folder Module with conflict customizer page not loading issue fixed.
 * Fixed: Admin Pages Meta Boxes issue fixed.

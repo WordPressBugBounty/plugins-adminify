@@ -22,7 +22,7 @@ class AdminBar extends AdminSettingsModel {
         $this->adminify_ui = $this->options['admin_ui'];
         $global_ui_mode = ( empty( $this->options['light_dark_mode']['admin_ui_mode'] ) ? 'light' : $this->options['light_dark_mode']['admin_ui_mode'] );
         $current_ui_mode = ( empty( get_user_meta( get_current_user_id(), 'color_mode', true ) ) ? $global_ui_mode : get_user_meta( get_current_user_id(), 'color_mode', true ) );
-        if ( $current_ui_mode === 'dark' ) {
+        if ( $current_ui_mode === 'dark' || $current_ui_mode === 'system' ) {
             new DarkModeConflicts();
         }
         // $admin_bar_user_roles = !empty($this->options['admin_bar_user_roles']) ? $this->options['admin_bar_user_roles'] : '';

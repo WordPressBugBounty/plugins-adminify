@@ -30,25 +30,25 @@ if (!class_exists('Frames')) {
 
             // Reload the page after plugin activation/deactivation
             if ( isset( $_GET['activate'] ) || isset( $_GET['activate-multi'] ) || isset( $_GET['deactivate'] ) || isset( $_GET['deactivate-multi'] ) ) {
-                self::custom_plugin_change_reload();
+                add_action('admin_footer', [$this, 'render_reload_script']);
             }
         }
-        
-        static function custom_plugin_change_reload($actual_link = null) {
-            // if (shortcode_exists('ssa_booking')) {
-            //     return;
-            // } Commented out to avoid issues with shortcode existence check as this plugin using iframe inside it.
 
+        static function render_reload_script() {
+            self::custom_plugin_change_reload();
+        }
+
+        static function custom_plugin_change_reload($actual_link = null) {
             if (!is_null($actual_link)) {
+                $safe_link = esc_url_raw($actual_link);
                 echo "<script type='text/javascript'>
-                    parent.location.replace('$actual_link');
+                    parent.location.replace('" . esc_js($safe_link) . "');
                 </script>";
-                return; 
-            }else{
-                echo '<script type="text/javascript">
-                    parent.location.reload();
-                </script>';
             }
+
+            echo '<script type="text/javascript">
+                parent.location.reload();
+            </script>';
         }
 
         public function load_scripts()

@@ -1320,6 +1320,9 @@ a {
   cursor: pointer;
   transition: all 0.2s ease-out;
 }
+#wp-adminify-color-mode-wrapper .mode-icon.adminify-color-mode-system-active {
+  width: 22px;
+}
 #wp-adminify-color-mode-wrapper .mode-icon .darkIcon,
 #wp-adminify-color-mode-wrapper .mode-icon .lightIcon {
   position: absolute;
