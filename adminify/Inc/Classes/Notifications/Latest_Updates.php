@@ -91,7 +91,7 @@ if (!class_exists('Latest_Updates')) {
 
 					'<h3 class="adminify-update-head">' . WP_ADMINIFY . ' <span><small><em>v' . esc_html(WP_ADMINIFY_VER) . '</em></small>' . __(' has some updates..', 'adminify') . '</span></h3><br>', // %3$s
 					// changelogs
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Gravity Form compatibility. </span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Gravity Form plugin Add New Form compatibility. </span><br>', 'adminify'),
 				);
 				printf(wp_kses_post($jltwp_adminify_changelog_message));
 			}

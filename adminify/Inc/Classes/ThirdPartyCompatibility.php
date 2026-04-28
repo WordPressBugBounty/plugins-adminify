@@ -26,6 +26,25 @@ class ThirdPartyCompatibility {
         add_action( 'admin_enqueue_scripts', [$this, 'jltwp_adminify_reset_theme_conflicts'], 999999 );
         // 28-6-24
         add_action( 'admin_head', [$this, 'jltwp_adminify_plugin_conflicts'], 999999 );
+        if ( Utils::is_plugin_active( 'gravityforms/gravityforms.php' ) ) {
+            add_filter(
+                'update_footer',
+                [$this, 'jltwp_adminify_change_admin_footer'],
+                9999,
+                3
+            );
+        }
+    }
+
+    /**
+     * Gravity Form Custom Footer missing div closing support
+     */
+    public function jltwp_adminify_change_admin_footer( $footer_text ) {
+        $current_screen = get_current_screen();
+        if ( !empty( $current_screen ) && ($current_screen->id === 'toplevel_page_gf_edit_forms' || $current_screen->id === 'forms_page_gf_new_form') ) {
+            return $footer_text . '</div>';
+        }
+        return $footer_text;
     }
 
     public function jltwp_adminify_plugin_conflicts() {
