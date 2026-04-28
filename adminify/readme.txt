@@ -4,7 +4,7 @@ Tags: white label WordPress, custom dashboard, admin menu editor, login customiz
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 4.1.12
+Stable tag: 4.1.13
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -149,6 +149,9 @@ Please report security bugs found in the source code of the undefined plugin thr
 7. The module settings page showing various addons like Activity Logs.
 
 == Changelog ==
+= WP Adminify - 4.1.13 (28-04-2026) =
+* Fixed: Gravity Form compatibility.
+
 = WP Adminify - 4.1.12 (25-04-2026) =
 * Fixed: Gutenberg Editor page system dark mode color issue fixed.
 * Fixed: Dashboard Dark/Light toggle default logo color issue fixed.
@@ -547,9 +550,3 @@ Please report security bugs found in the source code of the undefined plugin thr
 **➡️ [View Full Changelog](https://wpadminify.com/changelogs?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)**
 
 == Upgrade Notice ==
-
-= 4.0.5.1 =
-Compatibility updated for WPBakery visual page builder, WP Activity Log, WooCommerce plugins and UI Improvement for Light dark mode switcher.
-
-= 4.0.5.0 =
-Better WooCommerce Compatibility, WP Activity Log compatibility, and many more ➡️ [Upgrade Now](https://wpadminify.com/pricing?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)

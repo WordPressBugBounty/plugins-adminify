@@ -325,7 +325,7 @@ class AdminFooterText extends AdminSettingsModel
 						?>
 					</div>
 				</div>
-
+			</div>
 				<?php return $footer_text;
 			} ?>
 		</div>

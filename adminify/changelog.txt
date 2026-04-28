@@ -1,4 +1,7 @@
 == Changelog ==
+= WP Adminify - 4.1.13 (28-04-2026) =
+* Fixed: Gravity Form compatibility.
+
 = WP Adminify - 4.1.12 (25-04-2026) =
 * Fixed: Gutenberg Editor page system dark mode color issue fixed.
 * Fixed: Dashboard Dark/Light toggle default logo color issue fixed.
