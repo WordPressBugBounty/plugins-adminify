@@ -1,4 +1,10 @@
 == Changelog ==
+= WP Adminify - 4.1.15 (29-04-2026) =
+* Added: Media Replace feature added.
+* Fixed: WP Adminify UI with Fluent Support header style issue fixed.
+* Fixed: WP Adminify UI with Fluent Cart header style issue fixed.
+* Fixed: WP Adminify UI with Fluent Affiliate header style issue fixed.
+
 = WP Adminify - 4.1.14 (28-04-2026) =
 * Fixed: Gravity Form plugin Add New Form compatibility.
 

@@ -63,6 +63,24 @@ class ThirdPartyCompatibility {
 				}
 				</style>';
             }
+            // Fluent Support
+            if ( Utils::is_plugin_active( 'fluent-support/fluent-support.php' ) ) {
+                echo '<style>
+					body.adminify-ui .fs_main_navbar{width:100%;top:0;left:0;}
+				</style>';
+            }
+            // Fluent Affiliate
+            if ( Utils::is_plugin_active( 'fluent-affiliate/fluent-affiliate.php' ) ) {
+                echo '<style>
+					body.adminify-ui #fluent-affiliate-app #fa_aff_menu {top:0;}
+				</style>';
+            }
+            // Fluent Cart
+            if ( Utils::is_plugin_active( 'fluent-cart/fluent-cart.php' ) ) {
+                echo '<style>
+					body.adminify-ui #wpbody-content #fct_admin_menu_holder .fct_admin_menu_wrap {width:100%;top:0;left:0;}
+				</style>';
+            }
         }
         if ( Utils::is_plugin_active( 'squirrly-seo/squirrly.php' ) ) {
             echo '<style>
@@ -71,7 +89,7 @@ class ThirdPartyCompatibility {
             }
             </style>';
         }
-        if ( Utils::is_plugin_active( 'surecart / surecart.php' ) || Utils::is_plugin_active( 'suremember/suremember.php' ) ) {
+        if ( Utils::is_plugin_active( 'surecart/surecart.php' ) || Utils::is_plugin_active( 'suremember/suremember.php' ) ) {
             if ( !empty( $adminify_ui ) ) {
                 echo '<style>
 							.css-wa3qun,.backdrop-blur-sm {
