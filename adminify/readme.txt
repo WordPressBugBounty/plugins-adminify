@@ -4,7 +4,7 @@ Tags: white label WordPress, custom dashboard, admin menu editor, login customiz
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 4.1.15
+Stable tag: 4.1.16
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -149,6 +149,11 @@ Please report security bugs found in the source code of the undefined plugin thr
 7. The module settings page showing various addons like Activity Logs.
 
 == Changelog ==
+= WP Adminify - 4.1.16 (04-05-2026) =
+* Fixed: Fluent Plugins with Adminify UI white screen issue fixed.
+* Fixed: Multisite Setup Wizard wrong url issue fixed.
+* Fixed: Setup Wizard not hiding after completed issue fixed.
+
 = WP Adminify - 4.1.15 (29-04-2026) =
 * Added: Media Replace feature added.
 * Fixed: WP Adminify UI with Fluent Support header style issue fixed.

@@ -126,9 +126,16 @@ class Adminify_Setup_Wizard {
 		}
 
 		update_option('_wpadminify', $settings);
+
+		$is_complete = !empty($_POST['is_complete']) && $_POST['is_complete'] === '1';
+		if ($is_complete) {
+			update_option('jltwp_adminify_setup_wizard_ran', '1');
+		}
+
 		wp_send_json_success(
 			[
-				'redirect' => true,
+				'redirect'    => true,
+				'is_complete' => $is_complete,
 			]
 		);
 	}
@@ -149,10 +156,19 @@ class Adminify_Setup_Wizard {
 		wp_enqueue_script('wp-adminify-sw-setup');
 
 
+		$is_network = is_multisite() && is_network_admin();
+		$settings_url = $is_network
+			? network_admin_url('admin.php?page=wp-adminify-settings')
+			: admin_url('admin.php?page=wp-adminify-settings');
+		$dashboard_url = $is_network ? network_admin_url('/') : admin_url('/');
+
 		// Localize Script
 		$adminify_data = [
 			// 'rest_base'         => $this->get_rest_url(''),
 			'ajax_url'         	=> admin_url('admin-ajax.php'),
+			'admin_url'        	=> $dashboard_url,
+			'settings_url'     	=> $settings_url,
+			'rest_url'         	=> esc_url_raw(rest_url('adminify/v1/')),
 			'settings' 			=> [
 				'admin_ui'            		=> $this->options['admin_ui'],
 				'admin_ui_logo_type' 		=> $this->options['light_dark_mode']['admin_ui_logo_type'],

@@ -34,6 +34,46 @@ class ThirdPartyCompatibility {
                 3
             );
         }
+        // All Fluent Plugin Assets Supports
+        $this->whitelist_assets_in_fluent_plugins();
+    }
+
+    /**
+     * Whitelist Adminify assets in Fluent ecosystem no-conflict mode.
+     *
+     * Fluent Boards, Fluent Booking, Fluent CRM, Fluent Community, Fluent Forms,
+     * and Fluent Snippets (easy-code-manager) iterate $wp_scripts->queue on their
+     * admin pages and dequeue every plugin script whose src isn't in their approved
+     * slug list. Without this whitelist, Adminify's frame-adminify--admin script is
+     * stripped, leaving an empty React mount (white screen).
+     */
+    public function whitelist_assets_in_fluent_plugins() {
+        $add_regex = function ( $slugs ) {
+            $slugs[] = '\\/adminify\\/';
+            return $slugs;
+        };
+        if ( Utils::is_plugin_active( 'fluent-boards/fluent-boards.php' ) ) {
+            add_filter( 'fluent_boards/asset_listed_slugs', $add_regex );
+        }
+        if ( Utils::is_plugin_active( 'fluent-booking/fluent-booking.php' ) ) {
+            add_filter( 'fluent_booking/asset_listed_slugs', $add_regex );
+        }
+        if ( Utils::is_plugin_active( 'fluent-crm/fluent-crm.php' ) ) {
+            add_filter( 'fluent_crm_asset_listed_slugs', $add_regex );
+        }
+        if ( Utils::is_plugin_active( 'fluent-community/fluent-community.php' ) ) {
+            add_filter( 'fluent_community/asset_listed_slugs', $add_regex );
+            add_filter( 'fluent_com_editor/asset_listed_slugs', $add_regex );
+        }
+        if ( Utils::is_plugin_active( 'easy-code-manager/easy-code-manager.php' ) ) {
+            add_filter( 'fluent_snippets_asset_listed_slugs', $add_regex );
+        }
+        if ( Utils::is_plugin_active( 'fluentform/fluentform.php' ) ) {
+            add_filter( 'fluentform/exclude_js_slugs_from_dequeue', function ( $slugs ) {
+                $slugs[] = 'adminify';
+                return $slugs;
+            } );
+        }
     }
 
     /**

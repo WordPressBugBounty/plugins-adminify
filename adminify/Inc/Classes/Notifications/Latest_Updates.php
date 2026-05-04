@@ -82,7 +82,7 @@ if (!class_exists('Latest_Updates')) {
 
 			if("dismissed" !== $forever_notice){
 				$jltwp_adminify_changelog_message = sprintf(
-					__('%3$s %4$s %5$s %6$s %7$s <br> <strong>Check Changelogs for </strong> <a href="%1$s" target="__blank">%2$s</a>', 'adminify'),
+					__('%3$s %4$s %5$s %6$s <br> <strong>Check Changelogs for </strong> <a href="%1$s" target="__blank">%2$s</a>', 'adminify'),
 					esc_url_raw('https://wpadminify.com/changelogs'),
 					__('More about Updates ', 'adminify'),
 					/** Changelog Items
@@ -91,10 +91,9 @@ if (!class_exists('Latest_Updates')) {
 
 					'<h3 class="adminify-update-head">' . WP_ADMINIFY . ' <span><small><em>v' . esc_html(WP_ADMINIFY_VER) . '</em></small>' . __(' has some updates..', 'adminify') . '</span></h3><br>', // %3$s
 					// changelogs
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Added:</strong> Media Replace feature added. </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> WP Adminify UI with Fluent Support header style issue fixed. </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> WP Adminify UI with Fluent Cart header style issue fixed. </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> WP Adminify UI with Fluent Affiliate header style issue fixed. </span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Fluent Plugins with Adminify UI white screen issue fixed. </span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Multisite Setup Wizard wrong url issue fixed. </span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Setup Wizard not hiding after completed issue fixed. </span><br>', 'adminify'),
 				);
 				printf(wp_kses_post($jltwp_adminify_changelog_message));
 			}

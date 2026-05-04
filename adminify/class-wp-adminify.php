@@ -37,7 +37,7 @@ if ( !class_exists( 'WP_Adminify' ) ) {
             add_action( 'init', array($this, 'jltwp_adminify_include_files'), 1 );
             add_action( 'init', array($this, 'jltwp_is_plugin_row_meta'), 1 );
             $is_finished = get_option( 'jltwp_adminify_setup_wizard_ran' );
-            if ( !empty( $is_finished ) || $is_finished != '1' ) {
+            if ( $is_finished !== '1' ) {
                 if ( apply_filters( 'jltwp_adminify_show_setup_wizard', true ) ) {
                     new \WPAdminify\Inc\Classes\Wizard\Setup_Wizard();
                     set_transient( '_adminify_activation_redirect', 1, 30 );
