@@ -1,6 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) { die; } // Cannot access directly.
 
-use WPAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Utils;
 /**
  *
  * Field: checkbox
@@ -22,12 +22,12 @@ if ( ! class_exists( 'ADMINIFY_Field_checkbox' ) ) {
         'inline'         => false,
         'query_args'     => array(),
         'check_all'      => false,
-        'check_all_text' => esc_html__( 'Check/Uncheck All' ),
+        'check_all_text' => esc_html__( 'Check/Uncheck All', 'adminify' ),
       ) );
 
       $inline_class = ( $args['inline'] ) ? ' class="adminify--inline-list"' : '';
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       if ( isset( $this->field['options'] ) ) {
 
@@ -37,7 +37,7 @@ if ( ! class_exists( 'ADMINIFY_Field_checkbox' ) ) {
 
         if ( is_array( $options ) && ! empty( $options ) ) {
 
-          echo '<ul'. $inline_class .'>';
+          echo '<ul'. $inline_class .'>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attribute value pre-escaped with esc_attr() where built.
 
           foreach ( $options as $option_key => $option_value ) {
 
@@ -50,8 +50,8 @@ if ( ! class_exists( 'ADMINIFY_Field_checkbox' ) ) {
                     $checked = ( in_array( $sub_key, $value ) ) ? ' checked' : '';
                     echo '<li>';
                     echo '<label>';
-                    echo '<input type="checkbox" name="'. esc_attr( $this->field_name( '[]' ) ) .'" value="'. esc_attr( $sub_key ) .'"'. $this->field_attributes() . esc_attr( $checked ) .'/>';
-                    echo '<span class="adminify--text">'. Utils::wp_kses_custom( $sub_value ) .'</span>';
+                    echo '<input type="checkbox" name="'. esc_attr( $this->field_name( '[]' ) ) .'" value="'. esc_attr( $sub_key ) .'"'. $this->field_attributes() . esc_attr( $checked ) .'/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
+                    echo '<span class="adminify--text">'. Utils::kses_custom( $sub_value ) .'</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped.
                     echo '</label>';
                     echo '</li>';
                   }
@@ -64,8 +64,8 @@ if ( ! class_exists( 'ADMINIFY_Field_checkbox' ) ) {
 
               echo '<li>';
               echo '<label>';
-              echo '<input type="checkbox" name="'. esc_attr( $this->field_name( '[]' ) ) .'" value="'. esc_attr( $option_key ) .'"'. $this->field_attributes() . esc_attr( $checked ) .'/>';
-              echo '<span class="adminify--text">'. Utils::wp_kses_custom( $option_value ) .'</span>';
+              echo '<input type="checkbox" name="'. esc_attr( $this->field_name( '[]' ) ) .'" value="'. esc_attr( $option_key ) .'"'. $this->field_attributes() . esc_attr( $checked ) .'/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
+              echo '<span class="adminify--text">'. Utils::kses_custom( $option_value ) .'</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped.
               echo '</label>';
               echo '</li>';
 
@@ -88,14 +88,14 @@ if ( ! class_exists( 'ADMINIFY_Field_checkbox' ) ) {
       } else {
 
         echo '<label class="adminify-checkbox">';
-        echo '<input type="hidden" name="'. esc_attr( $this->field_name() ) .'" value="'. $this->value .'" class="adminify--input"'. $this->field_attributes() .'/>';
-        echo '<input type="checkbox" name="_pseudo" class="adminify--checkbox"'. esc_attr( checked( $this->value, 1, false ) ) . $this->field_attributes() .'/>';
-        echo ( ! empty( $this->field['label'] ) ) ? '<span class="adminify--text">'. Utils::wp_kses_custom( $this->field['label'] ) .'</span>' : '';
+        echo '<input type="hidden" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $this->value ) .'" class="adminify--input"'. $this->field_attributes() .'/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
+        echo '<input type="checkbox" name="_pseudo" class="adminify--checkbox"'. esc_attr( checked( $this->value, 1, false ) ) . $this->field_attributes() .'/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
+        echo ( ! empty( $this->field['label'] ) ) ? '<span class="adminify--text">'. Utils::kses_custom( $this->field['label'] ) .'</span>' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped.
         echo '</label>';
 
       }
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

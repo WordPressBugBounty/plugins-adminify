@@ -1,10 +1,14 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\MenuEditor;
+namespace PXLBSAdminify\Inc\Modules\MenuEditor;
 
-use WPAdminify\Inc\Base_Model;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
+use PXLBSAdminify\Inc\Base_Model;
 
 abstract class MenuEditorModel extends Base_Model {
 
-	protected $prefix = '_wpadminify_menu_settings';
+	protected $prefix = 'pxlbsadminify_menu_settings';
 }

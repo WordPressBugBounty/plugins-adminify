@@ -178,7 +178,7 @@ if ( ! class_exists( 'ADMINIFY_Setup' ) ) {
       // Setup taxonomy option framework
       $params = array();
       if ( class_exists( 'ADMINIFY_Taxonomy_Options' ) && ! empty( self::$args['taxonomy_options'] ) ) {
-        $taxonomy = ( isset( $_GET['taxonomy'] ) ) ? sanitize_text_field( wp_unslash( $_GET['taxonomy'] ) ) : '';
+        $taxonomy = ( isset( $_GET['taxonomy'] ) ) ? sanitize_text_field( wp_unslash( $_GET['taxonomy'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
         foreach ( self::$args['taxonomy_options'] as $key => $value ) {
           if ( ! empty( self::$args['sections'][$key] ) && ! isset( self::$inited[$key] ) ) {
 
@@ -578,12 +578,17 @@ if ( ! class_exists( 'ADMINIFY_Setup' ) ) {
       wp_enqueue_style( 'wp-color-picker' );
       wp_enqueue_script( 'wp-color-picker' );
 
-      // Font awesome 4 and 5 loader
+      // Font awesome 4 and 5 loader. The font files live in the main plugin's
+      // assets/ directory, not inside the framework, so resolve the base URL
+      // from there to avoid a 404 on the framework-relative path.
+      $adminify_fa_base = defined( 'PXLBSADMINIFY_ASSETS' )
+        ? PXLBSADMINIFY_ASSETS . 'vendors/fontawesome/'
+        : self::include_plugin_url( 'assets/vendors/fontawesome/' );
       if ( apply_filters( 'adminify_fa4', false ) ) {
-        wp_enqueue_style( 'adminify-fa', 'https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css', array(), '4.7.0', 'all' );
+        wp_enqueue_style( 'adminify-fa', $adminify_fa_base . 'fa4/css/font-awesome.min.css', array(), '4.7.0', 'all' );
       } else {
-        wp_enqueue_style( 'adminify-fa5', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css', array(), '5.15.5', 'all' );
-        wp_enqueue_style( 'adminify-fa5-v4-shims', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/v4-shims.min.css', array(), '5.15.5', 'all' );
+        wp_enqueue_style( 'adminify-fa5', $adminify_fa_base . 'fa5/css/all.min.css', array(), '5.15.4', 'all' );
+        wp_enqueue_style( 'adminify-fa5-v4-shims', $adminify_fa_base . 'fa5/css/v4-shims.min.css', array(), '5.15.4', 'all' );
       }
 
       // Check for developer mode
@@ -606,6 +611,7 @@ if ( ! class_exists( 'ADMINIFY_Setup' ) ) {
         'color_palette'     => apply_filters( 'adminify_color_palette', array() ),
         'i18n'              => array(
           'confirm'         => esc_html__( 'Are you sure?', 'adminify' ),
+          /* translators: %s: minimum number of characters required to trigger a search. */
           'typing_text'     => esc_html__( 'Please enter %s or more characters', 'adminify' ),
           'searching_text'  => esc_html__( 'Searching...', 'adminify' ),
           'no_results_text' => esc_html__( 'No results found.', 'adminify' ),
@@ -658,7 +664,7 @@ if ( ! class_exists( 'ADMINIFY_Setup' ) ) {
 
           $query['display'] = 'swap';
 
-          wp_enqueue_style( 'adminify-google-web-fonts', esc_url( add_query_arg( $query, '//fonts.googleapis.com/css' ) ), array(), null );
+          wp_enqueue_style( 'adminify-google-web-fonts', esc_url( add_query_arg( $query, '//fonts.googleapis.com/css' ) ), array(), PXLBSADMINIFY_VER );
 
         }
 
@@ -670,7 +676,7 @@ if ( ! class_exists( 'ADMINIFY_Setup' ) ) {
             $fonts[] = $family . ( ( ! empty( $styles ) ) ? ':'. implode( ',', $styles ) : '' );
           }
 
-          wp_enqueue_script( 'adminify-google-web-fonts', esc_url( '//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js' ), array(), null );
+          wp_enqueue_script( 'adminify-google-web-fonts', self::include_plugin_url( 'assets/js/webfont.js' ), array(), self::$version, false );
 
           wp_localize_script( 'adminify-google-web-fonts', 'WebFontConfig', array( 'google' => array( 'families' => $fonts ) ) );
 
@@ -695,7 +701,7 @@ if ( ! class_exists( 'ADMINIFY_Setup' ) ) {
     public static function add_custom_css() {
 
       if ( ! empty( self::$css ) ) {
-        echo '<style type="text/css">'. wp_strip_all_tags( self::$css ) .'</style>';
+        echo '<style type="text/css">'. wp_strip_all_tags( self::$css ) .'</style>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_strip_all_tags() removes all markup; CSS-only content cannot break out of the <style> block.
       }
 
     }
@@ -755,14 +761,15 @@ if ( ! class_exists( 'ADMINIFY_Setup' ) ) {
       }
 
       // These attributes has been sanitized above.
-      echo '<div class="adminify-field adminify-field-'. $field_type . $is_pseudo . $class . $visible .'"'. $depend .'>';
+      ob_start();
+      echo '<div class="adminify-field adminify-field-'. esc_attr( $field_type . $is_pseudo . $class . $visible ) .'"'. $depend .'>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- value pre-escaped where built.
 
       if ( ! empty( $field_type ) ) {
 
         if ( ! empty( $field['title'] ) ) {
           echo '<div class="adminify-title">';
-          echo '<h4>'. $field['title'] .'</h4>';
-          echo ( ! empty( $field['subtitle'] ) ) ? '<div class="adminify-subtitle-text">'. $field['subtitle'] .'</div>' : '';
+          echo '<h4>'. wp_kses_post( $field['title'] ) .'</h4>';
+          echo ( ! empty( $field['subtitle'] ) ) ? '<div class="adminify-subtitle-text">'. wp_kses_post( $field['subtitle'] ) .'</div>' : '';
           echo '</div>';
         }
 
@@ -787,6 +794,9 @@ if ( ! class_exists( 'ADMINIFY_Setup' ) ) {
       echo ( ! empty( $field['title'] ) ) ? '</div>' : '';
       echo '<div class="clear"></div>';
       echo '</div>';
+
+      $html = ob_get_clean();
+      echo apply_filters( 'pxlbsadminify_render_field_html', $html, $field ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- value pre-escaped where built.
 
     }
 

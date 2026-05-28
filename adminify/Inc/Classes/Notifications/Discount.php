@@ -1,9 +1,13 @@
 <?php
 
-namespace WPAdminify\Inc\Classes\Notifications;
+namespace PXLBSAdminify\Inc\Classes\Notifications;
 
-use WPAdminify\Inc\Classes\Notifications\Base\User_Data;
-use WPAdminify\Inc\Classes\Notifications\Model\Notice;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
+use PXLBSAdminify\Inc\Classes\Notifications\Base\User_Data;
+use PXLBSAdminify\Inc\Classes\Notifications\Model\Notice;
 
 
 if (!class_exists('Discount')) {
@@ -29,8 +33,8 @@ if (!class_exists('Discount')) {
         {
             parent::__construct();
 
-            if (empty(get_option('wpadminify_notice_discount_code'))) {
-                update_option('wpadminify_notice_discount_code', $this->coupon_code);
+            if (empty(get_option('pxlbsadminify_notice_discount_code'))) {
+                update_option('pxlbsadminify_notice_discount_code', $this->coupon_code);
             }
             add_action('admin_enqueue_scripts', [$this, 'discount_coupon_scripts'], 999);
         }
@@ -55,7 +59,7 @@ if (!class_exists('Discount')) {
                         Flash Sale
                     </h2>
                     <h3>Notice Content Notice Content Notice Content Notice Content Notice Content Notice Content Notice Content Notice Content </h3>
-                    <img width="70" height="70" src="<?php echo esc_url(WP_ADMINIFY_ASSETS_IMAGE . 'promo-image.png'); ?>" alt="<?php esc_attr_e('20% Discount Coupon', 'adminify'); ?>">
+                    <img width="70" height="70" src="<?php echo esc_url(PXLBSADMINIFY_ASSETS_IMAGE . 'promo-image.png'); ?>" alt="<?php esc_attr_e('20% Discount Coupon', 'adminify'); ?>">
                 </div>
             </div>
         <?php

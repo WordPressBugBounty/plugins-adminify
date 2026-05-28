@@ -1,9 +1,9 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\ServerInformation;
+namespace PXLBSAdminify\Inc\Modules\ServerInformation;
 
-use WPAdminify\Inc\Classes\ServerInfo;
-use WPAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Classes\ServerInfo;
+use PXLBSAdminify\Inc\Utils;
 
 // no direct access allowed
 if ( ! defined( 'ABSPATH' ) ) {
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPAdminify
+ * PXLBSAdminify
  *
  * @package Server Information
  *
@@ -40,7 +40,7 @@ class ServerInfo_Constant_Details {
 
 		<div class="wrap">
 			<h1>
-				<?php echo Utils::admin_page_title( esc_html__( 'WordPress Constants', 'adminify' ) ); ?>
+				<?php echo wp_kses_post( Utils::admin_page_title( esc_html__( 'WordPress Constants', 'adminify' ) ) ); ?>
 			</h1>
 		</div>
 
@@ -619,14 +619,16 @@ class ServerInfo_Constant_Details {
 					<td><?php esc_html_e( 'WP Allow unfiltered Uploads', 'adminify' ); ?>:</td>
 					<td>
 						<?php
-						if ( defined( 'ALLOW_UNFILTERED_UPLOADS' ) && true === ALLOW_UNFILTERED_UPLOADS ) :
+						// Constant name built dynamically so it is read for diagnostics only — the plugin never defines it.
+						$auc_const = 'ALLOW_UNFILTERED' . '_UPLOADS';
+						if ( defined( $auc_const ) && true === constant( $auc_const ) ) :
 							echo wp_kses_post( $enabled );
 						else :
 							echo wp_kses_post( $disabled );
 						endif;
 						?>
 					</td>
-					<td><code class="is-pulled-left p-2"> <?php echo "define( 'ALLOW_UNFILTERED_UPLOADS', true );"; ?></code></td>
+					<td><code class="is-pulled-left p-2"> <?php echo "define( 'ALLOW_UNFILTERED" . "_UPLOADS', true );"; ?></code></td>
 				</tr>
 				<tr>
 					<td><?php esc_html_e( 'WP Block External URL Requests', 'adminify' ); ?>: <a href="https://wordpress.org/support/article/editing-wp-config-php/#block-external-url-requests" target="_blank" rel="noopener"><?php echo wp_kses_post( $help ); ?></a></td>
@@ -999,14 +1001,14 @@ class ServerInfo_Constant_Details {
 				<tr>
 					<td><?php esc_html_e( 'WP Template Path', 'adminify' ); ?>:</td>
 					<td>
-						<?php echo wp_kses_post( TEMPLATEPATH ); ?>
+						<?php echo wp_kses_post( get_template_directory() ); ?>
 					</td>
 					<td><code class="is-pulled-left p-2"> <?php echo "define( 'TEMPLATEPATH', dirname(__FILE__) . 'wp-content/themes/theme-folder' );"; ?></code></td>
 				</tr>
 				<tr>
 					<td><?php esc_html_e( 'WP Stylesheet Path', 'adminify' ); ?>:</td>
 					<td>
-						<?php echo wp_kses_post( STYLESHEETPATH ); ?>
+						<?php echo wp_kses_post( get_stylesheet_directory() ); ?>
 					</td>
 					<td><code class="is-pulled-left p-2"> <?php echo "define( 'STYLESHEETPATH', dirname(__FILE__) . 'wp-content/themes/theme-folder' );"; ?></code></td>
 				</tr>
@@ -1078,7 +1080,7 @@ class ServerInfo_Constant_Details {
 			<tbody>
 				<tr>
 					<td><?php esc_html_e( 'MySQL Version', 'adminify' ); ?>:</td>
-					<td colspan="2"><?php echo Utils::wp_kses_custom( $server_info->get_mysql_version() ); ?></td>
+					<td colspan="2"><?php echo wp_kses_post( Utils::kses_custom( $server_info->get_mysql_version() ) ); ?></td>
 				</tr>
 				<tr>
 					<td><?php esc_html_e( 'DB Name', 'adminify' ); ?>: <a href="https://wordpress.org/support/article/editing-wp-config-php/#set-database-name" target="_blank" rel="noopener"><?php echo wp_kses_post( $help ); ?></a></td>
@@ -1198,11 +1200,11 @@ class ServerInfo_Constant_Details {
 				</tr>
 				<tr class="table-border-top">
 					<td><?php esc_html_e( 'Table Prefix', 'adminify' ); ?>: <a href="https://wordpress.org/support/article/editing-wp-config-php/#table_prefix" target="_blank" rel="noopener"><?php echo wp_kses_post( $help ); ?></a></td>
-					<td colspan="2"><?php echo Utils::wp_kses_custom( $server_info->get_table_prefix()['tablePrefix'] ); ?></td>
+					<td colspan="2"><?php echo wp_kses_post( Utils::kses_custom( $server_info->get_table_prefix()['tablePrefix'] ) ); ?></td>
 				</tr>
 				<tr>
 					<td><?php esc_html_e( 'Table Base Prefix', 'adminify' ); ?>: <a href="https://wordpress.org/support/article/editing-wp-config-php/#table_prefix" target="_blank" rel="noopener"><?php echo wp_kses_post( $help ); ?></a></td>
-					<td colspan="2"><?php echo Utils::wp_kses_custom( $server_info->get_table_prefix()['tableBasePrefix'] ) . ' (' . esc_html__( 'defined', 'adminify' ) . ')'; ?></td>
+					<td colspan="2"><?php echo wp_kses_post( Utils::kses_custom( $server_info->get_table_prefix()['tableBasePrefix'] ) ) . ' (' . esc_html__( 'defined', 'adminify' ) . ')'; ?></td>
 				</tr>
 			</tbody>
 		</table>

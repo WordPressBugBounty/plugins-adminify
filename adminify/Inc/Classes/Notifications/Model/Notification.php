@@ -1,7 +1,7 @@
 <?php
-namespace WPAdminify\Inc\Classes\Notifications\Model;
+namespace PXLBSAdminify\Inc\Classes\Notifications\Model;
 
-use WPAdminify\Inc\Classes\Notifications\Base\Date;
+use PXLBSAdminify\Inc\Classes\Notifications\Base\Date;
 use ReflectionClass;
 
 // No, Direct access Sir !!!
@@ -97,7 +97,7 @@ abstract class Notification {
 	 * @author Jewel Theme <support@jeweltheme.com>
 	 */
 	final public function fire( $trigger_time, $notification_type ) {
-		update_option( "jltwp_adminify_{$notification_type}_last_interact", $trigger_time );
+		update_option( "pxlbsadminify_{$notification_type}_last_interact", $trigger_time );
 
 		// Current Interval is completed .
 		$this->intervals[ $this->current_interval ]['fired'] = true;

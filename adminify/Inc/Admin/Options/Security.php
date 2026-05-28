@@ -1,9 +1,9 @@
 <?php
 
-namespace WPAdminify\Inc\Admin\Options;
+namespace PXLBSAdminify\Inc\Admin\Options;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Admin\AdminSettingsModel;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Admin\AdminSettingsModel;
 
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -177,7 +177,7 @@ if ( ! class_exists( 'Security' ) ) {
 					[
 						'id'         => 'enable_security_head',
 						'type'       => 'switcher',
-						'title'      => __('', 'adminify'),
+						'title'      => '',
 						'class'      => 'adminify-pl-0 adminify-pt-0',
 						'text_on'    => __('Show', 'adminify'),
 						'text_off'   => __('Hide', 'adminify'),
@@ -188,7 +188,7 @@ if ( ! class_exists( 'Security' ) ) {
 						'id'         => 'security_head_data',
 						'type'       => 'checkbox',
 						'class'      => 'adminify-one-col',
-						'title'      => __('', 'adminify'),
+						'title'      => '',
 						'options'    => $security_head,
 						'default'    => $this->get_default_field('security_head')['security_head_data'],
 						'dependency' => ['enable_security_head', '==', 'true', 'true']
@@ -241,7 +241,8 @@ if ( ! class_exists( 'Security' ) ) {
 			$redirect_urls = [
 				[
 					'id'       => 'redirect_urls_fields',
-					'title'    => sprintf(__('Redirect URLs %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+					/* translators: %s: Pro upgrade badge HTML */
+					'title'    => sprintf(__('Redirect URLs %s', 'adminify'), Utils::upgrade_pro_badge()),
 					'class'		 => 'adminify-pro-fieldset',
 					'subtitle'   => __('Login and logout redirects based on user roles. Customize URLs for administrators, editors, or subscribers etc.', 'adminify'),
 					'type'     => 'fieldset',
@@ -258,7 +259,7 @@ if ( ! class_exists( 'Security' ) ) {
 						[
 							'id'         => 'redirect_urls_options',
 							'type'       => 'fieldset',
-							'title'      => __(' ', 'adminify'),
+							'title'      => ' ',
 							'class'      => 'adminify-pt-0 adminify-pl-0 adminify-one-col adminify-tabs-content adminify-pro-notice',
 							'fields'     => [
 								[
@@ -294,7 +295,11 @@ if ( ! class_exists( 'Security' ) ) {
 				'type'        => 'text',
 				'class'       => 'new-login-url',
 				'title'       => __('New Login URL', 'adminify'),
-				'desc'        => __('Change the login URL and prevent access to the wp-admin and <code>' . wp_login_url() . '</code> page directly.', 'adminify'),
+				'desc'        => sprintf(
+					/* translators: %s: wp-login.php URL of the site */
+					__('Change the login URL and prevent access to the wp-admin and %s page directly.', 'adminify'),
+					'<code>' . esc_html( wp_login_url() ) . '</code>'
+				),
 				'placeholder' => 'login',
 				'before'      => \get_site_url() . '/',
 				// 'after'       => '/',
@@ -306,7 +311,11 @@ if ( ! class_exists( 'Security' ) ) {
 				'type'        => 'text',
 				'class'       => 'new-login-url redirect-admin-url',
 				'title'       => __('Redirect Admin', 'adminify'),
-				'desc'        => __('Redirect users those are not logged in and trying to access <code>' . get_admin_url() . '</code>', 'adminify'),
+				'desc'        => sprintf(
+					/* translators: %s: site admin URL */
+					__('Redirect users those are not logged in and trying to access %s', 'adminify'),
+					'<code>' . esc_html( get_admin_url() ) . '</code>'
+				),
 				'placeholder' => '404',
 				'default'     => $this->get_default_field('redirect_urls_fields')['redirect_urls_options']['redirect_urls_tabs']['redirect_admin_url'],
 				'before'      => \get_site_url() . '/',
@@ -319,7 +328,12 @@ if ( ! class_exists( 'Security' ) ) {
 				'class'       => 'new-login-url new-register-url',
 				'title'       => __('New Register URL', 'adminify'),
 				'subtitle'    => __('Use default registration: leave empty.', 'adminify'),
-				'desc'        => __('For default enable <strong>"Membership: Anyone can register"</strong> in <a href="' . admin_url('options-general.php#users_can_register') . '" style="color: var(--adminify-primary);">Settings → General.</a> To use custom registration: Create a Page, then paste its permalink here (e.g. /register).', 'adminify'),
+				'desc'        => sprintf(
+					/* translators: %s: opening anchor tag pointing to Settings > General, closed by </a> in the next placeholder */
+					__('For default enable <strong>"Membership: Anyone can register"</strong> in %1$sSettings → General.%2$s To use custom registration: Create a Page, then paste its permalink here (e.g. /register).', 'adminify'),
+					'<a href="' . esc_url( admin_url('options-general.php#users_can_register') ) . '" style="color: var(--adminify-primary);">',
+					'</a>'
+				),
 				'placeholder' => 'wp-login.php?action=register',
 				'before'      => \get_site_url() . '/',
 				// 'after'       => '/',
@@ -444,7 +458,7 @@ if ( ! class_exists( 'Security' ) ) {
 				'type'        => 'select',
 				'title'       => __('Capability', 'adminify'),
 				'placeholder' => __('Select a Capability', 'adminify'),
-				'options'     => '\WPAdminify\Inc\Classes\Helper::get_capability_options',
+				'options'     => '\PXLBSAdminify\Inc\Classes\Helper::get_capability_options',
 				'default'     => $this->get_default_field('redirect_urls_fields')['redirect_urls_options']['redirect_urls_tabs']['login_redirects']['redirect_cap'],
 				'dependency'  => ['user_types', '==', 'user_cap'],
 			];
@@ -521,7 +535,7 @@ if ( ! class_exists( 'Security' ) ) {
 				'type'        => 'select',
 				'title'       => __('Capability', 'adminify'),
 				'placeholder' => __('Select a Capability', 'adminify'),
-				'options'     => '\WPAdminify\Inc\Classes\Helper::get_capability_options',
+				'options'     => '\PXLBSAdminify\Inc\Classes\Helper::get_capability_options',
 				'default'     => $this->get_default_field('redirect_urls_fields')['redirect_urls_options']['redirect_urls_tabs']['logout_redirects']['redirect_cap'],
 				'dependency'  => ['user_types', '==', 'user_cap'],
 			];
@@ -560,6 +574,7 @@ if ( ! class_exists( 'Security' ) ) {
 				'text_off'   => __('Hide', 'adminify'),
 				'text_width' => 80,
 				'title'      => __('Username Change', 'adminify'),
+				/* translators: %s: URL to the documentation page */
 				'subtitle'   => sprintf(__('Remove Comments for Media attachment Template <a href="%s">More Details</a> ', 'adminify'), esc_url('https://wpadminify.com/docs')),
 				'default'    => $this->get_default_field('users_security')['change_username'],
 			];
@@ -570,6 +585,7 @@ if ( ! class_exists( 'Security' ) ) {
 				'text_off'   => __('Hide', 'adminify'),
 				'text_width' => 80,
 				'title'      => __('Limit Login Attempts', 'adminify'),
+				/* translators: %s: URL to the documentation page */
 				'subtitle'   => sprintf(__('Prevent brute force attacks by limiting the number of failed login attempts per IP address. <a href="%s">More Details</a> ', 'adminify'), esc_url('https://wpadminify.com/docs')),
 				'default'    => $this->get_default_field('users_security')['limit_logins'],
 			];
@@ -603,7 +619,7 @@ if ( ! class_exists( 'Security' ) ) {
 					'id'         => 'security_rest_api_enable',
 					'type'       => 'switcher',
 					'class'      => 'adminify-pl-0 adminify-pt-0',
-					'title'      => __('', 'adminify'),
+					'title'      => '',
 					'text_on'    => __('Show', 'adminify'),
 					'text_off'   => __('Hide', 'adminify'),
 					'text_width' => 80,
@@ -612,7 +628,7 @@ if ( ! class_exists( 'Security' ) ) {
 				[
 					'id'         => 'security_rest_api_data',
 					'type'       => 'checkbox',
-					'title'      => __('', 'adminify'),
+					'title'      => '',
 					'class'      => 'adminify-one-col',
 					'options'    => $json_api_fields_data,
 					'default'    => $this->get_default_field('security_rest_api')['security_rest_api_data'],
@@ -656,7 +672,7 @@ if ( ! class_exists( 'Security' ) ) {
 					[
 						'id'         => 'post_archives_enable',
 						'type'       => 'switcher',
-						'title'      => __('', 'adminify'),
+						'title'      => '',
 						'text_on'    => __('Show', 'adminify'),
 						'text_off'   => __('Hide', 'adminify'),
 						'text_width' => 80,
@@ -667,7 +683,7 @@ if ( ! class_exists( 'Security' ) ) {
 						'id'         => 'post_archives_data',
 						'type'       => 'checkbox',
 						'class'      => 'adminify-one-col',
-						'title'      => __('', 'adminify'),
+						'title'      => '',
 						'options'    => $archive_fields_data,
 						'default'    => $this->get_default_field('post_archives')['post_archives_data'],
 						'dependency' => ['post_archives_enable', '==', 'true', true],
@@ -694,6 +710,7 @@ if ( ! class_exists( 'Security' ) ) {
 					'type'       => 'switcher',
 					'title'      => '',
 					'class'		 => 'adminify-pt-0 adminify-pl-0 adminify-col-fit',
+					/* translators: %s: URL to the Discussion settings page */
 					'label'      => sprintf(__('Add your Custom Gravatar Images for Comments. Select Avatar Image from  <a href="%s">Settings>Discussion>Default Avatar</a>.', 'adminify'), esc_url(admin_url('options-discussion.php'))),
 					'text_on'    => __('Yes', 'adminify'),
 					'text_off'   => __('No', 'adminify'),
@@ -743,7 +760,8 @@ if ( ! class_exists( 'Security' ) ) {
 				'id'         => 'disable_automatic_emails',
 				'type'       => 'switcher',
 				'class'		=> 'adminify-pro-fieldset adminify-pro-notice',
-				'title'      => sprintf(__('Disable Automatic Updates Emails %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge HTML */
+				'title'      => sprintf(__('Disable Automatic Updates Emails %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'subtitle'   => __('Stop getting emails about automatic updates on your WordPress site.', 'adminify'),
 				'text_on'    => __('Yes', 'adminify'),
 				'text_off'   => __('No', 'adminify'),
@@ -755,7 +773,8 @@ if ( ! class_exists( 'Security' ) ) {
 				'id'         => 'disable_language_switcher_login',
 				'type'       => 'switcher',
 				'class'		=> 'adminify-pro-fieldset adminify-pro-notice',
-				'title'      => sprintf(__('Disable Login Screen Language Switcher %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge HTML */
+				'title'      => sprintf(__('Disable Login Screen Language Switcher %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'subtitle'   => __('Hide the Language Switcher on the default WordPress login screen.', 'adminify'),
 				'text_on'    => __('Yes', 'adminify'),
 				'text_off'   => __('No', 'adminify'),
@@ -782,9 +801,12 @@ if ( ! class_exists( 'Security' ) ) {
 				'close_front'          => __('Close Comments from front-end', 'adminify'),
 				'comments_notes'       => __('Remove "Your email address will not be published..." from comment form template', 'adminify'),
 				'comments_url_field'   => __('Remove website Field (URL)  from comment form template', 'adminify'),
-				'replace_author_link'  => sprintf(__('Remove Link from comment "Author Name" & replace to JavaScript? %s'), Utils::adminify_upgrade_pro_class()),
-				'replace_comment_link' => sprintf(__('Comments Content disable auto linking, display comments links as plain text, replace Comment Links to JavaScript? %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
-				'hide_existing'        => sprintf(__('Hide Existing Comments from Frontend? %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
+				/* translators: %s: Pro upgrade badge CSS class */
+				'replace_author_link'  => sprintf(__('Remove Link from comment "Author Name" & replace to JavaScript? %s', 'adminify'), Utils::upgrade_pro_class()),
+				/* translators: %s: Pro upgrade badge CSS class */
+				'replace_comment_link' => sprintf(__('Comments Content disable auto linking, display comments links as plain text, replace Comment Links to JavaScript? %s', 'adminify'), Utils::upgrade_pro_class()),
+				/* translators: %s: Pro upgrade badge CSS class */
+				'hide_existing'        => sprintf(__('Hide Existing Comments from Frontend? %s', 'adminify'), Utils::upgrade_pro_class()),
 			];
 
 			// check if WP_Widget_Recent_Comments is used
@@ -803,7 +825,7 @@ if ( ! class_exists( 'Security' ) ) {
 					[
 						'id'         => 'enable_disable_comments',
 						'type'       => 'switcher',
-						'title'      => __('', 'adminify'),
+						'title'      => '',
 						'class'      => 'adminify-pl-0 adminify-pt-0',
 						'text_on'    => __('Show', 'adminify'),
 						'text_off'   => __('Hide', 'adminify'),
@@ -815,7 +837,7 @@ if ( ! class_exists( 'Security' ) ) {
 						'type'       => 'checkbox',
 						'title'      => __('for Post Types', 'adminify'),
 						'subtitle'   => __('Check for enable Post Types', 'adminify'),
-						'options'    => 'WPAdminify\Inc\Admin\Options\Productivity::get_all_post_types',
+						'options'    => 'PXLBSAdminify\Inc\Admin\Options\Productivity::get_all_post_types',
 						'default'    => $this->get_default_field('disable_comments')['post_types'],
 						'dependency' => ['enable_disable_comments', '==', 'true', true],
 					],
@@ -823,7 +845,7 @@ if ( ! class_exists( 'Security' ) ) {
 					// 	'id'         => 'disable_comments_post_types',
 					// 	'type'       => 'notice',
 					// 	'style'      => 'warning',
-					// 	'content'    => Utils::adminify_upgrade_pro(),
+					// 	'content'    => Utils::upgrade_pro_notice(),
 					// 	'dependency' => [
 					// 		[ 'post_types', 'not-any', 'post,page', 'true' ],
 					// 		[ 'post_types', '!=', '', 'true' ],
@@ -832,7 +854,7 @@ if ( ! class_exists( 'Security' ) ) {
 					[
 						'id'         => 'apply_for',
 						'type'       => 'checkbox',
-						'title'      => __('', 'adminify'),
+						'title'      => '',
 						'class'      => 'adminify-one-col',
 						'options'    => $disable_comments_for,
 						'default'    => $this->get_default_field('disable_comments')['apply_for'],
@@ -854,12 +876,12 @@ if ( ! class_exists( 'Security' ) ) {
 			$fields[] = [
 				'id'      => 'security_subheading',
 				'type'    => 'subheading',
-				'content' => Utils::adminfiy_help_urls(
+				'content' => Utils::help_urls(
 					__('"WordPress" White Label Settings', 'adminify'),
 					'https://wpadminify.com/docs/security/',
 					'',
 					'https://www.facebook.com/groups/jeweltheme',
-					\WPAdminify\Inc\Admin\AdminSettings::support_url()
+					\PXLBSAdminify\Inc\Admin\AdminSettings::support_url()
 				)
 			];
 
@@ -874,7 +896,7 @@ if ( ! class_exists( 'Security' ) ) {
 
 			$this->security_custom_gravatar( $fields );
 
-			$fields = apply_filters('adminify_settings/security', $fields, $this);
+			$fields = apply_filters('pxlbsadminify_settings/security', $fields, $this);
 
 			  // Tweaks Section
 			\ADMINIFY::createSection(

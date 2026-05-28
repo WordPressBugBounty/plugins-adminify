@@ -1,8 +1,12 @@
 <?php
 
-namespace WPAdminify\Inc\Classes\Notifications;
+namespace PXLBSAdminify\Inc\Classes\Notifications;
 
-use WPAdminify\Inc\Classes\Notifications\Model\Notice;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
+use PXLBSAdminify\Inc\Classes\Notifications\Model\Notice;
 
 if (!class_exists('Latest_Updates')) {
 	/**
@@ -22,6 +26,7 @@ if (!class_exists('Latest_Updates')) {
 		 */
 		private function is_adminify_settings_page() {
 			global $pagenow;
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
 			return is_admin() && $pagenow === 'admin.php' && isset( $_GET['page'] ) && $_GET['page'] === 'wp-adminify-settings';
 		}
 
@@ -35,8 +40,8 @@ if (!class_exists('Latest_Updates')) {
 			parent::__construct();
 			if(is_admin()){
 				// TODO: Need to check about conflicts with other plugins
-        // add_action( 'admin_footer', array( $this, 'jltwp_handle_plugin_update_notice_dismiss' ),99999 );
-				add_action( 'wp_ajax_jltwp_plugin_update_info', array( $this, 'jltwp_plugin_update_info' ) );
+        // add_action( 'admin_footer', array( $this, 'pxlbsadminify_handle_plugin_update_notice_dismiss' ),99999 );
+				add_action( 'wp_ajax_pxlbsadminify_plugin_update_info', array( $this, 'pxlbsadminify_plugin_update_info' ) );
       }
 		}
 
@@ -49,7 +54,7 @@ if (!class_exists('Latest_Updates')) {
 		 *
 		 * @return void
 		 */
-		public function jltwp_plugin_update_info() {
+		public function pxlbsadminify_plugin_update_info() {
 			if (!current_user_can('install_plugins')) {
 				return;
 			}
@@ -57,10 +62,10 @@ if (!class_exists('Latest_Updates')) {
 			// Verify nonce for security.
 			check_ajax_referer( 'dismiss_notice_nonce', 'nonce' );
 
-			$action_type = isset( $_POST['action_type'] ) ? sanitize_text_field( $_POST['action_type'] ) : 'dismiss';
+			$action_type = isset( $_POST['action_type'] ) ? sanitize_text_field( wp_unslash( $_POST['action_type'] ) ) : 'dismiss';
 			$option_value = ( 'forever' === $action_type ) ? 'forever' : 'dismissed';
 
-			wp_send_json_success( array( 'message' => 'Notice dismissed.', 'data' => update_option('_wpadminify_plugin_update_info_notice', $option_value ) ) );
+			wp_send_json_success( array( 'message' => 'Notice dismissed.', 'data' => update_option('pxlbsadminify_plugin_update_info_notice', $option_value ) ) );
 		}
 
 
@@ -75,30 +80,29 @@ if (!class_exists('Latest_Updates')) {
 				return;
 			}
 
-			$forever_notice = get_option('_wpadminify_plugin_update_info_notice', true );
+			$forever_notice = get_option('pxlbsadminify_plugin_update_info_notice', true );
 			if( 'forever' === $forever_notice ){
 				return;
 			}
 
 			if("dismissed" !== $forever_notice){
-				$jltwp_adminify_changelog_message = sprintf(
-					__('%3$s %4$s %5$s %6$s <br> <strong>Check Changelogs for </strong> <a href="%1$s" target="__blank">%2$s</a>', 'adminify'),
+				$pxlbsadminify_changelog_message = sprintf(
+					/* translators: %1$s: changelogs page URL. %2$s: link anchor text. %3$s: plugin update heading HTML. %4$s, %5$s, %6$s, %7$s %8$s %9$s %10$s %11$s: changelog list item HTML. */
+					__('%3$s %4$s <br> <strong>Check Changelogs for </strong> <a href="%1$s" target="__blank">%2$s</a>', 'adminify'),
 					esc_url_raw('https://wpadminify.com/changelogs'),
 					__('More about Updates ', 'adminify'),
 					/** Changelog Items
 					 * Starts from: %3$s
 					 */
 
-					'<h3 class="adminify-update-head">' . WP_ADMINIFY . ' <span><small><em>v' . esc_html(WP_ADMINIFY_VER) . '</em></small>' . __(' has some updates..', 'adminify') . '</span></h3><br>', // %3$s
+					'<h3 class="adminify-update-head">' . PXLBSADMINIFY . ' <span><small><em>v' . esc_html(PXLBSADMINIFY_VER) . '</em></small>' . __(' has some updates..', 'adminify') . '</span></h3><br>', // %3$s
 					// changelogs
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Fluent Plugins with Adminify UI white screen issue fixed. </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Multisite Setup Wizard wrong url issue fixed. </span><br>', 'adminify'),
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Setup Wizard not hiding after completed issue fixed. </span><br>', 'adminify'),
+					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Admin Bar Editor with Adminify UI white screen issue fixed. </span><br>', 'adminify'),
 				);
-				printf(wp_kses_post($jltwp_adminify_changelog_message));
+				printf(wp_kses_post($pxlbsadminify_changelog_message));
 			}
 
-			$this->jltwp_handle_plugin_update_notice_dismiss();
+			$this->pxlbsadminify_handle_plugin_update_notice_dismiss();
 		}
 
 		/**
@@ -112,7 +116,7 @@ if (!class_exists('Latest_Updates')) {
 				return;
 			}
 
-			$notice_status = get_option('_wpadminify_plugin_update_info_notice', true );
+			$notice_status = get_option('pxlbsadminify_plugin_update_info_notice', true );
 			if ( 'forever' === $notice_status ) {
 				echo '<div class="wp-adminify-notice-hidden" style="display:none;"><div>';
 				return;
@@ -136,7 +140,7 @@ if (!class_exists('Latest_Updates')) {
 			}else{ echo '<div class="wp-adminify-notice-hidden" style="display:none;"><div>';}
 		}
 
-		public function jltwp_handle_plugin_update_notice_dismiss() { ?>
+		public function pxlbsadminify_handle_plugin_update_notice_dismiss() { ?>
 
 			<!-- Update Notice Confirmation Modal -->
 			<div id="wp-adminify-update-notice-modal" class="wp-adminify-update-modal-overlay">
@@ -369,9 +373,9 @@ if (!class_exists('Latest_Updates')) {
 					var $modal = $('#wp-adminify-update-notice-modal');
 					var $noticeContainer = null;
 
-					function jltwp_adminify_run_dismiss_ajax(action_type) {
+					function pxlbsadminify_run_dismiss_ajax(action_type) {
 						$.post('<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>', {
-							action: 'jltwp_plugin_update_info',
+							action: 'pxlbsadminify_plugin_update_info',
 							_wpnonce: '<?php echo esc_js( wp_create_nonce( 'dismiss_notice_nonce' ) ); ?>',
 							action_type: action_type
 						}).then(function(response) {
@@ -397,7 +401,7 @@ if (!class_exists('Latest_Updates')) {
 						if ($noticeContainer) {
 							$noticeContainer.slideUp(200);
 						}
-						jltwp_adminify_run_dismiss_ajax('dismiss');
+						pxlbsadminify_run_dismiss_ajax('dismiss');
 						closeModal();
 					});
 
@@ -407,7 +411,7 @@ if (!class_exists('Latest_Updates')) {
 						if ($noticeContainer) {
 							$noticeContainer.slideUp(200);
 						}
-						jltwp_adminify_run_dismiss_ajax('forever');
+						pxlbsadminify_run_dismiss_ajax('forever');
 						closeModal();
 					});
 

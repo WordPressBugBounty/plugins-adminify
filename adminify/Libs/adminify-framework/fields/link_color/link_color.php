@@ -42,7 +42,7 @@ if ( ! class_exists( 'ADMINIFY_Field_link_color' ) ) {
 
       $value = wp_parse_args( $this->value, $default_values );
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       foreach ( $color_props as $color_prop_key => $color_prop_value ) {
 
@@ -52,14 +52,14 @@ if ( ! class_exists( 'ADMINIFY_Field_link_color' ) ) {
 
           echo '<div class="adminify--left adminify-field-color">';
           echo '<div class="adminify--title">'. esc_attr( $color_prop_value ) .'</div>';
-          echo '<input type="text" name="'. esc_attr( $this->field_name( '['. $color_prop_key .']' ) ) .'" value="'. esc_attr( $value[$color_prop_key] ) .'" class="adminify-color"'. $default_attr . $this->field_attributes() .'/>';
+          echo '<input type="text" name="'. esc_attr( $this->field_name( '['. $color_prop_key .']' ) ) .'" value="'. esc_attr( $value[$color_prop_key] ) .'" class="adminify-color"'. $default_attr . $this->field_attributes() .'/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
           echo '</div>';
 
         }
 
       }
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

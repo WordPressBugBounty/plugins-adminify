@@ -1,10 +1,10 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\MenuEditor;
+namespace PXLBSAdminify\Inc\Modules\MenuEditor;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Admin\AdminSettings;
-use WPAdminify\Inc\Admin\AdminSettingsModel;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Admin\AdminSettings;
+use PXLBSAdminify\Inc\Admin\AdminSettingsModel;
 
 // no direct access allowed
 if (!defined('ABSPATH')) {
@@ -42,18 +42,18 @@ class MenuEditorAssets extends AdminSettingsModel
             $this->import_css();
 
             // Enqueue Styles
-            wp_enqueue_style('wp-adminify-icon-picker');
-            wp_enqueue_style('wp-adminify-select2');
-            wp_enqueue_style('wp-adminify-menu-editor');
+            wp_enqueue_style('adminify-icon-picker');
+            wp_enqueue_style('adminify-select2');
+            wp_enqueue_style('adminify-menu-editor');
 
             // Enqueue Scripts
-            wp_enqueue_script('wp-adminify-select2');
-            wp_enqueue_script('wp-adminify-icon-picker');
-            wp_enqueue_script('wp-adminify-menu-editor');
+            wp_enqueue_script('adminify-select2');
+            wp_enqueue_script('adminify-icon-picker');
+            wp_enqueue_script('adminify-menu-editor');
 
             wp_localize_script(
-                'wp-adminify-icon-picker',
-                'WPAdminifyIconPicker',
+                'adminify-icon-picker',
+                'PXLBSADMINIFY_ICON_PICKER',
                 [
                     'is_elementor_active' => Utils::is_plugin_active('elementor/elementor.php'),
                 ]
@@ -82,13 +82,13 @@ class MenuEditorAssets extends AdminSettingsModel
             'ajax_url'         => admin_url('admin-ajax.php'),
             'assets_manager'   => !empty($this->options['adminify_assets']) ? $this->options['adminify_assets'] : '',
             'plugins_icons'    => $plugins_icons,
-            'icon_picker_logo' => WP_ADMINIFY_ASSETS_IMAGE . 'logos/menu-icon.svg',
-            'security'         => wp_create_nonce('adminify-menu-editor-security-nonce'),
+            'icon_picker_logo' => PXLBSADMINIFY_ASSETS_IMAGE . 'logos/menu-icon.svg',
+            'security'         => wp_create_nonce('pxlbsadminify-menu-editor-security-nonce'),
             'max_upload_size'  => size_format(wp_max_upload_size()),
             'can_use_premium'  => jltwp_adminify()->can_use_premium_code__premium_only(),
             'baseurl'          => wp_upload_dir()['baseurl'],
         ];
-        wp_localize_script('wp-adminify-menu-editor', 'WPAdminifyMenuEditor', $localize_menu_data);
+        wp_localize_script('adminify-menu-editor', 'PXLBSADMINIFY_MENU_EDITOR', $localize_menu_data);
     }
 
     /**Import Menu CSS */
@@ -256,6 +256,6 @@ class MenuEditorAssets extends AdminSettingsModel
         $menu_editor_custom_css = preg_replace('/\s*([{}|:;,])\s+/', '$1', $menu_editor_custom_css);
         $menu_editor_custom_css = preg_replace('/\s\s+(.*)/', '$1', $menu_editor_custom_css);
 
-        wp_add_inline_style('wp-adminify-menu-editor', wp_strip_all_tags($menu_editor_custom_css));
+        wp_add_inline_style('adminify-menu-editor', wp_strip_all_tags($menu_editor_custom_css));
     }
 }

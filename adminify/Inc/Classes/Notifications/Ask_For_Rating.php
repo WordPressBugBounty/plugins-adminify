@@ -1,7 +1,11 @@
 <?php
-namespace WPAdminify\Inc\Classes\Notifications;
+namespace PXLBSAdminify\Inc\Classes\Notifications;
 
-use WPAdminify\Inc\Classes\Notifications\Model\Notice;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
+use PXLBSAdminify\Inc\Classes\Notifications\Model\Notice;
 
 if ( ! class_exists( 'Ask_For_Rating' ) ) {
 	/**
@@ -19,8 +23,8 @@ if ( ! class_exists( 'Ask_For_Rating' ) ) {
 		public function notice_content() {
 			printf(
 				'<h2 style="margin:0">Enjoying %1$s?</h2><p>%2$s</p>',
-				esc_html__( 'WP Adminify', 'adminify' ),
-				__( 'A positive rating will keep us motivated to continue supporting and improving this free plugin, and will help spread its popularity.<br> Your help is greatly appreciated!', 'adminify' )
+				esc_html__( 'Adminify', 'adminify' ),
+				wp_kses_post( __( 'A positive rating will keep us motivated to continue supporting and improving this free plugin, and will help spread its popularity.<br> Your help is greatly appreciated!', 'adminify' ) )
 			);
 		}
 
@@ -30,7 +34,7 @@ if ( ! class_exists( 'Ask_For_Rating' ) ) {
 		 * @author Jewel Theme <support@jeweltheme.com>
 		 */
 		public function plugin_rate_url() {
-			return 'https://wordpress.org/support/plugin/adminify/reviews/?filter=5' ;
+			return 'https://wordpress.org/support/plugin/adminify/reviews/' ;
 		}
 
 		/**

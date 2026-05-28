@@ -133,7 +133,7 @@ if ( ! class_exists( 'ADMINIFY_Comment_Metabox' ) ) {
                 $tab_icon  = ( ! empty( $section['icon'] ) ) ? '<i class="adminify-tab-icon '. esc_attr( $section['icon'] ) .'"></i>' : '';
                 $tab_error = ( ! empty( $errors['sections'][$tab_key] ) ) ? '<i class="adminify-label-error adminify-error">!</i>' : '';
 
-                echo '<li><a href="#">'. $tab_icon . $section['title'] . $tab_error .'</a></li>';
+                echo '<li><a href="#">'. wp_kses_post( $tab_icon ) . esc_html( $section['title'] ) . wp_kses_post( $tab_error ) .'</a></li>';
 
                 $tab_key++;
 
@@ -160,8 +160,8 @@ if ( ! class_exists( 'ADMINIFY_Comment_Metabox' ) ) {
 
               echo '<div class="adminify-section hidden'. esc_attr( $section_onload . $section_class ) .'">';
 
-              echo ( $section_title || $section_icon ) ? '<div class="adminify-section-title"><h3>'. $section_icon . $section_title .'</h3></div>' : '';
-              echo ( ! empty( $section['description'] ) ) ? '<div class="adminify-field adminify-section-description">'. $section['description'] .'</div>' : '';
+              echo ( $section_title || $section_icon ) ? '<div class="adminify-section-title"><h3>'. wp_kses_post( $section_icon ) . esc_html( $section_title ) .'</h3></div>' : '';
+              echo ( ! empty( $section['description'] ) ) ? '<div class="adminify-field adminify-section-description">'. wp_kses_post( $section['description'] ) .'</div>' : '';
 
               if ( ! empty( $section['fields'] ) ) {
 
@@ -230,9 +230,14 @@ if ( ! class_exists( 'ADMINIFY_Comment_Metabox' ) ) {
         return $comment_id;
       }
 
+      // Authorization: a valid nonce proves intent, not permission.
+      if ( ! current_user_can( 'edit_comment', $comment_id ) ) {
+        return $comment_id;
+      }
+
       // XSS ok.
       // No worries, This "POST" requests is sanitizing in the below foreach.
-      $request = ( ! empty( $_POST[ $this->unique ] ) ) ? $_POST[ $this->unique ] : array();
+      $request = ( ! empty( $_POST[ $this->unique ] ) ) ? wp_unslash( $_POST[ $this->unique ] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- each field is sanitized individually by the framework's per-field sanitize handlers.
 
       if ( ! empty( $request ) ) {
 
@@ -262,7 +267,12 @@ if ( ! class_exists( 'ADMINIFY_Comment_Metabox' ) ) {
 
                 } else {
 
-                  $data[$field_id] = $field_value;
+                  // A sanitize callback was declared but is not callable; never store raw input.
+                  if ( is_array( $field_value ) ) {
+                    $data[$field_id] = wp_kses_post_deep( $field_value );
+                  } else {
+                    $data[$field_id] = wp_kses_post( $field_value );
+                  }
 
                 }
 

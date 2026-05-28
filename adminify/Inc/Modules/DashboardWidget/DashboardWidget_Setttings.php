@@ -1,15 +1,15 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\DashboardWidget;
+namespace PXLBSAdminify\Inc\Modules\DashboardWidget;
 
-use WPAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Utils;
 // no direct access allowed
 if (!defined('ABSPATH')) {
 	exit;
 }
 
 /**
- * WPAdminify
+ * PXLBSAdminify
  *
  * @package Module: Dashboard Widget
  *
@@ -52,7 +52,7 @@ if (!class_exists('DashboardWidget_Setttings')) {
 				background-color: transparent;
 			}';
 
-			printf('<style>body.wp-adminify{%s}</style>', wp_strip_all_tags($css));
+			printf('<style>body.wp-adminify{%s}</style>', esc_html(wp_strip_all_tags($css)));
 		}
 
 
@@ -87,7 +87,7 @@ if (!class_exists('DashboardWidget_Setttings')) {
 						'dashw_type_icon_tooltip' => '',
 						'dashw_type_icon_link'    => [
 							'url'    => 'https://wpadminify.com/',
-							'text'   => __('WP Adminify', 'adminify'),
+							'text'   => __('Adminify', 'adminify'),
 							'target' => '_blank',
 						],
 						'dashw_type_shortcode'    => '',
@@ -236,7 +236,7 @@ if (!class_exists('DashboardWidget_Setttings')) {
 					'id'         => 'elementor_section_id',
 					'type'       => 'select',
 					'title'      => __('Saved Section', 'adminify'),
-					'options'    => 'WPAdminify\Inc\Utils::get_section_template_options',
+					'options'    => 'PXLBSAdminify\Inc\Utils::get_section_template_options',
 					'default'    => $this->get_default_field('dashboard_widget_types')['welcome_dash_widget']['elementor_section_id'],
 					'dependency' => ['widget_template_type|enable_custom_welcome_dash_widget', '==|==', 'elementor_section|true', true],
 				];
@@ -245,7 +245,7 @@ if (!class_exists('DashboardWidget_Setttings')) {
 					'id'         => 'elementor_widget_id',
 					'type'       => 'select',
 					'title'      => __('Saved Widget', 'adminify'),
-					'options'    => 'WPAdminify\Inc\Utils::get_widget_template_options',
+					'options'    => 'PXLBSAdminify\Inc\Utils::get_widget_template_options',
 					'default'    => $this->get_default_field('dashboard_widget_types')['welcome_dash_widget']['elementor_widget_id'],
 					'dependency' => ['widget_template_type|enable_custom_welcome_dash_widget', '==|==', 'elementor_widget|true', true],
 				];
@@ -254,7 +254,7 @@ if (!class_exists('DashboardWidget_Setttings')) {
 					'id'         => 'elementor_template_id',
 					'type'       => 'select',
 					'title'      => __('Saved Template', 'adminify'),
-					'options'    => 'WPAdminify\Inc\Utils::get_page_template_options',
+					'options'    => 'PXLBSAdminify\Inc\Utils::get_page_template_options',
 					'default'    => $this->get_default_field('dashboard_widget_types')['welcome_dash_widget']['elementor_template_id'],
 					'dependency' => ['widget_template_type|enable_custom_welcome_dash_widget', '==|==', 'elementor_template|true', true],
 				];
@@ -264,7 +264,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$welcome_widget_fields[] = [
 				'id'         => 'dismissible',
 				'type'       => 'switcher',
-				'title'      => sprintf(__('Dismissible %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge */
+				'title'      => sprintf(__('Dismissible %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-fieldset adminify-pro-notice',
 				'default'    => $this->get_default_field('dashboard_widget_types')['welcome_dash_widget']['dismissible'],
 				'dependency' => ['enable_custom_welcome_dash_widget', '==', 'true', true],
@@ -302,12 +303,12 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$dash_widgets_setting[] = [
 				'type'    => 'subheading',
 				'id'      => 'dashboard_widget_types_subheading',
-				'content' => Utils::adminfiy_help_urls(
+				'content' => Utils::help_urls(
 					__('Custom Dashboard & Welcome Widgets', 'adminify'),
 					'https://wpadminify.com/kb/wordpress-custom-dashboard-widget',
 					'https://www.youtube.com/playlist?list=PLqpMw0NsHXV-EKj9Xm1DMGa6FGniHHly8',
 					'https://www.facebook.com/groups/jeweltheme',
-					\WPAdminify\Inc\Admin\AdminSettings::support_url()
+					\PXLBSAdminify\Inc\Admin\AdminSettings::support_url()
 				),
 			];
 
@@ -420,7 +421,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$dashboard_group_fields[] = [
 				'id'         => 'dashw_type_icon',
 				'type'       => 'icon',
-				'title'      => sprintf(__('Icon %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge */
+				'title'      => sprintf(__('Icon %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-fieldset  adminify-pro-notice adminify-pro-pointer',
 				'dependency' => ['widget_type', '==', 'icon'],
 				'default'    => $this->get_default_field('dashboard_widget_types')['dashboard_widgets']['dashw_type_icon'],
@@ -429,7 +431,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$dashboard_group_fields[] = [
 				'id'         => 'dashw_type_icon_tooltip',
 				'type'       => 'text',
-				'title'      => sprintf(__('Tooltip Text %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge */
+				'title'      => sprintf(__('Tooltip Text %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-fieldset  adminify-pro-notice adminify-pro-pointer',
 				'dependency' => ['widget_type', '==', 'icon'],
 				'default'    => $this->get_default_field('dashboard_widget_types')['dashboard_widgets']['dashw_type_icon_tooltip'],
@@ -439,7 +442,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$dashboard_group_fields[] = [
 				'id'         => 'dashw_type_icon_link',
 				'type'       => 'link',
-				'title'      => sprintf(__('Link %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge */
+				'title'      => sprintf(__('Link %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
 				'default'    => $this->get_default_field('dashboard_widget_types')['dashboard_widgets']['dashw_type_icon_link'],
 				'dependency' => ['widget_type', '==', 'icon'],
@@ -449,7 +453,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$dashboard_group_fields[] = [
 				'id'         => 'dashw_type_shortcode',
 				'type'       => 'textarea',
-				'title'      => sprintf(__('Shortcode %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge */
+				'title'      => sprintf(__('Shortcode %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
 				'dependency' => ['widget_type', '==', 'shortcode'],
 				'default'    => $this->get_default_field('dashboard_widget_types')['dashboard_widgets']['dashw_type_shortcode'],
@@ -459,7 +464,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$dashboard_group_fields[] = [
 				'id'         => 'dashw_type_script',
 				'type'       => 'code_editor',
-				'title'      => sprintf(__('Script %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge */
+				'title'      => sprintf(__('Script %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
 				'subtitle'   => __('Write Custom Script code inside <strong>&lt;script&gt;&lt;/script&gt;</strong> tag.', 'adminify'),
 				'settings'   => [
@@ -474,7 +480,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$dashboard_group_fields[] = [
 				'id'         => 'dashw_type_rss_feed',
 				'type'       => 'text',
-				'title'      => sprintf(__('RSS Feed URL %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge */
+				'title'      => sprintf(__('RSS Feed URL %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
 				'dependency' => ['widget_type', '==', 'rss_feed'],
 				'default'    => $this->get_default_field('dashboard_widget_types')['dashboard_widgets']['dashw_type_rss_feed'],
@@ -483,7 +490,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$dashboard_group_fields[] = [
 				'id'         => 'dashw_type_rss_count',
 				'type'       => 'number',
-				'title'      => sprintf(__('No. of Feed Posts %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge */
+				'title'      => sprintf(__('No. of Feed Posts %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
 				'default'    => $this->get_default_field('dashboard_widget_types')['dashboard_widgets']['dashw_type_rss_count'],
 				'dependency' => ['widget_type', '==', 'rss_feed'],
@@ -492,7 +500,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$dashboard_group_fields[] = [
 				'id'         => 'dashw_type_rss_excerpt',
 				'type'       => 'switcher',
-				'title'      => sprintf(__('Show Excerpt? %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge */
+				'title'      => sprintf(__('Show Excerpt? %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
 				'text_on'    => __('Yes', 'adminify'),
 				'text_off'   => __('No', 'adminify'),
@@ -503,7 +512,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$dashboard_group_fields[] = [
 				'id'         => 'dashw_type_rss_date',
 				'type'       => 'switcher',
-				'title'      => sprintf(__('Show Date? %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge */
+				'title'      => sprintf(__('Show Date? %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
 				'text_on'    => __('Yes', 'adminify'),
 				'text_off'   => __('No', 'adminify'),
@@ -515,7 +525,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$dashboard_group_fields[] = [
 				'id'         => 'dashw_type_rss_author',
 				'type'       => 'switcher',
-				'title'      => sprintf(__('Show Author? %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge */
+				'title'      => sprintf(__('Show Author? %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
 				'text_on'    => __('Yes', 'adminify'),
 				'text_off'   => __('No', 'adminify'),
@@ -556,7 +567,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$dashboard_widget_video[] = [
 				'id'      => 'dashw_type_video_title',
 				'type'    => 'text',
-				'title'   => sprintf(__('Text %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge */
+				'title'   => sprintf(__('Text %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'   => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
 				'default' => $this->get_default_field('dashboard_widget_types')['dashboard_widgets']['dashw_video']['dashw_type_video_title'],
 				'dependency' => ['dashw_type_video_type', '!==', 'iframe', true],
@@ -566,7 +578,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$dashboard_widget_video[] = [
 				'id'         => 'dashw_type_video_type_self_hosted',
 				'type'       => 'media',
-				'title'      => sprintf(__('Upload Video %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge */
+				'title'      => sprintf(__('Upload Video %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
 				'library'    => 'video',
 				'preview'    => true,
@@ -577,7 +590,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$dashboard_widget_video[] = [
 				'id'         => 'dashw_type_video_type_youtube',
 				'type'       => 'text',
-				'title'      => sprintf(__('Youtube URL %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge */
+				'title'      => sprintf(__('Youtube URL %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
 				'validate'   => 'adminify_validate_url',
 				'dependency' => ['dashw_type_video_type', '==', 'youtube'],
@@ -587,7 +601,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$dashboard_widget_video[] = [
 				'id'         => 'dashw_type_video_type_vimeo',
 				'type'       => 'text',
-				'title'      => sprintf(__('Vimeo URL %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge */
+				'title'      => sprintf(__('Vimeo URL %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
 				'validate'   => 'adminify_validate_url',
 				'dependency' => ['dashw_type_video_type', '==', 'vimeo'],
@@ -597,7 +612,8 @@ if (!class_exists('DashboardWidget_Setttings')) {
 			$dashboard_widget_video[] = [
 				'id'         => 'dashw_type_video_type_iframe',
 				'type'       => 'text',
-				'title'      => sprintf(__('iFrame Video URL %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: Pro upgrade badge */
+				'title'      => sprintf(__('iFrame Video URL %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
 				'validate'   => 'adminify_validate_url',
 				'dependency' => ['dashw_type_video_type', '==', 'iframe'],
@@ -617,7 +633,7 @@ if (!class_exists('DashboardWidget_Setttings')) {
 				[
 
 					// Framework Title
-					'framework_title'         => __('WP Adminify Dashboard Widget <small>by Jewel Theme</small>', 'adminify'),
+					'framework_title'         => __('Adminify Dashboard Widget <small>by Jewel Theme</small>', 'adminify'),
 					'framework_class'         => 'adminify-dashboard-widgets',
 
 					// menu settings
@@ -676,7 +692,7 @@ if (!class_exists('DashboardWidget_Setttings')) {
 
 			$dash_widgets_setting = [];
 			$this->dash_widget_setting_setup($dash_widgets_setting);
-			$dash_widgets_setting = apply_filters('adminify_settings/dashboar_widgets', $dash_widgets_setting, $this);
+			$dash_widgets_setting = apply_filters('pxlbsadminify_settings/dashboar_widgets', $dash_widgets_setting, $this);
 
 			\ADMINIFY::createSection(
 				$this->prefix,

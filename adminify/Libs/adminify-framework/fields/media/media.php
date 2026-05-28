@@ -58,7 +58,7 @@ if ( ! class_exists( 'ADMINIFY_Field_media' ) ) {
       $hidden_auto = ( empty( $this->value['url'] ) ) ? ' hidden' : '';
       $placeholder = ( empty( $this->field['placeholder'] ) ) ? ' placeholder="'.  esc_html__( 'Not selected', 'adminify' ) .'"' : '';
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       if ( ! empty( $args['preview'] ) ) {
 
@@ -67,7 +67,7 @@ if ( ! class_exists( 'ADMINIFY_Field_media' ) ) {
         $preview_style  = ( ! empty( $preview_width ) || ! empty( $preview_height ) ) ? ' style="'. esc_attr( $preview_width . $preview_height ) .'"': '';
 
         echo '<div class="adminify--preview'. esc_attr( $hidden_auto ) .'">';
-        echo '<div class="adminify-image-preview"'. $preview_style .'>';
+        echo '<div class="adminify-image-preview"'. $preview_style .'>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attribute value pre-escaped with esc_attr() where built.
         echo '<i class="adminify--remove fas fa-times"></i><span><img src="'. esc_url( $preview_src ) .'" class="adminify--src" /></span>';
         echo '</div>';
         echo '</div>';
@@ -75,9 +75,9 @@ if ( ! class_exists( 'ADMINIFY_Field_media' ) ) {
       }
 
       echo '<div class="adminify--placeholder">';
-      echo '<input type="text" name="'. esc_attr( $this->field_name( '[url]' ) ) .'" value="'. esc_attr( $this->value['url'] ) .'" class="adminify--url'. esc_attr( $hidden_url ) .'" readonly="readonly"'. $this->field_attributes() . $placeholder .' />';
-      echo '<a href="#" class="button button-primary adminify--button" data-library="'. esc_attr( $library ) .'" data-preview-size="'. esc_attr( $args['preview_size'] ) .'">'. $args['button_title'] .'</a>';
-      echo ( empty( $args['preview'] ) ) ? '<a href="#" class="button button-secondary adminify-warning-primary adminify--remove'. esc_attr( $hidden_auto ) .'">'. $args['remove_title'] .'</a>' : '';
+      echo '<input type="text" name="'. esc_attr( $this->field_name( '[url]' ) ) .'" value="'. esc_attr( $this->value['url'] ) .'" class="adminify--url'. esc_attr( $hidden_url ) .'" readonly="readonly"'. $this->field_attributes() . $placeholder .' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
+      echo '<a href="#" class="button button-primary adminify--button" data-library="'. esc_attr( $library ) .'" data-preview-size="'. esc_attr( $args['preview_size'] ) .'">'. esc_html( $args['button_title'] ) .'</a>';
+      echo ( empty( $args['preview'] ) ) ? '<a href="#" class="button button-secondary adminify-warning-primary adminify--remove'. esc_attr( $hidden_auto ) .'">'. esc_html( $args['remove_title'] ) .'</a>' : '';
       echo '</div>';
 
       echo '<input type="hidden" name="'. esc_attr( $this->field_name( '[id]' ) ) .'" value="'. esc_attr( $this->value['id'] ) .'" class="adminify--id"/>';
@@ -88,7 +88,7 @@ if ( ! class_exists( 'ADMINIFY_Field_media' ) ) {
       echo '<input type="hidden" name="'. esc_attr( $this->field_name( '[title]' ) ) .'" value="'. esc_attr( $this->value['title'] ) .'" class="adminify--title"/>';
       echo '<input type="hidden" name="'. esc_attr( $this->field_name( '[description]' ) ) .'" value="'. esc_attr( $this->value['description'] ) .'" class="adminify--description"/>';
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

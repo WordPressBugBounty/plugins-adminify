@@ -1,8 +1,8 @@
 <?php
 
-namespace WPAdminify\Inc\Admin\Frames;
+namespace PXLBSAdminify\Inc\Admin\Frames;
 
-use WPAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Utils;
 
 // no direct access allowed
 if (!defined('ABSPATH')) {
@@ -29,6 +29,7 @@ if (!class_exists('Frames')) {
             add_action('admin_enqueue_scripts', [$this, 'load_scripts']);
 
             // Reload the page after plugin activation/deactivation
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
             if ( isset( $_GET['activate'] ) || isset( $_GET['activate-multi'] ) || isset( $_GET['deactivate'] ) || isset( $_GET['deactivate-multi'] ) ) {
                 add_action('admin_footer', [$this, 'render_reload_script']);
             }
@@ -53,7 +54,7 @@ if (!class_exists('Frames')) {
 
         public function load_scripts()
         {
-            wp_enqueue_style('frame-adminify--frame', WP_ADMINIFY_ASSETS . 'admin/css/frame' . Utils::assets_ext('.css'), [], WP_ADMINIFY_VER);
+            wp_enqueue_style('frame-adminify--frame', PXLBSADMINIFY_ASSETS . 'admin/css/frame' . Utils::assets_ext('.css'), [], PXLBSADMINIFY_VER);
         }
 
         public function page_attribute($attr)

@@ -1,21 +1,21 @@
 <?php
 
-namespace WPAdminify\Inc\Admin;
+namespace PXLBSAdminify\Inc\Admin;
 
-use WPAdminify\Inc\Utils;
-use \WPAdminify\Inc\Classes\CustomAdminColumns;
-use \WPAdminify\Inc\Classes\Tweaks;
-use \WPAdminify\Inc\Classes\MenuStyle;
-use \WPAdminify\Inc\Classes\AdminBar;
-use \WPAdminify\Inc\Classes\OutputCSS;
-use \WPAdminify\Inc\Classes\ThirdPartyCompatibility;
-use \WPAdminify\Inc\Classes\AdminFooterText;
-use \WPAdminify\Inc\Admin\Modules;
-use \WPAdminify\Inc\Classes\Sidebar_Widgets;
-use \WPAdminify\Inc\Classes\Remove_DashboardWidgets;
-use WPAdminify\Inc\Classes\Adminify_Rollback;
-use WPAdminify\Inc\Admin\AdminSettings;
-use WPAdminify\Inc\Admin\Frames\Init as FrameInit;
+use PXLBSAdminify\Inc\Utils;
+use \PXLBSAdminify\Inc\Classes\CustomAdminColumns;
+use \PXLBSAdminify\Inc\Classes\Tweaks;
+use \PXLBSAdminify\Inc\Classes\MenuStyle;
+use \PXLBSAdminify\Inc\Classes\AdminBar;
+use \PXLBSAdminify\Inc\Classes\OutputCSS;
+use \PXLBSAdminify\Inc\Classes\ThirdPartyCompatibility;
+use \PXLBSAdminify\Inc\Classes\AdminFooterText;
+use \PXLBSAdminify\Inc\Admin\Modules;
+use \PXLBSAdminify\Inc\Classes\Sidebar_Widgets;
+use \PXLBSAdminify\Inc\Classes\Remove_DashboardWidgets;
+use PXLBSAdminify\Inc\Classes\Adminify_Rollback;
+use PXLBSAdminify\Inc\Admin\AdminSettings;
+use PXLBSAdminify\Inc\Admin\Frames\Init as FrameInit;
 
 // no direct access allowed
 if (!defined('ABSPATH')) {
@@ -37,20 +37,19 @@ if (!class_exists('Admin')) {
 		{
 			$this->options = AdminSettings::get_instance()->get();
 
-			$this->jltwp_adminify_modules_manager();
+			$this->pxlbsadminify_modules_manager();
 
 			// Remove Page Header like - Dashboard, Plugins, Users etc
 			// add_action('admin_head', [$this, 'remove_page_headline'], 99);
 
 
 			// Freemius Hooks
-			jltwp_adminify()->add_filter('plugin_icon', array($this, 'jltwp_adminify_logo_icon'));
+			jltwp_adminify()->add_filter('plugin_icon', array($this, 'pxlbsadminify_logo_icon'));
 
 			add_action('admin_menu', array($this, 'support_menu'), 1100);
 			add_action('network_admin_menu', array($this, 'support_menu'), 1100);
 			add_action('admin_menu', [$this, 'submenu_link_new_tab']);
-			add_action('plugins_loaded', array($this, 'jltwp_adminify_ajax_data_save'), 999);
-			// jltwp_adminify()->add_filter('support_forum_url', [$this, 'jltwp_adminify_support_forum_url']);
+			// jltwp_adminify()->add_filter('support_forum_url', [$this, 'pxlbsadminify_support_forum_url']);
 
 			// Disable deactivation feedback form
 			jltwp_adminify()->add_filter('show_deactivation_feedback_form', '__return_false');
@@ -60,21 +59,23 @@ if (!class_exists('Admin')) {
 
 			$this->disable_gutenberg_editor();
 
-			add_filter('show_admin_bar', [ $this, 'jltwp_adminify_removeAdminBar'], PHP_INT_MAX);
-			add_action('wp_head', [ $this,'jltwp_adminify_remove_header_for_baknd'], PHP_INT_MAX);
+			add_filter('show_admin_bar', [ $this, 'pxlbsadminify_removeAdminBar'], PHP_INT_MAX);
+			add_action('wp_head', [ $this,'pxlbsadminify_remove_header_for_baknd'], PHP_INT_MAX);
 
 		}
 
-		function jltwp_adminify_removeAdminBar($status)
+		function pxlbsadminify_removeAdminBar($status)
 		{
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
 			if (!empty($_GET['bknd']) && sanitize_text_field(wp_unslash($_GET['bknd']))) {
 				return false;
 			}
 			return $status;
 		}
 
-		function jltwp_adminify_remove_header_for_baknd() {
-				if (isset($_GET['bknd']) && $_GET['bknd'] == '1') {
+		function pxlbsadminify_remove_header_for_baknd() {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
+				if (isset($_GET['bknd']) && sanitize_text_field(wp_unslash($_GET['bknd'])) == '1') {
 						echo '<script>
 						jQuery(document).ready(function($){
 							$("header").remove();
@@ -82,13 +83,6 @@ if (!class_exists('Admin')) {
 						})
 					</script>';
 				}
-		}
-
-
-		public function jltwp_adminify_ajax_data_save()
-		{
-			$ajax_data_save = new \WPAdminify\Inc\Classes\Notifications\What_We_Collect();
-			$ajax_data_save->jltwp_adminify_collect_ajax_data();
 		}
 
 		public function disable_gutenberg_editor()
@@ -152,9 +146,9 @@ if (!class_exists('Admin')) {
 		 *
 		 * @return void
 		 */
-		public function jltwp_adminify_logo_icon($logo)
+		public function pxlbsadminify_logo_icon($logo)
 		{
-			$logo = WP_ADMINIFY_PATH . '/assets/images/adminify.svg';
+			$logo = PXLBSADMINIFY_PATH . '/assets/images/adminify.svg';
 			return $logo;
 		}
 
@@ -162,7 +156,7 @@ if (!class_exists('Admin')) {
 		/**
 		 * WP Adminify: Modules
 		 */
-		public function jltwp_adminify_modules_manager()
+		public function pxlbsadminify_modules_manager()
 		{
 			// new MenuStyle();
 			new Modules();
@@ -232,7 +226,7 @@ if (!class_exists('Admin')) {
 			// $adminify_ui = AdminSettings::get_instance()->get('admin_ui');
 			$support_url = 'adminify-support';
 			// if($adminify_ui ) {
-				// $support_urlsss = \WPAdminify\Inc\Admin\AdminSettings::support_url();
+				// $support_urlsss = \PXLBSAdminify\Inc\Admin\AdminSettings::support_url();
 			// }
 			add_submenu_page(
 				'wp-adminify-settings',       // Ex. wp-adminify-settings
@@ -263,8 +257,9 @@ if (!class_exists('Admin')) {
 		 */
 		public function handle_support_redirect()
 		{
-			if (isset($_GET['page']) && $_GET['page'] === 'adminify-support') {
-				$redirect_url = \WPAdminify\Inc\Admin\AdminSettings::support_url();
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
+			if (isset($_GET['page']) && sanitize_key(wp_unslash($_GET['page'])) === 'adminify-support') {
+				$redirect_url = \PXLBSAdminify\Inc\Admin\AdminSettings::support_url();
 
 				// Add the URLs to the allowed redirect hosts filter
 				add_filter('allowed_redirect_hosts', function($hosts) {
@@ -273,8 +268,7 @@ if (!class_exists('Admin')) {
 					return $hosts;
 				});
 
-				// Use wp_redirect for external URLs instead of wp_safe_redirect
-				wp_redirect($redirect_url, 301);
+				wp_safe_redirect($redirect_url, 301);
 				exit;
 			}
 		}

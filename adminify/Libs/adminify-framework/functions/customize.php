@@ -7,8 +7,8 @@
  * @version 1.0.0
  *
  */
-if ( ! class_exists( 'WP_Customize_Panel_ADMINIFY' ) && class_exists( 'WP_Customize_Panel' ) ) {
-  class WP_Customize_Panel_ADMINIFY extends WP_Customize_Panel {
+if ( ! class_exists( 'PXLBSAdminify_Customize_Panel' ) && class_exists( 'WP_Customize_Panel' ) ) {
+  class PXLBSAdminify_Customize_Panel extends WP_Customize_Panel {
     public $type = 'adminify';
   }
 }
@@ -21,8 +21,8 @@ if ( ! class_exists( 'WP_Customize_Panel_ADMINIFY' ) && class_exists( 'WP_Custom
  * @version 1.0.0
  *
  */
-if ( ! class_exists( 'WP_Customize_Section_ADMINIFY' ) && class_exists( 'WP_Customize_Section' ) ) {
-  class WP_Customize_Section_ADMINIFY extends WP_Customize_Section {
+if ( ! class_exists( 'PXLBSAdminify_Customize_Section' ) && class_exists( 'WP_Customize_Section' ) ) {
+  class PXLBSAdminify_Customize_Section extends WP_Customize_Section {
     public $type = 'adminify';
   }
 }
@@ -35,8 +35,8 @@ if ( ! class_exists( 'WP_Customize_Section_ADMINIFY' ) && class_exists( 'WP_Cust
  * @version 1.0.0
  *
  */
-if ( ! class_exists( 'WP_Customize_Control_ADMINIFY' ) && class_exists( 'WP_Customize_Control' ) ) {
-  class WP_Customize_Control_ADMINIFY extends WP_Customize_Control {
+if ( ! class_exists( 'PXLBSAdminify_Customize_Control' ) && class_exists( 'WP_Customize_Control' ) ) {
+  class PXLBSAdminify_Customize_Control extends WP_Customize_Control {
 
     public $type   = 'adminify';
     public $field  = '';
@@ -83,7 +83,7 @@ if ( ! class_exists( 'WP_Customize_Control_ADMINIFY' ) && class_exists( 'WP_Cust
       $id    = 'customize-control-' . str_replace( array( '[', ']' ), array( '-', '' ), $this->id );
       $class = 'customize-control customize-control-'. $this->type . $visible;
 
-      echo '<li id="'. esc_attr( $id ) .'" class="'. esc_attr( $class ) .'"'. $depend .'>';
+      echo '<li id="'. esc_attr( $id ) .'" class="'. esc_attr( $class ) .'"'. $depend .'>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- value pre-escaped where built.
       $this->render_field_content();
       echo '</li>';
 
@@ -130,7 +130,7 @@ if ( ! class_exists( 'WP_Customize_Control_ADMINIFY' ) && class_exists( 'WP_Cust
 
       $this->field['dependency'] = array();
 
-      echo '<div class="adminify-customize-field'. esc_attr( $class ) .'"'. $atts .'>';
+      echo '<div class="adminify-customize-field'. esc_attr( $class ) .'"'. $atts .'>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- value pre-escaped where built.
 
       ADMINIFY::field( $this->field, $this->value(), $this->unique, 'customize' );
 

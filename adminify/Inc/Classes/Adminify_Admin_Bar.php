@@ -1,6 +1,10 @@
 <?php
 
-namespace WPAdminify\Inc\Classes;
+namespace PXLBSAdminify\Inc\Classes;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
 
 class Adminify_Admin_Bar extends \WP_Admin_Bar {
 
@@ -30,7 +34,7 @@ class Adminify_Admin_Bar extends \WP_Admin_Bar {
 				}
 
 				if ( is_admin() ) {
-					do_action( 'adminify/before/secondary_menu' );
+					do_action( 'pxlbsadminify/before/secondary_menu' );
 				}
 
 				foreach ( $root->children as $group ) {

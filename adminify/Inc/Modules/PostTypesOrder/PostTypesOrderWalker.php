@@ -1,6 +1,6 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\PostTypesOrder;
+namespace PXLBSAdminify\Inc\Modules\PostTypesOrder;
 
 // no direct access allowed
 if ( ! defined( 'ABSPATH' ) ) {

@@ -18,7 +18,7 @@ if ( ! class_exists( 'ADMINIFY_Field_tabbed' ) ) {
 
       $unallows = array( 'tabbed' );
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       echo '<div class="adminify-tabbed-nav" data-depend-id="'. esc_attr( $this->field['id'] ) .'">';
       foreach ( $this->field['tabs'] as $key => $tab ) {
@@ -26,7 +26,7 @@ if ( ! class_exists( 'ADMINIFY_Field_tabbed' ) ) {
         $tabbed_icon   = ( ! empty( $tab['icon'] ) ) ? '<i class="adminify--icon '. esc_attr( $tab['icon'] ) .'"></i>' : '';
         $tabbed_active = ( empty( $key ) ) ? 'adminify-tabbed-active' : '';
 
-        echo '<a href="#" class="'. esc_attr( $tabbed_active ) .'"">'. $tabbed_icon . esc_attr( $tab['title'] ) .'</a>';
+        echo '<a href="#" class="'. esc_attr( $tabbed_active ) .'"">'. wp_kses_post( $tabbed_icon ) . esc_html( $tab['title'] ) .'</a>';
 
       }
       echo '</div>';
@@ -56,7 +56,7 @@ if ( ! class_exists( 'ADMINIFY_Field_tabbed' ) ) {
       }
       echo '</div>';
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

@@ -1,14 +1,18 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 /**
  * WP Adminify has some hooks for developers.
  */
-if ( ! class_exists( 'WP_Adminify_Developer_Hooks' ) ) {
+if ( ! class_exists( 'PXLBSAdminify_Developer_Hooks' ) ) {
 
 	/**
 	 * Developer friendly hooks.
 	 */
-	class WP_Adminify_Developer_Hooks {
+	class PXLBSAdminify_Developer_Hooks {
 
 
 		/*
@@ -20,22 +24,25 @@ if ( ! class_exists( 'WP_Adminify_Developer_Hooks' ) ) {
 		}
 
 		public function _hooks() {
-			add_filter( 'wp_adminify_remember_me', [ $this, 'wp_adminify_remember_me_callback' ], 10, 1 );
+			add_filter( 'pxlbsadminify_remember_me', [ $this, 'remember_me_callback' ], 10, 1 );
 		}
 
 		/**
-		 * wp_adminify_remember_me_callback [turn off the remember me option from WordPress login form.]
+		 * remember_me_callback [turn off the remember me option from WordPress login form.]
 		 *
 		 * @param  bolean $activate
 		 * @since 1.0.0
 		 */
-		public function wp_adminify_remember_me_callback( $activate ) {
+		public function remember_me_callback( $activate ) {
 			if ( ! $activate ) {
 				return;
 			}
 
-			// Add the hook into the login_form
-			add_action( 'login_form', [ $this, 'wp_adminify_login_form' ], 99 );
+			// Hide the "Remember Me" checkbox via CSS instead of opening
+			// an output buffer in login_form. Output buffers that are not
+			// closed in the same logical flow can desync the buffer stack
+			// when other plugins/themes also buffer output.
+			add_action( 'login_head', [ $this, 'hide_remember_me_style' ], 99 );
 			// Reset any attempt to set the remember option
 			add_action( 'login_head', [ $this, 'unset_remember_me_option' ], 99 );
 		}
@@ -43,18 +50,14 @@ if ( ! class_exists( 'WP_Adminify_Developer_Hooks' ) ) {
 		function unset_remember_me_option() {
 
 			// Remove the rememberme post value
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only check, no state change.
 			if ( isset( $_POST['rememberme'] ) ) {
 				unset( $_POST['rememberme'] );
 			}
 		}
 
-		function wp_adminify_login_form() {
-			ob_start( [ $this, 'remove_forgetmenot_class' ] );
-		}
-
-		function remove_forgetmenot_class( $content ) {
-			$content = preg_replace( '/<p class="forgetmenot">(.*)<\/p>/', '', $content );
-			return $content;
+		function hide_remember_me_style() {
+			echo '<style id="wp-adminify-hide-rememberme">.forgetmenot{display:none !important;}</style>';
 		}
 	}
 }

@@ -1,8 +1,12 @@
 <?php
-namespace WPAdminify\Inc\Classes\Notifications;
+namespace PXLBSAdminify\Inc\Classes\Notifications;
 
-use WPAdminify\Inc\Classes\Notifications\Base\User_Data;
-use WPAdminify\Inc\Classes\Notifications\Model\Notice;
+use PXLBSAdminify\Inc\Classes\Notifications\Model\Notice;
+
+// no direct access allowed
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 if ( ! class_exists( 'Module_Conflicts' ) ) {
 	/**
@@ -17,10 +21,10 @@ if ( ! class_exists( 'Module_Conflicts' ) ) {
         public function __construct() {
             add_action('admin_notices', [$this, 'maybe_show_folder_module_notice'], -9999999);
             add_action('admin_footer', array($this, 'enqueue_conflict_plugin_admin_scripts'), 99999);
-            add_action('wp_ajax_jltwp_adminify_module_conflicts', [$this, 'jltwp_adminify_module_conflicts']);
+            add_action('wp_ajax_pxlbsadminify_module_conflicts', [$this, 'pxlbsadminify_module_conflicts']);
         }
 
-        public function jltwp_adminify_check_folder_module_conflict(){
+        public function check_folder_module_conflict(){
             $plugins = [
                 'folders/folders.php',
                 'filebird/filebird.php',
@@ -47,23 +51,26 @@ if ( ! class_exists( 'Module_Conflicts' ) ) {
          *
          * @since 1.0.0
          */
-        public function jltwp_adminify_module_conflicts() {
+        public function pxlbsadminify_module_conflicts() {
 
             if (!current_user_can('install_plugins')) {
                 return;
             }
 
             // Verify nonce for security.
-            check_ajax_referer( 'dismiss_notice_nonce', 'nonce' );
-            $conflicted_plugins = [];
-            $plugin_exists = get_option('_wpadminify_plugin_conflict');
+            check_ajax_referer( 'pxlbsadminify_dismiss_notice_nonce', 'nonce' );
+            $plugin_name = isset($_POST['plugin_name']) ? sanitize_text_field(wp_unslash($_POST['plugin_name'])) : '';
+            if ('' === $plugin_name) {
+                wp_send_json_error( array( 'message' => __( 'Missing plugin name.', 'adminify' ) ), 400 );
+            }
+            $plugin_exists = get_option('pxlbsadminify_plugin_conflict');
             $plugin_exists = is_array($plugin_exists) ? $plugin_exists : [];
-            $conflicted_plugins = array_merge( $plugin_exists, [$_POST['plugin_name']] );
+            $conflicted_plugins = array_merge( $plugin_exists, [ $plugin_name ] );
 
             // Update user meta to store dismissal state.
-            update_option('_wpadminify_plugin_conflict', $conflicted_plugins );
+            update_option('pxlbsadminify_plugin_conflict', $conflicted_plugins );
 
-            $this->jltwp_force_disable_module('folders');
+            $this->force_disable_module('folders');
             wp_send_json_success( array( 'message' => 'Notice dismissed.' ) );
         }
 
@@ -72,13 +79,13 @@ if ( ! class_exists( 'Module_Conflicts' ) ) {
          *
          * @param string $module_name Module name to disable.
          */
-        public function jltwp_force_disable_module( $module_name) {
+        public function force_disable_module( $module_name) {
             // Disable WP Adminify Folder Module
-            $adminSettings = \WPAdminify\Inc\Admin\AdminSettings::get_instance();
+            $adminSettings = \PXLBSAdminify\Inc\Admin\AdminSettings::get_instance();
             $options       = get_option($adminSettings->get_prefix());
 
             $options[$module_name] = false; // force disable
-            update_option('_wpadminify', $options);
+            update_option('pxlbsadminify_settings', $options);
         }
 
 
@@ -134,16 +141,16 @@ if ( ! class_exists( 'Module_Conflicts' ) ) {
          */
         public function maybe_show_folder_module_notice()
         {
-            $result = $this->jltwp_adminify_check_folder_module_conflict();
+            $result = $this->check_folder_module_conflict();
             if(! $result){
                 return;
             }
-            $this->jltwp_force_disable_module('folders');
+            $this->force_disable_module('folders');
             // Check if the notice has already been dismissed.
-            $plugin_exists = get_option('_wpadminify_plugin_conflict');
+            $plugin_exists = get_option('pxlbsadminify_plugin_conflict');
             if(!empty($plugin_exists)){
                 if(in_array( $result['Name'], $plugin_exists)){
-                    // $this->jltwp_force_disable_module('folders');
+                    // $this->force_disable_module('folders');
                     return;
                 }
             }
@@ -158,7 +165,7 @@ if ( ! class_exists( 'Module_Conflicts' ) ) {
 
             // if (is_admin()) {
                 // add_action('admin_footer', array($this, 'enqueue_conflict_plugin_admin_scripts'), 99999);
-                // add_action('wp_ajax_jltwp_adminify_module_conflicts', array($this, 'jltwp_adminify_module_conflicts'));
+                // add_action('wp_ajax_pxlbsadminify_module_conflicts', array($this, 'pxlbsadminify_module_conflicts'));
             // }
         }
 
@@ -168,18 +175,18 @@ if ( ! class_exists( 'Module_Conflicts' ) ) {
          * Enqueue JavaScript that handles the conflict notice dismissal.
          */
         public function enqueue_conflict_plugin_admin_scripts() { 
-            if( ! $this->jltwp_adminify_check_folder_module_conflict())  return;
+            if( ! $this->check_folder_module_conflict())  return;
             
             ?>
                 <script>
 
-                    function jltwp_adminify_notice_action(evt, $this, action_type) {
+                    function pxlbsadminify_notice_action(evt, $this, action_type) {
                         if (evt) evt.preventDefault();
                         $this.closest('.conflict-notice-wp-adminify').slideUp(200);
 
                         jQuery.post('<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>', {
-                            action: 'jltwp_adminify_module_conflicts',
-                            _wpnonce: '<?php echo esc_js( wp_create_nonce( 'dismiss_notice_nonce' ) ); ?>',
+                            action: 'pxlbsadminify_module_conflicts',
+                            _wpnonce: '<?php echo esc_js( wp_create_nonce( 'pxlbsadminify_dismiss_notice_nonce' ) ); ?>',
                             action_type: action_type,
                             plugin_name: $this.data('pluginName')
                         });
@@ -187,7 +194,7 @@ if ( ! class_exists( 'Module_Conflicts' ) ) {
 
                     // Notice Dismiss
                     jQuery('body').on('click', '.conflict-notice-wp-adminify .wp-adminify-notice-dismiss', function(evt) {
-                        jltwp_adminify_notice_action(evt, jQuery(this), 'dismiss');
+                        pxlbsadminify_notice_action(evt, jQuery(this), 'dismiss');
                     });
                 </script>
 

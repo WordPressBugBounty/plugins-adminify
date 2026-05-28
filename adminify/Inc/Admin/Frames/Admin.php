@@ -1,10 +1,10 @@
 <?php
 
-namespace WPAdminify\Inc\Admin\Frames;
+namespace PXLBSAdminify\Inc\Admin\Frames;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Modules\MenuEditor\MenuEditorOptions;
-use WPAdminify\Inc\Admin\AdminSettings;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Modules\MenuEditor\MenuEditorOptions;
+use PXLBSAdminify\Inc\Admin\AdminSettings;
 
 // no direct access allowed
 if (!defined('ABSPATH')) {
@@ -66,16 +66,16 @@ if (!class_exists('Admin')) {
          */
         public function load_scripts()
         {
-            wp_enqueue_style('frame-adminify--admin', WP_ADMINIFY_ASSETS . 'admin/css/admin' . Utils::assets_ext('.css'), [], WP_ADMINIFY_VER);
-            wp_enqueue_script('frame-adminify--admin', WP_ADMINIFY_ASSETS . 'admin/js/frame' . Utils::assets_ext('.js'), ['jquery', 'react'], WP_ADMINIFY_VER, true);
+            wp_enqueue_style('frame-adminify--admin', PXLBSADMINIFY_ASSETS . 'admin/css/admin' . Utils::assets_ext('.css'), [], PXLBSADMINIFY_VER);
+            wp_enqueue_script('frame-adminify--admin', PXLBSADMINIFY_ASSETS . 'admin/js/frame' . Utils::assets_ext('.js'), ['jquery', 'react'], PXLBSADMINIFY_VER, true);
 
             $localize_array_data = [
                 'ajax_url'  => admin_url('admin-ajax.php'),
                 'security_nonce' => wp_create_nonce('adminify_nonce')
             ];
 
-            wp_localize_script( 'frame-adminify--admin', 'WPAdminify', $localize_array_data );
-            wp_localize_script( 'frame-adminify--admin', 'WPAdminifyFrameNotAllowedURLs', self::get_not_allowed_urls() );
+            wp_localize_script( 'frame-adminify--admin', 'PXLBSADMINIFY_FRAME', $localize_array_data );
+            wp_localize_script( 'frame-adminify--admin', 'PXLBSADMINIFY_FRAME_NOT_ALLOWED_URLS', self::get_not_allowed_urls() );
         }
 
         public static function get_not_allowed_urls() {
@@ -161,7 +161,7 @@ if (!class_exists('Admin')) {
                 // ]
             ];
 
-            return apply_filters( 'adminify_frame_not_allowed_urls', $not_allowed_urls );
+            return apply_filters( 'pxlbsadminify_frame_not_allowed_urls', $not_allowed_urls );
         }
 
         /**
@@ -184,14 +184,14 @@ if (!class_exists('Admin')) {
          */
         public function load_template()
         {
-            adminify_load_template('Templates.php');
+            Utils::load_template('Templates.php');
         }
 
         public function capture_wp_menu($parent_file)
         {
             global $menu, $submenu;
 
-            $menu_build = jltwp_adminify_build_menu($menu, $submenu, $this->menu_settings);
+            $menu_build = pxlbsadminify_build_menu($menu, $submenu, $this->menu_settings);
 
             $this->enqueue_menu($menu_build);
 
@@ -209,7 +209,7 @@ if (!class_exists('Admin')) {
                         'admin_ui_mode' => 'light',
                         'admin_ui_logo_type' => 'image_logo',
                         'admin_ui_light_mode' => [
-                            'admin_ui_light_logo_text' => 'WP Adminify',
+                            'admin_ui_light_logo_text' => 'Adminify',
                             'admin_ui_light_logo_text_typo' => array_fill_keys(
                                 ['font-family', 'font-weight', 'font-style', 'font-size', 'letter-spacing', 'color', 'type', 'unit'], ''
                             ) + ['unit' => 'px'],
@@ -218,7 +218,7 @@ if (!class_exists('Admin')) {
                             'mini_admin_ui_light_logo' => array_fill_keys(['url', 'id', 'width', 'height', 'thumbnail', 'alt', 'title', 'description'], ''),
                         ],
                         'admin_ui_dark_mode' => [
-                            'admin_ui_dark_logo_text' => 'WP Adminify',
+                            'admin_ui_dark_logo_text' => 'Adminify',
                             'admin_ui_dark_logo_text_typo' => array_fill_keys(
                                 ['font-family', 'font-weight', 'font-style', 'font-size', 'letter-spacing', 'color', 'type', 'unit'], ''
                             ) + ['unit' => 'px'],
@@ -244,11 +244,11 @@ if (!class_exists('Admin')) {
                         'username' => esc_html($current_user->user_login),
                         'email'        => wp_kses_post(is_email($current_user->user_email)),
                     ],
-                    'image_path' => WP_ADMINIFY_ASSETS_IMAGE,
-                    'is_pro'      => (class_exists('\\WPAdminify\\Pro\\Adminify_Pro') && !empty(\WPAdminify\Pro\Adminify_Pro::is_premium())) ? true : false
+                    'image_path' => PXLBSADMINIFY_ASSETS_IMAGE,
+                    'is_pro'      => (class_exists('\\PXLBSAdminify\\Pro\\Adminify_Pro') && !empty(\PXLBSAdminify\Pro\Adminify_Pro::is_premium())) ? true : false
                 ];
 
-                $data = "var frame_adminify_menu=" . json_encode($menu_settings);
+                $data = "var frame_adminify_menu=" . wp_json_encode($menu_settings);
                 wp_print_inline_script_tag($data, ["id" => "frame_adminify_menu"]);
             };
 
@@ -267,8 +267,12 @@ if (!class_exists('Admin')) {
 
             // Admin Bar Exits
             if ( Utils::is_plugin_active('admin-bar/admin-bar.php') ) {
-                $admin_bar_items                  = get_option('_jltadminbar_settings');
-                if( empty($admin_bar_items) ) return;
+                $admin_bar_items                  = get_option('pxlbsadminify_adminbar_settings');
+
+                // Only build the customized admin bar when settings exist.
+                // Otherwise fall through so the default admin bar data is still
+                // printed and `adminify_admin_bar_data` is always defined.
+                if ( !empty($admin_bar_items) ) {
 
                 $existing_admin_bar               = !empty($admin_bar_items['existing_admin_bar']) ? $admin_bar_items['existing_admin_bar'] : '';
                 $saved_admin_bar                  = !empty($admin_bar_items['saved_admin_bar']) ? $admin_bar_items['saved_admin_bar'] : [];
@@ -292,6 +296,8 @@ if (!class_exists('Admin')) {
                     }
                     $admin_bar_menu_data[$key] = $value;
                 }
+
+                } // end if ( !empty($admin_bar_items) )
             }
 
             unset($admin_bar_data_nested['wp-logo']);
@@ -300,7 +306,7 @@ if (!class_exists('Admin')) {
             unset($admin_bar_data_nested['menu-toggle']);
             unset($admin_bar_data_nested['comments']);
 
-            $admin_bar_data_nested = jlt_adminify_replaceAmpersandInHref($admin_bar_data_nested);
+            $admin_bar_data_nested = pxlbsadminify_replaceAmpersandInHref($admin_bar_data_nested);
 
             // WP Adminify Pricing/Upgrade - open in new tab
             if (isset($admin_bar_data_nested['wp-adminify-settings']['submenu'])) {
@@ -325,7 +331,7 @@ if (!class_exists('Admin')) {
                     'notification'        => $this->options['admin_bar_notif'],
                     'light_dark_switcher' => $this->options['admin_bar_dark_light_btn'],
                 ];
-                $data = "var adminify_admin_bar_data=" . json_encode($extra_data);
+                $data = "var adminify_admin_bar_data=" . wp_json_encode($extra_data);
                 wp_print_inline_script_tag($data, ["id" => "adminify_admin_bar_data"]);
             };
 
@@ -349,7 +355,10 @@ if (!class_exists('Admin')) {
         }
 
         public function adminify_adminbar_localize_script(){
-            echo $this->get_admin_bar_menu_list();
+            // get_admin_bar_menu_list() returns an array and prints its script via
+            // wp_print_inline_script_tag() on the footer hook, so call it for that side effect
+            // rather than echoing the return value.
+            $this->get_admin_bar_menu_list();
         }
 
         /**
@@ -475,7 +484,7 @@ if (!class_exists('Admin')) {
 
                     }
 
-                    if (\WPAdminify\Inc\Utils::restrict_for($disable_for)) {
+                    if (\PXLBSAdminify\Inc\Utils::restrict_for($disable_for)) {
                         unset($flat_array[$menu_id]);
                         continue;
                     }

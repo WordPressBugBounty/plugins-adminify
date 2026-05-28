@@ -28,7 +28,7 @@ if ( ! class_exists( 'ADMINIFY_Field_select' ) ) {
 
       $this->value = ( is_array( $this->value ) ) ? $this->value : array_filter( (array) $this->value );
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       if ( isset( $this->field['options'] ) ) {
 
@@ -50,7 +50,7 @@ if ( ! class_exists( 'ADMINIFY_Field_select' ) ) {
         $field_name       = $this->field_name( $multiple_name );
         $field_attr       = $this->field_attributes();
         $maybe_options    = $this->field['options'];
-        $chosen_data_attr = ( $args['chosen'] && ! empty( $args['settings'] ) ) ? ' data-chosen-settings="'. esc_attr( json_encode( $args['settings'] ) ) .'"' : '';
+        $chosen_data_attr = ( $args['chosen'] && ! empty( $args['settings'] ) ) ? ' data-chosen-settings="'. esc_attr( wp_json_encode( $args['settings'] ) ) .'"' : '';
 
         if ( is_string( $maybe_options ) && ! empty( $args['chosen'] ) && ! empty( $args['ajax'] ) ) {
           $options = $this->field_wp_query_data_title( $maybe_options, $this->value );
@@ -64,7 +64,7 @@ if ( ! class_exists( 'ADMINIFY_Field_select' ) ) {
 
           if ( ! empty( $args['chosen'] ) && ! empty( $args['multiple'] ) ) {
 
-            echo '<select name="'. $field_name .'" class="adminify-hide-select hidden"'. $multiple_attr . $field_attr .'>';
+            echo '<select name="'. esc_attr( $field_name ) .'" class="adminify-hide-select hidden"'. $multiple_attr . $field_attr .'>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- value pre-escaped where built.
             foreach ( $this->value as $option_key ) {
               echo '<option value="'. esc_attr( $option_key ) .'" selected>'. esc_attr( $option_key ) .'</option>';
             }
@@ -76,7 +76,7 @@ if ( ! class_exists( 'ADMINIFY_Field_select' ) ) {
           }
 
           // These attributes has been serialized above.
-          echo '<select name="'. esc_attr( $field_name ) .'"'. $field_class . $multiple_attr . $placeholder_attr . $field_attr . $chosen_data_attr .'>';
+          echo '<select name="'. esc_attr( $field_name ) .'"'. $field_class . $multiple_attr . $placeholder_attr . $field_attr . $chosen_data_attr .'>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- value pre-escaped where built.
 
           if ( $args['placeholder'] && empty( $args['multiple'] ) ) {
             if ( ! empty( $args['chosen'] ) ) {
@@ -116,7 +116,7 @@ if ( ! class_exists( 'ADMINIFY_Field_select' ) ) {
 
       }
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

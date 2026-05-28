@@ -1,14 +1,14 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\ServerInformation;
+namespace PXLBSAdminify\Inc\Modules\ServerInformation;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Modules\ServerInformation\ServerInfo_WP_Details;
-use WPAdminify\Inc\Modules\ServerInformation\ServerInfo_Server_Details;
-use WPAdminify\Inc\Modules\ServerInformation\ServerInfo_PHP_INI_Details;
-use WPAdminify\Inc\Modules\ServerInformation\ServerInfo_Htaccess_Details;
-use WPAdminify\Inc\Modules\ServerInformation\ServerInfo_Robots_Details;
-use WPAdminify\Inc\Modules\ServerInformation\ServerInfo_Error_Logs_Details;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Modules\ServerInformation\ServerInfo_WP_Details;
+use PXLBSAdminify\Inc\Modules\ServerInformation\ServerInfo_Server_Details;
+use PXLBSAdminify\Inc\Modules\ServerInformation\ServerInfo_PHP_INI_Details;
+use PXLBSAdminify\Inc\Modules\ServerInformation\ServerInfo_Htaccess_Details;
+use PXLBSAdminify\Inc\Modules\ServerInformation\ServerInfo_Robots_Details;
+use PXLBSAdminify\Inc\Modules\ServerInformation\ServerInfo_Error_Logs_Details;
 
 // no direct access allowed
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPAdminify
+ * PXLBSAdminify
  *
  * @package Server Information
  *
@@ -26,24 +26,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 class ServerInformation {
 
 	private $url;
-	public $prefix = '_wpadminify_server_info';
+	public $prefix = 'pxlbsadminify_server_info';
 
 	public function __construct() {
 		// if ( is_multisite() && ! is_network_admin() ) {
 		// return; // only display to network admin if multisite is enbaled
 		// }
 
-		$this->url = WP_ADMINIFY_URL . 'Inc/Modules/ServerInformation';
-		add_action( 'adminify_loaded', [ $this, 'jltwp_adminify_server_info_menu' ] );
+		$this->url = PXLBSADMINIFY_URL . 'Inc/Modules/ServerInformation';
+		add_action( 'adminify_loaded', [ $this, 'server_info_menu' ] );
 
 		if ( is_admin() ) {
-			add_action( 'admin_enqueue_scripts', [ $this, 'jltwp_adminify_server_info_styles' ], 99999 );
+			add_action( 'admin_enqueue_scripts', [ $this, 'server_info_styles' ], 99999 );
 
 			// Refresh Debug Log
-			add_action( 'wp_ajax_jltwp_adminify_error_log_content_refresh', [ $this, 'jltwp_adminify_error_log_content_refresh' ] );
+			add_action( 'wp_ajax_pxlbsadminify_error_log_content_refresh', [ $this, 'pxlbsadminify_error_log_content_refresh' ] );
 
 			// Clear Debug Log
-			add_action( 'wp_ajax_jltwp_adminify_error_log_content_clear', [ $this, 'jltwp_adminify_error_log_content_clear' ] );
+			add_action( 'wp_ajax_pxlbsadminify_error_log_content_clear', [ $this, 'pxlbsadminify_error_log_content_clear' ] );
 		}
 	}
 
@@ -54,10 +54,12 @@ class ServerInformation {
 	 *
 	 * @return void
 	 */
-	public function jltwp_adminify_server_info_styles() {
+	public function server_info_styles() {
 		global $pagenow;
 
-		if ( ( 'admin.php' === $pagenow ) && ( 'adminify-server-info' === $_GET['page'] ) ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
+		$current_page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+		if ( ( 'admin.php' === $pagenow ) && ( 'adminify-server-info' === $current_page ) ) {
 				echo '<style>.wp-adminify_page_adminify-server-info .adminify-header-inner{padding:0;}.wp-adminify_page_adminify-server-info .adminify-field-subheading{font-size:20px; padding-left:0;}.wp-adminify_page_adminify-server-info .adminify-nav,.wp-adminify_page_adminify-server-info .adminify-search,.wp-adminify_page_adminify-server-info .adminify-footer,.wp-adminify_page_adminify-server-info .adminify-reset-all,.wp-adminify_page_adminify-server-info .adminify-expand-all,.wp-adminify_page_adminify-server-info .adminify-header-left,.wp-adminify_page_adminify-server-info .adminify-reset-section,.wp-adminify_page_adminify-server-info .adminify-nav-background{display: none !important;}.wp-adminify_page_adminify-server-info .adminify-nav-normal + .adminify-content{margin-left: 0;}
 
                 /* If needed for white top-bar */
@@ -70,11 +72,11 @@ class ServerInformation {
                 }
             </style>';
 
-			wp_enqueue_script( 'wp-adminify-error-logs', $this->url . '/error-logs.js', [ 'jquery' ], null, true );
-			wp_localize_script( 'wp-adminify-error-logs', 'WPAdminify_ErrorL', $this->adminify_error_logs_object() );
+			wp_enqueue_script( 'adminify-error-logs', $this->url . '/error-logs.js', [ 'jquery' ], PXLBSADMINIFY_VER, true );
+			wp_localize_script( 'adminify-error-logs', 'PXLBSADMINIFY_ERROR_LOGS', $this->adminify_error_logs_object() );
 
-			wp_enqueue_style( 'adminify', \ADMINIFY_Setup::include_plugin_url( 'assets/css/style.min.css' ), [], WP_ADMINIFY_VER, 'all' );
-			wp_enqueue_script( 'adminify', \ADMINIFY_Setup::include_plugin_url( 'assets/js/main.min.js' ), [ 'jquery' ], WP_ADMINIFY_VER, true );
+			wp_enqueue_style( 'adminify', \ADMINIFY_Setup::include_plugin_url( 'assets/css/style.min.css' ), [], PXLBSADMINIFY_VER, 'all' );
+			wp_enqueue_script( 'adminify', \ADMINIFY_Setup::include_plugin_url( 'assets/js/main.min.js' ), [ 'jquery' ], PXLBSADMINIFY_VER, true );
 		}
 	}
 
@@ -88,14 +90,14 @@ class ServerInformation {
 	public function adminify_error_logs_object() {
 		return [
 			'ajax_url'       => admin_url( 'admin-ajax.php' ),
-			'security_nonce' => wp_create_nonce( 'adminify-error-logs-security-nonce' ),
+			'security_nonce' => wp_create_nonce( 'pxlbsadminify-error-logs-security-nonce' ),
 			'label_update'   => esc_html__( 'Will be updated...', 'adminify' ),
 			'label_clear'    => esc_html__( 'Will be cleared...', 'adminify' ),
 			'label_done'     => esc_html__( 'Done!', 'adminify' ),
 		];
 	}
 
-	public function jltwp_adminify_server_info_menu() {
+	public function server_info_menu() {
 		if ( ! class_exists( 'ADMINIFY' ) ) {
 			return;
 		}
@@ -106,7 +108,7 @@ class ServerInformation {
 			[
 
 				// Framework Title
-				'framework_title'         => __( 'WP Adminify Server Info <small>by Jewel Theme</small>', 'adminify' ),
+				'framework_title'         => __( 'Adminify Server Info <small>by Jewel Theme</small>', 'adminify' ),
 				'framework_class'         => 'adminify-server-info',
 
 				// menu settings
@@ -184,7 +186,7 @@ class ServerInformation {
 										'id'       => 'wordpress',
 										'type'     => 'callback',
 										'class'    => 'adminify-one-col',
-										'function' => 'WPAdminify\Inc\Modules\ServerInformation\ServerInformation::jltwp_adminify_wordpress_details',
+										'function' => 'PXLBSAdminify\Inc\Modules\ServerInformation\ServerInformation::pxlbsadminify_wordpress_details',
 									],
 								],
 							],
@@ -196,7 +198,7 @@ class ServerInformation {
 										'id'       => 'server',
 										'type'     => 'callback',
 										'class'    => 'adminify-one-col',
-										'function' => 'WPAdminify\Inc\Modules\ServerInformation\ServerInformation::jltwp_adminify_server_details',
+										'function' => 'PXLBSAdminify\Inc\Modules\ServerInformation\ServerInformation::pxlbsadminify_server_details',
 									],
 								],
 							],
@@ -208,7 +210,7 @@ class ServerInformation {
 										'id'       => 'php_info',
 										'type'     => 'callback',
 										'class'    => 'adminify-one-col',
-										'function' => 'WPAdminify\Inc\Modules\ServerInformation\ServerInformation::jltwp_adminify_get_phpinfo',
+										'function' => 'PXLBSAdminify\Inc\Modules\ServerInformation\ServerInformation::pxlbsadminify_get_phpinfo',
 									],
 								],
 							],
@@ -219,7 +221,7 @@ class ServerInformation {
 									[
 										'id'       => 'mysql_info',
 										'type'     => 'callback',
-										'function' => 'WPAdminify\Inc\Modules\ServerInformation\ServerInformation::jltwp_adminify_get_mysqlinfo',
+										'function' => 'PXLBSAdminify\Inc\Modules\ServerInformation\ServerInformation::pxlbsadminify_get_mysqlinfo',
 									],
 								],
 							],
@@ -231,7 +233,7 @@ class ServerInformation {
 										'id'       => 'constants',
 										'type'     => 'callback',
 										'class'	   => 'adminify-one-col',
-										'function' => 'WPAdminify\Inc\Modules\ServerInformation\ServerInformation::jltwp_adminify_constant_details',
+										'function' => 'PXLBSAdminify\Inc\Modules\ServerInformation\ServerInformation::pxlbsadminify_constant_details',
 									],
 								],
 							],
@@ -243,7 +245,7 @@ class ServerInformation {
 										'id'       => 'htaccess',
 										'type'     => 'callback',
 										'class'	   => 'adminify-one-col',
-										'function' => 'WPAdminify\Inc\Modules\ServerInformation\ServerInformation::jltwp_adminify_htacces_details',
+										'function' => 'PXLBSAdminify\Inc\Modules\ServerInformation\ServerInformation::pxlbsadminify_htacces_details',
 									],
 								],
 							],
@@ -255,7 +257,7 @@ class ServerInformation {
 										'id'       => 'php_ini',
 										'type'     => 'callback',
 										'class'	   => 'adminify-one-col',
-										'function' => 'WPAdminify\Inc\Modules\ServerInformation\ServerInformation::jltwp_adminify_php_ini_details',
+										'function' => 'PXLBSAdminify\Inc\Modules\ServerInformation\ServerInformation::pxlbsadminify_php_ini_details',
 									],
 								],
 							],
@@ -267,7 +269,7 @@ class ServerInformation {
 										'id'       => 'robots_txt',
 										'type'     => 'callback',
 										'class'	   => 'adminify-one-col',
-										'function' => 'WPAdminify\Inc\Modules\ServerInformation\ServerInformation::jltwp_adminify_robots_details',
+										'function' => 'PXLBSAdminify\Inc\Modules\ServerInformation\ServerInformation::pxlbsadminify_robots_details',
 									],
 								],
 							],
@@ -279,7 +281,7 @@ class ServerInformation {
 										'id'       => 'error_logs',
 										'type'     => 'callback',
 										'class'	   => 'adminify-one-col',
-										'function' => '\WPAdminify\Inc\Modules\ServerInformation\ServerInformation::jltwp_adminify_error_log_details',
+										'function' => '\PXLBSAdminify\Inc\Modules\ServerInformation\ServerInformation::pxlbsadminify_error_log_details',
 									],
 								],
 							],
@@ -296,7 +298,7 @@ class ServerInformation {
 	/**
 	 * Server Details
 	 */
-	public static function jltwp_adminify_server_details() {
+	public static function pxlbsadminify_server_details() {
 		new ServerInfo_Server_Details();
 	}
 
@@ -304,7 +306,7 @@ class ServerInformation {
 	/**
 	 * WordPress Details
 	 */
-	public static function jltwp_adminify_wordpress_details() {
+	public static function pxlbsadminify_wordpress_details() {
 		new ServerInfo_WP_Details();
 	}
 
@@ -312,42 +314,42 @@ class ServerInformation {
 	/**
 	 * Constant Details
 	 */
-	public static function jltwp_adminify_constant_details() {
+	public static function pxlbsadminify_constant_details() {
 		new ServerInfo_Constant_Details();
 	}
 
 	/**
 	 * .htaccess file Details
 	 */
-	public static function jltwp_adminify_htacces_details() {
+	public static function pxlbsadminify_htacces_details() {
 		new ServerInfo_Htaccess_Details();
 	}
 
 	/**
 	 * php.ini file Details
 	 */
-	public static function jltwp_adminify_php_ini_details() {
+	public static function pxlbsadminify_php_ini_details() {
 		new ServerInfo_PHP_INI_Details();
 	}
 
 	/**
 	 * Robots file Details
 	 */
-	public static function jltwp_adminify_robots_details() {
+	public static function pxlbsadminify_robots_details() {
 		new ServerInfo_Robots_Details();
 	}
 
 	/**
 	 * Error Logs Details
 	 */
-	public static function jltwp_adminify_error_log_details() {
+	public static function pxlbsadminify_error_log_details() {
 		new ServerInfo_Error_Logs_Details();
 	}
 
 	/**
 	 * Error Logs Details
 	 */
-	public static function jltwp_adminify_get_phpinfo() {
+	public static function pxlbsadminify_get_phpinfo() {
 		if ( ! class_exists( 'DOMDocument' ) ) {
 			echo '<div class="wrap" id="PHPinfo">';
 			echo '<h2>' . esc_html__( 'PHP', 'adminify' ) . ' ' . esc_html( phpversion() ) . '</h2>';
@@ -355,7 +357,7 @@ class ServerInformation {
 			echo '</div>';
 		} else {
 			ob_start();
-			phpinfo();
+			phpinfo(); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_phpinfo -- intentional server-info display on a capability-gated admin screen.
 			$phpinfo = ob_get_contents();
 			ob_end_clean();
 
@@ -380,7 +382,7 @@ class ServerInformation {
 
 			echo '<div class="wrap" id="PHPinfo">';
 			echo '<h2>' . esc_html__( 'PHP', 'adminify' ) . ' ' . esc_html( phpversion() ) . '</h2>';
-			echo Utils::wp_kses_custom( $phpinfo_html );
+			echo wp_kses_post( Utils::kses_custom( $phpinfo_html ) );
 			echo '</div>';
 		}
 	}
@@ -391,10 +393,12 @@ class ServerInformation {
 	 *
 	 * @return void
 	 */
-	public static function jltwp_adminify_get_mysqlinfo() {
+	public static function pxlbsadminify_get_mysqlinfo() {
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- direct query required for live server-info display; not cached intentionally.
 		$sqlversion = $wpdb->get_var( 'SELECT VERSION() AS version' );
-		$mysqlinfo  = $wpdb->get_results( 'SHOW VARIABLES' );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- direct query required for live server-info display; not cached intentionally.
+		$mysqlinfo = $wpdb->get_results( 'SHOW VARIABLES' );
 
 		if ( is_rtl() ) { ?>
 			<style type="text/css">
@@ -429,8 +433,8 @@ class ServerInformation {
 
 
 	// Refresh Button Ajax
-	public function jltwp_adminify_error_log_content_refresh() {
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'adminify-error-logs-security-nonce', 'security' ) > 0 ) {
+	public function pxlbsadminify_error_log_content_refresh() {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'pxlbsadminify-error-logs-security-nonce', 'security' ) > 0 ) {
 			// Security check - only administrators can access error logs
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'adminify' ) ) );
@@ -445,10 +449,10 @@ class ServerInformation {
 				if ( $action == 'refresh_error_log' ) {
 
 					// Get the wp "debug.log" file
-					$file = ServerInfo_Error_Logs_Details::jltwp_adminify_error_log();
+					$file = ServerInfo_Error_Logs_Details::custom_error_log();
 
 					// Get the wp "debug.log" file content
-					$file_content = ServerInfo_Error_Logs_Details::jltwp_adminify_error_log_content( $file );
+					$file_content = ServerInfo_Error_Logs_Details::custom_error_log_content( $file );
 				}
 
 				wp_send_json( [ 'file_content' => $file_content ] );
@@ -460,8 +464,8 @@ class ServerInformation {
 
 
 
-	public function jltwp_adminify_error_log_content_clear() {
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'adminify-error-logs-security-nonce', 'security' ) > 0 ) {
+	public function pxlbsadminify_error_log_content_clear() {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'pxlbsadminify-error-logs-security-nonce', 'security' ) > 0 ) {
 			// Security check - only administrators can clear error logs
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'adminify' ) ) );
@@ -478,13 +482,13 @@ class ServerInformation {
 					WP_Filesystem();
 
 					// Get the wp "debug.log" file
-					$file = ServerInfo_Error_Logs_Details::jltwp_adminify_error_log();
+					$file = ServerInfo_Error_Logs_Details::custom_error_log();
 
 					// Save no content to "debug.log" file the clear the file content
 					$wp_filesystem->put_contents( $file, '', 0644 );
 
 					// Get the wp "debug.log" file content
-					$file_content = ServerInfo_Error_Logs_Details::jltwp_adminify_error_log_content( $file );
+					$file_content = ServerInfo_Error_Logs_Details::custom_error_log_content( $file );
 				}
 
 				return wp_send_json( [ 'file_content' => $file_content ] );

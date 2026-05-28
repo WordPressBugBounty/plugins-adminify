@@ -1,12 +1,16 @@
 <?php
 
-namespace WPAdminify\Inc\Admin;
+namespace PXLBSAdminify\Inc\Admin;
 
-use WPAdminify\Inc\Base_Model;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
+use PXLBSAdminify\Inc\Base_Model;
 
 abstract class AdminSettingsModel extends Base_Model
 {
 	public $options = [];
-	protected $prefix = '_wpadminify';
-	// protected $prefix = '_wpadminify_backup';
+	protected $prefix = 'pxlbsadminify_settings';
+	// protected $prefix = 'pxlbsadminify_settings_backup';
 }

@@ -1,9 +1,14 @@
 <?php
-namespace WPAdminify\Inc\Classes\Notifications;
+namespace PXLBSAdminify\Inc\Classes\Notifications;
 
-use WPAdminify\Inc\Classes\Notifications\Model\Popup;
-use WPAdminify\Inc\Classes\Pro_Upgrade;
-use WPAdminify\Inc\Classes\Helper;
+use PXLBSAdminify\Inc\Classes\Notifications\Model\Popup;
+use PXLBSAdminify\Inc\Classes\Pro_Upgrade;
+use PXLBSAdminify\Inc\Classes\Helper;
+
+// No, Direct access Sir !!!
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'Upgrade_Notice' ) ) {
 	/**
@@ -24,7 +29,7 @@ if ( ! class_exists( 'Upgrade_Notice' ) ) {
 
 			// On sheet data update, remove the popup data, to auto rebuid the data.
 			add_action(
-				'jltwp_adminify_sheet_promo_data_reset',
+				'pxlbsadminify_sheet_promo_data_reset',
 				function () {
 					$this->delete();
 				}
@@ -106,7 +111,7 @@ if ( ! class_exists( 'Upgrade_Notice' ) ) {
 
 			$this->data = Helper::get_merged_data( $sheet_data, $today, $this->date_increment( $today, 10 ) );
 
-			$this->is_active = wp_validate_boolean( $this->data['is_campaign'] );
+			$this->is_active = wp_validate_boolean( $this->data['is_live'] );
 		}
 	}
 }

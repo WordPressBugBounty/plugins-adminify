@@ -1,9 +1,9 @@
 <?php
 
-namespace WPAdminify\Inc\Classes;
+namespace PXLBSAdminify\Inc\Classes;
 
-use WPAdminify\Inc\Admin\AdminSettings;
-use WPAdminify\Inc\Classes\OutputCSS_Body;
+use PXLBSAdminify\Inc\Admin\AdminSettings;
+use PXLBSAdminify\Inc\Classes\OutputCSS_Body;
 
 
 // no direct access allowed
@@ -25,8 +25,8 @@ class OutputCSS
 			return; // only display to network admin if multisite is enbaled
 		}
 
-		add_action('admin_enqueue_scripts', [$this, 'jltwp_adminify_output_styles'], 100);
-		add_action('admin_footer', [$this, 'jltwp_adminify_output_scripts'], 100);
+		add_action('admin_enqueue_scripts', [$this, 'output_styles'], 100);
+		add_action('admin_footer', [$this, 'output_scripts'], 100);
 		add_filter('admin_body_class', [$this, 'add_body_classes']);
 	}
 
@@ -74,45 +74,52 @@ class OutputCSS
 		return $classes . $bodyclass;
 	}
 
-	public function jltwp_adminify_output_styles()
+	public function output_styles()
 	{
-		// $jltwp_adminify_output_css = '';
-		// $jltwp_adminify_output_css.= 'body.wp-adminify{';
+		// $pxlbsadminify_output_css = '';
+		// $pxlbsadminify_output_css.= 'body.wp-adminify{';
 
-		// $jltwp_adminify_output_css.= '}';
+		// $pxlbsadminify_output_css.= '}';
 
 		// // Combine the values from above and minifiy them.
-		// $jltwp_adminify_output_css = preg_replace('#/\*.*?\*/#s', '', $jltwp_adminify_output_css);
-		// $jltwp_adminify_output_css = preg_replace('/\s*([{}|:;,])\s+/', '$1', $jltwp_adminify_output_css);
-		// $jltwp_adminify_output_css = preg_replace('/\s\s+(.*)/', '$1', $jltwp_adminify_output_css);
+		// $pxlbsadminify_output_css = preg_replace('#/\*.*?\*/#s', '', $pxlbsadminify_output_css);
+		// $pxlbsadminify_output_css = preg_replace('/\s*([{}|:;,])\s+/', '$1', $pxlbsadminify_output_css);
+		// $pxlbsadminify_output_css = preg_replace('/\s\s+(.*)/', '$1', $pxlbsadminify_output_css);
 
 		// $adminify_ui = AdminSettings::get_instance()->get('admin_ui');
 
 		// if (!empty($adminify_ui)) {
-		// 	wp_add_inline_style('wp-adminify-admin', wp_strip_all_tags($jltwp_adminify_output_css));
+		// 	wp_add_inline_style('wp-adminify-admin', wp_strip_all_tags($pxlbsadminify_output_css));
 		// } else {
-		// 	wp_add_inline_style('wp-adminify-default-ui', wp_strip_all_tags($jltwp_adminify_output_css));
+		// 	wp_add_inline_style('wp-adminify-default-ui', wp_strip_all_tags($pxlbsadminify_output_css));
 		// }
 
 		// Custom CSS
 		if (!empty($this->options['devtools_tabs']['custom_css'])) {
-			echo "\n<!-- Start of WP Adminify - Admin Area Custom CSS -->\n";
+			echo "\n<!-- Start of Adminify - Admin Area Custom CSS -->\n";
 			echo "<style>\n";
-			echo wp_strip_all_tags($this->options['devtools_tabs']['custom_css']);
+			echo esc_html( wp_strip_all_tags($this->options['devtools_tabs']['custom_css']) );
 			echo "\n</style>";
-			echo "\n<!-- /End of WP Adminify - Admin Area Custom CSS -->\n";
+			echo "\n<!-- /End of Adminify - Admin Area Custom CSS -->\n";
 		}
 	}
 
-	public function jltwp_adminify_output_scripts()
+	public function output_scripts()
 	{
-		// Custom JS
+		// Custom JS (admin-defined developer tool, saved only by users with the plugin's settings capability).
 		if (!empty($this->options['devtools_tabs']['custom_js'])) {
-			echo "\n<!-- Start of WP Adminify - Admin Area Custom JS -->\n";
-			echo "<script>\n";
-			echo html_entity_decode($this->options['devtools_tabs']['custom_js']);
-			echo "\n</script>";
-			echo "\n<!-- /End of WP Adminify - Admin Area Custom JS -->\n";
+			$custom_js = html_entity_decode($this->options['devtools_tabs']['custom_js']);
+			echo "\n<!-- Start of Adminify - Admin Area Custom JS -->\n";
+			// Emit through the core helper, which builds a properly-formed inline <script> tag.
+			if (function_exists('wp_print_inline_script_tag')) {
+				wp_print_inline_script_tag($custom_js);
+			} else {
+				// Fallback for WP < 5.7: neutralise any premature closing tag before printing.
+				echo "<script>\n";
+				echo str_replace('</script>', '<\/script>', $custom_js); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- executable inline JS cannot be HTML-escaped; closing tag is neutralised and the value is admin-only config.
+				echo "\n</script>";
+			}
+			echo "\n<!-- /End of Adminify - Admin Area Custom JS -->\n";
 		}
 	}
 }

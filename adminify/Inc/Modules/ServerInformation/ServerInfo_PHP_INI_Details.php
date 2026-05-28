@@ -1,9 +1,9 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\ServerInformation;
+namespace PXLBSAdminify\Inc\Modules\ServerInformation;
 
-use WPAdminify\Inc\Classes\ServerInfo;
-use WPAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Classes\ServerInfo;
+use PXLBSAdminify\Inc\Utils;
 
 // no direct access allowed
 if ( ! defined( 'ABSPATH' ) ) {
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPAdminify
+ * PXLBSAdminify
  *
  * @package Server Information
  *
@@ -40,12 +40,13 @@ class ServerInfo_PHP_INI_Details {
 		<div class="wrap">
 
 			<h1>
-				<?php echo Utils::admin_page_title( esc_html__( 'PHP_INI_Details File', 'adminify' ) ); ?>
+				<?php echo wp_kses_post( Utils::admin_page_title( esc_html__( 'PHP_INI_Details File', 'adminify' ) ) ); ?>
 			</h1>
 
 			<p style="color: #ce2754; font-weight: bold">
 				<?php
 				$name = 'php.ini';
+				/* translators: %s: File name */
 				printf( wp_kses_post( __( 'For security reasons you can only read the %1$s file! Please connect to your server and modify the file in a file editor.', 'adminify' ) ), esc_html( $name ) );
 				?>
 			</p>
@@ -64,10 +65,10 @@ class ServerInfo_PHP_INI_Details {
 		<?php
 
 		// Get the wp "php.ini" file
-		$file = $this->jltwp_adminify_php_ini_file();
+		$file = $this->php_ini_file();
 
 		// Get the wp "php.ini" file content
-		$file_content = $this->jltwp_adminify_php_ini_file_content( $file );
+		$file_content = $this->php_ini_file_content( $file );
 
 		if ( $file ) {
 			?>
@@ -89,7 +90,7 @@ class ServerInfo_PHP_INI_Details {
 	 *
 	 * @return void
 	 */
-	public function jltwp_adminify_php_ini_file() {
+	public function php_ini_file() {
 
 		// Call wp file system
 		global $wp_filesystem;
@@ -117,7 +118,7 @@ class ServerInfo_PHP_INI_Details {
 	 *
 	 * @return void
 	 */
-	public function jltwp_adminify_php_ini_file_content( $file ) {
+	public function php_ini_file_content( $file ) {
 
 		// Call wp file system
 		global $wp_filesystem;

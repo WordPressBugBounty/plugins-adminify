@@ -1,12 +1,9 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\DisableComments;
+namespace PXLBSAdminify\Inc\Modules\DisableComments;
 
-use \Elementor;
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Classes\Multisite_Helper;
-use WPAdminify\Inc\Admin\AdminSettings;
-use WPAdminify\Inc\Admin\AdminSettingsModel;
+use PXLBSAdminify\Inc\Admin\AdminSettings;
+use PXLBSAdminify\Inc\Admin\AdminSettingsModel;
 
 
 // no direct access allowed
@@ -15,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPAdminify
+ * PXLBSAdminify
  *
  * @package Module: Disable Comments
  *
@@ -55,8 +52,8 @@ class DisableComments extends AdminSettingsModel {
 
 		// Remove comments links from admin bar
 		if (!empty($this->disable_comments['apply_for']) && in_array('admin_bar', $this->disable_comments['apply_for'])) {
-			// add_action('init', [$this, 'jltma_adminify_disable_comments_admin_bar_menu']);
-			add_action( 'wp_before_admin_bar_render', [ $this, 'jltma_adminify_remove_admin_bar_menus' ], 0 );
+			// add_action('init', [$this, 'disable_comments_admin_bar_menu']);
+			add_action( 'wp_before_admin_bar_render', [ $this, 'remove_admin_bar_menus' ], 0 );
 		}
 
 		// URL field remove from Comments
@@ -117,7 +114,7 @@ class DisableComments extends AdminSettingsModel {
 
 		// Remove styles for .recentcomments
 		if (!empty($this->disable_comments['apply_for']) && in_array('recentcomments', $this->disable_comments['apply_for'])) {
-			add_action('widgets_init', [$this, 'jltwp_adminify_remove_recent_comments_style']);
+			add_action('widgets_init', [$this, 'remove_recent_comments_style']);
 			add_filter( 'show_recent_comments_widget_style', '__return_false' );
 		}
 
@@ -138,7 +135,7 @@ class DisableComments extends AdminSettingsModel {
 	}
 
 	// Remove styles for .recentcomments
-	public function jltwp_adminify_remove_recent_comments_style()
+	public function remove_recent_comments_style()
 	{
 		global $wp_widget_factory;
 		remove_action('wp_head', [$wp_widget_factory->widgets['WP_Widget_Recent_Comments'], 'recent_comments_style']);
@@ -192,13 +189,13 @@ class DisableComments extends AdminSettingsModel {
 	}
 
 	/* Remove from the administration bar */
-	public function jltma_adminify_remove_admin_bar_menus() {
+	public function remove_admin_bar_menus() {
 		global $wp_admin_bar;
 		$wp_admin_bar->remove_menu( 'comments' );
 	}
 
 	// Remove Comments Menu
-	public function jltma_adminify_disable_comments_admin_bar_menu() {
+	public function disable_comments_admin_bar_menu() {
 		if ( is_admin_bar_showing() ) {
 			remove_action( 'admin_bar_menu', 'wp_admin_bar_comments_menu', 60 );
 		}

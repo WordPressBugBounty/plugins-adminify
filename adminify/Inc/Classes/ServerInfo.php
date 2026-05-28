@@ -1,15 +1,13 @@
 <?php
 
-namespace WPAdminify\Inc\Classes;
-
-use WPAdminify\Inc\Utils;
+namespace PXLBSAdminify\Inc\Classes;
 
 // no direct access allowed
 if (!defined('ABSPATH')) {
 	exit;
 }
 /**
- * WPAdminify
+ * PXLBSAdminify
  * Admin Menu: Server Info
  *
  * @author Jewel Theme <support@jeweltheme.com>
@@ -40,12 +38,12 @@ class ServerInfo
 			foreach ([0, 1] as $i) {
 				$cmd   = '/proc/stat';
 				$lines = [];
-				$fh    = fopen($cmd, 'r');
+				$fh    = fopen($cmd, 'r'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- reading the /proc special path not supported by WP_Filesystem.
 				if ($fh) {
 					while ($line = fgets($fh)) {
 						$lines[] = $line;
 					}
-					fclose($fh);
+					fclose($fh); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closing the /proc special path not supported by WP_Filesystem.
 				}
 				foreach ($lines as $line) {
 					$ma = [];
@@ -114,11 +112,12 @@ class ServerInfo
 	{
 		$memory_limit = (int) @ini_get('memory_limit') . ' MB' . ' (' . (int) WP_MEMORY_LIMIT . ' MB)';
 		if (@ini_get('memory_limit') == '-1') {
-			$memory_limit = '-1 / ' . esc_html__('Unlimited', 'adminify-serverinfo') . ' (' . (int) WP_MEMORY_LIMIT . ' MB)';
+			$memory_limit = '-1 / ' . esc_html__('Unlimited', 'adminify') . ' (' . (int) WP_MEMORY_LIMIT . ' MB)';
 		}
 
 		if ((int) WP_MEMORY_LIMIT < (int) @ini_get('memory_limit') && WP_MEMORY_LIMIT != '-1' || (int) WP_MEMORY_LIMIT < (int) @ini_get('memory_limit') && @ini_get('memory_limit') != '-1') {
-			$memory_limit .= ' <span class="warning"><span class="dashicons dashicons-warning"></span> ' . sprintf(__('The WP PHP Memory Limit is less than the %s Server PHP Memory Limit', 'adminify-serverinfo'), (int) @ini_get('memory_limit') . ' MB') . '!</span>';
+			/* translators: %s: Server PHP memory limit, e.g. "256 MB" */
+			$memory_limit .= ' <span class="warning"><span class="dashicons dashicons-warning"></span> ' . sprintf(__('The WP PHP Memory Limit is less than the %s Server PHP Memory Limit', 'adminify'), (int) @ini_get('memory_limit') . ' MB') . '!</span>';
 		}
 
 		return $memory_limit;
@@ -140,7 +139,8 @@ class ServerInfo
 		}
 
 		if ($php_version != 'N/A' && version_compare($php_version, '7.3', '<')) {
-			$php_version = '<span class="warning"><span class="dashicons dashicons-warning"></span> ' . sprintf(__('%1$s - Recommend  PHP version of 7.3. See: %2$s', 'adminify-serverinfo'), esc_html($php_version), '<a href="https://wordpress.org/about/requirements/" target="_blank" rel="noopener">' . __('WordPress Requirements', 'adminify-serverinfo') . '</a>') . '</span>';
+			/* translators: 1: Current PHP version, 2: Link to WordPress requirements page */
+			$php_version = '<span class="warning"><span class="dashicons dashicons-warning"></span> ' . sprintf(__('%1$s - Recommend  PHP version of 7.3. See: %2$s', 'adminify'), esc_html($php_version), '<a href="https://wordpress.org/about/requirements/" target="_blank" rel="noopener">' . __('WordPress Requirements', 'adminify') . '</a>') . '</span>';
 		}
 
 		return $php_version;
@@ -193,11 +193,11 @@ class ServerInfo
 		// Short Version
 		// $db_version = $wpdb->db_server_info();
 
-		$db_version_dump = $wpdb->get_var('SELECT VERSION() AS version from DUAL');
+		$db_version_dump = $wpdb->get_var('SELECT VERSION() AS version from DUAL'); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- direct query required for reading the live MySQL server version; not cached intentionally.
 		if (preg_match('/\d+(?:\.\d+)+/', $db_version_dump, $matches)) {
 			$db_version = $matches[0]; // returning the first match
 		} else {
-			$db_version = __('N/A', 'adminify-serverinfo');
+			$db_version = __('N/A', 'adminify');
 		}
 		return $db_version;
 	}
@@ -211,13 +211,13 @@ class ServerInfo
 	public function get_db_software()
 	{
 		global $wpdb;
-		$db_software_query = $wpdb->get_row("SHOW VARIABLES LIKE 'version_comment'");
+		$db_software_query = $wpdb->get_row("SHOW VARIABLES LIKE 'version_comment'"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- direct query required for reading the live MySQL server variable; not cached intentionally.
 		$db_software_dump  = $db_software_query->Value;
 		if (!empty($db_software_dump)) {
 			$db_soft_array = explode(' ', trim($db_software_dump));
 			$db_software   = $db_soft_array[0];
 		} else {
-			$db_software = __('N/A', 'adminify-serverinfo');
+			$db_software = __('N/A', 'adminify');
 		}
 
 		return $db_software;
@@ -286,7 +286,7 @@ class ServerInfo
 
 		// Linux server
 		if ($os == 'Linux') {
-			$fh = fopen('/proc/meminfo', 'r');
+			$fh = fopen('/proc/meminfo', 'r'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- reading the /proc special path not supported by WP_Filesystem.
 			if ($fh) {
 				while ($line = fgets($fh)) {
 					$pieces = [];
@@ -297,7 +297,7 @@ class ServerInfo
 						break;
 					}
 				}
-				fclose($fh);
+				fclose($fh); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closing the /proc special path not supported by WP_Filesystem.
 				return $result;
 			}
 		}
@@ -320,7 +320,7 @@ class ServerInfo
 
 		// Linux server
 		if ($os == 'Linux') {
-			$fh = fopen('/proc/meminfo', 'r');
+			$fh = fopen('/proc/meminfo', 'r'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- reading the /proc special path not supported by WP_Filesystem.
 			if ($fh) {
 				while ($line = fgets($fh)) {
 					$pieces = [];
@@ -330,7 +330,7 @@ class ServerInfo
 						break;
 					}
 				}
-				fclose($fh);
+				fclose($fh); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closing the /proc special path not supported by WP_Filesystem.
 
 				return $result;
 			}
@@ -355,7 +355,7 @@ class ServerInfo
 
 			$ram_data = '';
 			// Check if it readable
-			$fh = fopen('/proc/meminfo', 'r');
+			$fh = fopen('/proc/meminfo', 'r'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- reading the /proc special path not supported by WP_Filesystem.
 			if ($fh) {
 				foreach (file('/proc/meminfo') as $ri) {
 					$m[strtok($ri, ':')] = strtok('');
@@ -502,7 +502,7 @@ class ServerInfo
 	}
 
 
-	public static function wp_memory_usage_percentage()
+	public static function memory_usage_percentage()
 	{
 		$memory_usage            = (new ServerInfo())->get_wp_memory_usage();
 		$memory_usage_percentage = $memory_usage['MemUsageCalc'];
@@ -531,7 +531,10 @@ class ServerInfo
 			$result['used'] = 0;
 
 			$lines = null;
-			exec(sprintf('df /P %s', $path), $lines);
+			// $path defaults to '/'. Escape it before composing the shell
+			// command so any future caller-supplied path can't break out
+			// into additional commands.
+			exec( sprintf( 'df /P %s', escapeshellarg( $path ) ), $lines );
 
 			foreach ($lines as $index => $line) {
 				if ($index != 1) {
@@ -622,36 +625,36 @@ class ServerInfo
 	public function format_filesize($bytes)
 	{
 		if (($bytes / pow(1024, 5)) > 1) {
-			return number_format_i18n(($bytes / pow(1024, 5)), 0) . ' ' . __('PB', 'adminify-serverinfo');
+			return number_format_i18n(($bytes / pow(1024, 5)), 0) . ' ' . __('PB', 'adminify');
 		} elseif (($bytes / pow(1024, 4)) > 1) {
-			return number_format_i18n(($bytes / pow(1024, 4)), 0) . ' ' . __('TB', 'adminify-serverinfo');
+			return number_format_i18n(($bytes / pow(1024, 4)), 0) . ' ' . __('TB', 'adminify');
 		} elseif (($bytes / pow(1024, 3)) > 1) {
-			return number_format_i18n(($bytes / pow(1024, 3)), 0) . ' ' . __('GB', 'adminify-serverinfo');
+			return number_format_i18n(($bytes / pow(1024, 3)), 0) . ' ' . __('GB', 'adminify');
 		} elseif (($bytes / pow(1024, 2)) > 1) {
-			return number_format_i18n(($bytes / pow(1024, 2)), 0) . ' ' . __('MB', 'adminify-serverinfo');
+			return number_format_i18n(($bytes / pow(1024, 2)), 0) . ' ' . __('MB', 'adminify');
 		} elseif ($bytes / 1024 > 1) {
-			return number_format_i18n($bytes / 1024, 0) . ' ' . __('KB', 'adminify-serverinfo');
+			return number_format_i18n($bytes / 1024, 0) . ' ' . __('KB', 'adminify');
 		} elseif ($bytes >= 0) {
-			return number_format_i18n($bytes, 0) . ' ' . __('bytes', 'adminify-serverinfo');
+			return number_format_i18n($bytes, 0) . ' ' . __('bytes', 'adminify');
 		} else {
-			return __('Unknown', 'adminify-serverinfo');
+			return __('Unknown', 'adminify');
 		}
 	}
 
 	public function format_filesize_kB($kiloBytes)
 	{
 		if (($kiloBytes / pow(1024, 4)) > 1) {
-			return number_format_i18n(($kiloBytes / pow(1024, 4)), 0) . ' ' . __('PB', 'adminify-serverinfo');
+			return number_format_i18n(($kiloBytes / pow(1024, 4)), 0) . ' ' . __('PB', 'adminify');
 		} elseif (($kiloBytes / pow(1024, 3)) > 1) {
-			return number_format_i18n(($kiloBytes / pow(1024, 3)), 0) . ' ' . __('TB', 'adminify-serverinfo');
+			return number_format_i18n(($kiloBytes / pow(1024, 3)), 0) . ' ' . __('TB', 'adminify');
 		} elseif (($kiloBytes / pow(1024, 2)) > 1) {
-			return number_format_i18n(($kiloBytes / pow(1024, 2)), 0) . ' ' . __('GB', 'adminify-serverinfo');
+			return number_format_i18n(($kiloBytes / pow(1024, 2)), 0) . ' ' . __('GB', 'adminify');
 		} elseif (($kiloBytes / 1024) > 1) {
-			return number_format_i18n($kiloBytes / 1024, 0) . ' ' . __('MB', 'adminify-serverinfo');
+			return number_format_i18n($kiloBytes / 1024, 0) . ' ' . __('MB', 'adminify');
 		} elseif ($kiloBytes >= 0) {
-			return number_format_i18n($kiloBytes / 1, 0) . ' ' . __('KB', 'adminify-serverinfo');
+			return number_format_i18n($kiloBytes / 1, 0) . ' ' . __('KB', 'adminify');
 		} else {
-			return __('Unknown', 'adminify-serverinfo');
+			return __('Unknown', 'adminify');
 		}
 	}
 

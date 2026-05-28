@@ -1,5 +1,5 @@
 <?php
-namespace WPAdminify\Inc\Classes\Notifications\Base;
+namespace PXLBSAdminify\Inc\Classes\Notifications\Base;
 
 // No, Direct access Sir !!!
 if ( ! defined( 'ABSPATH' ) ) {

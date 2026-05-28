@@ -25,7 +25,7 @@ if ( ! class_exists( 'ADMINIFY_Field_upload' ) ) {
         'remove_title'   => esc_html__( 'Remove', 'adminify' ),
       ) );
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       $library = ( is_array( $args['library'] ) ) ? $args['library'] : array_filter( (array) $args['library'] );
       $library = ( ! empty( $library ) ) ? implode(',', $library ) : '';
@@ -41,7 +41,7 @@ if ( ! class_exists( 'ADMINIFY_Field_upload' ) ) {
         $preview_hidden = ( empty( $preview_src ) ) ? ' hidden' : '';
 
         echo '<div class="adminify--preview'. esc_attr( $preview_hidden ) .'">';
-        echo '<div class="adminify-image-preview"'. $preview_style .'>';
+        echo '<div class="adminify-image-preview"'. $preview_style .'>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attribute value pre-escaped with esc_attr() where built.
         echo '<i class="adminify--remove fas fa-times"></i><span><img src="'. esc_url( $preview_src ) .'" class="adminify--src" /></span>';
         echo '</div>';
         echo '</div>';
@@ -49,12 +49,12 @@ if ( ! class_exists( 'ADMINIFY_Field_upload' ) ) {
       }
 
       echo '<div class="adminify--wrap">';
-      echo '<input type="text" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $this->value ) .'"'. $this->field_attributes() .'/>';
-      echo '<a href="#" class="button button-primary adminify--button" data-library="'. esc_attr( $library ) .'">'. $args['button_title'] .'</a>';
-      echo '<a href="#" class="button button-secondary adminify-warning-primary adminify--remove'. esc_attr( $hidden ) .'">'. $args['remove_title'] .'</a>';
+      echo '<input type="text" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $this->value ) .'"'. $this->field_attributes() .'/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
+      echo '<a href="#" class="button button-primary adminify--button" data-library="'. esc_attr( $library ) .'">'. esc_html( $args['button_title'] ) .'</a>';
+      echo '<a href="#" class="button button-secondary adminify-warning-primary adminify--remove'. esc_attr( $hidden ) .'">'. esc_html( $args['remove_title'] ) .'</a>';
       echo '</div>';
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
   }

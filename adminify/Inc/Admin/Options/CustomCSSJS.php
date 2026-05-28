@@ -1,9 +1,9 @@
 <?php
 
-namespace WPAdminify\Inc\Admin\Options;
+namespace PXLBSAdminify\Inc\Admin\Options;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Admin\AdminSettingsModel;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Admin\AdminSettingsModel;
 
 
 if (!defined('ABSPATH')) {
@@ -78,15 +78,18 @@ if (!class_exists('CustomCSSJS')) {
          */
         public function maybe_trigger_reset( $data, $class ) {
 
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only check, no state change.
             if ( !empty( $_POST['adminify_transient']['reset'] ) ) {
 
-                delete_option( '_wpadminify_custom_js_css' );
+                delete_option( 'pxlbsadminify_custom_js_css' );
 
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only check, no state change.
             } else if ( !empty( $_POST['adminify_transient']['reset_section'] ) && isset( $_POST['adminify_transient']['section'] ) ) {
 
-                $section = $_POST['adminify_transient']['section'];
+                // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only check, no state change.
+                $section = sanitize_text_field( wp_unslash( $_POST['adminify_transient']['section'] ) );
                 if ( $class->pre_sections[ $section - 2 ]['id'] === 'custom_css_js' ) {
-                    delete_option( '_wpadminify_custom_js_css' );
+                    delete_option( 'pxlbsadminify_custom_js_css' );
                 }
 
             }
@@ -109,17 +112,17 @@ if (!class_exists('CustomCSSJS')) {
             if ( !Utils::is_plugin_active( 'adminify-header-footer-scripts/adminify-header-footer-scripts.php' ) ) {
                 $frontend_custom_scripts[] = [
                     'type'       => 'notice',
-                    'title'      => __(' ', 'adminify'),
+                    'title'      => ' ',
                     'class'      => 'adminify-missing-plugins adminify-one-col',
                     'style'      => 'warning',
                     'content'    => Utils::missing_plugin_notice('Custom Header & Footer'),
                 ];
             } else {
 
-                add_action( "adminify__wpadminify_save_after", [ $this, 'maybe_trigger_reset' ], 10, 2 );
+                add_action( "adminify_pxlbsadminify_settings_save_after", [ $this, 'maybe_trigger_reset' ], 10, 2 );
 
-                if ( class_exists( '\WPAdminify\Modules\CustomHeaderFooter\Inc\CustomHeaderFooter\CustomHeaderFooterSettings' ) ) {
-                    $customHeaderFooterSettings = new \WPAdminify\Modules\CustomHeaderFooter\Inc\CustomHeaderFooter\CustomHeaderFooterSettings();
+                if ( class_exists( '\PXLBSAdminify\Modules\CustomHeaderFooter\Inc\CustomHeaderFooter\CustomHeaderFooterSettings' ) ) {
+                    $customHeaderFooterSettings = new \PXLBSAdminify\Modules\CustomHeaderFooter\Inc\CustomHeaderFooter\CustomHeaderFooterSettings();
                     $frontend_custom_scripts = $customHeaderFooterSettings->get_fields();
                 }
             }

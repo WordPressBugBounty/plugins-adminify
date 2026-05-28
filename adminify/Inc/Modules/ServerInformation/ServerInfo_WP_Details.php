@@ -1,9 +1,9 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\ServerInformation;
+namespace PXLBSAdminify\Inc\Modules\ServerInformation;
 
-use WPAdminify\Inc\Classes\ServerInfo;
-use WPAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Classes\ServerInfo;
+use PXLBSAdminify\Inc\Utils;
 
 // no direct access allowed
 if ( ! defined( 'ABSPATH' ) ) {
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPAdminify
+ * PXLBSAdminify
  *
  * @package Server Information
  *
@@ -39,7 +39,7 @@ class ServerInfo_WP_Details {
 		?>
 
 		<div class="wrap">
-			<h1><?php echo Utils::admin_page_title( esc_html__( 'Site Information', 'adminify' ) ); ?></h1>
+			<h1><?php echo wp_kses_post( Utils::admin_page_title( esc_html__( 'Site Information', 'adminify' ) ) ); ?></h1>
 		</div>
 
 
@@ -61,12 +61,12 @@ class ServerInfo_WP_Details {
 
 				<tr>
 					<td><?php esc_html_e( 'PHP Version', 'adminify' ); ?>:</td>
-					<td><?php echo Utils::wp_kses_custom( $server_info->get_php_version() ); ?></td>
+					<td><?php echo wp_kses_post( Utils::kses_custom( $server_info->get_php_version() ) ); ?></td>
 				</tr>
 
 				<tr>
 					<td><?php esc_html_e( 'MySQL Version', 'adminify' ); ?>:</td>
-					<td><?php echo Utils::wp_kses_custom( $server_info->get_mysql_version() ); ?></td>
+					<td><?php echo wp_kses_post( Utils::kses_custom( $server_info->get_mysql_version() ) ); ?></td>
 				</tr>
 
 				<tr>
@@ -119,15 +119,15 @@ class ServerInfo_WP_Details {
 					<td>
 						<?php
 						if ( $server_info->get_wp_memory_usage()['MemLimitGet'] == '-1' ) {
-							echo Utils::wp_kses_custom( $server_info->get_wp_memory_usage()['MemUsageFormat'] ) . ' ' . esc_html__( 'of', 'adminify' ) . ' ' . esc_html__( 'Unlimited', 'adminify' ) . ' (-1)';
+							echo wp_kses_post( Utils::kses_custom( $server_info->get_wp_memory_usage()['MemUsageFormat'] ) ) . ' ' . esc_html__( 'of', 'adminify' ) . ' ' . esc_html__( 'Unlimited', 'adminify' ) . ' (-1)';
 						} else {
-							echo Utils::wp_kses_custom( $server_info->get_wp_memory_usage()['MemUsageFormat'] ) . ' ' . esc_html__( 'of', 'adminify' ) . ' ' . Utils::wp_kses_custom( $server_info->get_wp_memory_usage()['MemLimitFormat'] );
+							echo wp_kses_post( Utils::kses_custom( $server_info->get_wp_memory_usage()['MemUsageFormat'] ) ) . ' ' . esc_html__( 'of', 'adminify' ) . ' ' . wp_kses_post( Utils::kses_custom( $server_info->get_wp_memory_usage()['MemLimitFormat'] ) );
 							?>
 
 							<div class="adminify-system-progress">
 								<div class="status-progressbar">
-									<span><?php echo Utils::wp_kses_custom( $server_info->get_wp_memory_usage()['MemUsageCalc'] ) . '% '; ?></span>
-									<div style="width: <?php echo Utils::wp_kses_custom( $server_info->get_wp_memory_usage()['MemUsageCalc'] ); ?>%"></div>
+									<span><?php echo wp_kses_post( Utils::kses_custom( $server_info->get_wp_memory_usage()['MemUsageCalc'] ) ) . '% '; ?></span>
+									<div style="width: <?php echo esc_attr( Utils::kses_custom( $server_info->get_wp_memory_usage()['MemUsageCalc'] ) ); ?>%"></div>
 								</div>
 							</div>
 						<?php } ?>
@@ -139,13 +139,13 @@ class ServerInfo_WP_Details {
 					<td>
 						<?php
 						if ( $server_info->get_server_memory_usage()['MemLimitGet'] == '-1' ) {
-							echo Utils::wp_kses_custom( $server_info->get_server_memory_usage()['MemUsageFormat'] ) . ' ' . esc_html__( 'of', 'adminify' ) . ' ' . esc_html__( 'Unlimited', 'adminify' ) . ' (-1)';
+							echo wp_kses_post( Utils::kses_custom( $server_info->get_server_memory_usage()['MemUsageFormat'] ) ) . ' ' . esc_html__( 'of', 'adminify' ) . ' ' . esc_html__( 'Unlimited', 'adminify' ) . ' (-1)';
 						} else {
-							echo Utils::wp_kses_custom( $server_info->get_server_memory_usage()['MemUsageFormat'] ) . ' ' . esc_html__( 'of', 'adminify' ) . ' ' . Utils::wp_kses_custom( $server_info->get_server_memory_usage()['MemLimitFormat'] );
+							echo wp_kses_post( Utils::kses_custom( $server_info->get_server_memory_usage()['MemUsageFormat'] ) ) . ' ' . esc_html__( 'of', 'adminify' ) . ' ' . wp_kses_post( Utils::kses_custom( $server_info->get_server_memory_usage()['MemLimitFormat'] ) );
 							?>
 							<div class="adminify-system-progress">
 								<div class="status-progressbar">
-									<span><?php echo Utils::wp_kses_custom( $server_info->get_server_memory_usage()['MemUsageCalc'] ) . '% '; ?></span>
+									<span><?php echo wp_kses_post( Utils::kses_custom( $server_info->get_server_memory_usage()['MemUsageCalc'] ) ) . '% '; ?></span>
 									<div style="width: <?php echo esc_attr( $server_info->get_server_memory_usage()['MemUsageCalc'] ); ?>%"></div>
 								</div>
 							</div>
@@ -187,7 +187,6 @@ class ServerInfo_WP_Details {
 
 			<tbody>
 				<?php
-				include_once ABSPATH . 'wp-admin/includes/theme-install.php';
 				$active_theme  = wp_get_theme();
 				$theme_version = $active_theme->Version;
 				?>
@@ -329,42 +328,14 @@ class ServerInfo_WP_Details {
 							$plugin_name = '<a href="' . esc_url( $plugin_data['PluginURI'] ) . '" title="' . esc_attr__( 'Visit plugin homepage', 'adminify' ) . '" target="_blank" rel="noopener">' . $plugin_name . '</a>';
 						}
 
-						if ( strstr( $dirname, 'adminify-' ) && strstr( $plugin_data['PluginURI'], 'woothemes.com' ) ) {
-							if ( false === ( $version_data = get_transient( md5( $plugin ) . '_version_data' ) ) ) {
-								$changelog = wp_safe_remote_get( 'http://dzv365zjfbd8v.cloudfront.net/changelogs/' . $dirname . '/changelog.txt' );
-								$cl_lines  = explode( "\n", wp_remote_retrieve_body( $changelog ) );
-								if ( ! empty( $cl_lines ) ) {
-									foreach ( $cl_lines as $line_num => $cl_line ) {
-										if ( preg_match( '/^[0-9]/', $cl_line ) ) {
-											$date         = str_replace( '.', '-', trim( substr( $cl_line, 0, strpos( $cl_line, '-' ) ) ) );
-											$version      = preg_replace( '~[^0-9,.]~', '', stristr( $cl_line, 'version' ) );
-											$update       = trim( str_replace( '*', '', $cl_lines[ $line_num + 1 ] ) );
-											$version_data = [
-												'date'    => $date,
-												'version' => $version,
-												'update'  => $update,
-												'changelog' => $changelog,
-											];
-											set_transient( md5( $plugin ) . '_version_data', $version_data, DAY_IN_SECONDS );
-											break;
-										}
-									}
-								}
-							}
-
-							if ( ! empty( $version_data['version'] ) && version_compare( $version_data['version'], $plugin_data['Version'], '>' ) ) {
-								$version_string = ' &ndash; <strong style="color:red;">' . esc_html( sprintf( _x( '%s is available', 'Version info', 'adminify' ), $version_data['version'] ) ) . '</strong>';
-							}
-
-							if ( $plugin_data['Network'] != false ) {
-								$network_string = ' &ndash; <strong style="color:black;">' . __( 'Network enabled', 'adminify' ) . '</strong>';
-							}
+						if ( ! empty( $plugin_data['Network'] ) ) {
+							$network_string = ' &ndash; <strong style="color:black;">' . __( 'Network enabled', 'adminify' ) . '</strong>';
 						}
 						?>
 						<tr>
 							<td><?php echo wp_kses_post( $plugin_name ); ?></td>
 							<td><?php echo esc_html( $plugin_data['Version'] ) .wp_kses_post( $version_string) . wp_kses_post($network_string); ?></td>
-							<td><?php echo sprintf( esc_html__( '%s', 'by author', 'adminify' ), wp_kses_post($plugin_data['Author']) ); ?></td>
+							<td><?php echo wp_kses_post( $plugin_data['Author'] ); ?></td>
 						</tr>
 						<?php
 					}

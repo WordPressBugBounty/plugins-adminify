@@ -1,17 +1,16 @@
 <?php
 
-namespace WPAdminify\Inc\Classes;
+namespace PXLBSAdminify\Inc\Classes;
 
-use WPAdminify\Inc\Admin\AdminSettings;
-use WPAdminify\Inc\Admin\AdminSettingsModel;
-use WPAdminify\Inc\Admin\Options\Productivity;
+use PXLBSAdminify\Inc\Admin\AdminSettings;
+use PXLBSAdminify\Inc\Admin\AdminSettingsModel;
 
 // no direct access allowed
 if (!defined('ABSPATH')) {
     exit;
 }
 /**
- * WPAdminify
+ * PXLBSAdminify
  * Sidebar Widgets
  *
  * @author Jewel Theme <support@jeweltheme.com>
@@ -28,7 +27,7 @@ class Sidebar_Widgets extends AdminSettingsModel
 
 
         // Get and disable the sidebar widgets.
-        add_action('widgets_init', [$this, 'jltma_remove_default_widgets'], 99);
+        add_action('widgets_init', [$this, 'remove_default_widgets'], 99);
     }
 
     /**
@@ -47,7 +46,7 @@ class Sidebar_Widgets extends AdminSettingsModel
      *
      * @return void
      */
-    public static function jltwp_adminify_get_default_widgets()
+    public static function get_default_widgets()
     {
         global $wp_widget_factory;
 
@@ -77,10 +76,10 @@ class Sidebar_Widgets extends AdminSettingsModel
         /**
          * Array of known widgets that won't work in the builder.
          *
-         * @see jltwp_adminify_get_wp_widgets_exclude
+         * @see pxlbsadminify_get_wp_widgets_exclude
          */
         $exclude = apply_filters(
-            'jltwp_adminify_get_wp_widgets_exclude',
+            'pxlbsadminify_get_wp_widgets_exclude',
             [
                 'WP_Widget_Media_Audio',
                 'WP_Widget_Media_Image',
@@ -112,10 +111,10 @@ class Sidebar_Widgets extends AdminSettingsModel
      *
      * @since 1.0.0
      */
-    public function jltma_remove_default_widgets()
+    public function remove_default_widgets()
     {
         $widgets = $this->widget_list;
-        $_widgets = $this->jltwp_adminify_get_default_widgets();
+        $_widgets = $this->get_default_widgets();
 
         update_option('sidebar_widgets', $_widgets);
 

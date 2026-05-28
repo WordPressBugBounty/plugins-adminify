@@ -1,9 +1,7 @@
 <?php
 
-namespace WPAdminify\Inc;
+namespace PXLBSAdminify\Inc;
 
-use ReturnTypeWillChange;
-use WPAdminify\Inc\Classes\Helper;
 // no direct access allowed
 if (!defined('ABSPATH')) {
 	exit;
@@ -56,8 +54,13 @@ class Utils
 			return false;
 		}
 
+		// wp_get_current_user() lives in wp-includes/pluggable.php and is
+		// always available in normal plugin execution. If it is somehow
+		// unavailable (e.g. very early bootstrap), bail out instead of
+		// manually loading core files, which is disallowed by the
+		// WordPress.org plugin guidelines.
 		if (!function_exists('wp_get_current_user')) {
-			include ABSPATH . 'wp-includes/pluggable.php';
+			return false;
 		}
 
 		$restrict_for = array();
@@ -158,8 +161,10 @@ class Utils
 			return false;
 		}
 
-		require_once ABSPATH . '/wp-includes/pluggable.php';
-
+		// wp_get_current_user() is provided by wp-includes/pluggable.php and
+		// is loaded by core early in normal plugin execution. Manually
+		// loading core files is disallowed by the plugin guidelines, so we
+		// simply bail out if it is unavailable for any reason.
 		if (!function_exists('wp_get_current_user')) {
 			return false;
 		}
@@ -223,7 +228,7 @@ class Utils
 
 
 	// verfiy current page id
-	public static function jltwp_adminify_currentpage_id($id)
+	public static function currentpage_id($id)
 	{
 		if (!function_exists('get_current_screen')) {
 			return true;
@@ -242,12 +247,12 @@ class Utils
 	 */
 	public static function admin_page_title($title = '')
 	{
-		$title = isset($title) && !empty($title) ? $title : WP_ADMINIFY;
+		$title = isset($title) && !empty($title) ? $title : PXLBSADMINIFY;
 		echo esc_html($title);
 
 		if (is_multisite()) {
 			$text = ' | ' . esc_html__('Current Blog ID', 'adminify') . ': ' . get_current_blog_id(); ?>
-			<?php echo self::wp_kses_custom(self::admin_page_subtitle($text)); ?>
+			<?php echo self::kses_custom(self::admin_page_subtitle($text)); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped. ?>
 		<?php } ?>
 	<?php
 	}
@@ -276,7 +281,7 @@ class Utils
 		return $class;
 	}
 
-	public static function jltwp_adminify_class_cleanup($string)
+	public static function class_cleanup($string)
 	{
 		// Lower case everything
 		$string = strtolower($string);
@@ -352,7 +357,9 @@ class Utils
 	 */
 	public static function is_plugin_active( $plugin_path )
 	{
-		include_once ABSPATH . 'wp-admin/includes/plugin.php';
+		if (!function_exists('is_plugin_active')) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
 		return is_plugin_active( $plugin_path );
 	}
 
@@ -394,7 +401,7 @@ class Utils
 		return isset($installed_plugins[$plugin_file]);
 	}
 
-	public static function jltwp_adminify_notification_bar()
+	public static function notification_bar()
 	{
 		$plugin_slug = 'adminify-notification-bar';
 		$plugin_file = 'adminify-notification-bar/adminify-notification-bar.php';
@@ -441,7 +448,7 @@ class Utils
 	public static function get_user_preference($key)
 	{
 		$userid  = get_current_user_id();
-		$current = get_user_meta($userid, '_wpadminify_preferences', true);
+		$current = get_user_meta($userid, 'pxlbsadminify_preferences', true);
 		$value   = false;
 
 		if (is_array($current)) {
@@ -466,11 +473,11 @@ class Utils
 				if (is_array($in)) {
 					$values[$index] = self::clean_ajax_input($in);
 				} else {
-					$values[$index] = strip_tags($in);
+					$values[$index] = wp_strip_all_tags($in);
 				}
 			}
 		} else {
-			$values = strip_tags($values);
+			$values = wp_strip_all_tags($values);
 		}
 
 		return $values;
@@ -488,7 +495,7 @@ class Utils
 		$returndata                  = [];
 		$returndata['error']         = true;
 		$returndata['error_message'] = $message;
-		return json_encode($returndata);
+		return wp_json_encode($returndata);
 	}
 
 	/**
@@ -545,9 +552,9 @@ class Utils
 	/**
 	 * Upgrade Pro Icon
 	 *
-	 * @return void
+	 * @return string
 	 */
-	public static function jltwp_adminify_upgrade_pro_icon()
+	public static function upgrade_pro_icon()
 	{
 		return '<svg class="adminify-pro-notice-icon is-pulled-left mr-2" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M21.8233 0.18318C21.8541 0.215042 21.8753 0.255055 21.8843 0.298527C22.5767 3.32046 20.085 9.8239 16.4731 13.4209C15.8343 14.064 15.1407 14.6502 14.4002 15.1727C14.4955 16.2787 14.411 17.3846 13.9985 18.3318C12.8302 21.0043 9.75855 21.7824 8.44197 21.9937C8.36979 22.0059 8.29577 22.0012 8.22571 21.9799C8.15566 21.9587 8.09147 21.9215 8.03819 21.8713C7.9849 21.821 7.94397 21.7591 7.9186 21.6904C7.89323 21.6217 7.88411 21.548 7.89196 21.4751L8.36241 17.189C8.04096 17.1858 7.71987 17.1663 7.40039 17.1305C7.17735 17.1087 6.96893 17.0096 6.81109 16.8503L5.15076 15.1924C4.99146 15.0346 4.89242 14.8259 4.87084 14.6026C4.83497 14.281 4.81547 13.9578 4.8124 13.6343L0.524795 14.1076C0.451994 14.1156 0.378341 14.1065 0.309629 14.0811C0.240917 14.0558 0.17902 14.0148 0.128806 13.9615C0.0785915 13.9081 0.0414297 13.8438 0.0202432 13.7736C-0.000943262 13.7035 -0.0055768 13.6293 0.00670721 13.5571C0.223273 12.2368 1.00065 9.16771 3.67065 7.99148C4.61695 7.57859 5.72728 7.4965 6.83761 7.59481C7.35968 6.85546 7.94513 6.16306 8.58733 5.52547C12.1879 1.92304 18.8337 -0.585245 21.7099 0.118627C21.7531 0.128924 21.7924 0.151317 21.8233 0.18318ZM12.224 7.92186C12.3151 8.37957 12.5397 8.79996 12.8695 9.12986C13.0882 9.34908 13.348 9.52298 13.6339 9.64164C13.9198 9.7603 14.2263 9.82137 14.5358 9.82137C14.8453 9.82137 15.1517 9.7603 15.4377 9.64164C15.7236 9.52298 15.9833 9.34908 16.202 9.12986C16.5318 8.79996 16.7565 8.37957 16.8475 7.92186C16.9386 7.46415 16.892 6.98968 16.7137 6.55848C16.5353 6.12727 16.2332 5.7587 15.8455 5.49939C15.4578 5.24007 15.002 5.10166 14.5358 5.10166C14.0695 5.10166 13.6137 5.24007 13.226 5.49939C12.8384 5.7587 12.5362 6.12727 12.3579 6.55848C12.1795 6.98968 12.1329 7.46415 12.224 7.92186ZM5.47798 18.5161C5.99754 18.4262 6.4292 18.321 6.69831 18.0511C6.83974 17.9032 7.0897 18.0256 7.07153 18.2311C6.99299 18.8853 6.69667 19.4941 6.23032 19.9593C5.07579 21.1158 0.785726 21.225 0.785726 21.225C0.785726 21.225 0.894746 16.9334 2.04927 15.7768C2.51439 15.3115 3.12167 15.0153 3.77443 14.9353C3.81912 14.9292 3.86459 14.9374 3.90439 14.9586C3.94419 14.9799 3.97629 15.0131 3.99613 15.0537C4.01597 15.0942 4.02255 15.14 4.01493 15.1845C4.00731 15.229 3.98588 15.2699 3.95368 15.3015C3.80635 15.449 3.56965 16.0767 3.48961 16.5245C3.27991 17.7056 4.31069 18.7152 5.47798 18.5161Z" fill="#000"/>
@@ -556,27 +563,27 @@ class Utils
 
 
 	// Upgrade to Pro Notice
-	public static function adminify_upgrade_pro_img_notice( $image ){
+	public static function upgrade_pro_img_notice( $image ){
 		return '<div class="adminify-pro-notice"><img src="' . esc_url_raw($image ) . '" /></div>';
 	}
 
 	// Upgrade to Pro Notice Class
-	public static function upgrade_pro_class($classname = '')
+	public static function upgrade_pro_notice_class($notice = '')
 	{
-		if(empty($classname)){
+		if(empty($notice)){
 			// return ' adminify-depend-visible adminify-depend-on adminify-pro-notice ';
 			return ' adminify-pro-feature adminify-pro-notice';
 		} else {
-			echo esc_attr($classname);
+			echo esc_attr($notice);
 		}
 	}
 
 	// Upgrade to Pro Notice
-	public static function adminify_upgrade_pro($custom_message = '', $style='')
+	public static function upgrade_pro_notice($custom_message = '', $style='')
 	{
 
 		if (empty($custom_message)) {
-			$pro_content = sprintf(__('<strong>(Upgrade to Pro)</strong>', 'adminify'));
+			$pro_content = '<strong>' . __('(Upgrade to Pro)', 'adminify') . '</strong>';
 		} else {
 			$pro_content = $custom_message;
 		}
@@ -586,11 +593,11 @@ class Utils
 		}
 
 		$upgrade_notice_msg = sprintf(
-			__('<div class="adminify-pro-notice adminify-missing-addons"> %1$s %2$s </div>', 'adminify'),
-			self::jltwp_adminify_upgrade_pro_icon(),
-			self::wp_kses_custom($pro_content)
+			'<div class="adminify-pro-notice adminify-missing-addons"> %1$s %2$s </div>',
+			self::upgrade_pro_icon(),
+			self::kses_custom($pro_content)
 		);
-		return self::wp_kses_custom($upgrade_notice_msg);
+		return self::kses_custom($upgrade_notice_msg);
 	}
 
 
@@ -635,19 +642,20 @@ class Utils
 	}
 
 	/* White Label Upgrade Pro */
-	public static function jltwp_adminify_white_label_upgrade()
+	public static function white_label_upgrade()
 	{
 	?>
 		<div class="wp-adminify-white-label-notice-content">
 			<div class="wp-adminify-white-label-notice-logo">
-				<img src="<?php echo esc_url(WP_ADMINIFY_ASSETS_IMAGE) . 'logos/logo-text-light.svg'; ?>" alt="<?php echo esc_attr(WP_ADMINIFY); ?>">
+				<img src="<?php echo esc_url(PXLBSADMINIFY_ASSETS_IMAGE) . 'logos/logo-text-light.svg'; ?>" alt="<?php echo esc_attr(PXLBSADMINIFY); ?>">
 			</div>
 			<h2>
-				<?php echo sprintf(__('Upgrade <span>Pro</span> for White Labeling', 'adminify')); ?>
+				<?php echo wp_kses_post( sprintf(__('Upgrade <span>Pro</span> for White Labeling', 'adminify')) ); ?>
 			</h2>
 			<p>
 				<?php
-				echo sprintf(__('<strong>%1$s</strong> can be completely re-branded with your own brand Logo, Name and Author Details. Your clients will never know what tools you are using to build their website and will think that this is your own tool set. White-labeling works as long as your license is active. ', 'adminify'), esc_html(WP_ADMINIFY));
+				/* translators: %s: Plugin name */
+				echo wp_kses_post( sprintf(__('<strong>%1$s</strong> can be completely re-branded with your own brand Logo, Name and Author Details. Your clients will never know what tools you are using to build their website and will think that this is your own tool set. White-labeling works as long as your license is active. ', 'adminify'), esc_html(PXLBSADMINIFY)) );
 				?>
 				<br>
 				<em><?php esc_html_e('Note: Agency or Higher Plans Only', 'adminify'); ?></em>
@@ -663,7 +671,7 @@ class Utils
 	public static function get_widget_template_options()
 	{
 		$type           = 'widget';
-		$page_templates = self::jltwp_adminify_get_page_templates($type);
+		$page_templates = self::get_page_templates($type);
 
 		$options[-1] = __('Select', 'adminify');
 
@@ -681,7 +689,7 @@ class Utils
 	public static function get_section_template_options()
 	{
 		$type           = 'section';
-		$page_templates = self::jltwp_adminify_get_page_templates($type);
+		$page_templates = self::get_page_templates($type);
 
 		$options[-1] = __('Select', 'adminify');
 
@@ -699,7 +707,7 @@ class Utils
 	public static function get_page_template_options()
 	{
 		$type           = 'page';
-		$page_templates = self::jltwp_adminify_get_page_templates($type);
+		$page_templates = self::get_page_templates($type);
 
 		$options[-1] = __('Select', 'adminify');
 
@@ -714,12 +722,20 @@ class Utils
 		return $options;
 	}
 
-	public static function get_theme_presets($theme = null)
+	/**
+	 * Common preset CSS variables (padding / sizing / typography
+	 * defaults) shared by every theme preset and by the Pro
+	 * custom-color preset path. Extracted so the Pro filter
+	 * (Pro/Classes/OutputCSS_Body_Pro::build_custom_color_preset())
+	 * can reuse the same defaults instead of re-declaring them.
+	 *
+	 * @return array<string,string>
+	 */
+	public static function get_common_preset_vars()
 	{
-
-		$common_var = [
+		return [
 			'--adminify-menu-vertical-padding'          => '10px',
-			'--adminify-menu-horizontal-padding'		=> '8px',
+			'--adminify-menu-horizontal-padding'        => '8px',
 			'--adminify-menu-wrapper-padding-top'       => '16px',
 			'--adminify-menu-wrapper-padding-right'     => '8px',
 			'--adminify-menu-wrapper-padding-bottom'    => '16px',
@@ -729,14 +745,17 @@ class Utils
 			'--adminify-submenu-wrapper-padding-right'  => '0px',
 			'--adminify-submenu-wrapper-padding-bottom' => '8px',
 			'--adminify-submenu-wrapper-padding-left'   => '28px',
-			// '--adminify-menu-text-align' 			=> 'left',
-			// '--adminify-menu-text-transform' 		=> '',
-			// '--adminify-menu-text-decoration' 		=> 'none',
-			'--adminify-menu-font-size'      			=> '13px',
-			'--adminify-menu-line-height'    			=> '20px',
-			'--adminify-menu-letter-spacing' 			=> '',
-			'--adminify-menu-width'						=> '260px'
+			'--adminify-menu-font-size'                 => '13px',
+			'--adminify-menu-line-height'               => '20px',
+			'--adminify-menu-letter-spacing'            => '',
+			'--adminify-menu-width'                     => '260px',
 		];
+	}
+
+	public static function get_theme_presets($theme = null)
+	{
+
+		$common_var = self::get_common_preset_vars();
 
 		$presets = [
 
@@ -785,7 +804,7 @@ class Utils
 			],
 		];
 
-		$pro_presets = apply_filters('adminify_settings/color_presets', $common_var);
+		$pro_presets = apply_filters('pxlbsadminify_settings/color_presets', $common_var);
 
 		if( !empty(array_key_exists('preset3', $pro_presets)) ) {
 			$presets = array_merge($presets, $pro_presets);
@@ -810,7 +829,7 @@ class Utils
 		return [];
 	}
 
-	public static function jltwp_adminify_get_page_templates($type = '')
+	public static function get_page_templates($type = '')
 	{
 		$args = [
 			'post_type'      => 'elementor_library',
@@ -818,7 +837,7 @@ class Utils
 		];
 
 		if ($type) {
-			$args['tax_query'] = [
+			$args['tax_query'] = [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- intentional taxonomy filter on an admin-side query.
 				[
 					'taxonomy' => 'elementor_library_type',
 					'field'    => 'slug',
@@ -847,68 +866,77 @@ class Utils
 		return '.min' . $ext;
 	}
 
-	public static function wp_kses_atts_map(array $attrs)
+	public static function kses_atts_map(array $attrs)
 	{
 		return array_fill_keys(array_values($attrs), true);
 	}
 
-	public static function wp_kses_custom($content)
+	public static function kses_allowed_html()
 	{
 		/**
-		 * the context can be different 
-		 * The context for which to retrieve tags. Allowed values are 'post', 'strip', 'data', 'entities', or the name of a field filter such as 'pre_user_description', or an array of allowed HTML elements and attributes.
-		 * the post means here it will return all the tags that are allowed in post such as a, p, strong, em etc
-		*/
-		$allowed_tags = wp_kses_allowed_html('post'); // Details : https://developer.wordpress.org/reference/functions/wp_kses_allowed_html/
+		 * 'post' returns the tags allowed in post content (a, p, strong, em, etc.),
+		 * which we then extend with the custom tags below (svg, form fields, style).
+		 * https://developer.wordpress.org/reference/functions/wp_kses_allowed_html/
+		 */
+		$allowed_tags = wp_kses_allowed_html('post');
 		if( !is_array($allowed_tags) ) $allowed_tags = [];
 
 		$custom_tags = [
-			'select'         => self::wp_kses_atts_map(['class', 'id', 'style', 'width', 'height', 'title', 'data', 'name', 'autofocus', 'disabled', 'multiple', 'required', 'size']),
-			'input'          => self::wp_kses_atts_map(['class', 'id', 'style', 'width', 'height', 'title', 'data', 'name', 'autofocus', 'disabled', 'required', 'size', 'type', 'checked', 'readonly', 'placeholder', 'value', 'maxlength', 'min', 'max', 'multiple', 'pattern', 'step', 'autocomplete']),
-			'textarea'       => self::wp_kses_atts_map(['class', 'id', 'style', 'width', 'height', 'title', 'data', 'name', 'autofocus', 'disabled', 'required', 'rows', 'cols', 'wrap', 'maxlength']),
-			'option'         => self::wp_kses_atts_map(['class', 'id', 'label', 'disabled', 'label', 'selected', 'value']),
-			'optgroup'       => self::wp_kses_atts_map(['disabled', 'label', 'class', 'id']),
-			'form'           => self::wp_kses_atts_map(['class', 'id', 'data', 'style', 'width', 'height', 'accept-charset', 'action', 'autocomplete', 'enctype', 'method', 'name', 'novalidate', 'rel', 'target']),
-			'svg'            => self::wp_kses_atts_map(['class', 'xmlns', 'viewbox', 'width', 'height', 'fill', 'aria-hidden', 'aria-labelledby', 'role']),
-			'rect'           => self::wp_kses_atts_map(['rx', 'width', 'height', 'fill']),
-			'path'           => self::wp_kses_atts_map(['d', 'fill']),
-			'g'              => self::wp_kses_atts_map(['fill']),
-			'defs'           => self::wp_kses_atts_map(['fill']),
-			'linearGradient' => self::wp_kses_atts_map(['id', 'x1', 'x2', 'y1', 'y2', 'gradientUnits']),
-			'stop'           => self::wp_kses_atts_map(['stop-color', 'offset', 'stop-opacity']),
-			'style'          => self::wp_kses_atts_map(['type']),
-			'div'            => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'ul'             => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'li'             => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'label'          => self::wp_kses_atts_map(['class', 'for']),
-			'span'           => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'h1'             => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'h2'             => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'h3'             => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'h4'             => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'h5'             => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'h6'             => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'a'              => self::wp_kses_atts_map(['class', 'href', 'target', 'rel']),
-			'p'              => self::wp_kses_atts_map(['class', 'id', 'style', 'data']),
-			'table'          => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'thead'          => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'tbody'          => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'tr'             => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'th'             => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'td'             => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'i'              => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'button'         => self::wp_kses_atts_map(['class', 'id']),
-			'nav'            => self::wp_kses_atts_map(['class', 'id', 'style']),
-			'time'           => self::wp_kses_atts_map(['datetime']),
+			'select'         => self::kses_atts_map(['class', 'id', 'style', 'width', 'height', 'title', 'data', 'name', 'autofocus', 'disabled', 'multiple', 'required', 'size']),
+			'input'          => self::kses_atts_map(['class', 'id', 'style', 'width', 'height', 'title', 'data', 'name', 'autofocus', 'disabled', 'required', 'size', 'type', 'checked', 'readonly', 'placeholder', 'value', 'maxlength', 'min', 'max', 'multiple', 'pattern', 'step', 'autocomplete']),
+			'textarea'       => self::kses_atts_map(['class', 'id', 'style', 'width', 'height', 'title', 'data', 'name', 'autofocus', 'disabled', 'required', 'rows', 'cols', 'wrap', 'maxlength']),
+			'option'         => self::kses_atts_map(['class', 'id', 'label', 'disabled', 'label', 'selected', 'value']),
+			'optgroup'       => self::kses_atts_map(['disabled', 'label', 'class', 'id']),
+			'form'           => self::kses_atts_map(['class', 'id', 'data', 'style', 'width', 'height', 'accept-charset', 'action', 'autocomplete', 'enctype', 'method', 'name', 'novalidate', 'rel', 'target']),
+			'svg'            => self::kses_atts_map(['class', 'xmlns', 'viewbox', 'width', 'height', 'fill', 'stroke', 'aria-hidden', 'aria-labelledby', 'role']),
+			'rect'           => self::kses_atts_map(['rx', 'width', 'height', 'fill']),
+			'path'           => self::kses_atts_map(['d', 'fill', 'fill-rule', 'clip-rule', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin']),
+			'g'              => self::kses_atts_map(['fill']),
+			'defs'           => self::kses_atts_map(['fill']),
+			'linearGradient' => self::kses_atts_map(['id', 'x1', 'x2', 'y1', 'y2', 'gradientUnits']),
+			'stop'           => self::kses_atts_map(['stop-color', 'offset', 'stop-opacity']),
+			'style'          => self::kses_atts_map(['type']),
+			'div'            => self::kses_atts_map(['class', 'id', 'style']),
+			'ul'             => self::kses_atts_map(['class', 'id', 'style']),
+			'li'             => self::kses_atts_map(['class', 'id', 'style']),
+			'label'          => self::kses_atts_map(['class', 'for']),
+			'span'           => self::kses_atts_map(['class', 'id', 'style']),
+			'h1'             => self::kses_atts_map(['class', 'id', 'style']),
+			'h2'             => self::kses_atts_map(['class', 'id', 'style']),
+			'h3'             => self::kses_atts_map(['class', 'id', 'style']),
+			'h4'             => self::kses_atts_map(['class', 'id', 'style']),
+			'h5'             => self::kses_atts_map(['class', 'id', 'style']),
+			'h6'             => self::kses_atts_map(['class', 'id', 'style']),
+			'a'              => self::kses_atts_map(['class', 'href', 'target', 'rel']),
+			'p'              => self::kses_atts_map(['class', 'id', 'style', 'data']),
+			'table'          => self::kses_atts_map(['class', 'id', 'style']),
+			'thead'          => self::kses_atts_map(['class', 'id', 'style']),
+			'tbody'          => self::kses_atts_map(['class', 'id', 'style']),
+			'tr'             => self::kses_atts_map(['class', 'id', 'style']),
+			'th'             => self::kses_atts_map(['class', 'id', 'style']),
+			'td'             => self::kses_atts_map(['class', 'id', 'style']),
+			'i'              => self::kses_atts_map(['class', 'id', 'style']),
+			'button'         => self::kses_atts_map(['class', 'id']),
+			'nav'            => self::kses_atts_map(['class', 'id', 'style']),
+			'time'           => self::kses_atts_map(['datetime']),
 			'br'             => [],
 			'strong'         => [],
 			'style'          => [],
-			'img'            => self::wp_kses_atts_map(['class', 'src', 'alt', 'height', 'width', 'srcset', 'id', 'loading']),
+			'img'            => self::kses_atts_map(['class', 'src', 'alt', 'height', 'width', 'srcset', 'id', 'loading']),
 		];
 
-		$allowed_tags = array_merge_recursive($allowed_tags, $custom_tags);
+		return array_merge_recursive($allowed_tags, $custom_tags);
+	}
 
-		return wp_kses(stripslashes_deep($content), $allowed_tags);
+	/**
+	 * Sanitize a string with wp_kses() using the extended allowed-tags list.
+	 *
+	 * @param string $content
+	 * @return string
+	 */
+	public static function kses_custom($content)
+	{
+		return wp_kses( stripslashes_deep($content), self::kses_allowed_html() );
 	}
 
 
@@ -921,14 +949,14 @@ class Utils
 	 */
 	public static function missing_plugin_notice( $plugin_name = '' )
 	{
-		/* translators: %s: Plugin Name */
 		$missing_plugin_notice = sprintf(
+			/* translators: 1: Plugin name, 2: Addons/plugins admin page URL, 3: "Install Now" link text */
 			__('<strong>"%1$s"</strong> plugin is not Activated! Please install and activate <strong>%1$s</strong> Plugin <p> <a class="adminify-missing-addons" href="%2$s">%3$s</a></p>', 'adminify'),
 			esc_html($plugin_name),
 			admin_url('admin.php?page=wp-adminify-addons-plugins'),
 			__('Install Now', 'adminify')
 		);
-		return '<div class="adminify-missing-addons">' . self::jltwp_adminify_upgrade_pro_icon() . self::wp_kses_custom( $missing_plugin_notice ) . '</div>';
+		return '<div class="adminify-missing-addons">' . self::upgrade_pro_icon() . self::kses_custom( $missing_plugin_notice ) . '</div>';
 	}
 
 
@@ -1134,17 +1162,50 @@ class Utils
 		return array_merge_recursive($old_db, $result);
 	}
 
-	public static function adminify_upgrade_pro_class($inline_badge=false){
-		if(!empty($inline_badge)){
+	/**
+	 * Inline "Upgrade to Pro" marker rendered next to a checkbox option
+	 * label in the free build.
+	 *
+	 * Returns the rocket-icon + (Upgrade to Pro) span the settings UI
+	 * has rendered historically. The
+	 * Inc/Admin/AdminSettings::render_pro_locked_field() handler
+	 * detects this span inside a checkbox <li> and strips name= + sets
+	 * disabled on the enclosed input so the locked option cannot submit
+	 * a value.
+	 *
+	 * Returns an empty string when the Pro plugin is active so the Pro
+	 * UI is unchanged.
+	 */
+	public static function upgrade_pro_class($inline_badge = false){
+		if (function_exists('jltwp_adminify') && jltwp_adminify()->can_use_premium_code__premium_only()) {
+			return '';
+		}
+		if (!empty($inline_badge)){
 			return '<span class="adminify-pro-checkbox adminify-pro-badge adminify-pro-notice">Pro</span>';
 		}
-		return '<span class="adminify-pro-checkbox">' . self::jltwp_adminify_upgrade_pro_icon() . ' <strong>(Upgrade to Pro)</strong>' . '</span>';
+		return '<span class="adminify-pro-checkbox">' . self::upgrade_pro_icon() . ' <strong>(Upgrade to Pro)</strong>' . '</span>';
 	}
 
-	public static function adminify_upgrade_pro_badge($badge_text = 'Pro'){
-		if(!empty($badge_text)){
-			return '<span class="adminify-pro-badge">' . $badge_text . '</span>';
+	/**
+	 * Inline "Pro" badge rendered next to a field title in the free
+	 * build.
+	 *
+	 * Returns the legacy <span class="adminify-pro-badge">Pro</span>
+	 * markup. The render handler detects fields whose class list
+	 * contains adminify-pro-fieldset / -feature / -notice (the
+	 * Pro-style classes used alongside this badge) and neutralises
+	 * the inputs at render time.
+	 *
+	 * Returns an empty string when the Pro plugin is active.
+	 */
+	public static function upgrade_pro_badge($badge_text = 'Pro'){
+		if (function_exists('jltwp_adminify') && jltwp_adminify()->can_use_premium_code__premium_only()) {
+			return '';
 		}
+		if (!empty($badge_text)){
+			return '<span class="adminify-pro-badge">' . esc_html($badge_text) . '</span>';
+		}
+		return '';
 	}
 
 	/*
@@ -1160,16 +1221,15 @@ class Utils
 		return version_compare( $wp_version, $version, $operator );
 	}
 
-	public static function adminfiy_help_urls($module_name = '', $docs = '', $youtube = '', $facebook_grp = '', $support = '')
+	public static function help_urls($module_name = '', $docs = '', $youtube = '', $facebook_grp = '', $support = '')
 	{
 		$help_content = '';
 
-		// Modules
-		if (empty($module_name)) {
-			$module_name = '';
-		} else {
-			$module_name = $module_name;
-		}
+		// Modules ( sanitize the label so the returned template is safe to echo ).
+		// Callers may pass benign markup (e.g. an empty <span></span> used for layout/icons),
+		// so use wp_kses_post() — it keeps that markup while stripping scripts. esc_html()
+		// would print the tags literally (e.g. "<span></span>" shown as text).
+		$module_name = empty($module_name) ? '' : wp_kses_post($module_name);
 
 		$help_content_urls = '';
 
@@ -1195,6 +1255,58 @@ class Utils
 
 		$help_content = sprintf( '%1$s <div class="adminify-helps">%2$s</div>', $module_name, $help_content_urls );
 		return $help_content;
+	}
+
+	/**
+	 * Check if the request is coming from an iframe.
+	 *
+	 * @param None
+	 * @throws None
+	 * @return bool
+	 */
+	public static function is_iframe()
+	{
+			return isset($_SERVER["HTTP_SEC_FETCH_DEST"]) && strtolower(sanitize_text_field(wp_unslash($_SERVER["HTTP_SEC_FETCH_DEST"]))) === "iframe";
+		// $isIframe =  isset($_SERVER["HTTP_SEC_FETCH_DEST"]) && strtolower($_SERVER["HTTP_SEC_FETCH_DEST"]) === "iframe";
+			// if ( $isIframe ) return true;
+			// if ( isset($_GET['adminify-iframe']) ) return true;
+			// return false;
+	}
+
+	/**
+	 * Load a template file.
+	 *
+	 * @param string $template_name The name of the template file to load.
+	 * @throws None
+	 * @return void
+	 */
+	public static function load_template($template_name)
+	{
+		require_once PXLBSADMINIFY_PATH . 'Inc/Admin/Frames/Templates/' . $template_name;
+	}
+
+	/**
+	 * Multisite Check
+	 * @param URL
+	 * @return Admin_URL
+	 */
+	public static function maybe_network_admin_url($url) {
+    if ( is_network_admin() ) {
+        return network_admin_url($url);
+    }
+    return admin_url($url);
+	}
+
+	/**
+	 * Sluggify a string and replace hyphens with underscores.
+	 * @param string $string The string to sluggify.
+	 * @return string The sluggified string with underscores.
+	 */
+	public static function sluggify_with_underscores($string) {
+    $slug = sanitize_title($string);
+    $slug = str_replace('-', '_', $slug);
+
+    return $slug;
 	}
 
 }

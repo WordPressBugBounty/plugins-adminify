@@ -19,14 +19,14 @@
 							type: 'POST',
 							dataType: 'text',
 							async:false,
-							url: WPAdminify_ErrorL.ajax_url,
+							url: PXLBSADMINIFY_ERROR_LOGS.ajax_url,
 							data: {
-								action: 'jltwp_adminify_error_log_content_refresh',
-								security: WPAdminify_ErrorL.security_nonce,
+								action: 'pxlbsadminify_error_log_content_refresh',
+								security: PXLBSADMINIFY_ERROR_LOGS.security_nonce,
 								command: 'refresh_error_log',
 							},
 							beforeSend: function () {
-								$( '#adminify_error_log_refresh' ).text( WPAdminify_ErrorL.label_update );
+								$( '#adminify_error_log_refresh' ).text( PXLBSADMINIFY_ERROR_LOGS.label_update );
 							},
 							cache: false,
 							success: function (data){
@@ -34,7 +34,7 @@
 								// Refresh the textarea content
 								$( "textarea#adminify_error_log_area" ).val( refresh_content.file_content );
 								// // Change the button text
-								$( '#adminify_error_log_refresh' ).html( WPAdminify_ErrorL.label_done );
+								$( '#adminify_error_log_refresh' ).html( PXLBSADMINIFY_ERROR_LOGS.label_done );
 
 								// // Set button text to start text
 								setTimeout( function () { $( '#adminify_error_log_refresh' ).html( tempLabel ); }, 1500 );
@@ -64,15 +64,15 @@
 							type: 'POST',
 							dataType: 'text',
 							async:false,
-							url: WPAdminify_ErrorL.ajax_url,
+							url: PXLBSADMINIFY_ERROR_LOGS.ajax_url,
 							data: {
-								action: 'jltwp_adminify_error_log_content_clear',
-								security: WPAdminify_ErrorL.security_nonce,
+								action: 'pxlbsadminify_error_log_content_clear',
+								security: PXLBSADMINIFY_ERROR_LOGS.security_nonce,
 								command: 'clear_error_log',
 							},
 							beforeSend: function () {
 								// Clearing button text
-								$( '#adminify_error_log_clear' ).html( WPAdminify_ErrorL.label_clear );
+								$( '#adminify_error_log_clear' ).html( PXLBSADMINIFY_ERROR_LOGS.label_clear );
 							},
 							cache: false,
 							success: function (data) {
@@ -80,7 +80,7 @@
 								$( "textarea#adminify_error_log_area" ).val( data.file_content );
 
 								// Change the button text
-								$( '#adminify_error_log_clear' ).html( WPAdminify_ErrorL.label_done );
+								$( '#adminify_error_log_clear' ).html( PXLBSADMINIFY_ERROR_LOGS.label_done );
 
 								// Set button text to start text
 								setTimeout( function () { $( '#adminify_error_log_clear' ).html( tempLabel ); }, 1500 );

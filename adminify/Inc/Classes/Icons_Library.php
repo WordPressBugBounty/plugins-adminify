@@ -1,13 +1,13 @@
 <?php
 
-namespace WPAdminify\Inc\Classes;
+namespace PXLBSAdminify\Inc\Classes;
 
 // no direct access allowed
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 /**
- * WPAdminify
+ * PXLBSAdminify
  * Add Dashicons to Icon Picker
  *
  * @author Jewel Theme <support@jeweltheme.com>
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Icons_Library {
 
 	public function __construct() {
-		add_filter( 'adminify_field_icon_add_icons', [ $this, 'add_dashicons' ] );
+		add_filter( 'pxlbsadminify_field_icon_add_icons', [ $this, 'add_dashicons' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_custom_fonts_scripts' ], 100 );
 	}
 
@@ -26,7 +26,7 @@ class Icons_Library {
 	 * @return void
 	 */
 	public function enqueue_custom_fonts_scripts() {
-		wp_enqueue_style( 'wp-adminify-simple-line-icons' );
+		wp_enqueue_style( 'adminify-simple-line-icons' );
 	}
 
 

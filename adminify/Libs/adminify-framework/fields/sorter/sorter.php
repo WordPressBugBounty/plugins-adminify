@@ -22,7 +22,7 @@ if ( ! class_exists( 'ADMINIFY_Field_sorter' ) ) {
         'disabled_title' => esc_html__( 'Disabled', 'adminify' ),
       ) );
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       $this->value      = ( ! empty( $this->value ) ) ? $this->value : $this->field['default'];
       $enabled_options  = ( ! empty( $this->value['enabled'] ) ) ? $this->value['enabled'] : array();
@@ -60,7 +60,7 @@ if ( ! class_exists( 'ADMINIFY_Field_sorter' ) ) {
       }
 
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

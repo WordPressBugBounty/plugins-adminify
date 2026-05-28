@@ -1,6 +1,6 @@
 <?php
 
-namespace WPAdminify\Inc;
+namespace PXLBSAdminify\Inc;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

@@ -59,7 +59,7 @@ if ( ! class_exists( 'ADMINIFY_Field_background' ) ) {
 
       $this->value = wp_parse_args( $this->value, $default_value );
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       echo '<div class="adminify--background-colors">';
 
@@ -284,7 +284,7 @@ if ( ! class_exists( 'ADMINIFY_Field_background' ) ) {
 
       echo '</div>';
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

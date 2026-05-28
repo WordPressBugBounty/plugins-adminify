@@ -24,7 +24,7 @@ if ( ! class_exists( 'ADMINIFY_Field_button_set' ) ) {
 
       $value = ( is_array( $this->value ) ) ? $this->value : array_filter( (array) $this->value );
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       if ( isset( $this->field['options'] ) ) {
 
@@ -43,8 +43,8 @@ if ( ! class_exists( 'ADMINIFY_Field_button_set' ) ) {
             $checked = ( in_array( $key, $value ) || ( empty( $value ) && empty( $key ) ) ) ? ' checked' : '';
 
             echo '<div class="adminify--sibling adminify--button'. esc_attr( $active ) .'">';
-            echo '<input type="'. esc_attr( $type ) .'" name="'. esc_attr( $this->field_name( $extra ) ) .'" value="'. esc_attr( $key ) .'"'. $this->field_attributes() . esc_attr( $checked ) .'/>';
-            echo $option;
+            echo '<input type="'. esc_attr( $type ) .'" name="'. esc_attr( $this->field_name( $extra ) ) .'" value="'. esc_attr( $key ) .'"'. $this->field_attributes() . esc_attr( $checked ) .'/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
+            echo wp_kses_post( $option );
             echo '</div>';
 
           }
@@ -59,7 +59,7 @@ if ( ! class_exists( 'ADMINIFY_Field_button_set' ) ) {
 
       }
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

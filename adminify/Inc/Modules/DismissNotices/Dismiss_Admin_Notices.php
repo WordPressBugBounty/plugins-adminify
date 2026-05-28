@@ -1,10 +1,9 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\DismissNotices;
+namespace PXLBSAdminify\Inc\Modules\DismissNotices;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Admin\AdminSettings;
-use WPAdminify\Inc\Admin\AdminSettingsModel;
+use PXLBSAdminify\Inc\Admin\AdminSettings;
+use PXLBSAdminify\Inc\Admin\AdminSettingsModel;
 
 
 // no direct access allowed
@@ -20,20 +19,19 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 
 if ( ! class_exists( 'Dismiss_Admin_Notices' ) ) {
+	/**
+	 * Base class for the Dismiss Admin Notices module. The free build
+	 * has no admin-notice handlers of its own — every concrete handler
+	 * (welcome_panel, php_nag, core/plugin/theme update notices,
+	 * site_health, and the hide-notices stack) lives in
+	 * Pro/Classes/DismissNotice_Pro.php which extends this class.
+	 *
+	 * Kept as an empty base so DismissNotice_Pro continues to extend
+	 * a known free-side class.
+	 */
 	class Dismiss_Admin_Notices extends AdminSettingsModel {
 		public function __construct() {
-			$this->options       = (array) AdminSettings::get_instance()->get();
-
-			// Remove Gutenberg Panel
-			if (!empty($this->options['other_notices']) && in_array('welcome_panel', $this->options['other_notices'])) {
-				add_action('wp_dashboard_setup', [$this, 'remove_welcome_panel'], 999);
-			}
-		}
-
-		//Remove Welcome Panel
-		public function remove_welcome_panel()
-		{
-			remove_action('welcome_panel', 'wp_welcome_panel');
+			$this->options = (array) AdminSettings::get_instance()->get();
 		}
 	}
 }

@@ -17,9 +17,9 @@
             $.post(
                 ajaxurl,
                 {
-                    action: "update_post_types_order",
+                    action: "pxlbsadminify_update_post_types_order",
                     order: $("#adminify-pto-media #sortable").sortable("serialize"),
-                    security: adminify_pto.nonce,
+                    security: PXLBSADMINIFY_PTO.nonce,
                 },
                 function () {
                     $("#adminify-ajax-response").html(
@@ -46,7 +46,7 @@
     //     helper: adminifyPTOHelper,
     //     update: function (e, ui) {
     //         $.post(ajaxurl, {
-    //             action: "update_post_types_order",
+    //             action: "pxlbsadminify_update_post_types_order",
     //             order: $("#the-list").sortable("serialize"),
     //         });
     //     },
@@ -66,9 +66,9 @@
         placeholder: "ui-sortable-placeholder",
         update: function (e, ui) {
             $.post(ajaxurl, {
-                action: "update_post_types_order",
+                action: "pxlbsadminify_update_post_types_order",
                 order: $("#the-list").sortable("serialize"),
-                security: adminify_pto.nonce,
+                security: PXLBSADMINIFY_PTO.nonce,
             });
         },
     });
@@ -91,9 +91,9 @@
         placeholder: "ui-sortable-placeholder",
         update: function (e, ui) {
             $.post(ajaxurl, {
-                action: "update_post_types_taxonomy_order",
+                action: "pxlbsadminify_update_post_types_taxonomy_order",
                 order: $("#the-list").sortable("serialize"),
-                security: adminify_pto.nonce,
+                security: PXLBSADMINIFY_PTO.nonce,   
             });
         },
     });
@@ -133,9 +133,9 @@
         placeholder: "ui-sortable-placeholder",
         update: function (e, ui) {
             $.post(ajaxurl, {
-                action: "update_post_types_order_sites",
+                action: "pxlbsadminify_update_post_types_order_sites",
                 order: $("#the-list").sortable("serialize"),
-                security: adminify_pto.nonce,
+                security: PXLBSADMINIFY_PTO.nonce,
             });
         },
     });

@@ -1,6 +1,10 @@
 <?php
 
-namespace WPAdminify\Inc\Classes;
+namespace PXLBSAdminify\Inc\Classes;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
 
 class Upgrade
 {
@@ -10,7 +14,7 @@ class Upgrade
 	 *
 	 * @var string $option_name
 	 */
-	protected $option_name = 'wp_adminify_version';
+	protected $option_name = 'pxlbsadminify_version';
 
 	/**
 	 * Lists of upgrades
@@ -21,7 +25,8 @@ class Upgrade
 		'3.0.2'   => 'Upgrades/upgrade-3.0.2.php',
 		'3.0.9'   => 'Upgrades/upgrade-3.0.9.php',
 		'3.2.4.4' => 'Upgrades/upgrade-3.2.4.4.php',
-		'4.0.1'   => 'Upgrades/upgrade-4.0.php'
+		'4.0.1'   => 'Upgrades/upgrade-4.0.php',
+		'4.2.0'   => 'Upgrades/upgrade-4.2.0.php'
 	];
 
 	/**
@@ -31,7 +36,15 @@ class Upgrade
 	 */
 	protected function get_installed_version()
 	{
-		return get_option($this->option_name, '1.0.0');
+		$version = get_option($this->option_name, false);
+
+		// Fall back to the legacy version option (renamed in v4.2.0) so existing
+		// installs report their real version and historical upgrades don't re-run.
+		if (false === $version) {
+			$version = get_option('wp_adminify_version', '1.0.0');
+		}
+
+		return $version;
 	}
 
 	/**
@@ -41,7 +54,7 @@ class Upgrade
 	 */
 	public function if_updates_available()
 	{
-		if (version_compare($this->get_installed_version(), WP_ADMINIFY_VER, '<')) {
+		if (version_compare($this->get_installed_version(), PXLBSADMINIFY_VER, '<')) {
 			return true;
 		}
 
@@ -64,6 +77,6 @@ class Upgrade
 			}
 		}
 
-		// update_option( $this->option_name, WP_ADMINIFY_VER );
+		// update_option( $this->option_name, PXLBSADMINIFY_VER );
 	}
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace WPAdminify\Inc\Admin\Options;
+namespace PXLBSAdminify\Inc\Admin\Options;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Classes\Helper;
-use WPAdminify\Inc\Classes\Adminify_Rollback;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Classes\Helper;
+use PXLBSAdminify\Inc\Classes\Adminify_Rollback;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	die;
@@ -19,9 +19,9 @@ class RollbackVersion {
 		}
 
 		$this->prefix = '_adminify_rollback';
-		$this->jltwp_adminify_rollback_options();
+		$this->pxlbsadminify_rollback_options();
 
-		add_action( 'admin_enqueue_scripts', [ $this, 'jltwp_adminify_rollback_enqueue_scripts' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'pxlbsadminify_rollback_enqueue_scripts' ] );
 	}
 
 	public function get_defaults() {
@@ -33,11 +33,12 @@ class RollbackVersion {
 	/**
 	 * Scripts/Styles
 	 */
-	public function jltwp_adminify_rollback_enqueue_scripts() {
+	public function pxlbsadminify_rollback_enqueue_scripts() {
 		global $pagenow;
 
 		// Load Scripts/Styles only WP Adminify Custom CSS/JS Page
-		if ( ! empty( $_GET['page'] ) && ( 'admin.php' === $pagenow ) && ( 'adminify-rollback-version' === $_GET['page'] ) ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
+		if ( ! empty( $_GET['page'] ) && ( 'admin.php' === $pagenow ) && ( 'adminify-rollback-version' === sanitize_key( wp_unslash( $_GET['page'] ) ) ) ) {
 			$this->version_rollback_admin_script();
 		}
 	}
@@ -53,11 +54,11 @@ class RollbackVersion {
             }
             .adminify-rollback-version .adminify-field-callback a.dashicons{ width: inherit; }';
 
-		echo '<style>' . wp_strip_all_tags( $rollback_custom_admin_styles ) . '</style>';
+		echo '<style>' . esc_html( wp_strip_all_tags( $rollback_custom_admin_styles ) ) . '</style>';
 	}
 
 
-	public static function jltwp_adminify_rollback_contents() {      ?>
+	public static function pxlbsadminify_rollback_contents() {      ?>
 
 		<div class="border border-muted">
 
@@ -72,13 +73,13 @@ class RollbackVersion {
 				$rollback_html .= "<option value='{$version}'>$version</option>";
 			}
 			$rollback_html .= '</select>';
-			echo Utils::wp_kses_custom( $rollback_html );
+			echo Utils::kses_custom( $rollback_html ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped.
 
 			echo sprintf(
 				wp_kses_post( '<a data-placeholder-text="%1$s" href="#" data-placeholder-url="%2$s" class="button button-primary wp-adminify-btn wp-adminify-rollback-button dashicons dashicons-update-alt ml-2">%3$s</a>' ),
-				esc_html__( 'Reinstall', WP_ADMINIFY_VER ) . ' v' . esc_html( VERSION ),
-				esc_url_raw( wp_nonce_url( admin_url( 'admin-post.php?action=wp_adminify_rollback_version&version=VERSION' ), 'wp_adminify_rollback_version' ) ),
-				esc_html__( 'Reinstall', WP_ADMINIFY_VER )
+				esc_html__( 'Reinstall', 'adminify' ) . ' v' . esc_html( PXLBSADMINIFY_VER ),
+				esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=pxlbsadminify_rollback_version&version=VERSION' ), 'pxlbsadminify_rollback_version' ) ),
+				esc_html__( 'Reinstall', 'adminify' )
 			);
 			?>
 			<p class="wp-adminify-roll-desc pt-2 has-text-danger">
@@ -115,32 +116,33 @@ class RollbackVersion {
 	}
 
 
-	public function jltwp_adminify_rollback_fields( &$fields ) {
+	public function pxlbsadminify_rollback_fields( &$fields ) {
 		$fields[] = [
 			'type'    => 'subheading',
-			'content' => Utils::adminfiy_help_urls(
+			'content' => Utils::help_urls(
 				__( 'Rollback to Previous Version', 'adminify' ),
 				'https://wpadminify.com/kb/version-rollback/',
 				'https://www.youtube.com/playlist?list=PLqpMw0NsHXV-EKj9Xm1DMGa6FGniHHly8',
 				'https://www.facebook.com/groups/jeweltheme',
-				\WPAdminify\Inc\Admin\AdminSettings::support_url()
+				\PXLBSAdminify\Inc\Admin\AdminSettings::support_url()
 			),
 		];
 
 		$fields[] = [
 			'type'    => 'submessage',
 			'style'   => 'info',
-			'content' => sprintf( __( '<strong>Experiencing an issue with %1$s <em>v%2$s</em>? Rollback to a previous version before the issue appeared.</strong>', 'adminify' ), esc_html( WP_ADMINIFY ), esc_html( WP_ADMINIFY_VER ) ),
+			/* translators: %1$s: plugin name, %2$s: plugin version */
+			'content' => '<strong>' . sprintf( __( 'Experiencing an issue with %1$s <em>v%2$s</em>? Rollback to a previous version before the issue appeared.', 'adminify' ), esc_html( PXLBSADMINIFY ), esc_html( PXLBSADMINIFY_VER ) ) . '</strong>',
 		];
 
 		$fields[] = [
 			'id'       => 'adminify_rollback',
 			'type'     => 'callback',
-			'function' => '\WPAdminify\Inc\Admin\Options\RollbackVersion::jltwp_adminify_rollback_contents',
+			'function' => '\PXLBSAdminify\Inc\Admin\Options\RollbackVersion::pxlbsadminify_rollback_contents',
 		];
 	}
 
-	public function jltwp_adminify_rollback_options() {
+	public function pxlbsadminify_rollback_options() {
 		if ( ! class_exists( 'ADMINIFY' ) ) {
 			return;
 		}
@@ -151,7 +153,7 @@ class RollbackVersion {
 			[
 
 				// Framework Title
-				'framework_title'         => __( 'Rollback Version <small>for WP Adminify</small>', 'adminify' ),
+				'framework_title'         => __( 'Rollback Version <small>for Adminify</small>', 'adminify' ),
 				'framework_class'         => 'adminify-rollback-version',
 
 				// menu settings
@@ -209,7 +211,7 @@ class RollbackVersion {
 		);
 
 		$fields = [];
-		$this->jltwp_adminify_rollback_fields( $fields );
+		$this->pxlbsadminify_rollback_fields( $fields );
 
 		// Rollback Section
 		\ADMINIFY::createSection(

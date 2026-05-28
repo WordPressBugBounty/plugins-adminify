@@ -1,8 +1,8 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\MenuDuplicator;
+namespace PXLBSAdminify\Inc\Modules\MenuDuplicator;
 
-use WPAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Utils;
 
 // no direct access allowed
 if (!defined('ABSPATH')) {
@@ -21,11 +21,11 @@ class MenuDuplicator
 
 	public function __construct()
 	{
-		add_action('admin_footer', [$this, 'jltwp_adminify_add_duplicate_button'], 11);
-		add_action('admin_footer', [$this, 'jltwp_adminify_creating_menu_duplicate'], 6);
+		add_action('admin_footer', [$this, 'add_duplicate_button'], 11);
+		add_action('admin_footer', [$this, 'creating_menu_duplicate'], 6);
 
 		// Duplicate Nav Menu Item
-		add_action('admin_footer', [$this, 'jltwp_adminify_duplicate_nav_menu_item'], 12);
+		add_action('admin_footer', [$this, 'duplicate_nav_menu_item'], 12);
 	}
 
 	/**
@@ -33,17 +33,28 @@ class MenuDuplicator
 	 *
 	 * @return void
 	 */
-	public function jltwp_adminify_add_duplicate_button()
+	public function add_duplicate_button()
 	{
+		// Only users who can manage menus may see/use the duplicate action.
+		if ( ! current_user_can( 'edit_theme_options' ) ) {
+			return;
+		}
+
 		$current_screen = get_current_screen();
-		$current_menu   = get_user_option('nav_menu_recently_edited');
-		if ($current_screen->id == 'nav-menus' && $_GET['menu'] != '0') {
+		$current_menu   = (int) get_user_option('nav_menu_recently_edited');
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
+		if ($current_screen->id == 'nav-menus' && isset($_GET['menu']) && sanitize_text_field(wp_unslash($_GET['menu'])) != '0') {
+			// CSRF protection: sign the duplicate action with a nonce tied to the menu id.
+			$duplicate_url = wp_nonce_url(
+				add_query_arg( 'adminify-menu-duplicate', $current_menu, admin_url( 'nav-menus.php' ) ),
+				'adminify_duplicate_menu_' . $current_menu
+			);
 			$return  = '';
-			$return .= '<div class="AdminifyDuplicateMenuSpinenr spinner"></div><a class="AdminifyDuplicateMenuClick button button-primary button-large menu-save" href="?adminify-menu-duplicate=' . $current_menu . '">' . __('Duplicate Menu', 'adminify') . '</a>';
+			$return .= '<div class="AdminifyDuplicateMenuSpinenr spinner"></div><a class="AdminifyDuplicateMenuClick button button-primary button-large menu-save" href="' . esc_url( $duplicate_url ) . '">' . __('Duplicate Menu', 'adminify') . '</a>';
 ?>
 			<script type="text/javascript">
 				var update_menu_form = jQuery('#update-nav-menu');
-				update_menu_form.find('.publishing-action').append('<?php echo Utils::wp_kses_custom($return); ?>');
+				update_menu_form.find('.publishing-action').append('<?php echo Utils::kses_custom($return); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped. ?>');
 				jQuery('.AdminifyDuplicateMenuClick').click(function() {
 					jQuery('.AdminifyDuplicateMenuSpinenr').addClass('is-active').show();
 				});
@@ -58,14 +69,27 @@ class MenuDuplicator
 	 *
 	 * @return void
 	 */
-	public function jltwp_adminify_creating_menu_duplicate()
+	public function creating_menu_duplicate()
 	{
 		$current_screen = get_current_screen();
 		if ($current_screen->id == 'nav-menus') {
 			if (isset($_GET['adminify-menu-duplicate'])) {
-				$id        = intval(wp_unslash($_GET['adminify-menu-duplicate']));
+
+				$id = intval(wp_unslash($_GET['adminify-menu-duplicate']));
+
+				// Authorization: only menu managers may duplicate.
+				if ( ! current_user_can( 'edit_theme_options' ) ) {
+					return;
+				}
+
+				// CSRF: verify the nonce that was attached to the duplicate link.
+				$nonce = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
+				if ( ! wp_verify_nonce( $nonce, 'adminify_duplicate_menu_' . $id ) ) {
+					wp_die( esc_html__( 'Security check failed.', 'adminify' ) );
+				}
+
 				$source    = wp_get_nav_menu_object($id);
-				$duplicate = $this->render_menu_duplicate(sanitize_text_field(wp_unslash($_GET['adminify-menu-duplicate'])), $source->name . ' ' . __('(Copy)', 'adminify'));
+				$duplicate = $this->render_menu_duplicate($id, $source->name . ' ' . __('(Copy)', 'adminify'));
 				if ($duplicate) {
 			?>
 					<script type="text/javascript">
@@ -146,7 +170,7 @@ class MenuDuplicator
 			}
 
 			// allow developers to run any custom functionality they'd like
-			do_action('duplicate_menu_item', $menu_item, $args);
+			do_action('pxlbsadminify_duplicate_menu_item', $menu_item, $args);
 
 			$i++;
 		}
@@ -160,7 +184,7 @@ class MenuDuplicator
 	 *
 	 * @return void
 	 */
-	public function jltwp_adminify_duplicate_nav_menu_item()
+	public function duplicate_nav_menu_item()
 	{
 		global $pagenow;
 

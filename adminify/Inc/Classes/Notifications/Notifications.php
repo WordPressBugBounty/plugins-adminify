@@ -1,9 +1,9 @@
 <?php
 
-namespace WPAdminify\Inc\Classes\Notifications;
+namespace PXLBSAdminify\Inc\Classes\Notifications;
 
-use WPAdminify\Inc\Classes\Notifications\Base\Date;
-use WPAdminify\Inc\Classes\Helper;
+use PXLBSAdminify\Inc\Classes\Notifications\Base\Date;
+use PXLBSAdminify\Inc\Classes\Helper;
 // No, Direct access Sir !!!
 if ( !defined( 'ABSPATH' ) ) {
     exit;
@@ -26,16 +26,21 @@ class Notifications {
      */
     public function __construct() {
         $this->manager = new Manager();
-        $this->slug = Helper::jltwp_adminify_slug_cleanup();
+        $this->slug = Helper::slug_cleanup();
         add_action( 'admin_print_scripts', array($this, 'init_notifications'), 99999999 );
         add_action(
-            'jltwp_adminify_display_notice',
+            'pxlbsadminify_display_notice',
             array($this, 'display_notice'),
             10,
             2
         );
-        // add_action('jltwp_adminify_display_popup', array($this, 'display_popup'), 10, 2);
-        add_action( 'wp_ajax_jltwp_adminify_notification_action', array($this, 'notification_action') );
+        add_action(
+            'pxlbsadminify_display_popup',
+            array($this, 'display_popup'),
+            10,
+            2
+        );
+        add_action( 'wp_ajax_pxlbsadminify_notification_action', array($this, 'pxlbsadminify_notification_action') );
     }
 
     /**
@@ -43,8 +48,8 @@ class Notifications {
      *
      * @author Jewel Theme <support@jeweltheme.com>
      */
-    public function notification_action() {
-        check_ajax_referer( 'jltwp_adminify_notification_nonce' );
+    public function pxlbsadminify_notification_action() {
+        check_ajax_referer( 'pxlbsadminify_notification_nonce' );
         // Security check - only administrators can manage notifications
         if ( !current_user_can( 'manage_options' ) ) {
             wp_send_json_error( array(
@@ -67,7 +72,7 @@ class Notifications {
                 }
                 $notification->fire( $trigger_time, $notification_type )->save();
             } else {
-                ++$count;
+                $count++;
                 $notification->maybe_delay( $this->date_increment( $trigger_time, $this->conflict_days * $count ) )->save();
             }
         }
@@ -85,7 +90,7 @@ class Notifications {
         // $trigger_time should be today .
         $trigger_time = $this->current_time();
         // Block if necessary .
-        $notification_last_fired = get_option( "jltwp_adminify_{$type}_last_interact" );
+        $notification_last_fired = get_option( "pxlbsadminify_{$type}_last_interact" );
         if ( $notification_last_fired ) {
             $notification_enable_date = $this->date_increment( $notification_last_fired, $this->conflict_days );
             if ( $this->date_is_prev( $trigger_time, $notification_enable_date ) ) {
@@ -99,7 +104,7 @@ class Notifications {
             return;
         }
         $notification = $exec_notifications[0];
-        do_action( "jltwp_adminify_display_{$type}", $notification, $trigger_time );
+        do_action( "pxlbsadminify_display_{$type}", $notification, $trigger_time );
     }
 
     /**
@@ -148,11 +153,11 @@ class Notifications {
      * @author Jewel Theme <support@jeweltheme.com>
      */
     public function display_popup( $popup, $trigger_time ) {
-        if ( 'FALSE' === $this->get_content( 'is_campaign' ) ) {
+        $screen = get_current_screen();
+        if ( !in_array( $screen->id, ['toplevel_page_wp-adminify-settings', 'dashboard'] ) ) {
             return;
         }
         $image_url = $popup->get_content( 'image_url' );
-        $notice = ( !empty( $popup->get_content( 'notice' ) ) ? $popup->get_content( 'notice' ) : '' );
         ?>
 
 		<div class="wp-adminify-popup" id="wp-adminify-popup" data-plugin="<?php 
@@ -175,21 +180,6 @@ class Notifications {
 
 					<!-- countdown  -->
 					<div class="wp-adminify-popup-countdown" style="display: none;">
-
-						<?php 
-        if ( $notice ) {
-            ?>
-							<span data-counter="notice" style="color:#F4B740; font-size:14px; padding-bottom:20px; font-style:italic;">
-								<?php 
-            echo esc_html__( 'Notice:', 'adminify' );
-            ?> <?php 
-            echo esc_html( $notice );
-            ?>
-							</span>
-						<?php 
-        }
-        ?>
-
 						<span class="wp-adminify-popup-countdown-text"><?php 
         echo esc_html__( 'Deal Ends In', 'adminify' );
         ?></span>
@@ -241,7 +231,7 @@ class Notifications {
 		</div>
 
 		<script>
-			function jltwp_adminify_popup_action(evt, $this, $action_type) {
+			function pxlbsadminify_popup_action(evt, $this, $action_type) {
 
 				evt.preventDefault();
 
@@ -250,9 +240,9 @@ class Notifications {
 				jQuery.post('<?php 
         echo esc_url( admin_url( 'admin-ajax.php' ) );
         ?>', {
-					action: 'jltwp_adminify_notification_action',
+					action: 'pxlbsadminify_notification_action',
 					_wpnonce: '<?php 
-        echo esc_js( wp_create_nonce( 'jltwp_adminify_notification_nonce' ) );
+        echo esc_js( wp_create_nonce( 'pxlbsadminify_notification_nonce' ) );
         ?>',
 					action_type: $action_type,
 					notification_type: 'popup',
@@ -264,16 +254,16 @@ class Notifications {
 
 			// Notice Dismiss
 			jQuery('body').on('click', '.wp-adminify-popup .popup-dismiss', function(evt) {
-				jltwp_adminify_popup_action(evt, jQuery(this), 'dismiss');
+				pxlbsadminify_popup_action(evt, jQuery(this), 'dismiss');
 			});
 
 			// Notice Disable
 			jQuery('body').on('click', '.wp-adminify-popup .popup-disable', function(evt) {
-				jltwp_adminify_popup_action(evt, jQuery(this), 'disable');
+				pxlbsadminify_popup_action(evt, jQuery(this), 'disable');
 			});
 		</script>
 
-<?php 
+		<?php 
     }
 
 }

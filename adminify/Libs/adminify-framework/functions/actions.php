@@ -16,13 +16,18 @@ if ( ! function_exists( 'adminify_get_icons' ) ) {
       wp_send_json_error( array( 'error' => esc_html__( 'Error: Invalid nonce verification.', 'adminify' ) ) );
     }
 
+    // Authorization: this icon picker is an editor-facing admin helper.
+    if ( ! current_user_can( 'edit_posts' ) ) {
+      wp_send_json_error( array( 'error' => esc_html__( 'Error: You do not have permission to perform this action.', 'adminify' ) ) );
+    }
+
     ob_start();
 
     $icon_library = ( apply_filters( 'adminify_fa4', false ) ) ? 'fa4' : 'fa5';
 
     ADMINIFY::include_plugin_file( 'fields/icon/'. $icon_library .'-icons.php' );
 
-    $icon_lists = apply_filters( 'adminify_field_icon_add_icons', adminify_get_default_icons() );
+    $icon_lists = apply_filters( 'pxlbsadminify_field_icon_add_icons', adminify_get_default_icons() );
 
     if ( ! empty( $icon_lists ) ) {
 
@@ -68,6 +73,11 @@ if ( ! function_exists( 'adminify_export' ) ) {
       die( esc_html__( 'Error: Invalid nonce verification.', 'adminify' ) );
     }
 
+    // Authorization: only administrators may export settings.
+    if ( ! current_user_can( 'manage_options' ) ) {
+      die( esc_html__( 'Error: You do not have permission to perform this action.', 'adminify' ) );
+    }
+
     if ( empty( $unique ) ) {
       die( esc_html__( 'Error: Invalid key.', 'adminify' ) );
     }
@@ -79,7 +89,7 @@ if ( ! function_exists( 'adminify_export' ) ) {
     header('Pragma: no-cache');
     header('Expires: 0');
 
-    echo json_encode( get_option( $unique ) );
+    echo wp_json_encode( get_option( $unique ) );
 
     die();
 
@@ -100,10 +110,16 @@ if ( ! function_exists( 'adminify_import_ajax' ) ) {
 
     $nonce  = ( ! empty( $_POST[ 'nonce' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ 'nonce' ] ) ) : '';
     $unique = ( ! empty( $_POST[ 'unique' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ 'unique' ] ) ) : '';
-    $data   = ( ! empty( $_POST[ 'data' ] ) ) ? wp_kses_post_deep( json_decode( wp_unslash( trim( $_POST[ 'data' ] ) ), true ) ) : array();
+    // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified below before any data is processed.
+    $data   = ( ! empty( $_POST[ 'data' ] ) ) ? wp_kses_post_deep( json_decode( trim( wp_unslash( $_POST[ 'data' ] ) ), true ) ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- each field is sanitized individually by the framework's per-field sanitize handlers.
 
     if ( ! wp_verify_nonce( $nonce, 'adminify_backup_nonce' ) ) {
       wp_send_json_error( array( 'error' => esc_html__( 'Error: Invalid nonce verification.', 'adminify' ) ) );
+    }
+
+    // Authorization: only administrators may import settings.
+    if ( ! current_user_can( 'manage_options' ) ) {
+      wp_send_json_error( array( 'error' => esc_html__( 'Error: You do not have permission to perform this action.', 'adminify' ) ) );
     }
 
     if ( empty( $unique ) ) {
@@ -164,7 +180,8 @@ if ( ! function_exists( 'adminify_chosen_ajax' ) ) {
     $nonce = ( ! empty( $_POST[ 'nonce' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ 'nonce' ] ) ) : '';
     $type  = ( ! empty( $_POST[ 'type' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ 'type' ] ) ) : '';
     $term  = ( ! empty( $_POST[ 'term' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ 'term' ] ) ) : '';
-    $query = ( ! empty( $_POST[ 'query_args' ] ) ) ? wp_kses_post_deep( $_POST[ 'query_args' ] ) : array();
+    // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified below before any data is processed.
+    $query = ( ! empty( $_POST[ 'query_args' ] ) ) ? wp_kses_post_deep( wp_unslash( $_POST[ 'query_args' ] ) ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- each field is sanitized individually by the framework's per-field sanitize handlers.
 
     if ( ! wp_verify_nonce( $nonce, 'adminify_chosen_ajax_nonce' ) ) {
       wp_send_json_error( array( 'error' => esc_html__( 'Error: Invalid nonce verification.', 'adminify' ) ) );

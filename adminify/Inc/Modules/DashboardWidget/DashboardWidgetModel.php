@@ -1,10 +1,14 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\DashboardWidget;
+namespace PXLBSAdminify\Inc\Modules\DashboardWidget;
 
-use WPAdminify\Inc\Base_Model;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
+use PXLBSAdminify\Inc\Base_Model;
 
 abstract class DashboardWidgetModel extends Base_Model {
 
-	protected $prefix = '_wpadminify_dasboard_widgets';
+	protected $prefix = 'pxlbsadminify_dasboard_widgets';
 }

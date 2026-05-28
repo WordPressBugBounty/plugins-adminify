@@ -1,7 +1,7 @@
 <?php
-namespace WPAdminify\Inc\Classes;
+namespace PXLBSAdminify\Inc\Classes;
 
-use WPAdminify\Inc\Classes\Notifications\Base\User_Data;
+use PXLBSAdminify\Inc\Classes\Notifications\Base\User_Data;
 
 // No, Direct access Sir !!!
 if ( ! defined( 'ABSPATH' ) ) {
@@ -26,7 +26,7 @@ class Feedback {
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_suvery_scripts' ) );
 		add_action( 'admin_footer', array( $this, 'deactivation_footer' ) );
-		add_action( 'wp_ajax_jltwp_adminify_deactivation_survey', array( $this, 'jltwp_adminify_deactivation_survey' ) );
+		add_action( 'wp_ajax_pxlbsadminify_deactivation_survey', array( $this, 'deactivation_survey' ) );
 	}
 
 
@@ -46,15 +46,22 @@ class Feedback {
 
 	public function admin_suvery_scripts( $handle ) {
 		if ( 'plugins.php' === $handle ) {
-			wp_enqueue_style( 'jltwp_adminify-survey', WP_ADMINIFY_ASSETS . 'css/plugin-survey.css' );
+			wp_enqueue_style( 'adminify-survey', PXLBSADMINIFY_ASSETS . 'css/plugin-survey.css', array(), PXLBSADMINIFY_VER );
 		}
 	}
 
 	/**
 	 * Deactivation Survey
 	 */
-	public function jltwp_adminify_deactivation_survey() {
-		check_ajax_referer( 'jltwp_adminify_deactivation_nonce' );
+	public function deactivation_survey() {
+		check_ajax_referer( 'pxlbsadminify_deactivation_survey_nonce' );
+
+		// Only users who can deactivate plugins should be able to submit
+		// the deactivation survey, since it represents an action tied to
+		// the plugin lifecycle.
+		if ( ! current_user_can( 'deactivate_plugins' ) ) {
+			wp_send_json_error( array( 'mess' => __( 'You are not allowed to perform this action.', 'adminify' ) ), 403 );
+		}
 
 		$deactivation_reason = ! empty( $_POST['deactivation_reason'] ) ? sanitize_text_field( wp_unslash( $_POST['deactivation_reason'] ) ) : '';
 
@@ -99,10 +106,12 @@ class Feedback {
 				'title'             => esc_html__( 'It\'s a temporary deactivation', 'adminify' ),
 				'input_placeholder' => '',
 			),
-			'jltwp_adminify_pro'             => array(
-				'title'             => sprintf( esc_html__( 'I have %1$s Pro', 'adminify' ), WP_ADMINIFY ),
+			'pxlbsadminify_pro'             => array(
+				/* translators: %1$s: Plugin name */
+				'title'             => sprintf( esc_html__( 'I have %1$s Pro', 'adminify' ), PXLBSADMINIFY ),
 				'input_placeholder' => '',
-				'alert'             => sprintf( esc_html__( 'Wait! Don\'t deactivate %1$s. You have to activate both %1$s and %1$s Pro in order for the plugin to work.', 'adminify' ), WP_ADMINIFY ),
+				/* translators: %1$s: Plugin name */
+				'alert'             => sprintf( esc_html__( 'Wait! Don\'t deactivate %1$s. You have to activate both %1$s and %1$s Pro in order for the plugin to work.', 'adminify' ), PXLBSADMINIFY ),
 			),
 			'need_better_design'             => array(
 				'title'             => esc_html__( 'I need better design and presets', 'adminify' ),
@@ -130,18 +139,18 @@ class Feedback {
 		<div class="wp-adminify-deactivate-survey-modal" id="wp-adminify-deactivate-survey-modal">
 			<header>
 				<div class="wp-adminify-deactivate-survey-header">
-					<img src="<?php echo esc_url( WP_ADMINIFY_ASSETS_IMAGE . 'logos/menu-icon.svg' ); ?>" />
-					<h3><?php echo wp_sprintf( '%1$s <strong>%2$s</strong>', WP_ADMINIFY, __( '- Feedback', 'adminify' ) ); ?></h3>
+					<img src="<?php echo esc_url( PXLBSADMINIFY_ASSETS_IMAGE . 'logos/menu-icon.svg' ); ?>" />
+					<h3><?php echo wp_kses_post( wp_sprintf( '%1$s <strong>%2$s</strong>', PXLBSADMINIFY, __( '- Feedback', 'adminify' ) ) ); ?></h3>
 				</div>
 			</header>
 			<div class="wp-adminify-deactivate-info">
-			<?php echo wp_sprintf( '%1$s %2$s', __( 'If you have a moment, please share why you are deactivating', 'adminify' ), WP_ADMINIFY ); ?>
+			<?php echo esc_html( wp_sprintf( '%1$s %2$s', __( 'If you have a moment, please share why you are deactivating', 'adminify' ), PXLBSADMINIFY ) ); ?>
 			</div>
 			<div class="wp-adminify-deactivate-content-wrapper">
 				<form action="#" class="wp-adminify-deactivate-form-wrapper">
 				<?php foreach ( $this->get_survey_questions() as $reason_key => $reason ) { ?>
 						<div class="wp-adminify-deactivate-input-wrapper">
-							<input id="wp-adminify-deactivate-feedback-<?php echo esc_attr( $reason_key ); ?>" class="wp-adminify-deactivate-feedback-dialog-input" type="radio" name="reason_key" value="<?php echo $reason_key; ?>">
+							<input id="wp-adminify-deactivate-feedback-<?php echo esc_attr( $reason_key ); ?>" class="wp-adminify-deactivate-feedback-dialog-input" type="radio" name="reason_key" value="<?php echo esc_attr( $reason_key ); ?>">
 							<label for="wp-adminify-deactivate-feedback-<?php echo esc_attr( $reason_key ); ?>" class="wp-adminify-deactivate-feedback-dialog-label"><?php echo esc_html( $reason['title'] ); ?></label>
 							<?php if ( ! empty( $reason['input_placeholder'] ) ) : ?>
 								<input class="wp-adminify-deactivate-feedback-text" type="text" name="reason_<?php echo esc_attr( $reason_key ); ?>" placeholder="<?php echo esc_attr( $reason['input_placeholder'] ); ?>" />
@@ -220,8 +229,8 @@ class Feedback {
 						async: true,
 						// dataType: 'jsonp',
 						data: {
-							action: 'jltwp_adminify_deactivation_survey',
-							_wpnonce: '<?php echo esc_js( wp_create_nonce( 'jltwp_adminify_deactivation_nonce' ) ); ?>',
+							action: 'pxlbsadminify_deactivation_survey',
+							_wpnonce: '<?php echo esc_js( wp_create_nonce( 'pxlbsadminify_deactivation_survey_nonce' ) ); ?>',
 							deactivation_reason: deactivation_reason
 						},
 						success:function(response){

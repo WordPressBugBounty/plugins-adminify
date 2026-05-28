@@ -20,14 +20,14 @@ class ComposerStaticInit8744fc635bac09f8831ffa55e80f863b
         array (
             'enshrined\\svgSanitize\\' => 22,
         ),
-        'W' => 
+        'P' => 
         array (
-            'WPAdminify\\Libs\\' => 16,
-            'WPAdminify\\Inc\\Modules\\' => 23,
-            'WPAdminify\\Inc\\Classes\\' => 23,
-            'WPAdminify\\Inc\\Admin\\' => 21,
-            'WPAdminify\\Inc\\' => 15,
-            'WPAdminify\\' => 11,
+            'PXLBSAdminify\\Libs\\' => 19,
+            'PXLBSAdminify\\Inc\\Modules\\' => 26,
+            'PXLBSAdminify\\Inc\\Classes\\' => 26,
+            'PXLBSAdminify\\Inc\\Admin\\' => 24,
+            'PXLBSAdminify\\Inc\\' => 18,
+            'PXLBSAdminify\\' => 14,
         ),
     );
 
@@ -36,27 +36,27 @@ class ComposerStaticInit8744fc635bac09f8831ffa55e80f863b
         array (
             0 => __DIR__ . '/..' . '/enshrined/svg-sanitize/src',
         ),
-        'WPAdminify\\Libs\\' => 
+        'PXLBSAdminify\\Libs\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Libs',
         ),
-        'WPAdminify\\Inc\\Modules\\' => 
+        'PXLBSAdminify\\Inc\\Modules\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Inc/Modules',
         ),
-        'WPAdminify\\Inc\\Classes\\' => 
+        'PXLBSAdminify\\Inc\\Classes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Inc/classes',
         ),
-        'WPAdminify\\Inc\\Admin\\' => 
+        'PXLBSAdminify\\Inc\\Admin\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Inc/Admin',
         ),
-        'WPAdminify\\Inc\\' => 
+        'PXLBSAdminify\\Inc\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Inc',
         ),
-        'WPAdminify\\' => 
+        'PXLBSAdminify\\' => 
         array (
             0 => __DIR__ . '/../..' . '/adminify',
         ),

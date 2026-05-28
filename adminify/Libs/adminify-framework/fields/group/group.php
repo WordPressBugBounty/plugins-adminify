@@ -1,6 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) { die; } // Cannot access directly.
 
-use WPAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Utils;
 /**
  *
  * Field: group
@@ -46,7 +46,7 @@ if ( ! class_exists( 'ADMINIFY_Field_group' ) ) {
 
       } else {
 
-        echo $this->field_before();
+        echo wp_kses_post( $this->field_before() );
 
         echo '<div class="adminify-cloneable-item adminify-cloneable-hidden" data-depend-id="'. esc_attr( $this->field['id'] ) .'">';
 
@@ -77,7 +77,7 @@ if ( ! class_exists( 'ADMINIFY_Field_group' ) ) {
 
         echo '</div>';
 
-        echo '<div class="adminify-cloneable-wrapper adminify-data-wrapper" data-title-by="'. esc_attr( json_encode( $title_by ) ) .'" data-title-by-prefix="'. esc_attr( $title_by_prefix ) .'" data-title-number="'. esc_attr( $title_number ) .'" data-field-id="['. esc_attr( $this->field['id'] ) .']" data-max="'. esc_attr( $args['max'] ) .'" data-min="'. esc_attr( $args['min'] ) .'">';
+        echo '<div class="adminify-cloneable-wrapper adminify-data-wrapper" data-title-by="'. esc_attr( wp_json_encode( $title_by ) ) .'" data-title-by-prefix="'. esc_attr( $title_by_prefix ) .'" data-title-number="'. esc_attr( $title_number ) .'" data-field-id="['. esc_attr( $this->field['id'] ) .']" data-max="'. esc_attr( $args['max'] ) .'" data-min="'. esc_attr( $args['min'] ) .'">';
 
         if ( ! empty( $this->value ) ) {
 
@@ -142,11 +142,11 @@ if ( ! class_exists( 'ADMINIFY_Field_group' ) ) {
 
         echo '</div>';
 
-        echo '<div class="adminify-cloneable-alert adminify-cloneable-max">'. Utils::wp_kses_custom($args['max_text'] ) .'</div>';
+        echo '<div class="adminify-cloneable-alert adminify-cloneable-max">'. Utils::kses_custom($args['max_text'] ) .'</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped.
         echo '<div class="adminify-cloneable-alert adminify-cloneable-min">'. esc_html__( 'You cannot remove more.', 'adminify' ) .'</div>';
-        echo '<a href="#" class="button button-primary adminify-cloneable-add">'. $args['button_title'] .'</a>';
+        echo '<a href="#" class="button button-primary adminify-cloneable-add">'. esc_html( $args['button_title'] ) .'</a>';
 
-        echo $this->field_after();
+        echo wp_kses_post( $this->field_after() );
 
       }
 

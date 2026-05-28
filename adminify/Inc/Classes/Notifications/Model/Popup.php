@@ -1,5 +1,5 @@
 <?php
-namespace WPAdminify\Inc\Classes\Notifications\Model;
+namespace PXLBSAdminify\Inc\Classes\Notifications\Model;
 
 // No, Direct access Sir !!!
 if ( ! defined( 'ABSPATH' ) ) {
@@ -21,6 +21,6 @@ abstract class Popup extends Notification {
 	 * @author Jewel Theme <support@jeweltheme.com>
 	 */
 	final public function get_key() {
-		return 'jltwp_adminify_popup_' . $this->get_id();
+		return 'pxlbsadminify_popup_' . $this->get_id();
 	}
 }

@@ -24,7 +24,7 @@ if ( ! class_exists( 'ADMINIFY_Field_gallery' ) ) {
 
       $hidden = ( empty( $this->value ) ) ? ' hidden' : '';
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       echo '<ul>';
       if ( ! empty( $this->value ) ) {
@@ -39,12 +39,12 @@ if ( ! class_exists( 'ADMINIFY_Field_gallery' ) ) {
       }
       echo '</ul>';
 
-      echo '<a href="#" class="button button-primary adminify-button">'. $args['add_title'] .'</a>';
-      echo '<a href="#" class="button adminify-edit-gallery'. esc_attr( $hidden ) .'">'. $args['edit_title'] .'</a>';
-      echo '<a href="#" class="button adminify-warning-primary adminify-clear-gallery'. esc_attr( $hidden ) .'">'. $args['clear_title'] .'</a>';
-      echo '<input type="hidden" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $this->value ) .'"'. $this->field_attributes() .'/>';
+      echo '<a href="#" class="button button-primary adminify-button">'. esc_html( $args['add_title'] ) .'</a>';
+      echo '<a href="#" class="button adminify-edit-gallery'. esc_attr( $hidden ) .'">'. esc_html( $args['edit_title'] ) .'</a>';
+      echo '<a href="#" class="button adminify-warning-primary adminify-clear-gallery'. esc_attr( $hidden ) .'">'. esc_html( $args['clear_title'] ) .'</a>';
+      echo '<input type="hidden" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $this->value ) .'"'. $this->field_attributes() .'/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

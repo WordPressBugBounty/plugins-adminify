@@ -7,10 +7,10 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'enshrined\\svgSanitize\\' => array($vendorDir . '/enshrined/svg-sanitize/src'),
-    'WPAdminify\\Libs\\' => array($baseDir . '/Libs'),
-    'WPAdminify\\Inc\\Modules\\' => array($baseDir . '/Inc/Modules'),
-    'WPAdminify\\Inc\\Classes\\' => array($baseDir . '/Inc/classes'),
-    'WPAdminify\\Inc\\Admin\\' => array($baseDir . '/Inc/Admin'),
-    'WPAdminify\\Inc\\' => array($baseDir . '/Inc'),
-    'WPAdminify\\' => array($baseDir . '/adminify'),
+    'PXLBSAdminify\\Libs\\' => array($baseDir . '/Libs'),
+    'PXLBSAdminify\\Inc\\Modules\\' => array($baseDir . '/Inc/Modules'),
+    'PXLBSAdminify\\Inc\\Classes\\' => array($baseDir . '/Inc/classes'),
+    'PXLBSAdminify\\Inc\\Admin\\' => array($baseDir . '/Inc/Admin'),
+    'PXLBSAdminify\\Inc\\' => array($baseDir . '/Inc'),
+    'PXLBSAdminify\\' => array($baseDir . '/adminify'),
 );

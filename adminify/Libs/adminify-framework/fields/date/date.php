@@ -23,7 +23,7 @@ if ( ! class_exists( 'ADMINIFY_Field_date' ) ) {
       $settings = ( ! empty( $this->field['settings'] ) ) ? $this->field['settings'] : array();
       $settings = wp_parse_args( $settings, $default_settings );
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       if ( ! empty( $this->field['from_to'] ) ) {
 
@@ -37,18 +37,18 @@ if ( ! class_exists( 'ADMINIFY_Field_date' ) ) {
           'to'   => '',
         ) );
 
-        echo '<label class="adminify--from">'. esc_attr( $args['text_from'] ) .' <input type="text" name="'. esc_attr( $this->field_name( '[from]' ) ) .'" value="'. esc_attr( $value['from'] ) .'"'. $this->field_attributes() .'/></label>';
-        echo '<label class="adminify--to">'. esc_attr( $args['text_to'] ) .' <input type="text" name="'. esc_attr( $this->field_name( '[to]' ) ) .'" value="'. esc_attr( $value['to'] ) .'"'. $this->field_attributes() .'/></label>';
+        echo '<label class="adminify--from">'. esc_attr( $args['text_from'] ) .' <input type="text" name="'. esc_attr( $this->field_name( '[from]' ) ) .'" value="'. esc_attr( $value['from'] ) .'"'. $this->field_attributes() .'/></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
+        echo '<label class="adminify--to">'. esc_attr( $args['text_to'] ) .' <input type="text" name="'. esc_attr( $this->field_name( '[to]' ) ) .'" value="'. esc_attr( $value['to'] ) .'"'. $this->field_attributes() .'/></label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
 
       } else {
 
-        echo '<input type="text" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $this->value ) .'"'. $this->field_attributes() .'/>';
+        echo '<input type="text" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $this->value ) .'"'. $this->field_attributes() .'/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
 
       }
 
-      echo '<div class="adminify-date-settings" data-settings="'. esc_attr( json_encode( $settings ) ) .'"></div>';
+      echo '<div class="adminify-date-settings" data-settings="'. esc_attr( wp_json_encode( $settings ) ) .'"></div>';
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

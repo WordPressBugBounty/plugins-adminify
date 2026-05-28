@@ -1,8 +1,12 @@
 <?php
-namespace WPAdminify\Inc\Classes\Notifications;
+namespace PXLBSAdminify\Inc\Classes\Notifications;
 
-use WPAdminify\Inc\Classes\Notifications\Base\User_Data;
-use WPAdminify\Inc\Classes\Notifications\Model\Notice;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
+use PXLBSAdminify\Inc\Classes\Notifications\Base\User_Data;
+use PXLBSAdminify\Inc\Classes\Notifications\Model\Notice;
 
 if ( ! class_exists( 'Subscribe' ) ) {
 	/**
@@ -23,7 +27,7 @@ if ( ! class_exists( 'Subscribe' ) ) {
 		 */
 		public function __construct() {
 			parent::__construct();
-			add_action( 'wp_ajax_jltwp_adminify_subscribe', array( $this, 'jltwp_adminify_subscribe' ) );
+			add_action( 'wp_ajax_pxlbsadminify_subscribe', array( $this, 'pxlbsadminify_subscribe' ) );
 		}
 
 		/**
@@ -31,8 +35,14 @@ if ( ! class_exists( 'Subscribe' ) ) {
 		 *
 		 * @author Jewel Theme <support@jeweltheme.com>
 		 */
-		public function jltwp_adminify_subscribe() {
-			check_ajax_referer( 'jltwp_adminify_subscribe_nonce' );
+		public function pxlbsadminify_subscribe() {
+			check_ajax_referer( 'pxlbsadminify_subscribe_nonce' );
+
+			// Subscribing the site contact email to a third-party list is
+			// a site-wide action and must only be performed by an admin.
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'mess' => __( 'You are not allowed to perform this action.', 'adminify' ) ), 403 );
+			}
 
 			$name  = ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 			$email = ! empty( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
@@ -89,7 +99,7 @@ if ( ! class_exists( 'Subscribe' ) ) {
 		public function set_title() {
 			printf(
 				'<h4>Wanna get some discount for %1$s? No Worries!! We got you!! Enter your email, we will send you the discount code?</h4>',
-				esc_html__( 'WP Adminify', 'adminify' )
+				esc_html__( 'Adminify', 'adminify' )
 			);
 		}
 
@@ -103,7 +113,7 @@ if ( ! class_exists( 'Subscribe' ) ) {
 			?>
 			<div class="notice notice-wp-adminify is-dismissible notice-plugin-review notice-<?php echo esc_attr( $this->color ); ?> wp-adminify-notice-<?php echo esc_attr( $this->get_id() ); ?>">
 				<button type="button" class="notice-dismiss wp-adminify-notice-dismiss"></button>
-				<img width="70" height="70" src="<?php echo esc_url( WP_ADMINIFY_ASSETS_IMAGE . 'logos/menu-icon.svg' ); ?>" alt="<?php esc_attr_e( 'Logo', 'adminify' ); ?>">
+				<img width="70" height="70" src="<?php echo esc_url( PXLBSADMINIFY_ASSETS_IMAGE . 'logos/menu-icon.svg' ); ?>" alt="<?php esc_attr_e( 'Logo', 'adminify' ); ?>">
 				<div class="wp-adminify-subscribe-content">
 					<?php $this->set_title(); ?>
 					<form style="display:flex">
@@ -126,7 +136,7 @@ if ( ! class_exists( 'Subscribe' ) ) {
 		 * @author Jewel Theme <support@jeweltheme.com>
 		 */
 		public function plugin_rate_url() {
-			return 'https://wordpress.org/plugins/' . WP_ADMINIFY_SLUG;
+			return 'https://wordpress.org/plugins/' . PXLBSADMINIFY_SLUG;
 		}
 
 		/**
@@ -186,8 +196,8 @@ if ( ! class_exists( 'Subscribe' ) ) {
 							method: 'POST',
 							crossDomain: true,
 							data: {
-								action: 'jltwp_adminify_subscribe',
-								_wpnonce: '<?php echo esc_js( wp_create_nonce( 'jltwp_adminify_subscribe_nonce' ) ); ?>',
+								action: 'pxlbsadminify_subscribe',
+								_wpnonce: '<?php echo esc_js( wp_create_nonce( 'pxlbsadminify_subscribe_nonce' ) ); ?>',
 								name: name,
 								email: email,
 							}
@@ -195,7 +205,7 @@ if ( ! class_exists( 'Subscribe' ) ) {
 						.done(function(response) {
 							formWrapper.hide().after('<p class="wp-adminify--notice-message"><strong>' + response.data + '</strong><p>');
 							let subsTimeout = setTimeout(function() {
-								jltwp_adminify_notice_action(null, form, 'disable');
+								pxlbsadminify_notice_action(null, form, 'disable');
 								clearTimeout(subsTimeout);
 							}, 1500);
 						})

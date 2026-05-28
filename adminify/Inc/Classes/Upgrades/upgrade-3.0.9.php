@@ -1,9 +1,13 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
 /**
  * Update: Custom Header Footer CSS and JS
  */
-function jltwp_adminify_update_custom_header_footer_css_js()
+function pxlbsadminify_update_custom_header_footer_css_js()
 {
 	$adminify_custom_header_footer_settings = get_option('_wpadminify_custom_js_css', '');
 
@@ -29,12 +33,12 @@ function jltwp_adminify_update_custom_header_footer_css_js()
 		}
 	}
 }
-jltwp_adminify_update_custom_header_footer_css_js();
+pxlbsadminify_update_custom_header_footer_css_js();
 
 /**
  * Update: Admin Custom CSS and JS saving error issue
  */
-function jltwp_adminify_update_custom_css_js_script()
+function pxlbsadminify_update_custom_css_js_script()
 {
 	$adminify_options_settings = get_option('_wpadminify', '');
 
@@ -58,12 +62,12 @@ function jltwp_adminify_update_custom_css_js_script()
 		}
 	}
 }
-jltwp_adminify_update_custom_css_js_script();
+pxlbsadminify_update_custom_css_js_script();
 
 /**
  * Update: Login Customizer CSS and JS saving error issue
  */
-function jltwp_adminify_update_customizer_custom_css_js_script()
+function pxlbsadminify_update_customizer_custom_css_js_script()
 {
 	$adminify_login_customizer_settings = get_option('jltwp_adminify_login', '');
 
@@ -87,7 +91,7 @@ function jltwp_adminify_update_customizer_custom_css_js_script()
 		}
 	}
 }
-jltwp_adminify_update_customizer_custom_css_js_script();
+pxlbsadminify_update_customizer_custom_css_js_script();
 
 
 // update version once migration is completed.

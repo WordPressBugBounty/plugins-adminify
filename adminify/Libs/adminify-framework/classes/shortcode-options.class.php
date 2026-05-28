@@ -98,7 +98,7 @@ if ( ! class_exists( 'ADMINIFY_Shortcoder' ) ) {
             <div class="adminify-modal-overlay"></div>
             <div class="adminify-modal-inner">
               <div class="adminify-modal-title">
-                <?php echo $this->args['button_title']; ?>
+                <?php echo esc_html( $this->args['button_title'] ); ?>
                 <div class="adminify-modal-close"></div>
               </div>
               <?php
@@ -121,7 +121,7 @@ if ( ! class_exists( 'ADMINIFY_Shortcoder' ) ) {
                       $shortcode = ( ! empty( $sub['shortcode'] ) ) ? ' data-shortcode="'. esc_attr( $sub['shortcode'] ) .'"' : '';
                       $group     = ( ! empty( $sub['group_shortcode'] ) ) ? ' data-group="'. esc_attr( $sub['group_shortcode'] ) .'"' : '';
 
-                      echo '<option value="'. esc_attr( $tab_key ) .'"'. $view . $shortcode . $group .'>'. esc_attr( $sub['title'] ) .'</option>';
+                      echo '<option value="'. esc_attr( $tab_key ) .'"'. $view . $shortcode . $group .'>'. esc_html( $sub['title'] ) .'</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- value pre-escaped where built.
 
                       $tab_key++;
 
@@ -135,7 +135,7 @@ if ( ! class_exists( 'ADMINIFY_Shortcoder' ) ) {
                       $shortcode = ( ! empty( $tab['shortcode'] ) ) ? ' data-shortcode="'. esc_attr( $tab['shortcode'] ) .'"' : '';
                       $group     = ( ! empty( $tab['group_shortcode'] ) ) ? ' data-group="'. esc_attr( $tab['group_shortcode'] ) .'"' : '';
 
-                      echo '<option value="'. esc_attr( $tab_key ) .'"'. $view . $shortcode . $group .'>'. esc_attr( $tab['title'] ) .'</option>';
+                      echo '<option value="'. esc_attr( $tab_key ) .'"'. $view . $shortcode . $group .'>'. esc_html( $tab['title'] ) .'</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- value pre-escaped where built.
 
                     $tab_key++;
 
@@ -151,7 +151,7 @@ if ( ! class_exists( 'ADMINIFY_Shortcoder' ) ) {
                 <div class="adminify-modal-loading"><div class="adminify-loading"></div></div>
                 <div class="adminify-modal-load"></div>
               </div>
-              <div class="adminify-modal-insert-wrapper hidden"><a href="#" class="button button-primary adminify-modal-insert"><?php echo $this->args['insert_title']; ?></a></div>
+              <div class="adminify-modal-insert-wrapper hidden"><a href="#" class="button button-primary adminify-modal-insert"><?php echo esc_html( $this->args['insert_title'] ); ?></a></div>
             </div>
           </div>
         </div>
@@ -166,7 +166,8 @@ if ( ! class_exists( 'ADMINIFY_Shortcoder' ) ) {
       $nonce         = ( ! empty( $_POST[ 'nonce' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ 'nonce' ] ) ) : '';
       $shortcode_key = ( ! empty( $_POST[ 'shortcode_key' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ 'shortcode_key' ] ) ) : '';
 
-      if ( ! empty( $shortcode_key ) && wp_verify_nonce( $nonce, 'adminify_shortcode_nonce' ) ) {
+      // A valid nonce proves intent; current_user_can() enforces permission (editor-facing builder).
+      if ( ! empty( $shortcode_key ) && wp_verify_nonce( $nonce, 'adminify_shortcode_nonce' ) && current_user_can( 'edit_posts' ) ) {
 
         $unallows  = array( 'group', 'repeater', 'sorter' );
         $section   = $this->pre_sections[$shortcode_key-1];
@@ -181,7 +182,7 @@ if ( ! class_exists( 'ADMINIFY_Shortcoder' ) ) {
 
             echo '<div class="adminify-fields">';
 
-            echo ( ! empty( $section['description'] ) ) ? '<div class="adminify-field adminify-section-description">'. $section['description'] .'</div>' : '';
+            echo ( ! empty( $section['description'] ) ) ? '<div class="adminify-field adminify-section-description">'. wp_kses_post( $section['description'] ) .'</div>' : '';
 
             foreach ( $section['fields'] as $field ) {
 
@@ -237,7 +238,7 @@ if ( ! class_exists( 'ADMINIFY_Shortcoder' ) ) {
 
             echo '</div>';
 
-            echo '<div class="adminify--repeat-button-block"><a class="button adminify--repeat-button" href="#"><i class="fas fa-plus-circle"></i> '. $button_title .'</a></div>';
+            echo '<div class="adminify--repeat-button-block"><a class="button adminify--repeat-button" href="#"><i class="fas fa-plus-circle"></i> '. esc_html( $button_title ) .'</a></div>';
 
           }
 
@@ -275,7 +276,7 @@ if ( ! class_exists( 'ADMINIFY_Shortcoder' ) ) {
         $depends[] = 'wp-edit-post';
       }
 
-      wp_enqueue_script( 'adminify-gutenberg-block', ADMINIFY::include_plugin_url( 'assets/js/gutenberg.js' ), $depends );
+      wp_enqueue_script( 'adminify-gutenberg-block', ADMINIFY::include_plugin_url( 'assets/js/gutenberg.js' ), $depends, PXLBSADMINIFY_VER, true );
 
       wp_localize_script( 'adminify-gutenberg-block', 'adminify_gutenberg_blocks', ADMINIFY::$shortcode_instances );
 

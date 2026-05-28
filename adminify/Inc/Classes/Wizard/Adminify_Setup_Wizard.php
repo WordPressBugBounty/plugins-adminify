@@ -1,9 +1,9 @@
 <?php
 
-namespace WPAdminify\Inc\Classes\Wizard;
+namespace PXLBSAdminify\Inc\Classes\Wizard;
 
-use \WPAdminify\Inc\Admin\AdminSettings;
-use WPAdminify\Inc\Utils;
+use \PXLBSAdminify\Inc\Admin\AdminSettings;
+use PXLBSAdminify\Inc\Utils;
 
 // no direct access allowed
 if (!defined('ABSPATH')) {
@@ -17,27 +17,28 @@ class Adminify_Setup_Wizard {
 
 		if (current_user_can('manage_options') && current_user_can('administrator')) {
 
-			add_action('wp_ajax_wpadminify_save_wizard_data', [$this, 'wpadminify_save_wizard_data']);
+			add_action('wp_ajax_pxlbsadminify_save_wizard_data', [$this, 'pxlbsadminify_save_wizard_data']);
 
 			$this->options = (array) AdminSettings::get_instance()->get();
 
-			$this->jltwp_adminify_setup_wizard();
+			$this->setup_wizard();
 
-			add_action('wp_ajax_adminify_drag_and_drop_image', [$this, 'adminify_drag_and_drop_image_callback']);
+			add_action('wp_ajax_pxlbsadminify_drag_and_drop_image', [$this, 'pxlbsadminify_drag_and_drop_image_callback']);
 
 		}
 
 	}
 
 	// Drag and Drop Image
-	public function adminify_drag_and_drop_image_callback() {
-		check_ajax_referer('jltwp_adminify_sw');
+	public function pxlbsadminify_drag_and_drop_image_callback() {
+		check_ajax_referer('pxlbsadminify_sw');
 
 		// Security check - only administrators can upload images via wizard
 		if (!current_user_can('manage_options')) {
 			wp_send_json_error(__('You do not have permission to perform this action.', 'adminify'));
 		}
 
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce verified above; settings array recursively sanitized via wp_kses_post_deep().
 		$data_source = empty($_POST['settings']) ? [] : (array) wp_kses_post_deep(wp_unslash($_POST['settings']));
 
 		$base64_image = $data_source['image_data'];
@@ -84,23 +85,24 @@ class Adminify_Setup_Wizard {
 	}
 
 	// TEXT validation
-	public function wpadminify_text_validation($text) {
+	public function text_validation($text) {
 		return sanitize_text_field( wp_unslash( $text ?? '' ) );
 	}
 
-	public function wpadminify_save_wizard_data() {
-		check_ajax_referer('jltwp_adminify_sw');
+	public function pxlbsadminify_save_wizard_data() {
+		check_ajax_referer('pxlbsadminify_sw');
 
 		// Security check - only administrators can save wizard settings
 		if (!current_user_can('manage_options')) {
 			wp_send_json_error(__('You do not have permission to perform this action.', 'adminify'));
 		}
 
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce verified above; settings array recursively sanitized via wp_kses_post_deep().
 		$settings = empty($_POST['settings']) ? [] : (array) wp_kses_post_deep(wp_unslash($_POST['settings']));
 
 		$validate_settings = $this->validate_before_save($settings);
 
-		$settings = get_option('_wpadminify', []);
+		$settings = get_option('pxlbsadminify_settings', []);
 
 		// Adminify UI
 		if( array_key_exists('admin_ui', $validate_settings) ) {
@@ -112,7 +114,7 @@ class Adminify_Setup_Wizard {
 
 			$settings['light_dark_mode']['admin_ui_logo_type'] = $validate_settings['admin_ui_logo_type'];
 			if($validate_settings['admin_ui_logo_type'] === 'text_logo') {
-				$settings['light_dark_mode']['admin_ui_light_mode']['admin_ui_light_logo_text'] = $this->wpadminify_text_validation( $validate_settings['admin_ui_light_mode']['admin_ui_light_logo_text'] );
+				$settings['light_dark_mode']['admin_ui_light_mode']['admin_ui_light_logo_text'] = $this->text_validation( $validate_settings['admin_ui_light_mode']['admin_ui_light_logo_text'] );
 			}
 			if($validate_settings['admin_ui_logo_type'] === 'image_logo') {
 				$settings['light_dark_mode']['admin_ui_light_mode']['admin_ui_light_logo']['url'] = wp_http_validate_url($validate_settings['admin_ui_light_mode']['admin_ui_light_logo']['url']);
@@ -125,11 +127,11 @@ class Adminify_Setup_Wizard {
 			$settings['white_label']['wordpress']['footer_text'] = wp_kses_post( $validate_settings['footer_text'] );
 		}
 
-		update_option('_wpadminify', $settings);
+		update_option('pxlbsadminify_settings', $settings);
 
 		$is_complete = !empty($_POST['is_complete']) && $_POST['is_complete'] === '1';
 		if ($is_complete) {
-			update_option('jltwp_adminify_setup_wizard_ran', '1');
+			update_option('pxlbsadminify_setup_wizard_ran', '1');
 		}
 
 		wp_send_json_success(
@@ -143,17 +145,39 @@ class Adminify_Setup_Wizard {
 	public function load_scripts() {
 
 		// Register
-		// wp_register_script('wp-adminify-vue-vendors', WP_ADMINIFY_ASSETS . 'admin/js/vendor' . Utils::assets_ext('.js'), [], WP_ADMINIFY_VER, true);
-		wp_register_style('wp-adminify-sw-setup', WP_ADMINIFY_ASSETS . 'css/setup.css');
-		wp_register_script('wp-adminify-sw-setup', WP_ADMINIFY_ASSETS . 'admin/js/wp-adminify--setup-wizard' . Utils::assets_ext('.js'), ['react', 'jquery'], WP_ADMINIFY_VER, true);
+		// wp_register_script('wp-adminify-vue-vendors', PXLBSADMINIFY_ASSETS . 'admin/js/vendor' . Utils::assets_ext('.js'), [], PXLBSADMINIFY_VER, true);
+		wp_register_style('adminify-sw-setup', PXLBSADMINIFY_ASSETS . 'css/setup.css', array(), PXLBSADMINIFY_VER);
+		wp_register_script('adminify-sw-setup', PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify--setup-wizard' . Utils::assets_ext('.js'), ['react', 'jquery'], PXLBSADMINIFY_VER, true);
+
+		// Elementor registers "elementor-ai-media-library" inside the
+		// WordPress media iframe with dependencies (elementor-v2-ui,
+		// elementor-v2-icons) that are not registered in this admin
+		// context. WordPress 6.9.1+ raises a "called incorrectly" notice
+		// at registration time when that happens. Pre-register empty stubs
+		// for those handles before wp_enqueue_media() so the dependency
+		// check passes silently. The wizard does not use Elementor, so we
+		// also dequeue Elementor's media-library script after enqueue to
+		// avoid loading unrelated assets here.
+		if (!wp_script_is('elementor-v2-ui', 'registered')) {
+			wp_register_script('elementor-v2-ui', '', [], PXLBSADMINIFY_VER, true);
+		}
+		if (!wp_script_is('elementor-v2-icons', 'registered')) {
+			wp_register_script('elementor-v2-icons', '', [], PXLBSADMINIFY_VER, true);
+		}
 
 		// Media uploader
 		wp_enqueue_media();
 
+		add_action('admin_print_scripts', function () {
+			if (wp_script_is('elementor-ai-media-library', 'enqueued')) {
+				wp_dequeue_script('elementor-ai-media-library');
+			}
+		}, 999);
+
 		// Load
-		wp_enqueue_style('wp-adminify-sw-setup');
+		wp_enqueue_style('adminify-sw-setup');
 		// wp_enqueue_script('media-upload');
-		wp_enqueue_script('wp-adminify-sw-setup');
+		wp_enqueue_script('adminify-sw-setup');
 
 
 		$is_network = is_multisite() && is_network_admin();
@@ -180,12 +204,12 @@ class Adminify_Setup_Wizard {
 				],
 				'footer_text'				=> $this->options['white_label']['wordpress']['footer_text'],
 			],
-			'images'   			=> WP_ADMINIFY_ASSETS_IMAGE,
-			'wpnonce'  			=> wp_create_nonce('jltwp_adminify_sw'),
+			'images'   			=> PXLBSADMINIFY_ASSETS_IMAGE,
+			'wpnonce'  			=> wp_create_nonce('pxlbsadminify_sw'),
 			'rest_nonce'    => wp_create_nonce('wp_rest')
 		];
 
-		wp_localize_script('wp-adminify-sw-setup', 'adminify_setup_wizard_data', $adminify_data);
+		wp_localize_script('adminify-sw-setup', 'PXLBSADMINIFY_SETUP_WIZARD_DATA', $adminify_data);
 
 
 		// // Dequeue Styles
@@ -201,10 +225,11 @@ class Adminify_Setup_Wizard {
 
 	}
 
-	public function jltwp_adminify_setup_wizard() {
+	public function setup_wizard() {
 		global $hook_suffix;
 
-		if (empty($_GET['page']) || 'wp-adminify-setup-wizard' !== $_GET['page']) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
+		if (empty($_GET['page']) || 'wp-adminify-setup-wizard' !== sanitize_text_field(wp_unslash($_GET['page']))) {
 			return;
 		}
 

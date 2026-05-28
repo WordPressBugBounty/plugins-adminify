@@ -1,15 +1,15 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\ServerInformation;
+namespace PXLBSAdminify\Inc\Modules\ServerInformation;
 
-use WPAdminify\Inc\Classes\ServerInfo;
-use WPAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Classes\ServerInfo;
+use PXLBSAdminify\Inc\Utils;
 // no direct access allowed
 if ( !defined( 'ABSPATH' ) ) {
     exit;
 }
 /**
- * WPAdminify
+ * PXLBSAdminify
  *
  * @package Server Information
  *
@@ -34,7 +34,7 @@ class ServerInfo_Server_Details {
 
 		<div class="wrap">
 			<h1> <?php 
-        echo Utils::admin_page_title( esc_html__( 'Server Info', 'adminify' ) );
+        echo esc_html( Utils::admin_page_title( esc_html__( 'Server Info', 'adminify' ) ) );
         ?> </h1>
 
 			<p><?php 
@@ -73,7 +73,7 @@ class ServerInfo_Server_Details {
         esc_html_e( 'Software', 'adminify' );
         ?>:</td>
 						<td><?php 
-        echo Utils::wp_kses_custom( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) );
+        echo esc_html( ( isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : '' ) );
         ?></td>
 					</tr>
 					<tr>
@@ -81,7 +81,7 @@ class ServerInfo_Server_Details {
         esc_html_e( 'IP Address', 'adminify' );
         ?>:</td>
 						<td><?php 
-        echo Utils::wp_kses_custom( wp_unslash( $_SERVER['SERVER_ADDR'] ) );
+        echo esc_html( ( isset( $_SERVER['SERVER_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_ADDR'] ) ) : '' ) );
         ?></td>
 					</tr>
 					<tr>
@@ -89,7 +89,7 @@ class ServerInfo_Server_Details {
         esc_html_e( 'Web Port', 'adminify' );
         ?>:</td>
 						<td><?php 
-        echo Utils::wp_kses_custom( wp_unslash( $_SERVER['SERVER_PORT'] ) );
+        echo esc_html( ( isset( $_SERVER['SERVER_PORT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_PORT'] ) ) : '' ) );
         ?></td>
 					</tr>
 					<tr>
@@ -97,7 +97,7 @@ class ServerInfo_Server_Details {
         esc_html_e( 'Date / Time (WP)', 'adminify' );
         ?>:</td>
 						<td><?php 
-        echo wp_kses_post( date( 'Y-m-d H:i:s', time() ) ) . ' (' . wp_kses_post( current_time( 'mysql' ) ) . ')';
+        echo wp_kses_post( gmdate( 'Y-m-d H:i:s', time() ) ) . ' (' . wp_kses_post( current_time( 'mysql' ) ) . ')';
         ?></td>
 					</tr>
 					<tr>
@@ -116,9 +116,9 @@ class ServerInfo_Server_Details {
 					<?php 
         $default_timezone = date_default_timezone_get();
         if ( 'UTC' !== $default_timezone ) {
-            echo '<span>' . Utils::wp_kses_custom( $no ) . sprintf( wp_kses_post( 'Default timezone is %s - it should be UTC', 'adminify' ), esc_html( $default_timezone ) ) . '</span>';
+            echo '<span>' . wp_kses_post( Utils::kses_custom( $no ) ) . sprintf( wp_kses_post( 'Default timezone is %s - it should be UTC', 'adminify' ), esc_html( $default_timezone ) ) . '</span>';
         } else {
-            echo Utils::wp_kses_custom( $yes );
+            echo wp_kses_post( Utils::kses_custom( $yes ) );
         }
         ?>
 						</td>
@@ -136,7 +136,7 @@ class ServerInfo_Server_Details {
         esc_html_e( 'CGI Version', 'adminify' );
         ?>:</td>
 						<td><?php 
-        echo esc_html( sanitize_text_field( wp_unslash( $_SERVER['GATEWAY_INTERFACE'] ) ) );
+        echo esc_html( ( isset( $_SERVER['GATEWAY_INTERFACE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['GATEWAY_INTERFACE'] ) ) : '' ) );
         ?></td>
 					</tr>
 
@@ -151,10 +151,10 @@ class ServerInfo_Server_Details {
 							<div class="adminify-system-progress">
 								<div class="status-progressbar">
 									<span><?php 
-        echo Utils::wp_kses_custom( $server_info->get_server_cpu_load_percentage() ) . '% ';
+        echo wp_kses_post( Utils::kses_custom( $server_info->get_server_cpu_load_percentage() ) ) . '% ';
         ?></span>
 									<div style="width: <?php 
-        echo Utils::wp_kses_custom( $server_info->get_server_cpu_load_percentage() );
+        echo esc_attr( Utils::kses_custom( $server_info->get_server_cpu_load_percentage() ) );
         ?>%"></div>
 								</div>
 							</div>
@@ -165,7 +165,7 @@ class ServerInfo_Server_Details {
         esc_html_e( 'CPU Load Average', 'adminify' );
         ?>:</td>
 						<td><?php 
-        echo Utils::wp_kses_custom( $server_info->get_cpu_load_average() );
+        echo wp_kses_post( Utils::kses_custom( $server_info->get_cpu_load_average() ) );
         ?></td>
 					</tr>
 					<tr>
@@ -273,9 +273,9 @@ class ServerInfo_Server_Details {
 						<td>
 							<?php 
         if ( extension_loaded( 'memcache' ) ) {
-            echo Utils::wp_kses_custom( $yes );
+            echo wp_kses_post( Utils::kses_custom( $yes ) );
         } else {
-            echo Utils::wp_kses_custom( $no );
+            echo wp_kses_post( Utils::kses_custom( $no ) );
         }
         ?>
 						</td>
@@ -289,7 +289,7 @@ class ServerInfo_Server_Details {
         esc_html_e( 'PHP Version', 'adminify' );
         ?>:</td>
 						<td><?php 
-        echo Utils::wp_kses_custom( $server_info->get_php_version() );
+        echo wp_kses_post( Utils::kses_custom( $server_info->get_php_version() ) );
         ?></td>
 					</tr>
 
@@ -301,7 +301,7 @@ class ServerInfo_Server_Details {
             esc_html_e( 'PHP Memory Limit (WP)', 'adminify' );
             ?>:</td>
 							<td><?php 
-            echo Utils::wp_kses_custom( $server_info->get_wp_memory_limit() );
+            echo wp_kses_post( Utils::kses_custom( $server_info->get_wp_memory_limit() ) );
             ?></td>
 						</tr>
 						<tr>
@@ -313,18 +313,18 @@ class ServerInfo_Server_Details {
             if ( $server_info->get_server_memory_usage()['MemLimitGet'] == '-1' ) {
                 ?>
 										<?php 
-                echo Utils::wp_kses_custom( $server_info->get_server_memory_usage()['MemUsageFormat'] ) . ' ' . esc_html__( 'of', 'adminify' ) . ' ' . esc_html__( 'Unlimited', 'adminify' ) . ' (-1)';
+                echo wp_kses_post( Utils::kses_custom( $server_info->get_server_memory_usage()['MemUsageFormat'] ) ) . ' ' . esc_html__( 'of', 'adminify' ) . ' ' . esc_html__( 'Unlimited', 'adminify' ) . ' (-1)';
                 ?>
 								<?php 
             } else {
                 ?>
 										<?php 
-                echo Utils::wp_kses_custom( $server_info->get_server_memory_usage()['MemUsageFormat'] ) . ' ' . esc_html__( 'of', 'adminify' ) . ' ' . Utils::wp_kses_custom( $server_info->get_server_memory_usage()['MemLimitFormat'] );
+                echo wp_kses_post( Utils::kses_custom( $server_info->get_server_memory_usage()['MemUsageFormat'] ) ) . ' ' . esc_html__( 'of', 'adminify' ) . ' ' . wp_kses_post( Utils::kses_custom( $server_info->get_server_memory_usage()['MemLimitFormat'] ) );
                 ?>
 
 									<div class="adminify-system-progress">
 										<div class="status-progressbar"><span><?php 
-                echo Utils::wp_kses_custom( $server_info->get_server_memory_usage()['MemUsageCalc'] ) . '% ';
+                echo wp_kses_post( Utils::kses_custom( $server_info->get_server_memory_usage()['MemUsageCalc'] ) ) . '% ';
                 ?></span>
 											<div style="width: <?php 
                 echo esc_attr( $server_info->get_server_memory_usage()['MemUsageCalc'] );
@@ -374,7 +374,7 @@ class ServerInfo_Server_Details {
             esc_html_e( 'PHP Extensions', 'adminify' );
             ?>:</td>
 							<td><?php 
-            echo Utils::wp_kses_custom( implode( ', ', get_loaded_extensions() ) );
+            echo esc_html( implode( ', ', get_loaded_extensions() ) );
             ?></td>
 						</tr>
 						<tr>
@@ -385,9 +385,9 @@ class ServerInfo_Server_Details {
 									<?php 
             $gdl = gd_info();
             if ( $gdl ) {
-                echo Utils::wp_kses_custom( $yes ) . ' / ' . esc_html__( 'Version', 'adminify' ) . ': ' . wp_kses_post( $gdl['GD Version'] );
+                echo wp_kses_post( Utils::kses_custom( $yes ) ) . ' / ' . esc_html__( 'Version', 'adminify' ) . ': ' . wp_kses_post( $gdl['GD Version'] );
             } else {
-                echo Utils::wp_kses_custom( $no );
+                echo wp_kses_post( Utils::kses_custom( $no ) );
             }
             ?>
 							</td>
@@ -397,7 +397,7 @@ class ServerInfo_Server_Details {
             esc_html_e( 'cURL Version', 'adminify' );
             ?>:</td>
 							<td><?php 
-            echo Utils::wp_kses_custom( $server_info->get_cURL_version() );
+            echo wp_kses_post( Utils::kses_custom( $server_info->get_cURL_version() ) );
             ?></td>
 						</tr>
 						<tr>
@@ -442,7 +442,8 @@ class ServerInfo_Server_Details {
             $fields['soap_client']['success'] = true;
         } else {
             $fields['soap_client']['success'] = false;
-            $fields['soap_client']['note'] = sprintf( __( 'Your server does not have the %s class enabled - some gateway plugins which use SOAP may not work as expected.', 'bsi' ), '<a href="https://php.net/manual/en/class.soapclient.php">SoapClient</a>' );
+            /* translators: %s: SoapClient class link */
+            $fields['soap_client']['note'] = sprintf( __( 'Your server does not have the %s class enabled - some gateway plugins which use SOAP may not work as expected.', 'adminify' ), '<a href="https://php.net/manual/en/class.soapclient.php">SoapClient</a>' );
         }
         // DOMDocument.
         $fields['dom_document']['name'] = 'DOMDocument';
@@ -450,7 +451,8 @@ class ServerInfo_Server_Details {
             $fields['dom_document']['success'] = true;
         } else {
             $fields['dom_document']['success'] = false;
-            $fields['dom_document']['note'] = sprintf( __( 'Your server does not have the %s class enabled - HTML/Multipart emails, and also some extensions, will not work without DOMDocument.', 'bsi' ), '<a href="https://php.net/manual/en/class.domdocument.php">DOMDocument</a>' );
+            /* translators: %s: DOMDocument class link */
+            $fields['dom_document']['note'] = sprintf( __( 'Your server does not have the %s class enabled - HTML/Multipart emails, and also some extensions, will not work without DOMDocument.', 'adminify' ), '<a href="https://php.net/manual/en/class.domdocument.php">DOMDocument</a>' );
         }
         // GZIP.
         $fields['gzip']['name'] = 'GZip';
@@ -458,7 +460,8 @@ class ServerInfo_Server_Details {
             $fields['gzip']['success'] = true;
         } else {
             $fields['gzip']['success'] = false;
-            $fields['gzip']['note'] = sprintf( __( 'Your server does not support the %s function - this is required to use the GeoIP database from MaxMind.', 'bsi' ), '<a href="https://php.net/manual/en/zlib.installation.php">gzopen</a>' );
+            /* translators: %s: gzopen function link */
+            $fields['gzip']['note'] = sprintf( __( 'Your server does not support the %s function - this is required to use the GeoIP database from MaxMind.', 'adminify' ), '<a href="https://php.net/manual/en/zlib.installation.php">gzopen</a>' );
         }
         // Multibyte String.
         $fields['mbstring']['name'] = 'Multibyte String';
@@ -466,23 +469,8 @@ class ServerInfo_Server_Details {
             $fields['mbstring']['success'] = true;
         } else {
             $fields['mbstring']['success'] = false;
-            $fields['mbstring']['note'] = sprintf( __( 'Your server does not support the %s functions - this is required for better character encoding. Some fallbacks will be used instead for it.', 'bsi' ), '<a href="https://php.net/manual/en/mbstring.installation.php">mbstring</a>' );
-        }
-        // Remote Get.
-        $fields['remote_get']['name'] = 'Remote Get Status';
-        $response = wp_remote_get( 'https://www.paypal.com/cgi-bin/webscr', [
-            'timeout'     => 60,
-            'user-agent'  => 'BSI/' . 1.0,
-            'httpversion' => '1.1',
-            'body'        => [
-                'cmd' => '_notify-validate',
-            ],
-        ] );
-        $response_code = wp_remote_retrieve_response_code( $response );
-        if ( $response_code == 200 ) {
-            $fields['remote_get']['success'] = true;
-        } else {
-            $fields['remote_get']['success'] = false;
+            /* translators: %s: mbstring functions link */
+            $fields['mbstring']['note'] = sprintf( __( 'Your server does not support the %s functions - this is required for better character encoding. Some fallbacks will be used instead for it.', 'adminify' ), '<a href="https://php.net/manual/en/mbstring.installation.php">mbstring</a>' );
         }
         foreach ( $fields as $field ) {
             $mark = ( !empty( $field['success'] ) ? 'yes' : 'error' );
@@ -498,10 +486,10 @@ class ServerInfo_Server_Details {
             echo esc_attr( $mark );
             ?>">
 									<?php 
-            echo ( !empty( $field['success'] ) ? Utils::wp_kses_custom( $yes ) : Utils::wp_kses_custom( $no ) );
+            echo ( !empty( $field['success'] ) ? wp_kses_post( Utils::kses_custom( $yes ) ) : wp_kses_post( Utils::kses_custom( $no ) ) );
             ?>
 									<?php 
-            echo ( !empty( $field['note'] ) ? Utils::wp_kses_custom( $field['note'] ) : '' );
+            echo ( !empty( $field['note'] ) ? wp_kses_post( Utils::kses_custom( $field['note'] ) ) : '' );
             ?>
 								</span>
 							</td>

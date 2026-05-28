@@ -21,18 +21,18 @@ if ( ! class_exists( 'ADMINIFY_Field_switcher' ) ) {
       $text_off   = ( ! empty( $this->field['text_off'] ) ) ? $this->field['text_off'] : esc_html__( 'Off', 'adminify' );
       $text_width = ( ! empty( $this->field['text_width'] ) ) ? ' style="width: '. esc_attr( $this->field['text_width'] ) .'px;"': '';
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
-      echo '<div class="adminify--switcher'. esc_attr( $active ) .'"'. $text_width .'>';
+      echo '<div class="adminify--switcher'. esc_attr( $active ) .'"'. $text_width .'>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attribute value pre-escaped with esc_attr() where built.
       echo '<span class="adminify--on">'. esc_attr( $text_on ) .'</span>';
       echo '<span class="adminify--off">'. esc_attr( $text_off ) .'</span>';
       echo '<span class="adminify--ball"></span>';
-      echo '<input type="hidden" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $this->value ) .'"'. $this->field_attributes() .' />';
+      echo '<input type="hidden" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $this->value ) .'"'. $this->field_attributes() .' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
       echo '</div>';
 
       echo ( ! empty( $this->field['label'] ) ) ? '<span class="adminify--label">'. wp_kses_post( $this->field['label'] ) . '</span>' : '';
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

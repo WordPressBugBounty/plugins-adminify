@@ -18,7 +18,7 @@ if ( ! class_exists( 'ADMINIFY_Field_color_group' ) ) {
 
       $options = ( ! empty( $this->field['options'] ) ) ? $this->field['options'] : array();
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       if ( ! empty( $options ) ) {
         foreach ( $options as $key => $option ) {
@@ -27,14 +27,14 @@ if ( ! class_exists( 'ADMINIFY_Field_color_group' ) ) {
           $default_attr = ( ! empty( $this->field['default'][$key] ) ) ? ' data-default-color="'. esc_attr( $this->field['default'][$key] ) .'"' : '';
 
           echo '<div class="adminify--left adminify-field-color">';
-          echo '<div class="adminify--title">'. $option .'</div>';
-          echo '<input type="text" name="'. esc_attr( $this->field_name( '['. $key .']' ) ) .'" value="'. esc_attr( $color_value ) .'" class="adminify-color"'. $default_attr . $this->field_attributes() .'/>';
+          echo '<div class="adminify--title">'. esc_html( $option ) .'</div>';
+          echo '<input type="text" name="'. esc_attr( $this->field_name( '['. $key .']' ) ) .'" value="'. esc_attr( $color_value ) .'" class="adminify-color"'. $default_attr . $this->field_attributes() .'/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
           echo '</div>';
 
         }
       }
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

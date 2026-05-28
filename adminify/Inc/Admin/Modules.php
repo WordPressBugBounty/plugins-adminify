@@ -1,20 +1,20 @@
 <?php
 
-namespace WPAdminify\Inc\Admin;
+namespace PXLBSAdminify\Inc\Admin;
 
-use WPAdminify\Inc\Utils;
-use \WPAdminify\Inc\Admin\AdminSettings;
-use \WPAdminify\Inc\Admin\AdminSettingsModel;
-use \WPAdminify\Inc\Modules\MenuEditor\MenuEditor;
-use \WPAdminify\Inc\Modules\MenuDuplicator\MenuDuplicator;
-use \WPAdminify\Inc\Modules\PostDuplicator\PostDuplicator;
-use \WPAdminify\Inc\Modules\PostTypesOrder\PostTypesOrder;
-use \WPAdminify\Inc\Modules\Folders\Folders;
-use \WPAdminify\Inc\Modules\DisableComments\DisableComments;
-use \WPAdminify\Inc\Modules\ServerInformation\ServerInformation;
-use \WPAdminify\Inc\Modules\DismissNotices\Dismiss_Admin_Notices;
-use \WPAdminify\Inc\Modules\DashboardWidget\DashboardWidget;
-use WPAdminify\Inc\Admin\Options\RollbackVersion;
+use PXLBSAdminify\Inc\Utils;
+use \PXLBSAdminify\Inc\Admin\AdminSettings;
+use \PXLBSAdminify\Inc\Admin\AdminSettingsModel;
+use \PXLBSAdminify\Inc\Modules\MenuEditor\MenuEditor;
+use \PXLBSAdminify\Inc\Modules\MenuDuplicator\MenuDuplicator;
+use \PXLBSAdminify\Inc\Modules\PostDuplicator\PostDuplicator;
+use \PXLBSAdminify\Inc\Modules\PostTypesOrder\PostTypesOrder;
+use \PXLBSAdminify\Inc\Modules\Folders\Folders;
+use \PXLBSAdminify\Inc\Modules\DisableComments\DisableComments;
+use \PXLBSAdminify\Inc\Modules\ServerInformation\ServerInformation;
+use \PXLBSAdminify\Inc\Modules\DismissNotices\Dismiss_Admin_Notices;
+use \PXLBSAdminify\Inc\Modules\DashboardWidget\DashboardWidget;
+use PXLBSAdminify\Inc\Admin\Options\RollbackVersion;
 
 // no direct access allowed
 if (!defined('ABSPATH')) {

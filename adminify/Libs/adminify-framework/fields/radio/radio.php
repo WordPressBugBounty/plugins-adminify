@@ -23,7 +23,7 @@ if ( ! class_exists( 'ADMINIFY_Field_radio' ) ) {
 
       $inline_class = ( $args['inline'] ) ? ' class="adminify--inline-list"' : '';
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       if ( isset( $this->field['options'] ) ) {
 
@@ -32,7 +32,7 @@ if ( ! class_exists( 'ADMINIFY_Field_radio' ) ) {
 
         if ( is_array( $options ) && ! empty( $options ) ) {
 
-          echo '<ul'. $inline_class .'>';
+          echo '<ul'. $inline_class .'>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attribute value pre-escaped with esc_attr() where built.
 
           foreach ( $options as $option_key => $option_value ) {
 
@@ -45,7 +45,7 @@ if ( ! class_exists( 'ADMINIFY_Field_radio' ) ) {
                     $checked = ( $sub_key == $this->value ) ? ' checked' : '';
                     echo '<li>';
                     echo '<label>';
-                    echo '<input type="radio" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $sub_key ) .'"'. $this->field_attributes() . esc_attr( $checked ) .'/>';
+                    echo '<input type="radio" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $sub_key ) .'"'. $this->field_attributes() . esc_attr( $checked ) .'/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
                     echo '<span class="adminify--text">'. esc_attr( $sub_value ) .'</span>';
                     echo '</label>';
                     echo '</li>';
@@ -59,7 +59,7 @@ if ( ! class_exists( 'ADMINIFY_Field_radio' ) ) {
 
               echo '<li>';
               echo '<label>';
-              echo '<input type="radio" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $option_key ) .'"'. $this->field_attributes() . esc_attr( $checked ) .'/>';
+              echo '<input type="radio" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $option_key ) .'"'. $this->field_attributes() . esc_attr( $checked ) .'/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
               echo '<span class="adminify--text">'. esc_attr( $option_value ) .'</span>';
               echo '</label>';
               echo '</li>';
@@ -79,13 +79,13 @@ if ( ! class_exists( 'ADMINIFY_Field_radio' ) ) {
       } else {
 
         $label = ( isset( $this->field['label'] ) ) ? $this->field['label'] : '';
-        echo '<label><input type="radio" name="'. esc_attr( $this->field_name() ) .'" value="1"'. $this->field_attributes() . esc_attr( checked( $this->value, 1, false ) ) .'/>';
+        echo '<label><input type="radio" name="'. esc_attr( $this->field_name() ) .'" value="1"'. $this->field_attributes() . esc_attr( checked( $this->value, 1, false ) ) .'/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
         echo ( ! empty( $this->field['label'] ) ) ? '<span class="adminify--text">'. esc_attr( $this->field['label'] ) .'</span>' : '';
         echo '</label>';
 
       }
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

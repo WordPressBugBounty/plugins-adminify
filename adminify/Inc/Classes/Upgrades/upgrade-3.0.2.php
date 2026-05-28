@@ -1,9 +1,13 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
 /**
  * Update: Admin general button colors settings key. reduced it from six to two.
  */
-function update_admin_general_button_color_keys()
+function pxlbsadminify_update_admin_general_button_color_keys()
 {
     $adminify_options_settings = get_option('_wpadminify', '');
 
@@ -29,16 +33,16 @@ function update_admin_general_button_color_keys()
         }
     }
 }
-update_admin_general_button_color_keys();
+pxlbsadminify_update_admin_general_button_color_keys();
 
 /**
  * Update: Admin Column Data
  */
-function update_admin_columns_data()
+function pxlbsadminify_update_admin_columns_data()
 {
     global $wpdb;
 
-    $column_options = $wpdb->get_results("SELECT option_name FROM {$wpdb->prefix}options WHERE option_name LIKE ('_adminify_admin_columns_%')", ARRAY_A);
+    $column_options = $wpdb->get_results("SELECT option_name FROM {$wpdb->prefix}options WHERE option_name LIKE ('_adminify_admin_columns_%')", ARRAY_A); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- direct query required for a one-time upgrade routine; not cached intentionally.
 
     if (is_wp_error($column_options) || empty($column_options)) {
         return;
@@ -69,7 +73,7 @@ function update_admin_columns_data()
         }
     }
 }
-update_admin_columns_data();
+pxlbsadminify_update_admin_columns_data();
 
 // update version once migration is completed.
 update_option($this->option_name, $version);

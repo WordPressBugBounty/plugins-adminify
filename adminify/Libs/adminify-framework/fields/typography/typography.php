@@ -20,7 +20,7 @@ if ( ! class_exists( 'ADMINIFY_Field_typography' ) ) {
 
     public function render() {
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       $args                  = wp_parse_args( $this->field, array(
         'font_family'        => true,
@@ -94,7 +94,7 @@ if ( ! class_exists( 'ADMINIFY_Field_typography' ) ) {
           if ( ! empty( $args['font_family'] ) ) {
             echo '<div class="adminify--block">';
             echo '<div class="adminify--title">'. esc_html__( 'Font Family', 'adminify' ) .'</div>';
-            echo $this->create_select( array( $this->value['font-family'] => $this->value['font-family'] ), 'font-family', esc_html__( 'Select a font', 'adminify' ) );
+            echo $this->create_select( array( $this->value['font-family'] => $this->value['font-family'] ), 'font-family', esc_html__( 'Select a font', 'adminify' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns markup escaped within the method.
             echo '</div>';
           }
 
@@ -103,7 +103,7 @@ if ( ! class_exists( 'ADMINIFY_Field_typography' ) ) {
           if ( ! empty( $args['backup_font_family'] ) ) {
             echo '<div class="adminify--block adminify--block-backup-font-family hidden">';
             echo '<div class="adminify--title">'. esc_html__( 'Backup Font Family', 'adminify' ) .'</div>';
-            echo $this->create_select( apply_filters( 'adminify_field_typography_backup_font_family', array(
+            echo $this->create_select( apply_filters( 'adminify_field_typography_backup_font_family', array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns markup escaped within the method.
               'Arial, Helvetica, sans-serif',
               "'Arial Black', Gadget, sans-serif",
               "'Comic Sans MS', cursive, sans-serif",
@@ -143,7 +143,7 @@ if ( ! class_exists( 'ADMINIFY_Field_typography' ) ) {
               echo '<div class="adminify--block-extra-styles hidden">';
               echo ( ! $this->chosen ) ? '<div class="adminify--title">'. esc_html__( 'Load Extra Styles', 'adminify' ) .'</div>' : '';
               $placeholder = ( $this->chosen ) ? esc_html__( 'Load Extra Styles', 'adminify' ) : esc_html__( 'Default', 'adminify' );
-              echo $this->create_select( $this->value['extra-styles'], 'extra-styles', $placeholder, true );
+              echo $this->create_select( $this->value['extra-styles'], 'extra-styles', $placeholder, true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns markup escaped within the method.
               echo '</div>';
             }
 
@@ -157,7 +157,7 @@ if ( ! class_exists( 'ADMINIFY_Field_typography' ) ) {
             echo '<div class="adminify--block adminify--block-subset hidden">';
             echo '<div class="adminify--title">'. esc_html__( 'Subset', 'adminify' ) .'</div>';
             $subset = ( is_array( $this->value['subset'] ) ) ? $this->value['subset'] : array_filter( (array) $this->value['subset'] );
-            echo $this->create_select( $subset, 'subset', esc_html__( 'Default', 'adminify' ), $args['multi_subset'] );
+            echo $this->create_select( $subset, 'subset', esc_html__( 'Default', 'adminify' ), $args['multi_subset'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns markup escaped within the method.
             echo '</div>';
           }
 
@@ -166,7 +166,7 @@ if ( ! class_exists( 'ADMINIFY_Field_typography' ) ) {
           if ( ! empty( $args['text_align'] ) ) {
             echo '<div class="adminify--block">';
             echo '<div class="adminify--title">'. esc_html__( 'Text Align', 'adminify' ) .'</div>';
-            echo $this->create_select( array(
+            echo $this->create_select( array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns markup escaped within the method.
               'inherit' => esc_html__( 'Inherit', 'adminify' ),
               'left'    => esc_html__( 'Left', 'adminify' ),
               'center'  => esc_html__( 'Center', 'adminify' ),
@@ -182,7 +182,7 @@ if ( ! class_exists( 'ADMINIFY_Field_typography' ) ) {
           if ( ! empty( $args['font_variant'] ) ) {
             echo '<div class="adminify--block">';
             echo '<div class="adminify--title">'. esc_html__( 'Font Variant', 'adminify' ) .'</div>';
-            echo $this->create_select( array(
+            echo $this->create_select( array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns markup escaped within the method.
               'normal'         => esc_html__( 'Normal', 'adminify' ),
               'small-caps'     => esc_html__( 'Small Caps', 'adminify' ),
               'all-small-caps' => esc_html__( 'All Small Caps', 'adminify' )
@@ -195,7 +195,7 @@ if ( ! class_exists( 'ADMINIFY_Field_typography' ) ) {
           if ( ! empty( $args['text_transform'] ) ) {
             echo '<div class="adminify--block">';
             echo '<div class="adminify--title">'. esc_html__( 'Text Transform', 'adminify' ) .'</div>';
-            echo $this->create_select( array(
+            echo $this->create_select( array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns markup escaped within the method.
               'none'       => esc_html__( 'None', 'adminify' ),
               'capitalize' => esc_html__( 'Capitalize', 'adminify' ),
               'uppercase'  => esc_html__( 'Uppercase', 'adminify' ),
@@ -209,7 +209,7 @@ if ( ! class_exists( 'ADMINIFY_Field_typography' ) ) {
           if ( ! empty( $args['text_decoration'] ) ) {
             echo '<div class="adminify--block">';
             echo '<div class="adminify--title">'. esc_html__( 'Text Decoration', 'adminify' ) .'</div>';
-            echo $this->create_select( array(
+            echo $this->create_select( array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns markup escaped within the method.
               'none'               => esc_html__( 'None', 'adminify' ),
               'underline'          => esc_html__( 'Solid', 'adminify' ),
               'underline double'   => esc_html__( 'Double', 'adminify' ),
@@ -283,7 +283,7 @@ if ( ! class_exists( 'ADMINIFY_Field_typography' ) ) {
           echo '<div class="adminify--block adminify--block-font-color">';
           echo '<div class="adminify--title">'. esc_html__( 'Font Color', 'adminify' ) .'</div>';
           echo '<div class="adminify-field-color">';
-          echo '<input type="text" name="'. esc_attr( $this->field_name( '[color]' ) ) .'" class="adminify-color adminify--color" value="'. esc_attr( $this->value['color'] ) .'"'. $default_color_attr .' />';
+          echo '<input type="text" name="'. esc_attr( $this->field_name( '[color]' ) ) .'" class="adminify-color adminify--color" value="'. esc_attr( $this->value['color'] ) .'"'. $default_color_attr .' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attribute value pre-escaped with esc_attr() where built.
           echo '</div>';
           echo '</div>';
         }
@@ -313,7 +313,7 @@ if ( ! class_exists( 'ADMINIFY_Field_typography' ) ) {
 
       echo '</div>';
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 
@@ -351,7 +351,8 @@ if ( ! class_exists( 'ADMINIFY_Field_typography' ) ) {
 
         ADMINIFY::include_plugin_file( 'fields/typography/google-fonts.php' );
 
-        wp_enqueue_script( 'adminify-webfontloader', 'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js', array( 'adminify' ), '1.6.28', true );
+        $webfontloader_url = defined( 'PXLBSADMINIFY_ASSETS' ) ? PXLBSADMINIFY_ASSETS . 'vendors/webfontloader/webfontloader.min.js' : '';
+        wp_enqueue_script( 'adminify-webfontloader', $webfontloader_url, array( 'adminify' ), '1.6.28', true );
 
         $webfonts = array();
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace WPAdminify\Inc\Classes;
+namespace PXLBSAdminify\Inc\Classes;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Admin\AdminSettings;
-use WPAdminify\Inc\Admin\AdminSettingsModel;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Admin\AdminSettings;
+use PXLBSAdminify\Inc\Admin\AdminSettingsModel;
 
 // no direct access allowed
 if (!defined('ABSPATH')) {
@@ -58,7 +58,7 @@ class Tweaks extends AdminSettingsModel
 		$this->security_attachments();
 
 		if(!empty($this->performance['performance_enable'])){
-			$this->adminify_performances();
+			$this->performances();
 		}
 
 		// Add Custom Default Gravatar Image
@@ -73,7 +73,7 @@ class Tweaks extends AdminSettingsModel
 				// Change Howdy Text
 				// add_action('admin_bar_menu', [$this, 'remove_from_admin_bar'], 999);
 				// add_action('admin_bar_menu', [$this, 'clear_node_title'], 999);
-				add_filter('admin_bar_menu', [$this, 'adminify_change_howdy_text'], 9999);
+				add_filter('admin_bar_menu', [$this, 'change_howdy_text'], 9999);
 			}
 		}
 
@@ -160,7 +160,8 @@ class Tweaks extends AdminSettingsModel
 	public function url_redirection(){
 		global $wp_query;
 		$wp_query->set_404();
-		wp_redirect(esc_url(home_url()), 301);
+		wp_safe_redirect(esc_url(home_url()), 301);
+		exit;
 	}
 
 	public function redirect_to_home(){
@@ -213,8 +214,8 @@ class Tweaks extends AdminSettingsModel
 
 		// Add Featured Image or Post Thumbnail to RSS Feed
 		if (!empty($this->security_media['thumbnails_rss_feed'])) {
-			add_filter('the_excerpt_rss', [$this, 'jltwp_adminify_rss_post_thumbnail']);
-			add_filter('the_content_feed', [$this, 'jltwp_adminify_rss_post_thumbnail']);
+			add_filter('the_excerpt_rss', [$this, 'rss_post_thumbnail']);
+			add_filter('the_content_feed', [$this, 'rss_post_thumbnail']);
 		}
 
 	}
@@ -401,7 +402,7 @@ class Tweaks extends AdminSettingsModel
 	/*
 	* Change Howdy Text
 	*/
-	public function adminify_change_howdy_text($wp_admin_bar)
+	public function change_howdy_text($wp_admin_bar)
 	{
 		// Remove Howdy Message entirely
 		if (!empty($this->options['white_label']['wordpress']['remove_howdy_msg'])) {
@@ -436,7 +437,7 @@ class Tweaks extends AdminSettingsModel
 			if (isset($my_account->title)) {
 
 				// Replace the "Howdy" text with "Welcome"
-				$changed_howdy_text = str_replace('Howdy', Utils::wp_kses_custom($this->options['white_label']['wordpress']['change_howdy_text']), $my_account->title);
+				$changed_howdy_text = str_replace('Howdy', Utils::kses_custom($this->options['white_label']['wordpress']['change_howdy_text']), $my_account->title);
 
 				// Update the node with the new title
 				$wp_admin_bar->add_node([
@@ -542,14 +543,17 @@ class Tweaks extends AdminSettingsModel
 	// Custom Avatars
 	public function add_custom_gravatar_image($avatar_defaults)
 	{
-		// if (!empty($this->custom_gravatar) && array_key_exists('image', $this->custom_gravatar)) {
-		// 	foreach ($this->custom_gravatar['image'] as $key => $value) {
-		// 		$avatar_url                     = esc_url_raw($value['avatar_image']['url']);
-		// 		$avatar_defaults[$avatar_url] = $value['avatar_name'];
-		// 	}
-		// }
-		$custom_avatar_url = 'https://scontent.fzyl2-2.fna.fbcdn.net/v/t39.30808-6/348970682_781621106945149_5992028158112526767_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=gUNSZF2ODw8Q7kNvgG5T48V&_nc_ht=scontent.fzyl2-2.fna&oh=00_AYDLLCAW7eyeRQakH_Fy9R57hYPAekMNIcEHLGi12watcA&oe=66906465'; // Replace with your custom avatar URL
-		$avatar_defaults[$custom_avatar_url] = 'Custom Gravatar'; // Text to display in the avatar dropdown
+		// Register the avatar images configured by the administrator in the plugin settings.
+		if ( ! empty( $this->custom_gravatar['image'] ) && is_array( $this->custom_gravatar['image'] ) ) {
+			foreach ( $this->custom_gravatar['image'] as $value ) {
+				if ( empty( $value['avatar_image']['url'] ) ) {
+					continue;
+				}
+				$avatar_url                     = esc_url_raw( $value['avatar_image']['url'] );
+				$avatar_name                    = ! empty( $value['avatar_name'] ) ? sanitize_text_field( $value['avatar_name'] ) : __( 'Custom Gravatar', 'adminify' );
+				$avatar_defaults[ $avatar_url ] = $avatar_name;
+			}
+		}
 
 		return $avatar_defaults;
 	}
@@ -623,7 +627,7 @@ class Tweaks extends AdminSettingsModel
 	 * @param array $rules WordPress rewrite rules.
 	 * @return array Rewrite rules without embeds rules.
 	 */
-	public function adminify_disable_embeds_rewrites($rules)
+	public function disable_embeds_rewrites($rules)
 	{
 		foreach ($rules as $rule => $rewrite) {
 			if (false !== strpos($rewrite, 'embed=true')) {
@@ -650,16 +654,16 @@ class Tweaks extends AdminSettingsModel
 			$target = esc_url(home_url());
 		}
 
-		$target = apply_filters('wp_adminify_redirect_target', $target);
-		$status = apply_filters('wp_adminify_redirect_status', $this->redirect_status);
+		$target = apply_filters('pxlbsadminify_redirect_target', $target);
+		$status = apply_filters('pxlbsadminify_redirect_status', $this->redirect_status);
 
-		wp_redirect($target, $status);
-		die();
+		wp_safe_redirect($target, $status);
+		exit;
 	}
 
 
 	/* Add Featured Image or Post Thumbnail to RSS Feed */
-	public function jltwp_adminify_rss_post_thumbnail($content)
+	public function rss_post_thumbnail($content)
 	{
 		global $post;
 		if (has_post_thumbnail($post->ID)) {
@@ -681,10 +685,10 @@ class Tweaks extends AdminSettingsModel
 
 		if ($u_modified_time >= $u_time + 86400) {
 			$custom_content = sprintf(
-				__('<div class="wp-adminify-last-updated"><strong><span>%1$s</span></strong><span>%2$s %3$s</span></div>', 'adminify'),
-				esc_html__('Last Updated on ', 'adminify'),
-				get_the_modified_time('F jS, Y'),
-				get_the_modified_time('h:i a')
+				'<div class="wp-adminify-last-updated"><strong><span>%1$s</span></strong><span>%2$s %3$s</span></div>',
+				esc_html__('Last Updated on', 'adminify'),
+				esc_html(get_the_modified_time('F jS, Y')),
+				esc_html(get_the_modified_time('h:i a'))
 			);
 			return $custom_content . $content;
 		}
@@ -740,14 +744,14 @@ class Tweaks extends AdminSettingsModel
 
 
 	/** Remove Dashicons from Admin Bar for non logged in users **/
-	public function jltwp_adminify_remove_dashicons()
+	public function remove_dashicons()
 	{
 		global $pagenow;
 
 		if (!is_user_logged_in()) {
 
 			// This retrieves the /path/file.php?param=val part of the URL
-			$current_request_uri = sanitize_text_field($_SERVER['REQUEST_URI']);
+			$current_request_uri = isset($_SERVER['REQUEST_URI']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : '';
 
 			// for homepage
 			if (empty($current_request_uri)) {
@@ -787,7 +791,7 @@ class Tweaks extends AdminSettingsModel
 	}
 
 	/** Browser Cache Expires & GZIP Compression **/
-	public function jltwp_adminify_htaccess()
+	public function htaccess()
 	{
 		// We get the main WordPress .htaccess filepath.
 		$ruta_htaccess = get_home_path() . '.htaccess'; // https://codex.wordpress.org/Function_Reference/get_home_path !
@@ -820,7 +824,7 @@ class Tweaks extends AdminSettingsModel
 		$lineas[] = 'AddOutputFilterByType DEFLATE font/ttf font/truetype application/font-ttf application/x-font-ttf';
 		$lineas[] = '</IfModule>';
 
-		insert_with_markers($ruta_htaccess, 'WP Adminify by Jewel Theme', $lineas); // https://developer.wordpress.org/reference/functions/insert_with_markers/ !
+		insert_with_markers($ruta_htaccess, 'Adminify by Jewel Theme', $lineas); // https://developer.wordpress.org/reference/functions/insert_with_markers/ !
 	}
 
 
@@ -831,7 +835,7 @@ class Tweaks extends AdminSettingsModel
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function adminify_performances()
+	public function performances()
 	{
 		$performance_data = $this->performance['performance_data'];
 
@@ -839,7 +843,7 @@ class Tweaks extends AdminSettingsModel
 
 		// Remove Dashicons from Frontend
 		if (!empty($performance_data) && in_array('dashicons', $performance_data)) {
-			add_action('wp_print_styles', [$this, 'jltwp_adminify_remove_dashicons'], 100);
+			add_action('wp_print_styles', [$this, 'remove_dashicons'], 100);
 		}
 
 		/** Remove Version Query Strings from Scripts/Styles */
@@ -880,7 +884,7 @@ class Tweaks extends AdminSettingsModel
 
 		/** Browser Cache Expires & GZIP Compression */
 		if (in_array('cache_gzip_compression', $performance_data)) {
-			register_activation_hook(__FILE__, [$this, 'jltwp_adminify_htaccess']);
+			register_activation_hook(__FILE__, [$this, 'htaccess']);
 		}
 
 
@@ -908,7 +912,7 @@ class Tweaks extends AdminSettingsModel
 	/** Secure method for Defer Parsing of JavaScript moving ALL JS from Header to Footer **/
 	public function defer_parsing_of_js($tag, $handle)
 	{
-		$skip = apply_filters('wp_adminify_defer_skip', false, $tag, $handle);
+		$skip = apply_filters('pxlbsadminify_defer_skip', false, $tag, $handle);
 
 		if ($skip) {
 			return $tag;

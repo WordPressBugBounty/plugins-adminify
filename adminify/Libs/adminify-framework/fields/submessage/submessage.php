@@ -18,7 +18,7 @@ if ( ! class_exists( 'ADMINIFY_Field_submessage' ) ) {
 
       $style = ( ! empty( $this->field['style'] ) ) ? $this->field['style'] : 'normal';
 
-      echo '<div class="adminify-submessage adminify-submessage-'. esc_attr( $style ) .'">'. $this->field['content'] .'</div>';
+      echo '<div class="adminify-submessage adminify-submessage-'. esc_attr( $style ) .'">'. wp_kses_post( $this->field['content'] ) .'</div>';
 
     }
 

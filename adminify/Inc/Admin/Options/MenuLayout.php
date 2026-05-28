@@ -1,10 +1,10 @@
 <?php
 
-namespace WPAdminify\Inc\Admin\Options;
+namespace PXLBSAdminify\Inc\Admin\Options;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Admin\AdminSettingsModel;
-use WPAdminify\Inc\Modules\MenuEditor\MenuEditor;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Admin\AdminSettingsModel;
+use PXLBSAdminify\Inc\Modules\MenuEditor\MenuEditor;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	die;
@@ -98,14 +98,15 @@ class MenuLayout extends AdminSettingsModel {
 			'type'       => 'notice',
 			'style'      => 'warning',
 			'class'      => 'adminify-one-col',
-			'content'    => Utils::adminify_upgrade_pro( 'Horizontal Menu Requires "Adminify UI" Enabled from "Customize" Tab ' ),
+			'content'    => Utils::upgrade_pro_notice( 'Horizontal Menu Requires "Adminify UI" Enabled from "Customize" Tab ' ),
 			'dependency' => [ 'admin_ui|layout_type', '!=|==', 'true|horizontal', 'true' ],
 		];
 
 		$settings_tab[] = [
 			'id'         => 'menu_search',
 			'type'       => 'switcher',
-			'title'    	 => sprintf(__('Menu Search %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+			/* translators: %s: PRO badge label */
+			'title'    	 => sprintf(__('Menu Search %s', 'adminify'), Utils::upgrade_pro_badge()),
 			'class'      => 'adminify-pro-fieldset adminify-pro-notice',
 			'label'      => __( 'Enable or Disable Menu Search on Admin Menu', 'adminify' ),
 			'text_on'    => __( 'Enable', 'adminify' ),
@@ -133,7 +134,7 @@ class MenuLayout extends AdminSettingsModel {
 			'type'       => 'notice',
 			'style'      => 'warning',
 			'class'		 => 'adminify-one-col',
-			'content'    => Utils::adminify_upgrade_pro( 'Rounded Menu Mode Requires "Adminify UI" Module Enabled from "WP Adminify>Customize" Menu ' ),
+			'content'    => Utils::upgrade_pro_notice( 'Rounded Menu Mode Requires "Adminify UI" Module Enabled from "Adminify>Customize" Menu ' ),
 			'dependency' => [ 'admin_ui|layout_type|menu_mode', '!=|==|==', 'true|vertical|rounded', 'true' ],
 		];
 
@@ -167,7 +168,7 @@ class MenuLayout extends AdminSettingsModel {
 			'type'       => 'notice',
 			'style'      => 'warning',
 			'class'		 => 'adminify-one-col',
-			'content'    => Utils::adminify_upgrade_pro( 'Two Step Menu Requires "Adminify UI" Module Enabled from "WP Adminify>Customize" Menu ' ),
+			'content'    => Utils::upgrade_pro_notice( 'Two Step Menu Requires "Adminify UI" Module Enabled from "Adminify>Customize" Menu ' ),
 			'dependency' => [ 'admin_ui|layout_type|menu_hover_submenu', '!=|==|==', 'true|vertical|two_step', 'true' ],
 		];
 
@@ -176,7 +177,7 @@ class MenuLayout extends AdminSettingsModel {
 			'type'       => 'notice',
 			'style'      => 'warning',
 			'class'		 => 'adminify-one-col',
-			'content'    => Utils::adminify_upgrade_pro( 'Accordion Menu Requires "Adminify UI" Module Enabled from "WP Adminify>Customize" Menu ' ),
+			'content'    => Utils::upgrade_pro_notice( 'Accordion Menu Requires "Adminify UI" Module Enabled from "Adminify>Customize" Menu ' ),
 			'dependency' => [ 'admin_ui|layout_type|menu_hover_submenu', '!=|==|==', 'true|vertical|accordion', 'true' ],
 		];
 
@@ -185,7 +186,7 @@ class MenuLayout extends AdminSettingsModel {
 			'type'       => 'notice',
 			'style'      => 'warning',
 			'class'		 => 'adminify-one-col',
-			'content'    => Utils::adminify_upgrade_pro( 'Toggle Menu Requires "Adminify UI" Module Enabled from "WP Adminify>Customize" Menu ' ),
+			'content'    => Utils::upgrade_pro_notice( 'Toggle Menu Requires "Adminify UI" Module Enabled from "Adminify>Customize" Menu ' ),
 			'dependency' => [ 'admin_ui|layout_type|menu_hover_submenu', '!=|==|==', 'true|vertical|toggle', 'true' ],
 		];
 
@@ -194,7 +195,7 @@ class MenuLayout extends AdminSettingsModel {
 		// 	'type'       => 'notice',
 		// 	'title'      => __( 'Horizontal Menu', 'adminify' ),
 		// 	'style'      => 'warning',
-		// 	'content'    => Utils::adminify_upgrade_pro(),
+		// 	'content'    => Utils::upgrade_pro_notice(),
 		// 	'dependency' => [ 'admin_ui|layout_type', '==|==', 'true|horizontal', 'true' ],
 		// ];
 
@@ -203,16 +204,17 @@ class MenuLayout extends AdminSettingsModel {
 			'id'         => 'horizontal_menu_notice',
 			'type'       => 'notice',
 			'style'      => 'warning',
-			'title'      => __( ' ', 'adminify' ),
+			'title'      => ' ',
 			// 'class'      => 'adminify-one-col',
-			'content'    => Utils::adminify_upgrade_pro( '<strong>Horizontal Menu is available in PRO version</strong>' ),
+			'content'    => Utils::upgrade_pro_notice( '<strong>Horizontal Menu is available in PRO version</strong>' ),
 			'dependency' => [ 'admin_ui|layout_type', '==|==', 'true|horizontal', 'true' ],
 		];
 
 		$settings_tab[] = [
 			'id'         => 'user_info_fields',
 			'type'       => 'fieldset',
-			'title'    	 => sprintf(__('User Info %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+			/* translators: %s: PRO badge label */
+			'title'    	 => sprintf(__('User Info %s', 'adminify'), Utils::upgrade_pro_badge()),
 			'dependency' => [ 'admin_ui|layout_type', '==|==', 'true|vertical', 'true' ],
 			'fields'     => [
 				[
@@ -229,7 +231,7 @@ class MenuLayout extends AdminSettingsModel {
 				[
 					'id'         => 'user_info_content',
 					'type'       => 'button_set',
-					'class'		 => Utils::upgrade_pro_class(),
+					'class'		 => Utils::upgrade_pro_notice_class(),
 					'title'      => __( 'Content Type', 'adminify' ),
 					'options'    => [
 						'text' => __( 'Text', 'adminify' ),
@@ -241,7 +243,7 @@ class MenuLayout extends AdminSettingsModel {
 				[
 					'id'         => 'user_info_avatar',
 					'type'       => 'button_set',
-					'class'		 => Utils::upgrade_pro_class(),
+					'class'		 => Utils::upgrade_pro_notice_class(),
 					'title'      => __( 'Avatar Type', 'adminify' ),
 					'options'    => [
 						'rounded' => __( 'Rounded', 'adminify' ),
@@ -257,7 +259,8 @@ class MenuLayout extends AdminSettingsModel {
 			'id'      	=> 'horz_menu_type',
             'type'    	=> 'button_set',
 			'class'		=> 'adminify-pro-fieldset',
-			'title'    	=> sprintf(__('Menu Item Style %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+			/* translators: %s: PRO badge label */
+			'title'    	=> sprintf(__('Menu Item Style %s', 'adminify'), Utils::upgrade_pro_badge()),
             'options' 	=> [
                 'icons_only' => __( 'Icon Only', 'adminify' ),
                 'text_only'  => __( 'Text Only', 'adminify' ),
@@ -271,7 +274,8 @@ class MenuLayout extends AdminSettingsModel {
 			'id'         => 'horz_dropdown_icon',
             'type'       => 'switcher',
 			'class'		=> 'adminify-pro-fieldset adminify-pro-notice',
-			'title'    	 => sprintf(__('Dropdown Toggle Icon %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+			/* translators: %s: PRO badge label */
+			'title'    	 => sprintf(__('Dropdown Toggle Icon %s', 'adminify'), Utils::upgrade_pro_badge()),
             'label'      => __( 'Show/Hide Dropdown Icon', 'adminify' ),
             'text_on'    => __( 'Show', 'adminify' ),
             'text_off'   => __( 'Hide', 'adminify' ),
@@ -284,7 +288,8 @@ class MenuLayout extends AdminSettingsModel {
 			'id'         => 'horz_toplinks',
             'type'       => 'switcher',
 			'class'		=> 'adminify-pro-fieldset adminify-pro-notice',
-			'title'    	 => sprintf(__('Top Menu Links %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+			/* translators: %s: PRO badge label */
+			'title'    	 => sprintf(__('Top Menu Links %s', 'adminify'), Utils::upgrade_pro_badge()),
             'label'      => __( 'Parent/Top Menu Links clickable', 'adminify' ),
             'text_on'    => __( 'Enabled', 'adminify' ),
             'text_off'   => __( 'Disabled', 'adminify' ),
@@ -297,7 +302,8 @@ class MenuLayout extends AdminSettingsModel {
 			'id'         => 'horz_bubble_icon_hide',
             'type'       => 'switcher',
 			'class'		=> 'adminify-pro-fieldset adminify-pro-notice',
-			'title'    	 => sprintf(__('Bubble Icon %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+			/* translators: %s: PRO badge label */
+			'title'    	 => sprintf(__('Bubble Icon %s', 'adminify'), Utils::upgrade_pro_badge()),
             'label'      => __( 'Show/Hide Update or Plugins Bubble Icon', 'adminify' ),
             'text_on'    => __( 'Show', 'adminify' ),
             'text_off'   => __( 'Hide', 'adminify' ),
@@ -311,7 +317,7 @@ class MenuLayout extends AdminSettingsModel {
         //     'type'       => 'switcher',
 		// 	'class'		=> 'adminify-pro-fieldset adminify-pro-notice',
         //     'title'      => __( 'Break Long Lists', 'adminify' ),
-		// 	'title'    	 => sprintf(__('Break Long Lists %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+		// 	'title'    	 => sprintf(__('Break Long Lists %s', 'adminify'), Utils::upgrade_pro_badge()),
         //     'label'      => __( 'Break Menu Lines if Main menu gets longer lists and doesn\'t cover screen witdh', 'adminify' ),
         //     'text_on'    => __( 'Enable', 'adminify' ),
         //     'text_off'   => __( 'Disable', 'adminify' ),
@@ -384,7 +390,8 @@ class MenuLayout extends AdminSettingsModel {
 			'id'         => 'horz_menu_parent_padding',
             'type'       => 'slider',
 			'class'		 => 'adminify-pro-fieldset adminify-pro-notice',
-			'title'      => sprintf(__('Parent Menu Horizontal Padding %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+			/* translators: %s: PRO badge label */
+			'title'      => sprintf(__('Parent Menu Horizontal Padding %s', 'adminify'), Utils::upgrade_pro_badge()),
             'unit'       => 'px',
             'min'        => 1,
             'max'        => 100,
@@ -478,7 +485,8 @@ class MenuLayout extends AdminSettingsModel {
 			'id'      => 'user_info_style',
 			'type'    => 'color_group',
 			'class'   => 'adminify-pro-fieldset',
-			'title'   => sprintf(__('User Info Colors %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+			/* translators: %s: PRO badge label */
+			'title'   => sprintf(__('User Info Colors %s', 'adminify'), Utils::upgrade_pro_badge()),
 			'options' => [
                 'info_text_color'       => __('Link Color', 'adminify'),
                 'info_text_hover_color' => __('Hover Color', 'adminify'),
@@ -494,9 +502,9 @@ class MenuLayout extends AdminSettingsModel {
 	/**
 	 * Menu Editor Root
 	 */
-	public static function jltwp_adminify_menu_editor_contents() {
+	public static function menu_editor_contents() {
 		$menu_editor = MenuEditor::get_instance();
-		$menu_editor->jltwp_adminify_menu_editor_contents();
+		$menu_editor->menu_editor_contents();
 	}
 
 
@@ -514,8 +522,8 @@ class MenuLayout extends AdminSettingsModel {
 		$this->menu_layout_settings_tab( $settings_tab );
 		$this->menu_styles_tab( $styles_tab );
 
-		$settings_tab = apply_filters('adminify_settings/admin_menu/settings', $settings_tab, $this);
-		$styles_tab = apply_filters('adminify_settings/admin_menu/styles', $styles_tab, $this);
+		$settings_tab = apply_filters('pxlbsadminify_settings/admin_menu/settings', $settings_tab, $this);
+		$styles_tab = apply_filters('pxlbsadminify_settings/admin_menu/styles', $styles_tab, $this);
 
 		// Menu Layout Section
 		\ADMINIFY::createSection(
@@ -526,12 +534,12 @@ class MenuLayout extends AdminSettingsModel {
 				'fields' => [
 					[
 						'type'    => 'subheading',
-						'content' => Utils::adminfiy_help_urls(
+						'content' => Utils::help_urls(
 							__('Admin Menu Settings', 'adminify' ),
 							'https://wpadminify.com/docs/adminify/admin-menu/admin-menu-editor',
 							'https://www.youtube.com/watch?v=zbEYlAg91QM',
 							'https://www.facebook.com/groups/jeweltheme',
-							\WPAdminify\Inc\Admin\AdminSettings::support_url()
+							\PXLBSAdminify\Inc\Admin\AdminSettings::support_url()
 						),
 					],
 					[
@@ -546,7 +554,7 @@ class MenuLayout extends AdminSettingsModel {
 										'id'    => 'menu_editor',
 										'type'  => 'callback',
 										'class'	=> 'adminify-one-col',
-										'function' => '\WPAdminify\Inc\Admin\Options\MenuLayout::jltwp_adminify_menu_editor_contents',
+										'function' => '\PXLBSAdminify\Inc\Admin\Options\MenuLayout::menu_editor_contents',
 									]
 								],
 							],

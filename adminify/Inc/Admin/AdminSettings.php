@@ -1,16 +1,16 @@
 <?php
 
-namespace WPAdminify\Inc\Admin;
+namespace PXLBSAdminify\Inc\Admin;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Admin\AdminSettingsModel;
-use WPAdminify\Inc\Admin\Options\Customize;
-use WPAdminify\Inc\Admin\Options\Productivity;
-use WPAdminify\Inc\Admin\Options\CustomCSSJS;
-use WPAdminify\Inc\Admin\Options\Performance;
-use WPAdminify\Inc\Admin\Options\MenuLayout;
-use WPAdminify\Inc\Admin\Options\Security;
-use WPAdminify\Inc\Admin\Options\White_Label;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Admin\AdminSettingsModel;
+use PXLBSAdminify\Inc\Admin\Options\Customize;
+use PXLBSAdminify\Inc\Admin\Options\Productivity;
+use PXLBSAdminify\Inc\Admin\Options\CustomCSSJS;
+use PXLBSAdminify\Inc\Admin\Options\Performance;
+use PXLBSAdminify\Inc\Admin\Options\MenuLayout;
+use PXLBSAdminify\Inc\Admin\Options\Security;
+use PXLBSAdminify\Inc\Admin\Options\White_Label;
 if ( !defined( 'ABSPATH' ) ) {
     die;
 }
@@ -24,11 +24,94 @@ if ( !class_exists( 'AdminSettings' ) ) {
 
         private $message = [];
 
+        // Snapshot of the settings admin menu taken just before Freemius runs,
+        // used to restore it afterwards (see pxlbsadminify_capture_settings_menu).
+        private $captured_menu_item = null;
+
+        private $captured_submenu = null;
+
+        private $captured_page_cb = null;
+
         public function __construct() {
             // this should be first so the default values get stored
-            $this->jltwp_adminify_options();
+            $this->pxlbsadminify_options();
             parent::__construct( (array) get_option( $this->prefix ) );
             add_action( 'network_admin_menu', [$this, 'network_panel'] );
+            // Freemius's _prepare_admin_menu (admin_menu @ 999999999, x2 via
+            // parallel_activation) strips the per-site "wp-adminify-settings" menu on
+            // multisite (SDK 2.13.1+), so individual site admins hit
+            // "Cannot load wp-adminify-settings". Snapshot the menu just before Freemius
+            // runs and restore it just after — this keeps the menu registered at the
+            // normal priority (so submenu URLs stay correct) yet survives Freemius's
+            // removal pass.
+            add_action( 'admin_menu', [$this, 'pxlbsadminify_capture_settings_menu'], 999999998 );
+            add_action( 'admin_menu', [$this, 'pxlbsadminify_restore_settings_menu'], PHP_INT_MAX );
+            add_filter(
+                'pxlbsadminify_render_field_html',
+                array($this, 'render_pro_locked_field'),
+                10,
+                2
+            );
+        }
+
+        /**
+         * Snapshot the wp-adminify-settings menu, submenu and page callback right
+         * before Freemius's _prepare_admin_menu (priority 999999999) can remove them.
+         */
+        public function pxlbsadminify_capture_settings_menu() {
+            global $menu, $submenu, $wp_filter;
+            $slug = 'wp-adminify-settings';
+            $hook = 'toplevel_page_' . $slug;
+            if ( !empty( $menu ) ) {
+                foreach ( $menu as $item ) {
+                    if ( isset( $item[2] ) && $item[2] === $slug ) {
+                        $this->captured_menu_item = $item;
+                        break;
+                    }
+                }
+            }
+            if ( isset( $submenu[$slug] ) ) {
+                $this->captured_submenu = $submenu[$slug];
+            }
+            if ( isset( $wp_filter[$hook] ) ) {
+                foreach ( $wp_filter[$hook]->callbacks as $callbacks ) {
+                    foreach ( $callbacks as $callback ) {
+                        $this->captured_page_cb = $callback['function'];
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        /**
+         * Restore anything Freemius removed: the top-level menu entry, its submenus
+         * and the page render callback. No-op when nothing was removed.
+         */
+        public function pxlbsadminify_restore_settings_menu() {
+            global $menu, $submenu;
+            $slug = 'wp-adminify-settings';
+            $hook = 'toplevel_page_' . $slug;
+            // Re-attach the page render callback so the page is loadable again.
+            if ( !has_action( $hook ) && $this->captured_page_cb ) {
+                add_action( $hook, $this->captured_page_cb );
+            }
+            // Re-add the top-level menu entry if it was removed.
+            $has_top = false;
+            if ( !empty( $menu ) ) {
+                foreach ( $menu as $item ) {
+                    if ( isset( $item[2] ) && $item[2] === $slug ) {
+                        $has_top = true;
+                        break;
+                    }
+                }
+            }
+            if ( !$has_top && $this->captured_menu_item ) {
+                $menu[] = $this->captured_menu_item;
+            }
+            // Re-add submenus if they were removed (preserves their original URLs).
+            if ( empty( $submenu[$slug] ) && $this->captured_submenu ) {
+                $submenu[$slug] = $this->captured_submenu;
+            }
         }
 
         public function network_panel() {
@@ -38,7 +121,7 @@ if ( !class_exists( 'AdminSettings' ) ) {
                 'manage_options',
                 'wp-adminify-settings',
                 [$this, 'network_panel_display'],
-                WP_ADMINIFY_ASSETS_IMAGE . 'logos/menu-icon.svg',
+                PXLBSADMINIFY_ASSETS_IMAGE . 'logos/menu-icon.svg',
                 30
             );
         }
@@ -63,6 +146,7 @@ if ( !class_exists( 'AdminSettings' ) ) {
         }
 
         public function get_sites_option_empty() {
+            /* translators: 1: option value attribute, 2: option label text */
             return sprintf( __( '<option value="%1$s">%2$s</option>', 'adminify' ), 0, __( 'Select', 'adminify' ) );
         }
 
@@ -75,6 +159,7 @@ if ( !class_exists( 'AdminSettings' ) ) {
                 $_sites[] = $this->get_sites_option_empty();
             }
             foreach ( $sites as $site ) {
+                /* translators: 1: site blog ID used as option value, 2: site name shown as option label */
                 $_sites[] = sprintf( __( '<option value="%1$s">%2$s</option>', 'adminify' ), $site->blog_id, $site->name );
             }
             return implode( '', $_sites );
@@ -85,27 +170,27 @@ if ( !class_exists( 'AdminSettings' ) ) {
                 return;
             }
             $classes = 'adminify-status adminify-status--' . esc_attr( $this->message['type'] );
-            echo '<div class="' . esc_attr( $classes ) . '"><p>' . esc_html__( wp_kses_post( $this->message['message'] ), 'adminify' );
+            echo '<div class="' . esc_attr( $classes ) . '"><p>' . wp_kses_post( $this->message['message'] ) . '</p></div>';
         }
 
         public function network_panel_display() {
             $multisite_settings = sprintf(
                 wp_kses_post( '<div class="%1$s"><h2>%2$s</h2> <a href="%3$s" target="_blank">%4$s</a></div>', 'adminify' ),
-                Utils::upgrade_pro_class(),
+                Utils::upgrade_pro_notice_class(),
                 esc_html__( 'Network Settings', 'adminify' ),
                 esc_url( 'https://wpadminify.com/pricing' ),
-                Utils::adminify_upgrade_pro( 'Please Upgrade or Activate License' )
+                Utils::upgrade_pro_notice_class( 'Please Upgrade or Activate License' )
             );
             // Initialize the multisite_settings variable
-            $multisite_settings = apply_filters( 'adminify/admin_settings/network', $multisite_settings );
+            $multisite_settings = apply_filters( 'pxlbsadminify/admin_settings/network', $multisite_settings );
             // Apply the filter
-            echo $multisite_settings;
+            echo wp_kses_post( $multisite_settings );
         }
 
         public function option_modules() {
             $extra_data_merge = [];
             $clonable_data = [
-                '_wpadminify'                                 => __( 'WP Adminify Options', 'adminify' ),
+                'pxlbsadminify_settings'                      => __( 'Adminify Options', 'adminify' ),
                 '_adminify_admin_columns_adminify_admin_page' => __( 'Admin Page Columns Data', 'adminify' ),
             ];
             // Activity Logs Active
@@ -115,7 +200,7 @@ if ( !class_exists( 'AdminSettings' ) ) {
             }
             // Quick Circle Menu Active
             if ( Utils::is_plugin_active( 'adminify-quick-circle-menu/adminify-quick-circle-menu.php' ) ) {
-                $extra_data_merge['_wpadminify_quick_circle_menu'] = __( 'Quick Circle Menu', 'adminify' );
+                $extra_data_merge['pxlbsadminify_quick_circle_menu'] = __( 'Quick Circle Menu', 'adminify' );
                 $clonable_data = array_merge( $clonable_data, $extra_data_merge );
             }
             // Google Pagespeed Active
@@ -125,17 +210,17 @@ if ( !class_exists( 'AdminSettings' ) ) {
             }
             // Login Customizer Active
             if ( Utils::is_plugin_active( 'loginfy/loginfy.php' ) ) {
-                $extra_data_merge['jltwp_adminify_login'] = __( 'Loginify Data', 'adminify' );
+                $extra_data_merge['pxlbsadminify_login'] = __( 'Loginify Data', 'adminify' );
                 $clonable_data = array_merge( $clonable_data, $extra_data_merge );
             }
             // Header Footer Scripts Active
             if ( Utils::is_plugin_active( 'adminify-sidebar-generator/adminify-sidebar-generator.php' ) ) {
-                $extra_data_merge['_wp_adminify_sidebar_settings'] = __( 'Sidebar Generator', 'adminify' );
+                $extra_data_merge['pxlbsadminify_sidebar_settings'] = __( 'Sidebar Generator', 'adminify' );
                 $clonable_data = array_merge( $clonable_data, $extra_data_merge );
             }
             // Sidebar Generator Active
             if ( Utils::is_plugin_active( 'adminify-header-footer-scripts/adminify-header-footer-scripts.php' ) ) {
-                $extra_data_merge['_wpadminify_custom_js_css'] = __( 'Custom JS/CSS', 'adminify' );
+                $extra_data_merge['pxlbsadminify_custom_js_css'] = __( 'Custom JS/CSS', 'adminify' );
                 $clonable_data = array_merge( $clonable_data, $extra_data_merge );
             }
             // Admin Columns Active
@@ -151,6 +236,7 @@ if ( !class_exists( 'AdminSettings' ) ) {
             switch_to_blog( $copy_from );
             global $wpdb;
             $table_name = $wpdb->prefix . 'adminify_page_speed';
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name derived from a sanitized internal value, no user input; direct query required for reading a custom plugin table; not cached intentionally.
             $histories = $wpdb->get_results( "SELECT * FROM {$table_name}", ARRAY_A );
             restore_current_blog();
             return $histories;
@@ -162,6 +248,7 @@ if ( !class_exists( 'AdminSettings' ) ) {
             $table_name = $wpdb->prefix . 'adminify_page_speed';
             foreach ( $histories as $history ) {
                 unset($history['id']);
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- direct query required for writing to a custom plugin table; not cached intentionally.
                 $wpdb->insert( "{$table_name}", $history, [
                     'url'           => '%s',
                     'score_desktop' => '%d',
@@ -204,12 +291,12 @@ if ( !class_exists( 'AdminSettings' ) ) {
 
         public static function get_pro_label() {
             $is_pro = "";
-            $is_pro = WP_ADMINIFY;
+            $is_pro = esc_html__( 'Adminify', 'adminify' );
             return $is_pro;
         }
 
         public function get_plugin_menu_icon() {
-            $menu_icon = WP_ADMINIFY_ASSETS_IMAGE . 'logos/menu-icon-light.svg';
+            $menu_icon = PXLBSADMINIFY_ASSETS_IMAGE . 'logos/menu-icon-light.svg';
             $saved_data = get_option( $this->prefix );
             if ( isset( $saved_data['white_label']['adminify']['menu_icon'] ) && !empty( $saved_data['white_label']['adminify']['menu_icon']['url'] ) ) {
                 $menu_icon = $saved_data['white_label']['adminify']['menu_icon']['url'];
@@ -232,17 +319,17 @@ if ( !class_exists( 'AdminSettings' ) ) {
             return $support_url;
         }
 
-        public function jltwp_adminify_options() {
+        public function pxlbsadminify_options() {
             if ( !class_exists( 'ADMINIFY' ) ) {
                 return;
             }
-            $submenu_position = apply_filters( 'jltwp_adminify_submenu_position', 30 );
+            $submenu_position = apply_filters( 'pxlbsadminify_submenu_position', 30 );
             $saved_data = get_option( $this->prefix );
             $global_admin_ui_mode = ( empty( $saved_data['light_dark_mode']['admin_ui_mode'] ) ? 'light' : sanitize_text_field( $saved_data['light_dark_mode']['admin_ui_mode'] ) );
             $admin_ui_mode = ( empty( get_user_meta( get_current_user_id(), 'color_mode', true ) ) ? $global_admin_ui_mode : get_user_meta( get_current_user_id(), 'color_mode', true ) );
-            $light_logo_image_url = WP_ADMINIFY_ASSETS_IMAGE . 'logos/logo-text-light.svg';
-            $dark_logo_image_url = WP_ADMINIFY_ASSETS_IMAGE . 'logos/logo-text-dark.svg';
-            $plugin_author_name = WP_ADMINIFY_AUTHOR;
+            $light_logo_image_url = PXLBSADMINIFY_ASSETS_IMAGE . 'logos/logo-text-light.svg';
+            $dark_logo_image_url = PXLBSADMINIFY_ASSETS_IMAGE . 'logos/logo-text-dark.svg';
+            $plugin_author_name = PXLBSADMINIFY_AUTHOR;
             // WP Adminify Options
             \ADMINIFY::createOptions( $this->prefix, [
                 'framework_title'         => '<img class="wp-adminify-settings-logo adminify-settings-light-logo" src=' . esc_url( $light_logo_image_url ) . '><img class="wp-adminify-settings-logo adminify-settings-dark-logo" src=' . esc_url( $dark_logo_image_url ) . '>' . ' <small>by ' . esc_html( $plugin_author_name ) . '</small>',
@@ -303,7 +390,7 @@ if ( !class_exists( 'AdminSettings' ) ) {
                 'icon'   => 'fas fa-database',
                 'fields' => [[
                     'type'    => 'subheading',
-                    'content' => Utils::adminfiy_help_urls(
+                    'content' => Utils::help_urls(
                         __( 'Backup Config Settings', 'adminify' ),
                         'https://wpadminify.com/docs/adminify/export-import/backup',
                         'https://www.youtube.com/playlist?list=PLqpMw0NsHXV-EKj9Xm1DMGa6FGniHHly8',
@@ -333,6 +420,93 @@ if ( !class_exists( 'AdminSettings' ) ) {
 
         public function get_prefix() {
             return $this->prefix;
+        }
+
+        /**
+         * Render-time hook that neutralizes Pro-locked controls in the
+         * free build. Bypassed when the Pro plugin is active so the Pro
+         * UI is unchanged.
+         *
+         * Two operating modes, both detected from the rendered HTML:
+         *
+         * 1. Field-level lock (the field's class array contains
+         *    'adminify-pro-locked'): strip name="..." from every input/
+         *    select/textarea, add disabled + tabindex="-1", and wrap the
+         *    entire field with a <div class="adminify-pro-locked-wrapper">
+         *    that carries a lock-icon + "Upgrade to Pro" CTA overlay.
+         *
+         * 2. Option-level lock (a checkbox/radio option label contains
+         *    <span class="adminify-pro-locked-option">): for every <li>
+         *    that contains the marker span, strip name="..." from the
+         *    enclosed input and add disabled + tabindex="-1". Inline lock
+         *    icon is rendered by CSS off the marker class itself.
+         *
+         * @param string $html  Rendered field HTML from the framework.
+         * @param array  $field Field config array.
+         * @return string Possibly transformed HTML.
+         */
+        public function render_pro_locked_field( $html, $field ) {
+            // Pro plugin active: leave HTML untouched.
+            if ( function_exists( 'jltwp_adminify' ) && jltwp_adminify()->can_use_premium_code__premium_only() ) {
+                return $html;
+            }
+            $field_class = '';
+            if ( is_array( $field ) && isset( $field['class'] ) ) {
+                $field_class = (string) $field['class'];
+            }
+            // Detect field-level lock from either the new marker class
+            // (adminify-pro-locked) or the legacy Pro-feature classes that
+            // pre-date the render-disable hook. Both signal a Pro-only
+            // field that must not submit a value in the free build.
+            $has_field_lock = strpos( $field_class, 'adminify-pro-locked' ) !== false || strpos( $field_class, 'adminify-pro-fieldset' ) !== false || strpos( $field_class, 'adminify-pro-feature' ) !== false || strpos( $field_class, 'adminify-pro-notice' ) !== false;
+            // Per-option lock signal: the helper Utils::upgrade_pro_class()
+            // emits a <span class="adminify-pro-checkbox"> next to a Pro-only
+            // checkbox label. Match that span (or the historical
+            // adminify-pro-locked-option marker) inside <li> blocks.
+            $has_option_lock = strpos( $html, 'adminify-pro-checkbox' ) !== false || strpos( $html, 'adminify-pro-locked-option' ) !== false;
+            if ( !$has_field_lock && !$has_option_lock ) {
+                return $html;
+            }
+            if ( $has_field_lock ) {
+                // Strip name attrs and disable inputs across the whole field.
+                // The visual treatment is the inline <span class="adminify-pro-badge">Pro</span>
+                // rendered by the helper — no extra wrapper / overlay.
+                $html = $this->adminify_strip_inputs( $html );
+                return $html;
+            }
+            // Option-level: only strip inputs inside <li> blocks that
+            // carry the per-option marker. Match each <li> ... </li>
+            // non-greedily.
+            $html = preg_replace_callback( '#<li\\b[^>]*>(.*?)</li>#is', function ( $li_match ) {
+                $li_inner = $li_match[1];
+                if ( strpos( $li_inner, 'adminify-pro-checkbox' ) === false && strpos( $li_inner, 'adminify-pro-locked-option' ) === false ) {
+                    return $li_match[0];
+                }
+                $open_tag_end = strpos( $li_match[0], '>' );
+                $open_tag = substr( $li_match[0], 0, $open_tag_end + 1 );
+                return $open_tag . $this->adminify_strip_inputs( $li_inner ) . '</li>';
+            }, $html );
+            return $html;
+        }
+
+        /**
+         * Strip name="..." from inputs/selects/textareas in the given
+         * HTML and add disabled + tabindex="-1" if missing. Pure string
+         * transform — the framework emits a known shape.
+         */
+        private function adminify_strip_inputs( $html ) {
+            $html = preg_replace( '/\\s+name="[^"]*"/i', '', $html );
+            $html = preg_replace_callback( '/<(input|select|textarea)\\b([^>]*)>/i', function ( $m ) {
+                $attrs = $m[2];
+                if ( strpos( $attrs, 'disabled' ) === false ) {
+                    $attrs .= ' disabled="disabled"';
+                }
+                if ( strpos( $attrs, 'tabindex=' ) === false ) {
+                    $attrs .= ' tabindex="-1"';
+                }
+                return '<' . $m[1] . $attrs . '>';
+            }, $html );
+            return $html;
         }
 
     }

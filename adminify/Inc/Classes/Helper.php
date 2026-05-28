@@ -1,7 +1,6 @@
 <?php
 
-namespace WPAdminify\Inc\Classes;
-use WPAdminify\Inc\Utils;
+namespace PXLBSAdminify\Inc\Classes;
 
 // no direct access allowed
 if (!defined('ABSPATH')) {
@@ -12,11 +11,11 @@ class Helper
 {
 
 	// Admin Path
-	public static function jltwp_adminify_admin_path($path)
+	public static function pxlbsadminify_admin_path($path)
 	{
 		// Get custom filter path
-		if (has_filter('jltwp_adminify_admin_path')) {
-			return apply_filters('jltwp_adminify_admin_path', $path);
+		if (has_filter('pxlbsadminify_admin_path')) {
+			return apply_filters('pxlbsadminify_admin_path', $path);
 		}
 
 		// Get plugin path
@@ -100,6 +99,7 @@ class Helper
 	 */
 	public static function is_elementor_editor_page()
 	{
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
 		return !empty($_GET['elementor-preview']);
 	}
 
@@ -207,7 +207,7 @@ class Helper
 	 */
 	public static function allowed_host($url)
 	{
-		$url_parsed = parse_url($url);
+		$url_parsed = wp_parse_url($url);
 		if (isset($url_parsed['host'])) {
 			$allowed_hosts[] = $url_parsed['host'];
 			add_filter('allowed_redirect_hosts', function ($hosts) use ($allowed_hosts) {
@@ -236,7 +236,7 @@ class Helper
 
 		$caps = array_unique($caps);
 
-		$caps = (array) apply_filters('adminify_capabilities', $caps);
+		$caps = (array) apply_filters('pxlbsadminify_capabilities', $caps);
 
 		sort($caps);
 
@@ -263,9 +263,9 @@ class Helper
 	/**
 	 * Remove spaces from Plugin Slug
 	 */
-	public static function jltwp_adminify_slug_cleanup()
+	public static function slug_cleanup()
 	{
-		return str_replace('-', '_', strtolower(WP_ADMINIFY_SLUG));
+		return str_replace('-', '_', strtolower(PXLBSADMINIFY_SLUG));
 	}
 
 	/**
@@ -273,38 +273,43 @@ class Helper
 	 *
 	 * @return DateTimeImmutable
 	 */
-	public static function jltwp_adminify_current_datetime()
+	public static function custom_current_datetime()
 	{
 		if (function_exists('current_datetime')) {
 			return current_datetime();
 		}
 
-		return new \DateTimeImmutable('now', self::jltwp_adminify_wp_timezone());
+		return new \DateTimeImmutable('now', self::custom_wp_timezone());
 	}
 
 	/**
-	 * Function jltwp_adminify_wp_timezone() compability for wp version < 5.3
+	 * Function custom_wp_timezone() compability for wp version < 5.3
 	 *
 	 * @return DateTimeZone
 	 */
-	public static function jltwp_adminify_wp_timezone()
+	public static function custom_wp_timezone()
 	{
 		if (function_exists('wp_timezone')) {
 			return wp_timezone();
 		}
 
-		return new \DateTimeZone(self::jltwp_adminify_wp_timezone_string());
+		return new \DateTimeZone(self::custom_wp_timezone_string());
 	}
 
 	/**
-	 * API Endpoint
+	 * Public Jewel Theme API base URL.
+	 *
+	 * Single source of truth for the external host the plugin talks to;
+	 * the subscribe / survey endpoints are derived from this base via
+	 * crm_endpoint() and crm_survey_endpoint() so the host only ever
+	 * appears in one place.
 	 *
 	 * @return string
 	 */
 	public static function api_endpoint()
 	{
-		$api_endpoint_url = 'https://bo.jeweltheme.com';
-		$api_endpoint     = apply_filters('jltwp_adminify_endpoint', $api_endpoint_url);
+		$api_endpoint_url = 'https://pixarlabs.com';
+		$api_endpoint     = apply_filters('pxlbsadminify_endpoint', $api_endpoint_url);
 
 		return trailingslashit($api_endpoint);
 	}
@@ -316,31 +321,18 @@ class Helper
 	 */
 	public static function crm_endpoint()
 	{
-		$crm_endpoint_url = 'https://bo.jeweltheme.com/wp-json/jlt-api/v1/subscribe'; // Endpoint .
-		$crm_endpoint     = apply_filters('jltwp_adminify_crm_crm_endpoint', $crm_endpoint_url);
+		$crm_endpoint_url = self::api_endpoint() . 'api/plugin/subscribe';
+		$crm_endpoint     = apply_filters('pxlbsadminify_subscribe_endpoint', $crm_endpoint_url);
 
 		return trailingslashit($crm_endpoint);
 	}
 
 	/**
-	 * CRM Endpoint
+	 * Function custom_wp_timezone_string() compability for wp version < 5.3
 	 *
 	 * @return string
 	 */
-	public static function crm_survey_endpoint()
-	{
-		$crm_feedback_endpoint_url = 'https://bo.jeweltheme.com/wp-json/jlt-api/v1/survey'; // Endpoint .
-		$crm_feedback_endpoint     = apply_filters('jltwp_adminify_crm_crm_endpoint', $crm_feedback_endpoint_url);
-
-		return trailingslashit($crm_feedback_endpoint);
-	}
-
-	/**
-	 * Function jltwp_adminify_wp_timezone_string() compability for wp version < 5.3
-	 *
-	 * @return string
-	 */
-	public static function jltwp_adminify_wp_timezone_string()
+	public static function custom_wp_timezone_string()
 	{
 		$timezone_string = get_option('timezone_string');
 
@@ -373,11 +365,11 @@ class Helper
 	{
 		$_data = shortcode_atts(
 			array(
-				'image_url'        => WP_ADMINIFY_ASSETS_IMAGE . '/promo-image.png',
+				'image_url'        => PXLBSADMINIFY_ASSETS_IMAGE . '/promo-image.png',
 				'start_date'       => $start_date,
 				'end_date'         => $end_data,
 				'counter_time'     => '',
-				'is_campaign'      => 'false',
+				'is_live'      		 => false,
 				'button_text'      => 'Get Premium',
 				'button_url'       => 'https://wpadminify.com/pricing',
 				'btn_color'        => '#CC22FF',
@@ -389,7 +381,7 @@ class Helper
 		);
 
 		if (empty($_data['image_url'])) {
-			$_data['image_url'] = WP_ADMINIFY_ASSETS_IMAGE . '/promo-image.png';
+			$_data['image_url'] = PXLBSADMINIFY_ASSETS_IMAGE . '/promo-image.png';
 		}
 
 		return $_data;

@@ -1,9 +1,13 @@
 <?php
 
-namespace WPAdminify\Inc\Classes\Notifications;
+namespace PXLBSAdminify\Inc\Classes\Notifications;
 
-use WPAdminify\Inc\Classes\Notifications\Base\User_Data;
-use WPAdminify\Inc\Classes\Notifications\Model\Notice;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
+use PXLBSAdminify\Inc\Classes\Notifications\Base\User_Data;
+use PXLBSAdminify\Inc\Classes\Notifications\Model\Notice;
 
 if (! class_exists('What_We_Collect')) {
 	/**
@@ -27,7 +31,7 @@ if (! class_exists('What_We_Collect')) {
 		public function __construct()
 		{
 			parent::__construct();
-			add_action('wp_ajax_jltwp_adminify_allow_collect', array($this, 'jltwp_adminify_allow_collect'));
+			add_action('wp_ajax_pxlbsadminify_allow_collect', array($this, 'pxlbsadminify_allow_collect'));
 		}
 
 		/**
@@ -35,18 +39,25 @@ if (! class_exists('What_We_Collect')) {
 		 *
 		 * @author Jewel Theme <support@jeweltheme.com>
 		 */
-		public function jltwp_adminify_allow_collect()
+		public function pxlbsadminify_allow_collect()
 		{
-			check_ajax_referer('jltwp_adminify_allow_collect_nonce');
+			check_ajax_referer('pxlbsadminify_allow_collect_nonce');
 
-			$this->jltwp_adminify_collect_ajax_data();
+			// Opting in to send diagnostic data to a third party is a
+			// site-wide consent and must only be performed by a site
+			// administrator.
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'mess' => __( 'You are not allowed to perform this action.', 'adminify' ) ), 403 );
+			}
+
+			$this->pxlbsadminify_collect_ajax_data();
 		}
 
 
-		public function jltwp_adminify_collect_ajax_data()
+		public function pxlbsadminify_collect_ajax_data()
 		{
 
-			if (!empty(get_option('jltwp_adminify_what_we_collect'))) {
+			if (!empty(get_option('pxlbsadminify_what_we_collect'))) {
 				return;
 			}
 
@@ -61,7 +72,7 @@ if (! class_exists('What_We_Collect')) {
 				'email'      => $email,
 			));
 
-			update_option('jltwp_adminify_what_we_collect', 'yes');
+			update_option('pxlbsadminify_what_we_collect', 'yes');
 			return $response;
 		}
 
@@ -76,7 +87,7 @@ if (! class_exists('What_We_Collect')) {
 		{
 			printf(
 				'<h4>Wanna get some discount for %1$s? No Worries!! We got you!! give us your email we will send you the discount code?</h4>',
-				esc_html__('WP Adminify', 'adminify')
+				esc_html__('Adminify', 'adminify')
 			);
 		}
 
@@ -100,17 +111,19 @@ if (! class_exists('What_We_Collect')) {
 			<div class="wp-adminify-notice-review-box wp-adminify-wwc">
 				<p>
 					<?php
-					echo sprintf(
+					echo wp_kses_post( sprintf(
+						/* translators: %1$s: Plugin name */
 						__('Want to help make <strong>%1$s</strong> even more awesome? Allow %1$s to collect non-sensitive diagnostic data and usage information.', 'adminify'),
-						__('WP Adminify', 'adminify')
-					);
+						esc_html( __('Adminify', 'adminify') )
+					) );
 					?>
 					(<?php $this->what_we_collect_link(); ?>)</p>
 				<div class="wp-adminify-wwc-content" style="display:none">
-					<?php echo sprintf(
+					<?php echo wp_kses_post( sprintf(
+						/* translators: %1$s: Privacy Policy page URL */
 						__('Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Local or Production Site, IP Address, Site name and url, Your name and email address etc. No sensitive data is tracked. Learn more about our <a href="%1$s" target="_blank">Privacy Policy</a>, how we handle and collects your data.', 'adminify'),
 						esc_url('https://wpadminify.com/privacy-policy')
-					); ?>
+					) ); ?>
 				</div>
 			</div>
 
@@ -190,14 +203,14 @@ if (! class_exists('What_We_Collect')) {
 							method: 'POST',
 							crossDomain: true,
 							data: {
-								action: 'jltwp_adminify_allow_collect',
-								_wpnonce: '<?php echo esc_js(wp_create_nonce('jltwp_adminify_allow_collect_nonce')); ?>',
+								action: 'pxlbsadminify_allow_collect',
+								_wpnonce: '<?php echo esc_js(wp_create_nonce('pxlbsadminify_allow_collect_nonce')); ?>',
 							}
 						})
 						.done(function(response) {
 							noticeWrapper.children(':not(.notice-dismiss)').hide().end().append('<p class="wp-adminify--notice-message"><strong>' + response.data + '</strong></p>');
 							let subsTimeout = setTimeout(function() {
-								jltwp_adminify_notice_action(null, noticeWrapper.children(), 'disable');
+								pxlbsadminify_notice_action(null, noticeWrapper.children(), 'disable');
 								clearTimeout(subsTimeout);
 							}, 1500);
 						})

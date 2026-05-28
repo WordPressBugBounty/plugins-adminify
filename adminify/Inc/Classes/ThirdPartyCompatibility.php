@@ -1,16 +1,16 @@
 <?php
 
-namespace WPAdminify\Inc\Classes;
+namespace PXLBSAdminify\Inc\Classes;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Admin\AdminSettings;
-use WPAdminify\Inc\Modules\MenuEditor\MenuEditorOptions;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Admin\AdminSettings;
+use PXLBSAdminify\Inc\Modules\MenuEditor\MenuEditorOptions;
 // no direct access allowed
 if ( !defined( 'ABSPATH' ) ) {
     exit;
 }
 /**
- * WPAdminify
+ * PXLBSAdminify
  * Third Party Plugins Compatibility
  *
  * @author Jewel Theme <support@jeweltheme.com>
@@ -23,13 +23,13 @@ class ThirdPartyCompatibility {
         add_action( 'init', [$this, 'register_actions_on_init'], 0 );
         add_action( 'admin_init', [$this, 'register_actions_on_admin_init'], 0 );
         // 24-3-24
-        add_action( 'admin_enqueue_scripts', [$this, 'jltwp_adminify_reset_theme_conflicts'], 999999 );
+        add_action( 'admin_enqueue_scripts', [$this, 'reset_theme_conflicts'], 999999 );
         // 28-6-24
-        add_action( 'admin_head', [$this, 'jltwp_adminify_plugin_conflicts'], 999999 );
+        add_action( 'admin_head', [$this, 'plugin_conflicts'], 999999 );
         if ( Utils::is_plugin_active( 'gravityforms/gravityforms.php' ) ) {
             add_filter(
                 'update_footer',
-                [$this, 'jltwp_adminify_change_admin_footer'],
+                [$this, 'change_admin_footer'],
                 9999,
                 3
             );
@@ -79,7 +79,7 @@ class ThirdPartyCompatibility {
     /**
      * Gravity Form Custom Footer missing div closing support
      */
-    public function jltwp_adminify_change_admin_footer( $footer_text ) {
+    public function change_admin_footer( $footer_text ) {
         $current_screen = get_current_screen();
         if ( !empty( $current_screen ) && ($current_screen->id === 'toplevel_page_gf_edit_forms' || $current_screen->id === 'forms_page_gf_new_form') ) {
             return $footer_text . '</div>';
@@ -87,7 +87,7 @@ class ThirdPartyCompatibility {
         return $footer_text;
     }
 
-    public function jltwp_adminify_plugin_conflicts() {
+    public function plugin_conflicts() {
         $adminify_ui = AdminSettings::get_instance()->get( 'admin_ui' );
         if ( !empty( $adminify_ui ) ) {
             // Motopress Hotel Booking Lite
@@ -161,7 +161,7 @@ class ThirdPartyCompatibility {
         }
         if ( Utils::is_plugin_active( 'advanced-access-manager/aam.php' ) ) {
             add_filter(
-                'jltwp_adminify_menu_option_compatibility_filter',
+                'pxlbsadminify_menu_option_compatibility_filter',
                 array($this, 'apply_menu_restrictions_via_filter'),
                 10,
                 2
@@ -188,7 +188,8 @@ class ThirdPartyCompatibility {
         if ( Utils::is_plugin_active( 'shopengine/shopengine.php' ) ) {
             global $pagenow;
             // e.g. "edit.php"
-            $post_type = ( isset( $_GET['post_type'] ) ? sanitize_key( $_GET['post_type'] ) : '' );
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
+            $post_type = ( isset( $_GET['post_type'] ) ? sanitize_key( wp_unslash( $_GET['post_type'] ) ) : '' );
             // Build the slug
             $slug = ( $post_type ? "{$pagenow}?post_type={$post_type}" : $pagenow );
             // Example usage:
@@ -243,7 +244,7 @@ class ThirdPartyCompatibility {
         if ( Utils::is_plugin_active( 'redis-cache/redis-cache.php' ) ) {
             $nonce = wp_create_nonce();
             $ajaxurl = esc_url( admin_url( 'admin-ajax.php' ) );
-            $flushingText = __( 'Flushing cache...', 'redis-cache' );
+            $flushingText = __( 'Flushing cache...', 'adminify' );
             echo '<script>
 				jQuery(document).ready(function($) {
 					const flushBtn = document.getElementById("adminify-top-menu-redis-cache-flush");
@@ -280,7 +281,7 @@ class ThirdPartyCompatibility {
 								data.append("action", "roc_flush_cache");
 								data.append("nonce", "' . esc_js( $nonce ) . '");
 
-								const response = await fetch("' . $ajaxurl . '", {
+								const response = await fetch("' . esc_url( $ajaxurl ) . '", {
 									method: "POST",
 									body: data,
 								});
@@ -360,7 +361,7 @@ class ThirdPartyCompatibility {
         return $menu_options;
     }
 
-    public function jltwp_adminify_reset_theme_conflicts() {
+    public function reset_theme_conflicts() {
         global $pagenow;
         if ( $pagenow == 'wp-login.php' || $pagenow == 'wp-register.php' || $pagenow == 'customize.php' ) {
             return;
@@ -371,9 +372,9 @@ class ThirdPartyCompatibility {
         if ( 'Neve' == $theme->name || 'Neve' == $theme->parent_theme ) {
             wp_enqueue_style(
                 'wp-adminify_neve-theme',
-                WP_ADMINIFY_ASSETS . 'css/themes/neve.min.css',
+                PXLBSADMINIFY_ASSETS . 'css/themes/neve.min.css',
                 false,
-                WP_ADMINIFY_VER
+                PXLBSADMINIFY_VER
             );
         }
         // Phlox WordPress Theme
@@ -442,18 +443,18 @@ class ThirdPartyCompatibility {
 			</script>';
         }
         // Third Party Plugin CSS Conflict
-        // $jltwp_adminify_plugin_conflict_css = '';
+        // $pxlbsadminify_plugin_conflict_css = '';
         // if (Utils::is_plugin_active('quillforms/quillforms.php')) {
-        // $jltwp_adminify_plugin_conflict_css = '//css code here';
-        // $jltwp_adminify_plugin_conflict_css = preg_replace('#/\*.*?\*/#s', '', $jltwp_adminify_plugin_conflict_css);
-        // $jltwp_adminify_plugin_conflict_css = preg_replace('/\s*([{}|:;,])\s+/', '$1', $jltwp_adminify_plugin_conflict_css);
-        // $jltwp_adminify_plugin_conflict_css = preg_replace('/\s\s+(.*)/', '$1', $jltwp_adminify_plugin_conflict_css);
+        // $pxlbsadminify_plugin_conflict_css = '//css code here';
+        // $pxlbsadminify_plugin_conflict_css = preg_replace('#/\*.*?\*/#s', '', $pxlbsadminify_plugin_conflict_css);
+        // $pxlbsadminify_plugin_conflict_css = preg_replace('/\s*([{}|:;,])\s+/', '$1', $pxlbsadminify_plugin_conflict_css);
+        // $pxlbsadminify_plugin_conflict_css = preg_replace('/\s\s+(.*)/', '$1', $pxlbsadminify_plugin_conflict_css);
         // }
         // $adminify_ui = AdminSettings::get_instance()->get('admin_ui');
         // if (!empty($adminify_ui)) {
-        // wp_add_inline_style('wp-adminify-admin', wp_strip_all_tags($jltwp_adminify_plugin_conflict_css));
+        // wp_add_inline_style('wp-adminify-admin', wp_strip_all_tags($pxlbsadminify_plugin_conflict_css));
         // } else {
-        // wp_add_inline_style('wp-adminify-default-ui', wp_strip_all_tags($jltwp_adminify_plugin_conflict_css));
+        // wp_add_inline_style('wp-adminify-default-ui', wp_strip_all_tags($pxlbsadminify_plugin_conflict_css));
         // }
         if ( Utils::is_plugin_active( 'stackable-ultimate-gutenberg-blocks-premium/plugin.php' ) ) {
             echo '<style>
@@ -508,7 +509,7 @@ class ThirdPartyCompatibility {
             </style>';
         }
         if ( Utils::is_plugin_active( 'wpforms-lite/wpforms.php' ) ) {
-            if ( Utils::jltwp_adminify_currentpage_id( 'dashboard' ) ) {
+            if ( Utils::currentpage_id( 'dashboard' ) ) {
                 wp_enqueue_style(
                     'wpforms-full',
                     WPFORMS_PLUGIN_URL . 'assets/css/frontend/classic/wpforms-full.css',
@@ -647,7 +648,7 @@ class ThirdPartyCompatibility {
 			</style>';
         }
         // Third Party localize script
-        wp_localize_script( 'wp-adminify-admin', 'WPAdminify_ThirdParty', $this->thirdparty_create_js_object() );
+        wp_localize_script( 'adminify-admin', 'PXLBSADMINIFY_THIRDPARTY', $this->thirdparty_create_js_object() );
     }
 
     public function thirdparty_create_js_object() {
@@ -678,9 +679,10 @@ class ThirdPartyCompatibility {
 
     public function register_actions_on_init() {
         // Brizy Builder
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
         if ( isset( $_REQUEST['brizy-edit-iframe'] ) ) {
-            add_filter( 'wp_adminify_defer_skip', '__return_true' );
-            add_filter( 'wp_adminify_skip_removing_dashicons', '__return_true' );
+            add_filter( 'pxlbsadminify_defer_skip', '__return_true' );
+            add_filter( 'pxlbsadminify_skip_removing_dashicons', '__return_true' );
         }
     }
 
@@ -691,7 +693,7 @@ class ThirdPartyCompatibility {
             add_action( 'admin_enqueue_scripts', [$this, 'enqueue_scripts'], 999 );
         }
         // Commented On: 10-6-24
-        // add_filter('adminify_third_party_styles', [$this, 'register_compatability_styles']);
+        // add_filter('pxlbsadminify_third_party_styles', [$this, 'register_compatability_styles']);
         // Fluent CRM
         add_action( 'fluentcrm_skip_no_conflict', '__return_true' );
         // Fluent FORM
@@ -707,8 +709,8 @@ class ThirdPartyCompatibility {
         if ( !is_array( $plugin_supports ) ) {
             $plugin_supports = [];
         }
-        $plugin_dir = WP_ADMINIFY_ASSETS . 'css/plugins/';
-        $plugin_files = list_files( WP_ADMINIFY_PATH . 'assets/css/plugins/', 1 );
+        $plugin_dir = PXLBSADMINIFY_ASSETS . 'css/plugins/';
+        $plugin_files = list_files( PXLBSADMINIFY_PATH . 'assets/css/plugins/', 1 );
         if ( !empty( $plugin_files ) ) {
             foreach ( $plugin_files as $file ) {
                 $plugin_supports[wp_basename( $file, '.min.css' )] = $plugin_dir . wp_basename( $file );
@@ -724,7 +726,7 @@ class ThirdPartyCompatibility {
      */
     public function enqueue_scripts() {
         $plugin_supports = [];
-        $plugin_supports = apply_filters( 'adminify_third_party_styles', $plugin_supports );
+        $plugin_supports = apply_filters( 'pxlbsadminify_third_party_styles', $plugin_supports );
         // Check Plugin Activated for Site Wide
         if ( is_multisite() ) {
             $active_plugins = get_site_option( 'active_sitewide_plugins' );
@@ -735,12 +737,12 @@ class ThirdPartyCompatibility {
                     if ( isset( $plugin_supports[$pluginname] ) ) {
                         if ( $plugin_supports[$pluginname] != '' ) {
                             wp_register_style(
-                                'wp-adminify_site-wide_' . $pluginname . '_css',
+                                'adminify_site-wide_' . $pluginname . '_css',
                                 $plugin_supports[$pluginname],
                                 [],
-                                WP_ADMINIFY_VER
+                                PXLBSADMINIFY_VER
                             );
-                            wp_enqueue_style( 'wp-adminify_site-wide_' . $pluginname . '_css' );
+                            wp_enqueue_style( 'adminify_site-wide_' . $pluginname . '_css' );
                         }
                     }
                 }
@@ -755,12 +757,12 @@ class ThirdPartyCompatibility {
                 if ( isset( $plugin_supports[$pluginname] ) ) {
                     if ( $plugin_supports[$pluginname] != '' ) {
                         wp_register_style(
-                            'wp-adminify_' . $pluginname . '_css',
+                            'adminify_' . $pluginname . '_css',
                             $plugin_supports[$pluginname],
                             [],
-                            WP_ADMINIFY_VER
+                            PXLBSADMINIFY_VER
                         );
-                        wp_enqueue_style( 'wp-adminify_' . $pluginname . '_css' );
+                        wp_enqueue_style( 'adminify_' . $pluginname . '_css' );
                     }
                 }
             }

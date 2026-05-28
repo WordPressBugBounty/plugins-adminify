@@ -28,7 +28,7 @@ if ( ! class_exists( 'ADMINIFY_Field_repeater' ) ) {
 
       } else {
 
-        echo $this->field_before();
+        echo wp_kses_post( $this->field_before() );
 
         echo '<div class="adminify-repeater-item adminify-repeater-hidden" data-depend-id="'. esc_attr( $this->field['id'] ) .'">';
         echo '<div class="adminify-repeater-content">';
@@ -88,9 +88,9 @@ if ( ! class_exists( 'ADMINIFY_Field_repeater' ) ) {
 
         echo '<div class="adminify-repeater-alert adminify-repeater-max">'. esc_html__( 'You cannot add more.', 'adminify' ) .'</div>';
         echo '<div class="adminify-repeater-alert adminify-repeater-min">'. esc_html__( 'You cannot remove more.', 'adminify' ) .'</div>';
-        echo '<a href="#" class="button button-primary adminify-repeater-add">'. $args['button_title'] .'</a>';
+        echo '<a href="#" class="button button-primary adminify-repeater-add">'. esc_html( $args['button_title'] ) .'</a>';
 
-        echo $this->field_after();
+        echo wp_kses_post( $this->field_after() );
 
       }
 

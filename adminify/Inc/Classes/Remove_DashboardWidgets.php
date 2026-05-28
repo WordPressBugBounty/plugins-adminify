@@ -1,17 +1,16 @@
 <?php
 
-namespace WPAdminify\Inc\Classes;
+namespace PXLBSAdminify\Inc\Classes;
 
-use WPAdminify\Inc\Admin\AdminSettings;
-use WPAdminify\Inc\Admin\AdminSettingsModel;
+use PXLBSAdminify\Inc\Admin\AdminSettings;
+use PXLBSAdminify\Inc\Admin\AdminSettingsModel;
 
-use WPAdminify\Inc\Utils;
 // no direct access allowed
 if (!defined('ABSPATH')) {
     exit;
 }
 /**
- * WPAdminify
+ * PXLBSAdminify
  * Dashboard Widgets
  *
  * @author Jewel Theme <support@jeweltheme.com>
@@ -26,12 +25,12 @@ class Remove_DashboardWidgets extends AdminSettingsModel
         // $this->restrict_for = (array) AdminSettings::get_instance()->get('dashboard_widgets_user_roles');
 
         // Dashboard widgets by WP Adminify
-        add_action('admin_init', [$this, 'jltwp_adminify_add_hooks']);
+        add_action('admin_init', [$this, 'add_hooks']);
 
         // add_action('admin_enqueue_scripts', [$this, 'dashboard_styles'], 100);
     }
 
-    public function jltwp_adminify_add_hooks()
+    public function add_hooks()
     {
         add_action('wp_dashboard_setup', [$this, 'disable_dashboard_widgets'], 100);
         // add_action('wp_network_dashboard_setup', [$this, 'disable_dashboard_widgets'], 100);
@@ -105,7 +104,7 @@ class Remove_DashboardWidgets extends AdminSettingsModel
          *
          * @param array $widgets The globally available dashboard widgets.
          */
-        return apply_filters('wp_adminify_dashboard_widgets', $widgets);
+        return apply_filters('pxlbsadminify_dashboard_widgets', $widgets);
     }
 
     public function disable_dashboard_widgets()

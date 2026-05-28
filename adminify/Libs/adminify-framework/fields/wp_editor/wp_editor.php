@@ -39,15 +39,15 @@ if ( ! class_exists( 'ADMINIFY_Field_wp_editor' ) ) {
         'wpautop'       => $args['wpautop'],
       );
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
-      echo ( adminify_wp_editor_api() ) ? '<div class="adminify-wp-editor" data-editor-settings="'. esc_attr( json_encode( $editor_settings ) ) .'">' : '';
+      echo ( adminify_wp_editor_api() ) ? '<div class="adminify-wp-editor" data-editor-settings="'. esc_attr( wp_json_encode( $editor_settings ) ) .'">' : '';
 
-      echo '<textarea name="'. esc_attr( $this->field_name() ) .'"'. $this->field_attributes( $attributes ) . $editor_height .'>'. $this->value .'</textarea>';
+      echo '<textarea name="'. esc_attr( $this->field_name() ) .'"'. $this->field_attributes( $attributes ) . $editor_height .'>'. esc_textarea( $this->value ) .'</textarea>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
 
       echo ( adminify_wp_editor_api() ) ? '</div>' : '';
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 
@@ -79,7 +79,7 @@ if ( ! class_exists( 'ADMINIFY_Field_wp_editor' ) ) {
       $media_buttons = ob_get_clean();
 
       echo '<script type="text/javascript">';
-      echo 'var adminify_media_buttons = '. json_encode( $media_buttons ) .';';
+      echo 'var adminify_media_buttons = '. wp_json_encode( $media_buttons ) .';'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_json_encode returns safe JSON for inline script.
       echo '</script>';
 
     }

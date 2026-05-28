@@ -1,27 +1,20 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\Folders;
+namespace PXLBSAdminify\Inc\Modules\Folders;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Admin\AdminSettings;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Admin\AdminSettings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 class Folders {
-
-
 	private static $postIds;
-
 	public $options;
 
 	public function __construct() {
-
-		
 		$this->options = (array) AdminSettings::get_instance()->get('folders');
-
-		$needed_keys = [ 'user_roles', 'enable_for', 'media' ];
 
 		add_action( 'init', [ $this, 'register_folders_terms' ], 999 );
 
@@ -29,7 +22,7 @@ class Folders {
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ], PHP_INT_MAX );
 
-		add_action( 'wp_ajax_adminify_folder', [ $this, 'handle_adminify_folder' ] );
+		add_action( 'wp_ajax_pxlbsadminify_folder', [ $this, 'handle_adminify_folder' ] );
 
 		add_action( 'ajax_query_attachments_args', [ $this, 'filter_grid' ] );
 
@@ -41,16 +34,16 @@ class Folders {
 
 		add_filter( 'wp_prepare_attachment_for_js', [ $this, 'modify_attachment_for_js' ] );
 	
-		add_action( 'pre-upload-ui', [ $this, 'wp_adminify_select_folder_when_upload' ] );
+		add_action( 'pre-upload-ui', [ $this, 'select_folder_when_upload' ] );
 
-		add_action('wp_ajax_wp_adminify_assign_media_folder', array($this, 'wp_adminify_handle_folder_assignment'));
+		add_action('wp_ajax_pxlbsadminify_assign_media_folder', array($this, 'handle_folder_assignment'));
 
-		add_action( 'restrict_manage_posts', [$this, 'wp_adminify_show_folders_in_list_filter'] );
+		add_action( 'restrict_manage_posts', [$this, 'show_folders_in_list_filter'] );
 
-		add_action( 'add_attachment', [$this ,'wp_adminify_assign_media_folder_to_new_attachment'] );
+		add_action( 'add_attachment', [$this ,'assign_media_folder_to_new_attachment'] );
 
 		if ( ! empty( $this->options['media'] )) {
-			add_filter( 'attachment_fields_to_edit', [$this, 'wp_adminify_edit_attachment_fields'], 25, 2 );
+			add_filter( 'attachment_fields_to_edit', [$this, 'edit_attachment_fields'], 25, 2 );
 
 			add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_scripts_for_media_uploads' ], PHP_INT_MAX );
 			add_action( 'customize_controls_print_footer_scripts', [ $this, 'add_adminify_body_class' ] );
@@ -63,8 +56,6 @@ class Folders {
 			// Classic editor support (post/page/CPT edit screens without Gutenberg)
 			add_action( 'admin_enqueue_scripts', [ $this, 'maybe_enqueue_for_classic_editor' ], PHP_INT_MAX );
 		}
-
-
 	}
 
 	/**
@@ -102,9 +93,7 @@ class Folders {
 		<?php
 	}
 
-
 	public function modify_attachment_for_js( $response ) {
-
 		if ( ! (bool) $this->options['media'] ) return $response;
 
 		$folders    = wp_get_post_terms( $response['id'], 'media_folder' );
@@ -121,14 +110,11 @@ class Folders {
 			]
 		);
 
-		// @todo add more configurations here
-
 		return $post_types;
 	}
 
 	public function filter_list( $query ) {
-		global $typenow;
-		global $pagenow;
+		global $typenow, $pagenow;
 
 		$post_type = $typenow;
 		if ( empty( $post_type ) ) {
@@ -145,10 +131,12 @@ class Folders {
 
 		$taxonomy = self::get_post_type_taxonomy( $post_type );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
 		if ( ! isset( $_REQUEST[ $taxonomy ] ) ) {
 			return $query;
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
 		$term = sanitize_text_field( wp_unslash( $_REQUEST[ $taxonomy ] ) );
 
 		if ( $term != '-1' ) {
@@ -183,7 +171,7 @@ class Folders {
 
 		unset( $args[ $taxonomy ] );
 
-		$args['tax_query'] = [
+		$args['tax_query'] = [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- intentional taxonomy filter on an admin-side query.
 			[
 				'taxonomy' => $taxonomy,
 				'operator' => __( 'NOT EXISTS', 'adminify' ),
@@ -278,21 +266,23 @@ class Folders {
             ) AND {$post_table}.post_type = '%s' AND {$post_table}.post_status = 'inherit'";
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is composed only of trusted internal $wpdb->prefix table names; user values are bound here as %s placeholders.
 		$query = $wpdb->prepare( $query, $post_type_tax, $post_type );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- direct query required for uncategorized post count; not cached intentionally; $query already prepared above.
 		$total = $wpdb->get_var( $query );
 
 		return empty( $total ) ? 0 : $total;
 	}
 
 	public function get_folders( $post_type, $post_type_tax ) {
-		$folders = get_terms(
-			$post_type_tax,
-			[
-				'hide_empty' => false,
-				'pad_counts' => true,
-			]
-		);
+		$args = [
+			'taxonomy' => $post_type_tax,
+			'hide_empty' => false,
+			'pad_counts' => true,
+		];
+
+		$folders = get_terms( $args );
 
 		if ( is_wp_error( $folders ) ) {
 			return [];
@@ -301,7 +291,7 @@ class Folders {
 		foreach ( $folders as $folder ) {
 			$posts = $this->get_posts_by_folder( $folder->term_id, $post_type, $post_type_tax );
 
-			$color = get_term_meta( $folder->term_id, '_wp_adminify_fodler_color', true );
+			$color = get_term_meta( $folder->term_id, 'pxlbsadminify_fodler_color', true );
 			if ( empty( $color ) ) {
 				$color = '';
 			}
@@ -320,8 +310,8 @@ class Folders {
 		}
 
 		$current_screen = get_current_screen();
-		wp_enqueue_style( 'wp-adminify--folder', WP_ADMINIFY_URL . 'assets/admin/css/wp-adminify--folder' . Utils::assets_ext( '.css' ), [], WP_ADMINIFY_VER );
-		wp_enqueue_style('wp-adminify-simple-line-icons', WP_ADMINIFY_ASSETS . '/vendors/font-icons/simple-line-icons/css/simple-line-icons' . Utils::assets_ext('.css'), false, WP_ADMINIFY_VER);
+		wp_enqueue_style( 'wp-adminify--folder', PXLBSADMINIFY_URL . 'assets/admin/css/wp-adminify--folder' . Utils::assets_ext( '.css' ), [], PXLBSADMINIFY_VER );
+		wp_enqueue_style('adminify-simple-line-icons', PXLBSADMINIFY_ASSETS . '/vendors/font-icons/simple-line-icons/css/simple-line-icons' . Utils::assets_ext('.css'), false, PXLBSADMINIFY_VER);
 
 		$post_type     = $current_screen->post_type;
 		$post_type_tax = self::get_post_type_taxonomy( $post_type );
@@ -347,20 +337,19 @@ class Folders {
 			'adminurl'      => admin_url(),
 			'ajaxurl'       => admin_url( 'admin-ajax.php' ),
 			'post_type'     => $post_type,
-			'nonce'         => wp_create_nonce( '__adminify-folder-secirity__' ),
+			'nonce'         => wp_create_nonce( 'pxlbsadminify_folder_nonce' ),
 			'post_type_tax' => $post_type_tax,
 			'media_folders_data' => $media_folders_data,
 			'is_pro'        => wp_validate_boolean( jltwp_adminify()->can_use_premium_code() ),
-			'pro_notice'    => Utils::adminify_upgrade_pro(),
+			'pro_notice'    => Utils::upgrade_pro_notice(),
 		];
 
 		$data = array_merge( $data, $this->refreshed_folder_data( $post_type, $post_type_tax ) );
 
-		// Adminify Folder
-		// wp_enqueue_script('wp-adminify-vue-vendors', WP_ADMINIFY_ASSETS . 'admin/js/vendor' . Utils::assets_ext('.js'), [], WP_ADMINIFY_VER, true);
-		wp_enqueue_script('wp-adminify--folder', WP_ADMINIFY_ASSETS . 'admin/js/wp-adminify--folder' . Utils::assets_ext('.js'), array('jquery', 'jquery-ui-droppable', 'jquery-ui-draggable'), WP_ADMINIFY_VER, true);
+		// Enqueue Scripts
+		wp_enqueue_script('wp-adminify--folder', PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify--folder' . Utils::assets_ext('.js'), array('jquery', 'jquery-ui-droppable', 'jquery-ui-draggable'), PXLBSADMINIFY_VER, true);
 
-		wp_localize_script( 'wp-adminify--folder', 'wp_adminify__folder_data', $data );
+		wp_localize_script( 'wp-adminify--folder', 'PXLBSADMINIFY_FOLDER_DATA', $data );
 
 		$inline_script_content = '
 			(function($) {
@@ -382,7 +371,7 @@ class Folders {
 									props: { folders: "" },
 									priority: 10
 								};
-								_.each(window.wp_adminify__folder_data?.media_folders_data || {}, function(value) {
+								_.each(window.PXLBSADMINIFY_FOLDER_DATA?.media_folders_data || {}, function(value) {
 									filters[value.slug] = {
 										text: value.name,
 										props: { folders: value.slug },
@@ -454,23 +443,18 @@ class Folders {
 	}
 
 	function enqueue_scripts_for_media_uploads(){
-		// Skip on customizer - not needed there
-		// if ( is_customize_preview() || ( function_exists( 'get_current_screen' ) && get_current_screen() && get_current_screen()->base === 'customize' ) ) {
-		// 	return;
-		// }
-
 		wp_enqueue_media();
 		wp_enqueue_script('media-views');
 		wp_enqueue_script('wp-dom-ready');
 
 		// Enqueue folder styles for modal
-		wp_enqueue_style( 'wp-adminify--folder', WP_ADMINIFY_URL . 'assets/admin/css/wp-adminify--folder' . Utils::assets_ext( '.css' ), [], WP_ADMINIFY_VER );
-		wp_enqueue_style('wp-adminify-simple-line-icons', WP_ADMINIFY_ASSETS . '/vendors/font-icons/simple-line-icons/css/simple-line-icons' . Utils::assets_ext('.css'), false, WP_ADMINIFY_VER);
+		wp_enqueue_style( 'wp-adminify--folder', PXLBSADMINIFY_URL . 'assets/admin/css/wp-adminify--folder' . Utils::assets_ext( '.css' ), [], PXLBSADMINIFY_VER );
+		wp_enqueue_style('adminify-simple-line-icons', PXLBSADMINIFY_ASSETS . '/vendors/font-icons/simple-line-icons/css/simple-line-icons' . Utils::assets_ext('.css'), false, PXLBSADMINIFY_VER);
 
 		// Enqueue folder script for modal sidebar
-		wp_enqueue_script('wp-adminify--popup-folder', WP_ADMINIFY_ASSETS . 'admin/js/wp-adminify--popup-folder' . Utils::assets_ext('.js'), array('jquery', 'jquery-ui-droppable', 'jquery-ui-draggable', 'wp-element', 'wp-dom-ready'), WP_ADMINIFY_VER, true);
+		wp_enqueue_script('wp-adminify--popup-folder', PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify--popup-folder' . Utils::assets_ext('.js'), array('jquery', 'jquery-ui-droppable', 'jquery-ui-draggable', 'wp-element', 'wp-dom-ready'), PXLBSADMINIFY_VER, true);
 
-		wp_enqueue_script('wp-adminify--folder', WP_ADMINIFY_ASSETS . 'admin/js/wp-adminify--folder' . Utils::assets_ext('.js'), array('jquery', 'jquery-ui-droppable', 'jquery-ui-draggable', 'wp-element', 'wp-dom-ready'), WP_ADMINIFY_VER, true);
+		wp_enqueue_script('wp-adminify--folder', PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify--folder' . Utils::assets_ext('.js'), array('jquery', 'jquery-ui-droppable', 'jquery-ui-draggable', 'wp-element', 'wp-dom-ready'), PXLBSADMINIFY_VER, true);
 
 		$post_type = 'attachment';
 		$post_type_tax = 'media_folder';
@@ -492,16 +476,16 @@ class Folders {
 
 		// Build full folder data for React sidebar
 		$data = apply_filters(
-			'wp_adminify_folder_data',
+			'pxlbsadminify_folder_data',
 			[
 				'adminurl'           => admin_url(),
 				'ajaxurl'            => admin_url( 'admin-ajax.php' ),
 				'post_type'          => $post_type,
-				'nonce'              => wp_create_nonce( '__adminify-folder-secirity__' ),
+				'nonce'              => wp_create_nonce( 'pxlbsadminify_folder_nonce' ),
 				'post_type_tax'      => $post_type_tax,
 				'media_folders_data' => $media_folders_data,
 				'is_pro'             => wp_validate_boolean( jltwp_adminify()->can_use_premium_code() ),
-				'pro_notice'         => Utils::adminify_upgrade_pro(),
+				'pro_notice'         => Utils::upgrade_pro_notice(),
 				'is_rtl'             => is_rtl(),
 			]
 		);
@@ -511,9 +495,9 @@ class Folders {
 
 		// Localize the data to multiple script handles
 		// This ensures data is available in different contexts
-		wp_localize_script( 'wp-adminify--folder', 'wp_adminify__folder_data', $data );
-		wp_localize_script( 'wp-dom-ready', 'wp_adminify__folder_data', $data );
-		wp_localize_script( 'media-views', 'wp_adminify__folder_data', $data );
+		wp_localize_script( 'wp-adminify--folder', 'PXLBSADMINIFY_FOLDER_DATA', $data );
+		wp_localize_script( 'wp-dom-ready', 'PXLBSADMINIFY_FOLDER_DATA', $data );
+		wp_localize_script( 'media-views', 'PXLBSADMINIFY_FOLDER_DATA', $data );
 
 
 		$inline_script_content = '
@@ -536,7 +520,7 @@ class Folders {
 									props: { folders: "" },
 									priority: 10
 								};
-								_.each(window.wp_adminify__folder_data?.media_folders_data || {}, function(value) {
+								_.each(window.PXLBSADMINIFY_FOLDER_DATA?.media_folders_data || {}, function(value) {
 									filters[value.slug] = {
 										text: value.name,
 										props: { folders: value.slug },
@@ -596,47 +580,60 @@ class Folders {
 
 		wp_add_inline_script('media-views', $inline_script_content, 'after');
 	}
-	public function modify_media_templates() {
-
-		?>
-
+	public function modify_media_templates() { ?>
 		<script>
 			var attachment_template = jQuery('#tmpl-attachment');
             if ( attachment_template.length ) {
                 var template = attachment_template.html().replace( 'data.orientation }}">', 'data.orientation }}" data-folders="{{ data.media_folder }}">' );
                 attachment_template.html( template );
             }
-		</script>
-
+		</script> 
 		<?php
-
 	}
 
 	public function handle_adminify_folder() {
-		check_ajax_referer( '__adminify-folder-secirity__' );
+		check_ajax_referer( 'pxlbsadminify_folder_nonce' );
 
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'adminify' ) ) );
 		}
 
+		$allowed_routes = array(
+			'delete_folders',
+			'rename_folder',
+			'move_to_folder',
+			'refresh_folders',
+			'create_new_folder',
+		);
+
 		if ( ! empty( $_POST['route'] ) ) {
-			$route_handler = 'handle_' . sanitize_text_field( wp_unslash( $_POST['route'] ) );
-			if ( is_callable( get_class( $this ), $route_handler ) ) {
-				$this->$route_handler( $_POST );
+			$route = sanitize_key( wp_unslash( $_POST['route'] ) );
+
+			if ( in_array( $route, $allowed_routes, true ) ) {
+				$route_handler = 'handle_' . $route;
+				if ( method_exists( $this, $route_handler ) ) {
+					$this->$route_handler( wp_unslash( $_POST ) );
+				}
 			}
 		}
 
-		wp_send_json_error( [ 'message' => __( 'Something is wrong, no route found' ) ], 400 );
+		wp_send_json_error( [ 'message' => __( 'Something is wrong, no route found', 'adminify' ) ], 400 );
 	}
 
 	public function handle_delete_folders( $data ) {
-		if ( empty( $data['term_ids'] ) || empty( $data['post_type'] ) || empty( $data['post_type_tax'] ) ) {
-			wp_send_json_error( [ 'message' => __( 'Something is wrong, few args are missing' ) ], 400 );
+		check_ajax_referer( 'pxlbsadminify_folder_nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to perform this action.', 'adminify' ) ], 403 );
 		}
 
-		$term_ids      = $data['term_ids'];
-		$post_type     = $data['post_type'];
-		$post_type_tax = $data['post_type_tax'];
+		if ( empty( $data['term_ids'] ) || empty( $data['post_type'] ) || empty( $data['post_type_tax'] ) ) {
+			wp_send_json_error( [ 'message' => __( 'Something is wrong, few args are missing', 'adminify' ) ], 400 );
+		}
+
+		$term_ids      = array_map( 'absint', (array) $data['term_ids'] );
+		$post_type     = sanitize_key( $data['post_type'] );
+		$post_type_tax = sanitize_key( $data['post_type_tax'] );
 
 		foreach ( $term_ids as $term_id ) {
 			wp_delete_term( $term_id, $post_type_tax );
@@ -648,15 +645,21 @@ class Folders {
 	}
 
 	public function handle_rename_folder( $data ) {
-		if ( empty( $data['term_id'] ) || empty( $data['post_type'] ) || empty( $data['post_type_tax'] ) || empty( $data['folder_name'] ) || empty( $data['folder_color_tag'] ) ) {
-			wp_send_json_error( [ 'message' => __( 'Something is wrong, few args are missing' ) ], 400 );
+		check_ajax_referer( 'pxlbsadminify_folder_nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to perform this action.', 'adminify' ) ], 403 );
 		}
 
-		$term_id          = $data['term_id'];
-		$folder_name      = $data['folder_name'];
-		$post_type        = $data['post_type'];
-		$post_type_tax    = $data['post_type_tax'];
-		$folder_color_tag = $data['folder_color_tag'];
+		if ( empty( $data['term_id'] ) || empty( $data['post_type'] ) || empty( $data['post_type_tax'] ) || empty( $data['folder_name'] ) || empty( $data['folder_color_tag'] ) ) {
+			wp_send_json_error( [ 'message' => __( 'Something is wrong, few args are missing', 'adminify' ) ], 400 );
+		}
+
+		$term_id          = absint( $data['term_id'] );
+		$folder_name      = sanitize_text_field( $data['folder_name'] );
+		$post_type        = sanitize_key( $data['post_type'] );
+		$post_type_tax    = sanitize_key( $data['post_type_tax'] );
+		$folder_color_tag = sanitize_text_field( $data['folder_color_tag'] );
 
 		$update = wp_update_term( $term_id, $post_type_tax, [ 'name' => $folder_name ] );
 
@@ -664,21 +667,28 @@ class Folders {
 			wp_send_json_success( [ 'message' => $update->get_error_message() ], 202 );
 		}
 
-		update_term_meta( $term_id, '_wp_adminify_fodler_color', $folder_color_tag );
+		update_term_meta( $term_id, 'pxlbsadminify_fodler_color', $folder_color_tag );
 		$data = $this->refreshed_folder_data( $post_type, $post_type_tax );
 
 		wp_send_json_success( $data );
 	}
 
 	public function handle_move_to_folder( $data ) {
-		if ( empty( $data['post_ids'] ) || empty( $data['folder_id'] ) || empty( $data['post_type'] ) || empty( $data['post_type_tax'] ) ) {
-			wp_send_json_error( [ 'message' => __( 'Something is wrong, few args are missing' ) ], 400 );
+		check_ajax_referer( 'pxlbsadminify_folder_nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to perform this action.', 'adminify' ) ], 403 );
 		}
 
-		$post_ids      = (array) $data['post_ids'];
+		if ( empty( $data['post_ids'] ) || empty( $data['folder_id'] ) || empty( $data['post_type'] ) || empty( $data['post_type_tax'] ) ) {
+			wp_send_json_error( [ 'message' => __( 'Something is wrong, few args are missing', 'adminify' ) ], 400 );
+		}
+
+		$post_ids      = array_map( 'absint', (array) $data['post_ids'] );
 		$folder_id     = sanitize_text_field( $data['folder_id'] );
 		$post_type     = sanitize_text_field( $data['post_type'] );
 		$post_type_tax = sanitize_text_field( $data['post_type_tax'] );
+		$screen        = isset( $data['screen'] ) ? sanitize_text_field( $data['screen'] ) : '';
 
 		global $mode;
 
@@ -714,7 +724,7 @@ class Folders {
 
 			$wp_query = new \WP_Query( $args );
 
-			$wp_list_table = \_get_list_table( 'WP_Media_List_Table', [ 'screen' => sanitize_text_field( wp_unslash( $_POST['screen'] ) ) ] );
+			$wp_list_table = \_get_list_table( 'WP_Media_List_Table', [ 'screen' => $screen ] );
 
 			foreach ( $post_ids as $post_id ) {
 				ob_start();
@@ -722,7 +732,7 @@ class Folders {
 				$updated_rows = ob_get_clean();
 			}
 		} else {
-			$wp_list_table = \_get_list_table( 'WP_Posts_List_Table', [ 'screen' => sanitize_text_field( wp_unslash( $_POST['screen'] ) ) ] );
+			$wp_list_table = \_get_list_table( 'WP_Posts_List_Table', [ 'screen' => $screen ] );
 
 			foreach ( $post_ids as $post_id ) {
 				$level = 0;
@@ -745,7 +755,6 @@ class Folders {
 
 		$data = [
 			'updated_rows' => $updated_rows,
-			// 'post_type_tax' => $post_type_tax,
 		];
 
 		$data = array_merge( $data, $this->refreshed_folder_data( $post_type, $post_type_tax ) );
@@ -754,38 +763,50 @@ class Folders {
 	}
 
 	public function handle_refresh_folders( $data ) {
-		if ( empty( $data['post_type'] ) || empty( $data['post_type_tax'] ) ) {
-			wp_send_json_error( [ 'message' => __( 'Something is wrong, few args are missing' ) ], 400 );
+		check_ajax_referer( 'pxlbsadminify_folder_nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to perform this action.', 'adminify' ) ], 403 );
 		}
 
-		$post_type     = $data['post_type'];
-		$post_type_tax = $data['post_type_tax'];
+		if ( empty( $data['post_type'] ) || empty( $data['post_type_tax'] ) ) {
+			wp_send_json_error( [ 'message' => __( 'Something is wrong, few args are missing', 'adminify' ) ], 400 );
+		}
+
+		$post_type     = sanitize_key( $data['post_type'] );
+		$post_type_tax = sanitize_key( $data['post_type_tax'] );
 
 		wp_send_json_success( $this->refreshed_folder_data( $post_type, $post_type_tax ) );
 	}
 
 	public function handle_create_new_folder( $data ) {
-		if ( empty( $data['post_type'] ) || empty( $data['post_type_tax'] ) ) {
-			wp_send_json_error( [ 'message' => __( 'Something is wrong, few args are missing' ) ], 400 );
-		}
-		if ( empty( $data['new_folder_name'] ) || empty( $data['folder_color_tag'] ) ) {
-			wp_send_json_error( [ 'message' => __( 'Something is wrong, few args are missing' ) ], 400 );
+		check_ajax_referer( 'pxlbsadminify_folder_nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( [ 'message' => __( 'You do not have permission to perform this action.', 'adminify' ) ], 403 );
 		}
 
-		$post_type        = $data['post_type'];
-		$post_type_tax    = $data['post_type_tax'];
-		$new_folder_name  = $data['new_folder_name'];
-		$folder_color_tag = $data['folder_color_tag'];
+		if ( empty( $data['post_type'] ) || empty( $data['post_type_tax'] ) ) {
+			wp_send_json_error( [ 'message' => __( 'Something is wrong, few args are missing', 'adminify' ) ], 400 );
+		}
+		if ( empty( $data['new_folder_name'] ) || empty( $data['folder_color_tag'] ) ) {
+			wp_send_json_error( [ 'message' => __( 'Something is wrong, few args are missing', 'adminify' ) ], 400 );
+		}
+
+		$post_type        = sanitize_key( $data['post_type'] );
+		$post_type_tax    = sanitize_key( $data['post_type_tax'] );
+		$new_folder_name  = sanitize_text_field( $data['new_folder_name'] );
+		$folder_color_tag = sanitize_text_field( $data['folder_color_tag'] );
 		$parent_term_id   = 0;
 
 		if ( jltwp_adminify()->can_use_premium_code() && ! empty( $data['parent_folder'] ) ) {
-			$parent_term_id = $data['parent_folder'];
+			$parent_term_id = absint( $data['parent_folder'] );
 		}
 
 		$insert_data = wp_insert_term( $new_folder_name, $post_type_tax, [ 'parent' => $parent_term_id ] );
 
 		if ( ! is_wp_error( $insert_data ) ) {
-			update_term_meta( $insert_data['term_id'], '_wp_adminify_fodler_color', $folder_color_tag );
+			update_term_meta( $insert_data['term_id'], 'pxlbsadminify_fodler_color', $folder_color_tag );
 			wp_send_json_success( $this->refreshed_folder_data( $post_type, $post_type_tax ) );
 		} else {
 			wp_send_json_success( [ 'message' => $insert_data->get_error_message() ], 202 );
@@ -803,7 +824,7 @@ class Folders {
 		];
 	}
 
-	function wp_set_post_categories( $post_ID = 0, $post_categories = [], $append = false ) {
+	function set_post_categories( $post_ID = 0, $post_categories = [], $append = false ) {
 		$post_ID     = (int) $post_ID;
 		$post_type   = get_post_type( $post_ID );
 		$post_status = get_post_status( $post_ID );
@@ -819,7 +840,7 @@ class Folders {
 			 *
 			 * @param string[] $post_types An array of post type names. Default empty array.
 			 */
-			$default_category_post_types = apply_filters( 'default_category_post_types', [] );
+			$default_category_post_types = apply_filters( 'pxlbsadminify_default_category_post_types', [] );
 
 			// Regular posts always require a default category.
 			$default_category_post_types = array_merge( $default_category_post_types, [ 'post' ] );
@@ -844,7 +865,7 @@ class Folders {
 				'post_status' => 'any',
 				'post_type'   => $post_type,
 				'fields'      => 'ids',
-				'tax_query'   => [
+				'tax_query'   => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- intentional taxonomy filter on an admin-side query.
 					[
 						'operator' => 'IN',
 						'taxonomy' => $taxonomy,
@@ -941,7 +962,9 @@ class Folders {
 	function manage_columns_head( $posts_columns ) {
 		$post_type = null;
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
 		if ( isset( $_REQUEST['post_type'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
 			$post_type = sanitize_text_field( wp_unslash( $_REQUEST['post_type'] ) );
 		}
 
@@ -958,7 +981,9 @@ class Folders {
 	function manage_columns_content( $column_name, $post_ID ) {
 		$post_type = null;
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
 		if ( isset( $_REQUEST['post_type'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
 			$post_type = sanitize_text_field( wp_unslash( $_REQUEST['post_type'] ) );
 		}
 
@@ -981,7 +1006,8 @@ class Folders {
 					if ( strlen( $title ) > 20 ) {
 						$title = substr( $title, 0, 20 ) . '...';
 					}
-					echo Utils::wp_kses_custom( '<div class="adminify-move-file" data-id="' . esc_attr( $post_ID ) . '" data-folders="' . esc_attr( $folder_ids ) . '"><span class="adminify-move dashicons dashicons-move"></span><span class="adminify-move-file--title">' . esc_html( $title ) . '</span></div>' );
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped.
+					echo Utils::kses_custom( '<div class="adminify-move-file" data-id="' . esc_attr( $post_ID ) . '" data-folders="' . esc_attr( $folder_ids ) . '"><span class="adminify-move dashicons dashicons-move"></span><span class="adminify-move-file--title">' . esc_html( $title ) . '</span></div>' );
 				}
 			}
 		}
@@ -1001,11 +1027,16 @@ class Folders {
 		return $bulk_actions;
 	}
 
-	public function wp_adminify_select_folder_when_upload() {
+	public function select_folder_when_upload() {
 		if ( ! $this->options['media'] ) {
 			return;
 		}
-		$selected = isset($_GET['media_folder']) ? $_GET['media_folder'] : '';
+		// Only show the folder selector to users who can upload media.
+		if ( ! current_user_can( 'upload_files' ) ) {
+			return;
+		}
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
+		$selected = isset($_GET['media_folder']) ? sanitize_text_field( wp_unslash( $_GET['media_folder'] ) ) : '';
 		wp_dropdown_categories( array(
 			'show_option_none' => 'Choose folder',
 			'taxonomy'         => 'media_folder', 
@@ -1020,26 +1051,43 @@ class Folders {
 
 	}
 
-	public function wp_adminify_assign_media_folder_to_new_attachment( $post_ID ) {
-		if ( isset( $_POST['folder_id'] ) && ! empty( $_POST['folder_id'] ) && $_POST['folder_id'] !== '-1' ) {
-			$term = get_term_by( 'slug', $_POST['folder_id'], 'media_folder' );
-			if ( ! $term && is_numeric( $_POST['folder_id']) ) {
-				$term = get_term_by( 'id', (int) $_POST['folder_id'], 'media_folder' );
+	public function assign_media_folder_to_new_attachment( $post_ID ) {
+
+		// Authorization: only users who can edit this attachment may change its folder.
+		if ( ! current_user_can( 'upload_files' ) || ! current_user_can( 'edit_post', $post_ID ) ) {
+			return;
+		}
+
+		// CSRF: the media upload request is signed with core's media-form nonce.
+		$nonce = isset( $_POST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ) : '';
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'media-form' ) ) {
+			return;
+		}
+
+		$folder_id = isset( $_POST['folder_id'] ) ? sanitize_text_field( wp_unslash( $_POST['folder_id'] ) ) : '';
+
+		if ( '' !== $folder_id && '-1' !== $folder_id ) {
+			$term = get_term_by( 'slug', $folder_id, 'media_folder' );
+			if ( ! $term && is_numeric( $folder_id ) ) {
+				$term = get_term_by( 'id', (int) $folder_id, 'media_folder' );
 			}
+
+			$post_type     = 'attachment';
+			$post_type_tax = $folder_id;
 
 			if ( $term && ! is_wp_error( $term ) ) {
 				wp_set_object_terms( $post_ID, (int) $term->term_id, 'media_folder' );
-				$post_type     = 'attachment';
-				$post_type_tax = $_POST['folder_id'];
 			} else {
-				error_log( 'Media Folder: Could not find term for value "' . $_POST['folder_id'] . '" for attachment ID ' . $post_ID );
+				// if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				// 	error_log( 'Media Folder: Could not find term for value "' . $folder_id . '" for attachment ID ' . $post_ID );
+				// }
 			}
-			$this->refreshed_folder_data( $post_type, $post_type_tax ) ;
+			$this->refreshed_folder_data( $post_type, $post_type_tax );
 		}
 	}
 
 	
-	public function wp_adminify_edit_attachment_fields($form_fields, $post) {
+	public function edit_attachment_fields($form_fields, $post) {
     $folder_fields = array(
         'label' => 'Folders',
         'show_in_edit' => false,
@@ -1056,7 +1104,7 @@ class Folders {
     }
 
     ob_start();
-    $this->wp_adminify_render_terms_dropdown($post->ID, $taxonomy_name);
+    $this->render_terms_dropdown($post->ID, $taxonomy_name);
     $html = ob_get_contents();
     ob_end_clean();
 
@@ -1066,7 +1114,7 @@ class Folders {
     return $form_fields;
 	}
 
-	public function wp_adminify_render_terms_dropdown($post_id, $taxonomy) {
+	public function render_terms_dropdown($post_id, $taxonomy) {
     $selected_terms = wp_get_object_terms($post_id, $taxonomy, array('fields' => 'ids'));
     $selected_term = !empty($selected_terms) ? $selected_terms[0] : 0;
     
@@ -1076,31 +1124,30 @@ class Folders {
         'parent' => 0
     ));
     
-    echo '<select name="media_folder_select" class="media-folder-select" data-attachment-id="' . $post_id . '">';
+    echo '<select name="media_folder_select" class="media-folder-select" data-attachment-id="' . esc_attr( $post_id ) . '">';
     echo '<option value="">— Select Folder —</option>';
     
     if (!empty($terms) && !is_wp_error($terms)) {
         foreach ($terms as $term) {
-            $this->wp_adminify_render_term_option($term, $selected_term, $taxonomy);
+            $this->render_term_option($term, $selected_term, $taxonomy);
         }
     }
     
     echo '</select>';
 
-    $this->wp_adminify_add_folder_script();
+    $this->add_folder_script();
 	}
 
-	public function wp_adminify_render_term_option($term, $selected_term, $taxonomy, $depth = 0) {
-			$indent = str_repeat('&nbsp;&nbsp;&nbsp;', $depth);
-			$selected = selected($term->term_id, $selected_term, false);
-			
-			echo sprintf(
-					'<option value="%s" %s>%s%s</option>',
-					$term->term_id,
-					$selected,
-					$indent,
-					esc_html($term->name)
-			);
+	public function render_term_option($term, $selected_term, $taxonomy, $depth = 0) {
+			// Build the indentation from real non-breaking-space characters so it survives esc_html().
+			$indent      = str_repeat( "\xC2\xA0\xC2\xA0\xC2\xA0", $depth );
+			$is_selected = ( (int) $term->term_id === (int) $selected_term );
+
+			echo '<option value="' . esc_attr( $term->term_id ) . '"';
+			if ( $is_selected ) {
+				echo ' selected="selected"';
+			}
+			echo '>' . esc_html( $indent ) . esc_html( $term->name ) . '</option>';
 			
 			// Get children
 			$children = get_terms(array(
@@ -1111,12 +1158,12 @@ class Folders {
 			
 			if (!empty($children) && !is_wp_error($children)) {
 					foreach ($children as $child) {
-							$this->wp_adminify_render_term_option($child, $selected_term, $taxonomy, $depth + 1);
+							$this->render_term_option($child, $selected_term, $taxonomy, $depth + 1);
 					}
 			}
 	}
 
-	public function wp_adminify_add_folder_script() {
+	public function add_folder_script() {
     ?>
     <script type="text/javascript">
     jQuery(document).ready(function($) {
@@ -1140,10 +1187,10 @@ class Folders {
                 url: ajaxurl,
                 type: 'POST',
                 data: {
-                    action: 'wp_adminify_assign_media_folder',
+                    action: 'pxlbsadminify_assign_media_folder',
                     attachment_id: attachment_id,
                     term_id: term_id,
-                    security: '<?php echo wp_create_nonce("wp_adminify_media_folder"); ?>'
+                    security: '<?php echo esc_attr( wp_create_nonce("pxlbsadminify_media_folder_nonce") ); ?>'
                 },
                 success: function(response) {
                     if (response.success) {
@@ -1167,8 +1214,9 @@ class Folders {
     </script>
     <?php
 	}
-	public function wp_adminify_handle_folder_assignment() {
-			check_ajax_referer('wp_adminify_media_folder', 'security');
+	
+	public function handle_folder_assignment() {
+			check_ajax_referer('pxlbsadminify_media_folder_nonce', 'security');
 
 			if ( ! current_user_can( 'upload_files' ) ) {
 				wp_send_json_error( __( 'You do not have permission to perform this action.', 'adminify' ) );
@@ -1195,7 +1243,7 @@ class Folders {
 			wp_send_json_success();
 	}
 
-	public function wp_adminify_show_folders_in_list_filter() {
+	public function show_folders_in_list_filter() {
     global $typenow;
     if (! $this->is_module_active()) {
         return;
@@ -1204,7 +1252,8 @@ class Folders {
         return;
     }
 
-    $selected = isset($_GET['media_folder']) ? $_GET['media_folder'] : '';
+    // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
+    $selected = isset($_GET['media_folder']) ? sanitize_text_field( wp_unslash( $_GET['media_folder'] ) ) : '';
     wp_dropdown_categories(
         array(
             'show_option_all' => 'All folders',
@@ -1219,7 +1268,5 @@ class Folders {
             'hide_empty'      => false,
         )
     );
-    
 	}
-
 }

@@ -50,7 +50,7 @@ if ( ! class_exists( 'ADMINIFY_Field_spacing' ) ) {
       $unit    = ( count( $args['units'] ) === 1 && ! empty( $args['unit'] ) ) ? $args['units'][0] : '';
       $is_unit = ( ! empty( $unit ) ) ? ' adminify--is-unit' : '';
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       echo '<div class="adminify--inputs" data-depend-id="'. esc_attr( $this->field['id'] ) .'">';
 
@@ -59,8 +59,8 @@ if ( ! class_exists( 'ADMINIFY_Field_spacing' ) ) {
         $placeholder = ( ! empty( $args['all_placeholder'] ) ) ? ' placeholder="'. esc_attr( $args['all_placeholder'] ) .'"' : '';
 
         echo '<div class="adminify--input">';
-        echo ( ! empty( $args['all_icon'] ) ) ? '<span class="adminify--label adminify--icon">'. $args['all_icon'] .'</span>' : '';
-        echo '<input type="number" name="'. esc_attr( $this->field_name( '[all]' ) ) .'" value="'. esc_attr( $value['all'] ) .'"'. $placeholder .' class="adminify-input-number'. esc_attr( $is_unit ) .'" step="any" />';
+        echo ( ! empty( $args['all_icon'] ) ) ? '<span class="adminify--label adminify--icon">'. wp_kses_post( $args['all_icon'] ) .'</span>' : '';
+        echo '<input type="number" name="'. esc_attr( $this->field_name( '[all]' ) ) .'" value="'. esc_attr( $value['all'] ) .'"'. $placeholder .' class="adminify-input-number'. esc_attr( $is_unit ) .'" step="any" />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attribute value pre-escaped with esc_attr() where built.
         echo ( $unit ) ? '<span class="adminify--label adminify--unit">'. esc_attr( $args['units'][0] ) .'</span>' : '';
         echo '</div>';
 
@@ -81,8 +81,8 @@ if ( ! class_exists( 'ADMINIFY_Field_spacing' ) ) {
           $placeholder = ( ! empty( $args[$property.'_placeholder'] ) ) ? ' placeholder="'. esc_attr( $args[$property.'_placeholder'] ) .'"' : '';
 
           echo '<div class="adminify--input">';
-          echo ( ! empty( $args[$property.'_icon'] ) ) ? '<span class="adminify--label adminify--icon">'. $args[$property.'_icon'] .'</span>' : '';
-          echo '<input type="number" name="'. esc_attr( $this->field_name( '['. $property .']' ) ) .'" value="'. esc_attr( $value[$property] ) .'"'. $placeholder .' class="adminify-input-number'. esc_attr( $is_unit ) .'" step="any" />';
+          echo ( ! empty( $args[$property.'_icon'] ) ) ? '<span class="adminify--label adminify--icon">'. wp_kses_post( $args[$property.'_icon'] ) .'</span>' : '';
+          echo '<input type="number" name="'. esc_attr( $this->field_name( '['. $property .']' ) ) .'" value="'. esc_attr( $value[$property] ) .'"'. $placeholder .' class="adminify-input-number'. esc_attr( $is_unit ) .'" step="any" />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attribute value pre-escaped with esc_attr() where built.
           echo ( $unit ) ? '<span class="adminify--label adminify--unit">'. esc_attr( $args['units'][0] ) .'</span>' : '';
           echo '</div>';
 
@@ -103,7 +103,7 @@ if ( ! class_exists( 'ADMINIFY_Field_spacing' ) ) {
 
       echo '</div>';
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

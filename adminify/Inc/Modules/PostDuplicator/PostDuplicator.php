@@ -1,8 +1,8 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\PostDuplicator;
+namespace PXLBSAdminify\Inc\Modules\PostDuplicator;
 
-use WPAdminify\Inc\Admin\AdminSettings;
+use PXLBSAdminify\Inc\Admin\AdminSettings;
 // no direct access allowed
 if (!defined('ABSPATH')) {
 	exit;
@@ -29,17 +29,20 @@ class PostDuplicator
 
 	public function __construct()
 	{
-		$this->clone_title = AdminSettings::get_instance()->get('jltwp_adminify_wl_plugin_menu_label');
+		$this->clone_title = AdminSettings::get_instance()->get('pxlbsadminify_wl_plugin_menu_label');
 
 		$this->options = (array) AdminSettings::get_instance()->get();
 
-		new TaxonomyDuplicator();
+		// Taxonomy duplicator (reads post_duplicator.taxonomies) is a
+		// Pro-only feature. Pro/Classes/Filters.php registers the
+		// admin_action and *_row_actions filters when the Pro plugin
+		// is active.
 
 		// Check Access for User roles
-		add_action('admin_init', [$this, 'adminify_post_duplicator_init']);
+		add_action('admin_init', [$this, 'post_duplicator_init']);
 	}
 
-	public function adminify_post_duplicator_init()
+	public function post_duplicator_init()
 	{
 		$post_types = [];
 		if (!empty($this->options['post_duplicator']['post_types'])) {
@@ -51,14 +54,14 @@ class PostDuplicator
 			return;
 		}
 	
-		add_action('admin_action_adminify_duplicate', [$this, 'adminify_duplicate_post_as_draft']);
-		add_filter('post_row_actions', [$this, 'jltwp_adminify_duplicator_row_actions'], 10, 2);
-		add_filter('page_row_actions', [$this, 'jltwp_adminify_duplicator_row_actions'], 10, 2);
+		add_action('admin_action_adminify_duplicate', [$this, 'duplicate_post_as_draft']);
+		add_filter('post_row_actions', [$this, 'duplicator_row_actions'], 10, 2);
+		add_filter('page_row_actions', [$this, 'duplicator_row_actions'], 10, 2);
 
 
 		// foreach ($post_types as $key => $post_type) {
 		// 	if (in_array($post_type, $all_post_types)) {
-		// 		add_filter($post_type . '_row_actions', [$this, 'jltwp_adminify_duplicator_row_actions'], 10, 2);
+		// 		add_filter($post_type . '_row_actions', [$this, 'duplicator_row_actions'], 10, 2);
 		// 	}
 		// }
 	}
@@ -94,7 +97,7 @@ class PostDuplicator
 	/*
 	 * Add the duplicate link to action list for post_row_actions
 	 */
-	public function jltwp_adminify_duplicator_row_actions($actions, $post)
+	public function duplicator_row_actions($actions, $post)
 	{
 		$post_type = $post->post_type;
 		$allowed_post_types = $post_types = $this->options['post_duplicator']['post_types'];
@@ -106,11 +109,12 @@ class PostDuplicator
 		}
 		
 		$adminify_duplicate_link = admin_url('admin.php?action=adminify_duplicate&post=' . $post->ID);
-		$adminify_duplicate_link = wp_nonce_url($adminify_duplicate_link, 'jltwp_adminify_post_duplicator_nonce');
+		$adminify_duplicate_link = wp_nonce_url($adminify_duplicate_link, 'pxlbsadminify_post_duplicator_nonce');
 
 		$clone_title                   = !empty($this->clone_title) ? $this->clone_title : 'Adminify';
 		$clone_title                   = preg_replace('/wp/i', '', $clone_title) . ' Clone';
 		$duplicate_title               = 'Duplicate this item ' . $post->post_title;
+		/* translators: 1: Duplicate post URL, 2: Link title attribute, 3: Link text */
 		$actions['adminify_duplicate'] = sprintf(__('<a href="%1$s" title="%2$s" rel="permalink">%3$s</a>', 'adminify'), $adminify_duplicate_link, $duplicate_title, $clone_title);
 		return $actions;
 	}
@@ -119,7 +123,7 @@ class PostDuplicator
 	/*
 	 * Function creates post duplicate as a draft and redirects then to the edit post screen
 	 */
-	public function adminify_duplicate_post_as_draft()
+	public function duplicate_post_as_draft()
 	{
 		global $wpdb;
 
@@ -131,7 +135,7 @@ class PostDuplicator
 		 * Nonce verification
 		 * Return if nonce is not valid
 		 */
-		if (!wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['_wpnonce'])), 'jltwp_adminify_post_duplicator_nonce')) {
+		if (!isset($_REQUEST['_wpnonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['_wpnonce'])), 'pxlbsadminify_post_duplicator_nonce')) {
 			return;
 		}
 
@@ -143,7 +147,7 @@ class PostDuplicator
 		 * and all the original post data then
 		 */
 		$post = get_post($post_id);
-		if( isset( $_SERVER['HTTP_REFERER']) && str_contains( $_SERVER['HTTP_REFERER'], 'action=adminify_duplicate' )) {
+		if( isset( $_SERVER['HTTP_REFERER']) && str_contains( esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ), 'action=adminify_duplicate' )) {
 			$redirect_url = admin_url('edit.php?post_type=' . $post->post_type);
 			wp_safe_redirect($redirect_url);
 
@@ -195,7 +199,8 @@ class PostDuplicator
 			/*
 			 * duplicate all post meta just in two SQL queries
 			 */
-			$post_meta_infos = $wpdb->get_results("SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id=$post_id");
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- direct query required for copying all post meta rows; not cached intentionally.
+			$post_meta_infos = $wpdb->get_results($wpdb->prepare("SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id=%d", $post_id));
 			if (count($post_meta_infos) != 0) {
 				$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
 				foreach ($post_meta_infos as $meta_info) {
@@ -218,6 +223,7 @@ class PostDuplicator
 					$sql_query_sel[] = $wpdb->prepare('SELECT %d, %s, %s', $new_post_id, $meta_key, $meta_value);
 				}
 				$sql_query .= implode(' UNION ALL ', $sql_query_sel);
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql_query is built from $wpdb->prepare() fragments above; direct query required for bulk meta insert, not cached intentionally.
 				$wpdb->query($sql_query);
 			}
 

@@ -1,82 +1,20 @@
 <?php
 
-/**
- * Check given value empty or not
- *
- * @param [type] $value
- *
- * @return void
- */
-function check_is_empty($value, $default = '')
-{
-	$value = !empty(esc_attr($value)) ? $value : $default;
-	return $value;
+// no direct access allowed
+if (!defined('ABSPATH')) {
+    exit;
 }
 
 
 // WP Adminify function for get an option
-if (!function_exists('jltwp_adminify_get_option')) {
-	function jltwp_adminify_get_option($option = '', $default = null)
-	{
-		$options = [];
-		// if (is_multisite() && is_site_wide('wp-adminify/wp-adminify.php')) {
-		$options = (array) \WPAdminify\Inc\Admin\AdminSettings::get_instance()->get();
-		// }
-		return (isset($options[$option])) ? $options[$option] : $default;
-	}
+function pxlbsadminify_get_option($option = '', $default = null) {
+    $options = [];
+    // if (is_multisite() && is_site_wide('wp-adminify/wp-adminify.php')) {
+    $options = (array) \PXLBSAdminify\Inc\Admin\AdminSettings::get_instance()->get();
+    // }
+    return (isset($options[$option])) ? $options[$option] : $default;
 }
 
-function is_site_wide($plugin)
-{
-	if (!is_multisite()) {
-		return false;
-	}
-
-	$plugins = get_site_option('active_sitewide_plugins');
-	if (isset($plugins[$plugin])) {
-		return true;
-	}
-
-	return false;
-}
-
-
-
-
-/**
- * Check if the request is coming from an iframe.
- *
- * @param None
- * @throws None
- * @return bool
- */
-function is_iframe()
-{
-    return isset($_SERVER["HTTP_SEC_FETCH_DEST"]) && strtolower($_SERVER["HTTP_SEC_FETCH_DEST"]) === "iframe";
-	// $isIframe =  isset($_SERVER["HTTP_SEC_FETCH_DEST"]) && strtolower($_SERVER["HTTP_SEC_FETCH_DEST"]) === "iframe";
-    // if ( $isIframe ) return true;
-    // if ( isset($_GET['adminify-iframe']) ) return true;
-    // return false;
-}
-
-/**
- * Load a template file.
- *
- * @param string $template_name The name of the template file to load.
- * @throws None
- * @return void
- */
-function adminify_load_template($template_name)
-{
-	require_once WP_ADMINIFY_PATH . 'Inc/Admin/Frames/Templates/' . $template_name;
-}
-
-function maybe_network_admin_url($url) {
-    if ( is_network_admin() ) {
-        return network_admin_url($url);
-    }
-    return admin_url($url);
-}
 
 /**
  * User Roles Slug from Names
@@ -85,7 +23,7 @@ function maybe_network_admin_url($url) {
  *
  * @return void
  */
-function jltwp_adminify_menu_roles($user_roles = [])
+function pxlbsadminify_menu_roles($user_roles = [])
 {
     $disabled_for_roles = [];
     if (!empty( $user_roles)) {
@@ -106,17 +44,17 @@ function jltwp_adminify_menu_roles($user_roles = [])
  *
  * @return array Admin menu array.
  */
-function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
+function pxlbsadminify_build_menu($menu, $submenu, $menu_options) {
     $admin_menu = [];
-    $menu_options = apply_filters('jltwp_adminify_menu_option_compatibility_filter', $menu_options, $menu);
+    $menu_options = apply_filters('pxlbsadminify_menu_option_compatibility_filter', $menu_options, $menu);
 
     foreach ($menu as $key => $item) { 
         if (is_array($menu_options)) {
             if (isset($menu_options[$item[2]])) {
                 $optiongroup = $menu_options[$item[2]];
                 if (!empty($optiongroup['hidden_for'])) {
-                    $disabled_for = jltwp_adminify_menu_roles($optiongroup['hidden_for']);
-                    if (\WPAdminify\Inc\Utils::restrict_for($disabled_for)) {
+                    $disabled_for = pxlbsadminify_menu_roles($optiongroup['hidden_for']);
+                    if (\PXLBSAdminify\Inc\Utils::restrict_for($disabled_for)) {
                         continue;
                     }
                 }
@@ -141,15 +79,15 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
 
         $url = '';
 
-        $arrParsedUrl = parse_url($menu_slug);
+        $arrParsedUrl = wp_parse_url($menu_slug);
         if (!empty($arrParsedUrl['scheme'])) {
             if ($arrParsedUrl['scheme'] === "http" || $arrParsedUrl['scheme'] === "https") {
                 $url = $menu_slug;
             }
         } else {
             $url = ( ! empty($menu_hook) || ( ( 'index.php' !== $menu_slug ) && file_exists(WP_PLUGIN_DIR . "/$menu_file") && ! file_exists(ABSPATH . "/wp-admin/$menu_file") ) )
-                ? maybe_network_admin_url('admin.php?page=' . $menu_slug)
-                : maybe_network_admin_url($menu_slug);
+                ? \PXLBSAdminify\Inc\Utils::maybe_network_admin_url('admin.php?page=' . $menu_slug)
+                : \PXLBSAdminify\Inc\Utils::maybe_network_admin_url($menu_slug);
         }
 
         $admin_menu[$menu_key_id] = [
@@ -190,15 +128,15 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
 
                 $sub_url = '';
 
-                $arrParsedUrl = parse_url($sub_slug);
+                $arrParsedUrl = wp_parse_url($sub_slug);
                 if (!empty($arrParsedUrl['scheme'])) {
                     if ($arrParsedUrl['scheme'] === "http" || $arrParsedUrl['scheme'] === "https") {
                         $sub_url = $sub_slug;
                     }
                 } else {
                     $sub_url = ( ! empty($sub_menu_hook) || ( ( 'index.php' !== $sub_slug ) && file_exists(WP_PLUGIN_DIR . "/$sub_file") && ! file_exists(ABSPATH . "/wp-admin/$sub_file") ) )
-                    ? maybe_network_admin_url('admin.php?page=' . $sub_slug)
-                    : maybe_network_admin_url($sub_slug);
+                    ? \PXLBSAdminify\Inc\Utils::maybe_network_admin_url('admin.php?page=' . $sub_slug)
+                    : \PXLBSAdminify\Inc\Utils::maybe_network_admin_url($sub_slug);
                 }
 
                 // Wrong Menu/Submenu Links
@@ -218,7 +156,7 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
 
                 // WP Adminify Support - open in new tab
                 if ('adminify-support' === $sub_slug) {
-                    $sub_url = \WPAdminify\Inc\Admin\AdminSettings::support_url();
+                    $sub_url = \PXLBSAdminify\Inc\Admin\AdminSettings::support_url();
                     $external_link = true;
                 }
 
@@ -318,7 +256,7 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
         // Silently degrade — menu renders without flyout items
     }
 
-    $admin_menu = jlt_adminify_replaceAmpersandInHref($admin_menu, 'url');
+    $admin_menu = pxlbsadminify_replaceAmpersandInHref($admin_menu, 'url');
     return $admin_menu;
 }
 
@@ -329,23 +267,16 @@ function jltwp_adminify_build_menu($menu, $submenu, $menu_options) {
 * @param array $array The input array to process.
 * @return array The updated array with replacements.
 */
-function jlt_adminify_replaceAmpersandInHref($array, $indicator='href') {
+function pxlbsadminify_replaceAmpersandInHref($array, $indicator='href') {
 
     foreach ($array as $key => $value) {
         if (is_array($value)) {
             // Recursively process child arrays
-            $array[$key] = jlt_adminify_replaceAmpersandInHref($value, $indicator);
+            $array[$key] = pxlbsadminify_replaceAmpersandInHref($value, $indicator);
         } elseif ($key === $indicator && is_string($value)) {
             // Replace &amp; with & in $indicator keys
             $array[$key] = str_replace('&amp;', '&', $value);
         }
     }
     return $array;
-}
-
-function jlt_adminify_sluggify_with_underscores($string) {
-    $slug = sanitize_title($string);
-    $slug = str_replace('-', '_', $slug);
-
-    return $slug;
 }

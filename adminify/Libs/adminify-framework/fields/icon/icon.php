@@ -21,19 +21,19 @@ if ( ! class_exists( 'ADMINIFY_Field_icon' ) ) {
         'remove_title' => esc_html__( 'Remove', 'adminify' ),
       ) );
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       $nonce  = wp_create_nonce( 'adminify_icon_nonce' );
       $hidden = ( empty( $this->value ) ) ? ' hidden' : '';
 
       echo '<div class="adminify-icon-select">';
       echo '<span class="adminify-icon-preview'. esc_attr( $hidden ) .'"><i class="'. esc_attr( $this->value ) .'"></i></span>';
-      echo '<a href="#" class="button button-primary adminify-icon-add" data-nonce="'. esc_attr( $nonce ) .'">'. $args['button_title'] .'</a>';
-      echo '<a href="#" class="button adminify-warning-primary adminify-icon-remove'. esc_attr( $hidden ) .'">'. $args['remove_title'] .'</a>';
-      echo '<input type="hidden" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $this->value ) .'" class="adminify-icon-value"'. $this->field_attributes() .' />';
+      echo '<a href="#" class="button button-primary adminify-icon-add" data-nonce="'. esc_attr( $nonce ) .'">'. esc_html( $args['button_title'] ) .'</a>';
+      echo '<a href="#" class="button adminify-warning-primary adminify-icon-remove'. esc_attr( $hidden ) .'">'. esc_html( $args['remove_title'] ) .'</a>';
+      echo '<input type="hidden" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $this->value ) .'" class="adminify-icon-value"'. $this->field_attributes() .' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
       echo '</div>';
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

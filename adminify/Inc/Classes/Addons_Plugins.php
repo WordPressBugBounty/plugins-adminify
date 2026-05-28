@@ -1,8 +1,13 @@
 <?php
 
-namespace WPAdminify\Inc\Classes;
+namespace PXLBSAdminify\Inc\Classes;
 
-use WPAdminify\Libs\Addons;
+use PXLBSAdminify\Libs\Addons;
+
+// no direct access allowed
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 if (!class_exists('Addons_Plugins')) {
     /**
@@ -13,7 +18,7 @@ if (!class_exists('Addons_Plugins')) {
     class Addons_Plugins extends Addons
     {
 
-        private $transient_key = 'wp_adminify_addon_plugins_data';
+        private $transient_key = 'pxlbsadminify_addon_plugins_data';
 
         /**
          * Constructor method
@@ -71,64 +76,52 @@ if (!class_exists('Addons_Plugins')) {
             $plugins_data = get_transient($this->transient_key);
             if (!empty($plugins_data)) return $plugins_data;
 
-            // URL of the raw file in the GitHub repository
-            $file_url = 'https://raw.githubusercontent.com/jeweltheme/adminify-addons-assets/main/adminify-plugins.json';
+            // Read the add-ons catalogue from the copy bundled with the plugin
+            // (no remote request).
+            $catalogue_file = PXLBSADMINIFY_PATH . 'Inc/data/adminify-plugins.json';
 
-            // Make the request to fetch the file contents
-            $response = wp_remote_get($file_url);
+            if (!is_readable($catalogue_file)) {
+                return array();
+            }
 
+            $data_array = wp_json_file_decode($catalogue_file, array('associative' => true));
 
-            // Check if the request was successful
-            if (!is_wp_error($response) && $response['response']['code'] === 200) {
-                // Get the body of the response (file contents)
-                $file_contents = wp_remote_retrieve_body($response);
+            if (empty($data_array) || !is_array($data_array)) {
+                return array();
+            }
 
-                // Decode the JSON data into an array
-                $data_array = json_decode($file_contents, true);
+            $plugins_data = [];
 
-                // Check if JSON decoding was successful
-                if (!empty($data_array)) {
-                    // Now you have the data in an array format, you can use it as needed
-                    $plugins_data = [];
+            foreach ($data_array as $plugin_data) {
 
-                    foreach ($data_array as $plugin_data) {
+                $plugins_data[$plugin_data['slug']] = $plugin_data;
 
-                        $plugins_data[$plugin_data['slug']] = $plugin_data;
+                if (str_contains($plugin_data['download_link'], 'downloads.wordpress.org')) {
 
-                        if (str_contains($plugin_data['download_link'], 'downloads.wordpress.org')) {
+                    require_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
 
-                            require_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
+                    $plugin_info = \plugins_api('plugin_information', array('slug' => $plugin_data['slug']));
+                    if (is_wp_error($plugin_info)) {
+                        unset($plugins_data[$plugin_data['slug']]);
+                        continue;
+                    }
+                    $plugins_data[$plugin_data['slug']]['version'] = $plugin_info->version;
+                } else {
 
-                            $plugin_info = \plugins_api('plugin_information', array('slug' => $plugin_data['slug']));
-                            if (is_wp_error($plugin_info)) {
-                                unset($plugins_data[$plugin_data['slug']]);
-                                continue;
-                            }
-                            $plugins_data[$plugin_data['slug']]['version'] = $plugin_info->version;
-                        } else {
-
-                            if (! isset($plugin_data['version'])) {
-                                unset($plugins_data[$plugin_data['slug']]);
-                                continue;
-                            }
-
-                            $download_link = add_query_arg('version', $plugin_data['version'], $plugin_data['download_link']);
-                            $plugins_data[$plugin_data['slug']]['download_link'] = $download_link;
-                        }
+                    if (! isset($plugin_data['version'])) {
+                        unset($plugins_data[$plugin_data['slug']]);
+                        continue;
                     }
 
-                    // Get plugins data from API and cache it
-                    $status = set_transient($this->transient_key, $plugins_data, DAY_IN_SECONDS / 2);
-                    if (!$status) return [];
-                    return $plugins_data;
-                } else {
-                    // JSON decoding failed
-                    echo esc_html__('Error while data retrieval.', 'adminify');
+                    $download_link = add_query_arg('version', $plugin_data['version'], $plugin_data['download_link']);
+                    $plugins_data[$plugin_data['slug']]['download_link'] = $download_link;
                 }
-            } else {
-                // Request failed
-                echo esc_html__('Failed to retrieve file from Source.', 'adminify');
             }
+
+            // Cache the processed catalogue.
+            set_transient($this->transient_key, $plugins_data, DAY_IN_SECONDS / 2);
+
+            return $plugins_data;
         }
 
 
@@ -139,7 +132,12 @@ if (!class_exists('Addons_Plugins')) {
          */
         public function plugins_list()
         {
-            return $this->get_adminify_plugins_lists();
+            // Do not hit the remote source on every admin load. At construction
+            // we only return the cached catalogue; the live fetch happens on the
+            // Add-ons page (get_addons_plugins_list) and on addon install, both
+            // of which are explicit user actions.
+            $cached = get_transient( $this->transient_key );
+            return ! empty( $cached ) ? $cached : array();
         }
 
         /**
@@ -147,7 +145,7 @@ if (!class_exists('Addons_Plugins')) {
          */
         public function admin_menu()
         {
-            $submenu_position = apply_filters('jltwp_adminify_submenu_position', 50);
+            $submenu_position = apply_filters('pxlbsadminify_submenu_position', 50);
             add_submenu_page(
                 'wp-adminify-settings',       // Ex. wp-adminify-settings /  edit.php?post_type=page .
                 __('Addons', 'adminify'),

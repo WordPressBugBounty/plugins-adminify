@@ -1,6 +1,6 @@
 <?php
 
-namespace WPAdminify\Libs;
+namespace PXLBSAdminify\Libs;
 
 // No, Direct access Sir !!!
 if (!defined('ABSPATH')) {
@@ -22,7 +22,7 @@ if (!class_exists('Featured')) {
 		 */
 		public function __construct()
 		{
-			add_action('plugins_loaded', [$this, 'jltwp_adminify_loaded_plgins']);
+			add_action('plugins_loaded', [$this, 'loaded_plgins']);
 		}
 
 
@@ -31,10 +31,10 @@ if (!class_exists('Featured')) {
 		 *
 		 * @return void
 		 */
-		public function jltwp_adminify_loaded_plgins()
+		public function loaded_plgins()
 		{
 			if (is_admin()) {
-				add_filter('install_plugins_table_api_args_featured', array($this, 'jltwp_adminify_featured_plugins_tab'));
+				add_filter('install_plugins_table_api_args_featured', array($this, 'featured_plugins_tab'));
 			}
 		}
 
@@ -43,9 +43,9 @@ if (!class_exists('Featured')) {
 		 *
 		 * @param [type] $args .
 		 */
-		public function jltwp_adminify_featured_plugins_tab($args)
+		public function featured_plugins_tab($args)
 		{
-			add_filter('plugins_api_result', array($this, 'jltwp_adminify_plugins_api_result'), 10, 3);
+			add_filter('plugins_api_result', array($this, 'plugins_api_result'), 10, 3);
 
 			return $args;
 		}
@@ -57,15 +57,15 @@ if (!class_exists('Featured')) {
 		 * @param [type] $action .
 		 * @param [type] $args .
 		 */
-		public function jltwp_adminify_plugins_api_result($res, $action, $args)
+		public function plugins_api_result($res, $action, $args)
 		{
-			remove_filter('plugins_api_result', array($this, 'jltwp_adminify_plugins_api_result'), 10, 1);
+			remove_filter('plugins_api_result', array($this, 'plugins_api_result'), 10, 1);
 
 			// Plugin list which you want to show as feature in dashboard.
-			// $res = $this->jltwp_adminify_add_plugin_favs('image-hover-effects-elementor-addon', $res); .
-			$res = $this->jltwp_adminify_add_plugin_favs('ultimate-blocks-for-gutenberg', $res);
-			$res = $this->jltwp_adminify_add_plugin_favs('adminify', $res);
-			$res = $this->jltwp_adminify_add_plugin_favs('master-addons', $res);
+			// $res = $this->add_plugin_favs('image-hover-effects-elementor-addon', $res); .
+			$res = $this->add_plugin_favs('ultimate-blocks-for-gutenberg', $res);
+			$res = $this->add_plugin_favs('adminify', $res);
+			$res = $this->add_plugin_favs('master-addons', $res);
 
 			return $res;
 		}
@@ -76,7 +76,7 @@ if (!class_exists('Featured')) {
 		 * @param [type] $plugin_slug .
 		 * @param [type] $res .
 		 */
-		public function jltwp_adminify_add_plugin_favs($plugin_slug, $res)
+		public function add_plugin_favs($plugin_slug, $res)
 		{
 			if (!empty($res->plugins) && is_array($res->plugins)) {
 				foreach ($res->plugins as $plugin) {
@@ -87,7 +87,7 @@ if (!class_exists('Featured')) {
 			}
 
 			$plugin_info = new \stdClass();
-			if (get_transient('jltwp_adminify-plugin-info-' . $plugin_slug == $plugin_info)) {
+			if (get_transient('pxlbsadminify-plugin-info-' . $plugin_slug == $plugin_info)) {
 				array_unshift($res->plugins, $plugin_info);
 			} else {
 				$plugin_info = plugins_api(
@@ -108,7 +108,7 @@ if (!class_exists('Featured')) {
 
 				if (!is_wp_error($plugin_info)) {
 					$res->plugins[] = $plugin_info;
-					set_transient('jltwp_adminify-plugin-info-' . $plugin_slug, $plugin_info, DAY_IN_SECONDS * 7);
+					set_transient('pxlbsadminify-plugin-info-' . $plugin_slug, $plugin_info, DAY_IN_SECONDS * 7);
 				}
 			}
 

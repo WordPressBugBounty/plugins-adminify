@@ -16,10 +16,10 @@ if ( ! class_exists( 'ADMINIFY_Field_textarea' ) ) {
 
     public function render() {
 
-      echo $this->field_before();
-      echo $this->shortcoder();
-      echo '<textarea name="'. esc_attr( $this->field_name() ) .'"'. $this->field_attributes() .'>'. $this->value .'</textarea>';
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_before() );
+      echo $this->shortcoder(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns markup escaped within the method.
+      echo '<textarea name="'. esc_attr( $this->field_name() ) .'"'. $this->field_attributes() .'>'. esc_textarea( $this->value ) .'</textarea>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
+      echo wp_kses_post( $this->field_after() );
 
     }
 

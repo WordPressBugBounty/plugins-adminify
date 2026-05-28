@@ -1,13 +1,17 @@
 <?php
 
-namespace WPAdminify\Inc\Classes;
+namespace PXLBSAdminify\Inc\Classes;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
 
 class Upgrade_v4_0 extends Upgrade{
   private static $instance = null;
 
   public function __construct() {
     add_action('admin_notices', array($this, 'check_for_upgrade'));
-    add_action('wp_ajax_jltwp_adminify_upgrade_v4_0_db', array($this, 'upgrade_database'));
+    add_action('wp_ajax_pxlbsadminify_upgrade_v4_0_db', array($this, 'upgrade_database'));
   }
 
 
@@ -15,17 +19,17 @@ class Upgrade_v4_0 extends Upgrade{
   public function check_for_upgrade(){
     $current_version = get_option($this->option_name);
 
-    if ($current_version !== WP_ADMINIFY_VER) {
+    if ($current_version !== PXLBSADMINIFY_VER) {
       $this->show_admin_notice();
     }
   }
 
   public function show_admin_notice(){ ?>
         <div class="hide-notice--ignored notice notice-warning">
-            <p><?php _e('A database upgrade is required due to the latest plugin version. Please click the button below to upgrade.', 'adminify'); ?></p>
+            <p><?php esc_html_e('A database upgrade is required due to the latest plugin version. Please click the button below to upgrade.', 'adminify'); ?></p>
             <p>
-                <button id="upgrade-db" class="button button-primary"><?php _e('Update Adminify Database', 'adminify'); ?></button>
-                <a href="https://wpadminify.com/what-is-new-in-wp-adminify-v4-0/" target="_blank" class="button button-secondary"><?php _e('Learn more about updates', 'adminify'); ?></a>
+                <button id="upgrade-db" class="button button-primary"><?php esc_html_e('Update Adminify Database', 'adminify'); ?></button>
+                <a href="https://wpadminify.com/what-is-new-in-wp-adminify-v4-0/" target="_blank" class="button button-secondary"><?php esc_html_e('Learn more about updates', 'adminify'); ?></a>
             </p>
         </div>
 
@@ -38,8 +42,8 @@ class Upgrade_v4_0 extends Upgrade{
                     $button.prop('disabled', true);
 
                     $.post(ajaxurl, {
-                        action: 'jltwp_adminify_upgrade_v4_0_db',
-                        security: '<?php echo wp_create_nonce('jltwp_adminify_upgrade_v4_0_db_nonce'); ?>'
+                        action: 'pxlbsadminify_upgrade_v4_0_db',
+                        security: '<?php echo esc_attr( wp_create_nonce('pxlbsadminify_upgrade_v4_0_db_nonce') ); ?>'
                     }, function(response) {
                         if (response.success) {
                             location.reload();
@@ -56,7 +60,7 @@ class Upgrade_v4_0 extends Upgrade{
 
   public function upgrade_database()
   {
-    check_ajax_referer('jltwp_adminify_upgrade_v4_0_db_nonce', 'security');
+    check_ajax_referer('pxlbsadminify_upgrade_v4_0_db_nonce', 'security');
 
     // Security check - only administrators can run database upgrades
     if (!current_user_can('manage_options')) {
@@ -73,7 +77,7 @@ class Upgrade_v4_0 extends Upgrade{
     $this->update_data_migration($old_data);
 
     // Plugin Version Update
-    update_option($this->option_name, WP_ADMINIFY_VER);
+    update_option($this->option_name, PXLBSADMINIFY_VER);
 
     wp_send_json_success();
   }
@@ -90,7 +94,7 @@ class Upgrade_v4_0 extends Upgrade{
   public function update_data_migration($jltwp_adminify_old_data) {
     
     
-    function jltwp_adminify_upgrade_v4_data($old_data) {
+    function upgrade_v4_data($old_data) {
     
         $data = [];
     
@@ -188,7 +192,7 @@ class Upgrade_v4_0 extends Upgrade{
             'jltwp_adminify_wl_plugin_row_links'       => 'white_label.adminify.row_links',
     
         ];
-        // $data = \WPAdminify\Inc\Utils::moveNestedKeys($old_data, $move_array_keys);
+        // $data = \PXLBSAdminify\Inc\Utils::moveNestedKeys($old_data, $move_array_keys);
     
     
         //REPLACE KEYS
@@ -196,7 +200,7 @@ class Upgrade_v4_0 extends Upgrade{
             // Productivity
             'admin_notices'    => 'hide_notices',
         ];
-        // $data = \WPAdminify\Inc\Utils::replace_keys($data, $replace_array_keys);
+        // $data = \PXLBSAdminify\Inc\Utils::replace_keys($data, $replace_array_keys);
     
         // CHECKBOX KEYS
         $checkbox_keys = [
@@ -277,7 +281,7 @@ class Upgrade_v4_0 extends Upgrade{
             // 'jltwp_adminify_wl_plugin_tab_system_info' => 'white_label.adminify.tab_system_info',
             // 'jltwp_adminify_wl_plugin_option'          => 'white_label.adminify.plugin_option',
         ];
-        // $data = \WPAdminify\Inc\Utils::checkboxes($data, $checkbox_keys);
+        // $data = \PXLBSAdminify\Inc\Utils::checkboxes($data, $checkbox_keys);
     
     
         // REMOVE KEYSmoveNestedKeys
@@ -331,14 +335,14 @@ class Upgrade_v4_0 extends Upgrade{
             'google_pagepseed_user_roles',
             'google_pagepseed_api_key'
         ];
-        // $data = \WPAdminify\Inc\Utils::removeKeys($data, $removeArrayKeys);
+        // $data = \PXLBSAdminify\Inc\Utils::removeKeys($data, $removeArrayKeys);
     
     
     
-        $data = \WPAdminify\Inc\Utils::replace_keys($old_data, $replace_array_keys);
-        $data = \WPAdminify\Inc\Utils::removeKeys($data, $removeArrayKeys);
-        $data = \WPAdminify\Inc\Utils::moveNestedKeys($data, $move_array_keys);
-        $data = \WPAdminify\Inc\Utils::checkboxes($data, $checkbox_keys);
+        $data = \PXLBSAdminify\Inc\Utils::replace_keys($old_data, $replace_array_keys);
+        $data = \PXLBSAdminify\Inc\Utils::removeKeys($data, $removeArrayKeys);
+        $data = \PXLBSAdminify\Inc\Utils::moveNestedKeys($data, $move_array_keys);
+        $data = \PXLBSAdminify\Inc\Utils::checkboxes($data, $checkbox_keys);
     
         // Redirect Urls data Mirgrate
         $redirect_urls_data = get_option('_wpadminify_redirect_urls');
@@ -356,7 +360,7 @@ class Upgrade_v4_0 extends Upgrade{
     }
     
     
-    $new_data = jltwp_adminify_upgrade_v4_data($jltwp_adminify_old_data);
+    $new_data = upgrade_v4_data($jltwp_adminify_old_data);
     update_option( '_wpadminify', $new_data );
  
     

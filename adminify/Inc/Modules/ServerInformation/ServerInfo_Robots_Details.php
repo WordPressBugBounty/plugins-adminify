@@ -1,8 +1,8 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\ServerInformation;
+namespace PXLBSAdminify\Inc\Modules\ServerInformation;
 
-use WPAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Utils;
 
 // no direct access allowed
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPAdminify
+ * PXLBSAdminify
  *
  * @package Server Information: Robots.txt file
  *
@@ -30,12 +30,13 @@ class ServerInfo_Robots_Details {
 		<div class="wrap">
 
 			<h1>
-				<?php echo Utils::admin_page_title( esc_html__( 'Robots.txt File', 'adminify' ) ); ?>
+				<?php echo wp_kses_post( Utils::admin_page_title( esc_html__( 'Robots.txt File', 'adminify' ) ) ); ?>
 			</h1>
 
 			<p style="color: #ce2754; font-weight: bold">
 				<?php
 				$name = 'robots.txt';
+				/* translators: %s: File name */
 				printf( wp_kses_post( __( 'For security reasons you can only read the %1$s file! Please connect to your server and modify the file in a file editor.', 'adminify' ) ), esc_html( $name ) );
 				?>
 			</p>
@@ -54,10 +55,10 @@ class ServerInfo_Robots_Details {
 		<?php
 
 		// Get the wp "robots.txt" file
-		$file = $this->jltwp_adminify_robots_txt_file();
+		$file = $this->robots_txt_file();
 
 		// Get the wp "robots.txt" file content
-		$file_content = $this->jltwp_adminify_robots_txt_file_content( $file );
+		$file_content = $this->robots_txt_file_content( $file );
 
 		if ( $file ) {
 			?>
@@ -75,7 +76,7 @@ class ServerInfo_Robots_Details {
 	}
 
 
-	function jltwp_adminify_robots_txt_file() {
+	function robots_txt_file() {
 
 		// Call wp file system
 		global $wp_filesystem;
@@ -97,7 +98,7 @@ class ServerInfo_Robots_Details {
 
 
 
-	function jltwp_adminify_robots_txt_file_content( $file ) {
+	function robots_txt_file_content( $file ) {
 
 		// Call wp file system
 		global $wp_filesystem;

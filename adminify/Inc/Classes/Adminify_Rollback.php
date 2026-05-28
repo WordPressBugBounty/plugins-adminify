@@ -1,6 +1,6 @@
 <?php
 
-namespace WPAdminify\Inc\Classes;
+namespace PXLBSAdminify\Inc\Classes;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -13,14 +13,14 @@ class Adminify_Rollback {
 
 	protected $version;
 
-	protected $plugin_name = WP_ADMINIFY;
+	protected $plugin_name = PXLBSADMINIFY;
 
 	protected $plugin_slug;
 
 	private static $instance = null;
 
 	public function __construct( $args = [] ) {
-		add_action( 'admin_post_wp_adminify_rollback_version', [ $this, 'jltwp_adminify_post_addons_rollback' ] );
+		add_action( 'admin_post_wp_adminify_rollback_version', [ $this, 'post_addons_rollback' ] );
 
 		foreach ( $args as $key => $value ) {
 			$this->{$key} = $value;
@@ -31,8 +31,8 @@ class Adminify_Rollback {
 	/**
 	 *  Rollback function
 	 */
-	public function jltwp_adminify_post_addons_rollback() {
-		check_admin_referer( 'wp_adminify_rollback_version' );
+	public function post_addons_rollback() {
+		check_admin_referer( 'pxlbsadminify_rollback_version' );
 
 		$rollback_versions = $this->get_rollback_versions();
 
@@ -40,10 +40,10 @@ class Adminify_Rollback {
 			wp_die( esc_html__( 'Error occurred, The version selected is invalid. Try selecting different version.', 'adminify' ) );
 		}
 
-		$plugin_slug    = basename( WP_ADMINIFY_BASE, '.php' );
+		$plugin_slug    = basename( PXLBSADMINIFY_BASE, '.php' );
 		$plugin_version = sanitize_text_field( wp_unslash($_GET['version']) );
 
-		$jltwp_adminify_rollback = new self(
+		$pxlbsadminify_rollback = new self(
 			[
 				'version'     => $plugin_version,
 				'plugin_name' => $this->plugin_name,
@@ -52,7 +52,7 @@ class Adminify_Rollback {
 			]
 		);
 
-		$jltwp_adminify_rollback->run();
+		$pxlbsadminify_rollback->run();
 
 		wp_die( '', esc_html__( 'Rollback to Previous Version', 'adminify' ), [ 'response' => 200 ] );
 	}
@@ -61,7 +61,7 @@ class Adminify_Rollback {
 
 
 	public function get_rollback_versions() {
-		$rollback_versions = get_transient( 'wp_adminify_rollback_versions_' . WP_ADMINIFY_VER );
+		$rollback_versions = get_transient( 'pxlbsadminify_rollback_versions_' . PXLBSADMINIFY_VER );
 		if ( false === $rollback_versions ) {
 			$max_versions = 30;
 
@@ -92,7 +92,7 @@ class Adminify_Rollback {
 				$is_valid_rollback_version = ! preg_match( '/(trunk|beta|rc|dev)/i', $lowercase_version );
 
 				$is_valid_rollback_version = apply_filters(
-					'adminify/options/rollback/is_valid_rollback_version',
+					'pxlbsadminify/options/rollback/is_valid_rollback_version',
 					$is_valid_rollback_version,
 					$lowercase_version
 				);
@@ -101,7 +101,7 @@ class Adminify_Rollback {
 					continue;
 				}
 
-				if ( version_compare( $version, WP_ADMINIFY_VER, '>=' ) ) {
+				if ( version_compare( $version, PXLBSADMINIFY_VER, '>=' ) ) {
 					continue;
 				}
 
@@ -109,7 +109,7 @@ class Adminify_Rollback {
 				$rollback_versions[] = $version;
 			}
 
-			set_transient( 'wp_adminify_rollback_versions_' . WP_ADMINIFY_VER, $rollback_versions, WEEK_IN_SECONDS );
+			set_transient( 'pxlbsadminify_rollback_versions_' . PXLBSADMINIFY_VER, $rollback_versions, WEEK_IN_SECONDS );
 		}
 
 		return $rollback_versions;
@@ -168,13 +168,13 @@ class Adminify_Rollback {
 	protected function upgrade() {
 		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 
-		$logo_url = WP_ADMINIFY_ASSETS_IMAGE . 'logos/logo-text-dark.svg';
+		$logo_url = PXLBSADMINIFY_ASSETS_IMAGE . 'logos/logo-text-dark.svg';
 
 		$upgrader_args = [
 			'url'    => 'update.php?action=upgrade-plugin&plugin=' . rawurlencode( $this->plugin_name ),
 			'plugin' => sanitize_text_field( $this->plugin_name ),
 			'nonce'  => 'upgrade-plugin_' . sanitize_text_field( $this->plugin_name ),
-			'title'  => '<img src="' . esc_url( $logo_url ) . '" alt="' . esc_attr__( 'WP Adminify Version Rollback', 'adminify' ) . '">' . esc_html__( 'Rollback to Previous Version ', 'adminify' ),
+			'title'  => '<img src="' . esc_url( $logo_url ) . '" alt="' . esc_attr__( 'Adminify Version Rollback', 'adminify' ) . '">' . esc_html__( 'Rollback to Previous Version ', 'adminify' ),
 		];
 
 		$this->print_inline_style();

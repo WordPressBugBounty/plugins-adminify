@@ -1,10 +1,11 @@
 <?php
 
-namespace WPAdminify\Inc\Admin\Options;
+namespace PXLBSAdminify\Inc\Admin\Options;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Admin\AdminSettings;
-use WPAdminify\Inc\Admin\AdminSettingsModel;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Admin\AdminSettings;
+use PXLBSAdminify\Inc\Admin\AdminSettingsModel;
+use PXLBSAdminify\Inc\Classes\AdminFooterText;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	die;
@@ -24,12 +25,8 @@ class White_Label extends AdminSettingsModel {
 					'admin_bar_cleanup' => [],
 					'remove_howdy_msg'  => false,
 					'change_howdy_text' => __('Howdy', 'adminify'),
-					'footer_text'       => sprintf(
-						__('<p>Developed by <a href="%1$s" target="_blank" title="WP Adminify by Jewel Theme" target="_blank">%2$s</a></p> <p>Powered by <a target="_blank" href="%3$s">WordPress</a></p>', 'adminify'),
-						esc_url('https://wpadminify.com/'),
-						\WPAdminify\Inc\Admin\AdminSettings::get_pro_label(),
-						esc_url('https://wordpress.org/')
-					),
+					'show_footer_credit' => false,
+					'footer_text'       => AdminFooterText::get_default_footer_credit(),
 					'admin_footer'	=> [
 						'ip_address',
 						'php_version',
@@ -42,10 +39,10 @@ class White_Label extends AdminSettingsModel {
 				'adminify'	=> [
 					'plugin_logo'         => [],
 					'plugin_logo_dark'    => [],
-					'plugin_name'         => \WPAdminify\Inc\Admin\AdminSettings::get_pro_label(),
-					'plugin_desc'         => __('WP Adminify is a powerful plugin that modernizes and customizes your WordPress admin dashboard. It offers a clean, branded interface and advanced menu management features to enhance your admin user experience.', 'adminify'),
+					'plugin_name'         => \PXLBSAdminify\Inc\Admin\AdminSettings::get_pro_label(),
+					'plugin_desc'         => __('Adminify is a powerful plugin that modernizes and customizes your WordPress admin dashboard. It offers a clean, branded interface and advanced menu management features to enhance your admin user experience.', 'adminify'),
 					'author_name'         => 'Jewel Theme',
-					'menu_label'          => \WPAdminify\Inc\Admin\AdminSettings::get_pro_label(),
+					'menu_label'          => \PXLBSAdminify\Inc\Admin\AdminSettings::get_pro_label(),
 					'menu_icon'          => [],
 					'plugin_url'          => 'https://wpadminify.com',
 					'row_links'           => false,
@@ -57,15 +54,17 @@ class White_Label extends AdminSettingsModel {
 		];
 	}
 
-	public function jltwp_wordpress_white_label_fields(&$white_label)
+	public function pxlbsadminify_wordpress_white_label_fields(&$white_label)
 	{
 		$admin_bar_items = [
 			// 'menu_toggle' => __('Menu Toggle', 'adminify'),
 			'wp_logo'     => __('WordPress Logo', 'adminify'),
 			'site_name'   => __('Site Name', 'adminify'),
 			'comments'    => __('Comments', 'adminify'),
-			'updates'     => sprintf(__('Updates  %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
-			'new_content' => sprintf(__('"New" Button %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
+			/* translators: %s: pro upgrade badge HTML */
+			'updates'     => sprintf(__('Updates  %s', 'adminify'), Utils::upgrade_pro_class()),
+			/* translators: %s: pro upgrade badge HTML */
+			'new_content' => sprintf(__('"New" Button %s', 'adminify'), Utils::upgrade_pro_class()),
 		];
 		$admin_footer_items = [
 			'ip_address'       => __('Show IP Address', 'adminify'),
@@ -79,12 +78,12 @@ class White_Label extends AdminSettingsModel {
 		$white_label[] = [
 			'id'      => 'white_label_subheading',
 			'type'    => 'subheading',
-			'content' => Utils::adminfiy_help_urls(
+			'content' => Utils::help_urls(
 				__('"WordPress" White Label Settings', 'adminify'),
 				'https://wpadminify.com/docs/adminify/white-label/wordpress-white-label-features',
 				'https://www.youtube.com/watch?v=zDK_MwIcTpc',
 				'https://www.facebook.com/groups/jeweltheme',
-				\WPAdminify\Inc\Admin\AdminSettings::support_url()
+				\PXLBSAdminify\Inc\Admin\AdminSettings::support_url()
 			)
 		];
 
@@ -132,6 +131,16 @@ class White_Label extends AdminSettingsModel {
 			'default'  => $this->get_default_field('white_label')['wordpress']['admin_footer'],
 		];
 		$white_label[] = [
+			'id'         => 'show_footer_credit',
+			'type'       => 'switcher',
+			'title'      => __('Show Footer Credit', 'adminify'),
+			'subtitle'   => __('Display the default "Developed by / Powered by" credit in the admin footer. Disabled by default; enable to opt in.', 'adminify'),
+			'text_on'    => __('Yes', 'adminify'),
+			'text_off'   => __('No', 'adminify'),
+			'text_width' => 80,
+			'default'    => $this->get_default_field('white_label')['wordpress']['show_footer_credit'],
+		];
+		$white_label[] = [
 			'id'            => 'footer_text',
 			'type'          => 'wp_editor',
 			'title'         => __( 'Admin Footer Text', 'adminify' ),
@@ -140,13 +149,14 @@ class White_Label extends AdminSettingsModel {
 			'tinymce'       => false,
 			'subtitle'      => 'Left Side WordPress Admin Footer Text ',
 			'default'       => $this->get_default_field( 'white_label')['wordpress']['footer_text' ],
+			'dependency'    => ['show_footer_credit', '==', 'true', 'true'],
 		];
 
-		$white_label = apply_filters('adminify_settings/wp_white_label', $white_label, $this);
+		$white_label = apply_filters('pxlbsadminify_settings/wp_white_label', $white_label, $this);
 	}
 
-	public static function jltwp_white_label_options(){
-		$adminify_options = get_option('_wpadminify');
+	public static function pxlbsadminify_white_label_options(){
+		$adminify_options = get_option('pxlbsadminify_settings');
 		if( isset($adminify_options['white_label']) && !empty($adminify_options['white_label']) ){
 			return $adminify_options['white_label'];
 		}else{
@@ -160,19 +170,19 @@ class White_Label extends AdminSettingsModel {
 	 *
 	 * @return void
 	 */
-	public function jltwp_white_label_fields( &$white_label ) {
+	public function pxlbsadminify_white_label_fields( &$white_label ) {
 
 
 		$wp_white_label = [];
 		$adminify_white_label = [];
 
-		$this->jltwp_wordpress_white_label_fields($wp_white_label);
+		$this->pxlbsadminify_wordpress_white_label_fields($wp_white_label);
 
-		$jltwp_white_label_options = self::jltwp_white_label_options();
-		$adminify_white_label_plugin_option_enabled = !empty($jltwp_white_label_options['plugin_option']) ? $jltwp_white_label_options['plugin_option'] : '';
+		$pxlbsadminify_white_label_options = self::pxlbsadminify_white_label_options();
+		$adminify_white_label_plugin_option_enabled = !empty($pxlbsadminify_white_label_options['plugin_option']) ? $pxlbsadminify_white_label_options['plugin_option'] : '';
 
 		if(empty($adminify_white_label_plugin_option_enabled)){
-			$this->jltwp_adminify_white_label_fields($adminify_white_label);
+			$this->pxlbsadminify_adminify_white_label_fields($adminify_white_label);
 		}
 
 		$white_label[] = [
@@ -204,7 +214,7 @@ class White_Label extends AdminSettingsModel {
 	 *
 	 * @return void
 	 */
-	public function jltwp_adminify_white_label_fields( &$adminify_whl_fields ) {
+	public function pxlbsadminify_adminify_white_label_fields( &$adminify_whl_fields ) {
 
 		$adminify_white_label_class = 'adminify-white-label adminify-pro-feature adminify-pro-notice';
 
@@ -212,12 +222,13 @@ class White_Label extends AdminSettingsModel {
 			'id'      => 'adminify_whl_sub_heading',
 			'type'    => 'subheading',
 			'class'   => 'adminify-mt-10 adminify-agency-plan',
-			'content' => Utils::adminfiy_help_urls(
-				sprintf(__('<span>"WP Adminify" Branding %s</span>', 'adminify'), Utils::adminify_upgrade_pro_badge('Agency or Higher Plan Only')),
+			'content' => Utils::help_urls(
+				/* translators: %s: pro plan badge HTML */
+				'<span>' . sprintf( __('"Adminify" Branding %s', 'adminify'), Utils::upgrade_pro_badge('Agency or Higher Plan Only')) . '</span>',
 				'https://wpadminify.com/docs/adminify/white-label/rebrand-wp-adminify-plugin',
 				'https://www.youtube.com/watch?v=zDK_MwIcTpc',
 				'https://www.facebook.com/groups/jeweltheme',
-				\WPAdminify\Inc\Admin\AdminSettings::support_url()
+				\PXLBSAdminify\Inc\Admin\AdminSettings::support_url()
 			),
 			'dependency' => ['plugin_option', '==', 'false', 'true'],
 		];
@@ -337,11 +348,11 @@ class White_Label extends AdminSettingsModel {
 			'id'      => 'plugin_option',
 			'type'    => 'checkbox',
 			'class'   => $adminify_white_label_class . ' adminify-full-width-field adminify-hightlight-field adminify-one-col adminify-mt-6 adminify-pro-pointer',
-			'label'   => __('Force Disable White Label (WP Adminify): When enabled, the White Label settings will be completely hidden. To access them again, you\'ll need to deactivate and reactivate WP Adminify Plugin.', 'adminify'),
+			'label'   => __('Force Disable White Label (Adminify): When enabled, the White Label settings will be completely hidden. To access them again, you\'ll need to deactivate and reactivate Adminify Plugin.', 'adminify'),
 			'default' => $this->get_default_field('white_label')['adminify']['plugin_option'],
 		];
 
-		$adminify_whl_fields = apply_filters('adminify_settings/adminify_white_label', $adminify_whl_fields, $this);
+		$adminify_whl_fields = apply_filters('pxlbsadminify_settings/adminify_white_label', $adminify_whl_fields, $this);
 	}
 
 
@@ -354,7 +365,7 @@ class White_Label extends AdminSettingsModel {
 		}
 
 		$fields = [];
-		$this->jltwp_white_label_fields($fields);
+		$this->pxlbsadminify_white_label_fields($fields);
 
 		\ADMINIFY::createSection(
 			$this->prefix,

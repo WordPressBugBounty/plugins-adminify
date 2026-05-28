@@ -1,16 +1,16 @@
 <?php
 
-namespace WPAdminify\Inc\Classes;
+namespace PXLBSAdminify\Inc\Classes;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Admin\AdminSettings;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Admin\AdminSettings;
 
 // no direct access allowed
 if (!defined('ABSPATH')) {
     exit;
 }
 /**
- * WPAdminify
+ * PXLBSAdminify
  * Dark Mode Conflicts with other plugins supports
  *
  * @author Jewel Theme <support@jeweltheme.com>
@@ -22,11 +22,11 @@ class DarkModeConflicts
 
     public function __construct()
     {
-        add_action('admin_enqueue_scripts', array($this, 'jltwp_adminify_darkmode_scripts'), 100);
-        add_action( 'enqueue_block_editor_assets', array($this, "jltwp_gutenberg_block_editor_darkmode_assets"));
+        add_action('admin_enqueue_scripts', array($this, 'darkmode_scripts'), 100);
+        add_action( 'enqueue_block_editor_assets', array($this, "gutenberg_block_editor_darkmode_assets"));
     }
 
-    public function jltwp_adminify_darkmode_scripts()
+    public function darkmode_scripts()
     {
 
         $this->options = (array) AdminSettings::get_instance()->get();
@@ -393,15 +393,15 @@ class DarkModeConflicts
         $dark_mode_style = preg_replace('#/\*.*?\*/#s', '', $dark_mode_style);
         $dark_mode_style = preg_replace('/\s*([{}|:;,])\s+/', '$1', $dark_mode_style);
         $dark_mode_style = preg_replace('/\s\s+(.*)/', '$1', $dark_mode_style);
-        wp_add_inline_style('wp-adminify-admin', wp_strip_all_tags($dark_mode_style));
+        wp_add_inline_style('adminify-admin', wp_strip_all_tags($dark_mode_style));
     }
 
     /**
      * Gutenberg Block Editor Dark Mode CSS
      */
-    function jltwp_gutenberg_block_editor_darkmode_assets () {
-        wp_register_style('wp-adminify-gutenberg-dark', false);
-        wp_enqueue_style('wp-adminify-gutenberg-dark');
+    function gutenberg_block_editor_darkmode_assets () {
+        wp_register_style('adminify-gutenberg-dark', false, array(), PXLBSADMINIFY_VER);
+        wp_enqueue_style('adminify-gutenberg-dark');
 
         // $parent_selector = 'body.wp-adminify.adminify-dark-mode';
         $parent_selector = 'body.wp-adminify';
@@ -413,6 +413,6 @@ class DarkModeConflicts
             $parent_selector .editor-sidebar__panel .editor-post-card-panel__header svg, 
             $parent_selector .commands-command-menu__container .commands-command-menu__header svg { fill: black; }
         ";
-        wp_add_inline_style('wp-adminify-gutenberg-dark', wp_strip_all_tags($dark_mode_style));
+        wp_add_inline_style('adminify-gutenberg-dark', wp_strip_all_tags($dark_mode_style));
     }
 }

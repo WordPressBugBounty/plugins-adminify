@@ -1,11 +1,10 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\MenuEditor;
+namespace PXLBSAdminify\Inc\Modules\MenuEditor;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Admin\AdminSettings;
-use WPAdminify\Inc\Modules\MenuEditor\MenuEditorAssets;
-use WPAdminify\Inc\Admin\AdminSettingsModel;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Admin\AdminSettings;
+use PXLBSAdminify\Inc\Modules\MenuEditor\MenuEditorAssets;
 use enshrined\svgSanitize\Sanitizer;
 // no direct access allowed
 if ( !defined( 'ABSPATH' ) ) {
@@ -48,21 +47,21 @@ if ( !class_exists( 'MenuEditor' ) ) {
             $this->options = (array) AdminSettings::get_instance()->get();
             add_filter( 'upload_mimes', [$this, 'custom_icon_mime_types'] );
             add_filter( 'wp_handle_upload_prefilter', [$this, 'sanitize_svg_file'] );
-            add_filter( 'admin_body_class', [$this, 'jltwp_adminify_menu_editor_body_class'] );
+            add_filter( 'admin_body_class', [$this, 'menu_editor_body_class'] );
             // add_filter('parent_file', [$this, 'set_menu'], 800);
             // add_filter('parent_file', [$this, 'apply_menu'], 900);
-            // add_action('jltwp_adminify_modules_menu_editor_render', [$this, 'jltwp_adminify_modules_menu_editor_render']);
-            if ( apply_filters( 'enable_jltwp_adminify_menu_editor_render', true ) ) {
+            // add_action('modules_menu_editor_render', [$this, 'modules_menu_editor_render']);
+            if ( apply_filters( 'pxlbsadminify_enable_menu_editor_render', true ) ) {
                 add_filter( 'parent_file', [$this, 'set_menu'], 800 );
                 add_filter( 'parent_file', [$this, 'apply_menu'], 900 );
             }
-            add_action( 'wp_ajax_adminify_save_menu_settings', [$this, 'adminify_save_menu_settings'] );
-            add_action( 'wp_ajax_adminify_reset_menu_settings', [$this, 'adminify_reset_menu_settings'] );
-            add_action( 'wp_ajax_adminify_export_menu_settings', [$this, 'adminify_export_menu_settings'] );
-            add_action( 'wp_ajax_adminify_import_menu_settings', [$this, 'adminify_import_menu_settings'] );
-            add_action( 'wp_ajax_adminify_file_upload', [$this, 'adminify_file_upload_callback'] );
-            add_action( 'wp_ajax_adminify_load_custom_icons', [$this, 'adminify_load_custom_icons_callback'] );
-            add_action( 'wp_ajax_adminify_search_users', [$this, 'adminify_search_users_callback'] );
+            add_action( 'wp_ajax_pxlbsadminify_save_menu_settings', [$this, 'save_menu_settings'] );
+            add_action( 'wp_ajax_pxlbsadminify_reset_menu_settings', [$this, 'reset_menu_settings'] );
+            add_action( 'wp_ajax_pxlbsadminify_export_menu_settings', [$this, 'export_menu_settings'] );
+            add_action( 'wp_ajax_pxlbsadminify_import_menu_settings', [$this, 'import_menu_settings'] );
+            add_action( 'wp_ajax_pxlbsadminify_file_upload', [$this, 'file_upload_callback'] );
+            add_action( 'wp_ajax_pxlbsadminify_load_custom_icons', [$this, 'load_custom_icons_callback'] );
+            add_action( 'wp_ajax_pxlbsadminify_search_users', [$this, 'search_users_callback'] );
             new MenuEditorAssets();
         }
 
@@ -104,9 +103,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
             return strpos( $value->guid, 'adminify-custom-icon' ) !== false;
         }
 
-        public function adminify_load_custom_icons_callback() {
+        public function load_custom_icons_callback() {
             // Security check - verify nonce and capability
-            check_ajax_referer( 'adminify-menu-editor-security-nonce', 'security' );
+            check_ajax_referer( 'pxlbsadminify-menu-editor-security-nonce', 'security' );
             if ( !current_user_can( 'manage_options' ) ) {
                 wp_send_json_error( array(
                     'message' => __( 'You do not have permission to perform this action.', 'adminify' ),
@@ -125,9 +124,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
             die;
         }
 
-        public function adminify_file_upload_callback() {
+        public function file_upload_callback() {
             $result['status'] = false;
-            check_ajax_referer( 'adminify-menu-editor-security-nonce', 'security' );
+            check_ajax_referer( 'pxlbsadminify-menu-editor-security-nonce', 'security' );
             if ( !current_user_can( 'manage_options' ) ) {
                 wp_send_json_error( array(
                     'message' => __( 'You do not have permission to perform this action.', 'adminify' ),
@@ -138,7 +137,13 @@ if ( !class_exists( 'MenuEditor' ) ) {
             if ( !is_dir( $targeted_dir ) ) {
                 wp_mkdir_p( $targeted_dir );
             }
-            add_filter( 'upload_dir', [$this, 'adminify_icon_custom_upload_dir'] );
+            add_filter( 'upload_dir', [$this, 'icon_custom_upload_dir'] );
+            if ( !isset( $_FILES['my_file_upload'] ) ) {
+                wp_send_json_error( array(
+                    'message' => __( 'No file was uploaded.', 'adminify' ),
+                ) );
+            }
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- $_FILES is sanitized by the WP upload handler.
             $files = wp_kses_post_deep( wp_unslash( $_FILES['my_file_upload'] ) );
             foreach ( $files['name'] as $key => $value ) {
                 if ( $files['name'][$key] ) {
@@ -165,12 +170,12 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     }
                 }
             }
-            remove_filter( 'upload_dir', [$this, 'adminify_icon_custom_upload_dir'] );
+            remove_filter( 'upload_dir', [$this, 'icon_custom_upload_dir'] );
             echo wp_json_encode( $result );
             wp_die();
         }
 
-        public function adminify_icon_custom_upload_dir( $dir_data ) {
+        public function icon_custom_upload_dir( $dir_data ) {
             // $dir_data already you might want to use
             $custom_dir = 'adminify-custom-icons';
             return [
@@ -187,8 +192,8 @@ if ( !class_exists( 'MenuEditor' ) ) {
          * AJAX callback to search users for Select2
          * Uses 'fields' parameter for optimized database query performance
          */
-        public function adminify_search_users_callback() {
-            check_ajax_referer( 'adminify-menu-editor-security-nonce', 'security' );
+        public function search_users_callback() {
+            check_ajax_referer( 'pxlbsadminify-menu-editor-security-nonce', 'security' );
             if ( !current_user_can( 'manage_options' ) ) {
                 wp_send_json_error( array(
                     'message' => __( 'You do not have permission to perform this action.', 'adminify' ),
@@ -249,7 +254,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
         }
 
         // Menu Editor Body Class
-        public function jltwp_adminify_menu_editor_body_class( $classes ) {
+        public function menu_editor_body_class( $classes ) {
             $classes .= ' adminify_menu_editor ';
             return $classes;
         }
@@ -266,11 +271,11 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     if ( is_array( $in ) ) {
                         $values[$index] = $this->clean_ajax_input( $in );
                     } else {
-                        $values[$index] = strip_tags( $in );
+                        $values[$index] = wp_strip_all_tags( $in );
                     }
                 }
             } else {
-                $values = strip_tags( $values );
+                $values = wp_strip_all_tags( $values );
             }
             return $values;
         }
@@ -285,21 +290,23 @@ if ( !class_exists( 'MenuEditor' ) ) {
             $returndata = [];
             $returndata['error'] = true;
             $returndata['error_message'] = $message;
-            return json_encode( $returndata );
+            return wp_json_encode( $returndata );
         }
 
-        public function adminify_save_menu_settings() {
-            if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'adminify-menu-editor-security-nonce', 'security' ) > 0 ) {
+        public function save_menu_settings() {
+            if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'pxlbsadminify-menu-editor-security-nonce', 'security' ) > 0 ) {
                 if ( !current_user_can( 'manage_options' ) ) {
                     wp_send_json_error( array(
                         'message' => __( 'You do not have permission to perform this action.', 'adminify' ),
                     ) );
                 }
-                $options = wp_kses_post_deep( wp_unslash( $_POST['options'] ) );
+                $options = ( isset( $_POST['options'] ) ? wp_kses_post_deep( wp_unslash( $_POST['options'] ) ) : '' );
+                // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized via wp_kses_post_deep() and clean_ajax_input() below.
                 $options = $this->clean_ajax_input( $options );
                 if ( $options == '' || !is_array( $options ) ) {
                     $message = __( 'No options supplied to save', 'adminify' );
-                    echo Utils::wp_kses_custom( $this->ajax_error_message( $message ) );
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped.
+                    echo Utils::kses_custom( $this->ajax_error_message( $message ) );
                     die;
                 }
                 if ( is_array( $options ) ) {
@@ -307,11 +314,12 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     $returndata = [];
                     $returndata['success'] = true;
                     $returndata['message'] = __( 'Settings saved', 'adminify' );
-                    echo json_encode( $returndata );
+                    echo wp_json_encode( $returndata );
                     die;
                 } else {
                     $message = __( 'Something went wrong', 'adminify' );
-                    echo Utils::wp_kses_custom( $this->ajax_error_message( $message ) );
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped.
+                    echo Utils::kses_custom( $this->ajax_error_message( $message ) );
                     die;
                 }
             }
@@ -323,8 +331,8 @@ if ( !class_exists( 'MenuEditor' ) ) {
          *
          * @return void
          */
-        public function adminify_reset_menu_settings() {
-            if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'adminify-menu-editor-security-nonce', 'security' ) > 0 ) {
+        public function reset_menu_settings() {
+            if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'pxlbsadminify-menu-editor-security-nonce', 'security' ) > 0 ) {
                 if ( !current_user_can( 'manage_options' ) ) {
                     wp_send_json_error( array(
                         'message' => __( 'You do not have permission to perform this action.', 'adminify' ),
@@ -336,11 +344,12 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     $returndata = [];
                     $returndata['success'] = true;
                     $returndata['message'] = __( 'Settings reset', 'adminify' );
-                    echo json_encode( $returndata );
+                    echo wp_json_encode( $returndata );
                     die;
                 } else {
                     $message = __( 'Something went wrong', 'adminify' );
-                    echo Utils::wp_kses_custom( $this->ajax_error_message( $message ) );
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped.
+                    echo Utils::kses_custom( $this->ajax_error_message( $message ) );
                     die;
                 }
             }
@@ -352,15 +361,15 @@ if ( !class_exists( 'MenuEditor' ) ) {
          *
          * @return void
          */
-        public function adminify_export_menu_settings() {
-            if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'adminify-menu-editor-security-nonce', 'security' ) > 0 ) {
+        public function export_menu_settings() {
+            if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'pxlbsadminify-menu-editor-security-nonce', 'security' ) > 0 ) {
                 if ( !current_user_can( 'manage_options' ) ) {
                     wp_send_json_error( array(
                         'message' => __( 'You do not have permission to perform this action.', 'adminify' ),
                     ) );
                 }
                 $menu_editor_options = get_option( $this->prefix );
-                echo json_encode( $menu_editor_options );
+                echo wp_json_encode( $menu_editor_options );
             }
             die;
         }
@@ -370,17 +379,19 @@ if ( !class_exists( 'MenuEditor' ) ) {
          *
          * @since 1.0.0
          */
-        public function adminify_import_menu_settings() {
-            if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'adminify-menu-editor-security-nonce', 'security' ) > 0 ) {
+        public function import_menu_settings() {
+            if ( defined( 'DOING_AJAX' ) && DOING_AJAX && check_ajax_referer( 'pxlbsadminify-menu-editor-security-nonce', 'security' ) > 0 ) {
                 if ( !current_user_can( 'manage_options' ) ) {
                     wp_send_json_error( array(
                         'message' => __( 'You do not have permission to perform this action.', 'adminify' ),
                     ) );
                 }
-                $new_options = wp_kses_post_deep( $_POST['settings'] );
+                $new_options = ( isset( $_POST['settings'] ) ? wp_kses_post_deep( wp_unslash( $_POST['settings'] ) ) : '' );
+                // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized via wp_kses_post_deep().
                 if ( $new_options == '' || !is_array( $new_options ) ) {
                     $message = __( 'No options supplied to save', 'adminify' );
-                    echo Utils::wp_kses_custom( $this->ajax_error_message( $message ) );
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped.
+                    echo Utils::kses_custom( $this->ajax_error_message( $message ) );
                     die;
                 }
                 if ( is_array( $new_options ) ) {
@@ -388,11 +399,12 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     $returndata = [];
                     $returndata['success'] = true;
                     $returndata['message'] = __( 'Menu Imported', 'adminify' );
-                    echo json_encode( $returndata );
+                    echo wp_json_encode( $returndata );
                     die;
                 } else {
                     $message = __( 'Something went wrong', 'adminify' );
-                    echo Utils::wp_kses_custom( $this->ajax_error_message( $message ) );
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped.
+                    echo Utils::kses_custom( $this->ajax_error_message( $message ) );
                     die;
                 }
             }
@@ -557,7 +569,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
                     } else {
                         if ( empty( $menu_s['icon'] ) || strpos( $menu_s['icon'], ',' ) !== false ) {
                             if ( empty( $menu_s['icon'] ) ) {
-                                $menu_icon = WP_ADMINIFY_ASSETS_IMAGE . 'logos/menu-icon.svg';
+                                $menu_icon = PXLBSADMINIFY_ASSETS_IMAGE . 'logos/menu-icon.svg';
                             } else {
                                 $menu_icon = explode( ',', $menu_s['icon'] )[1];
                             }
@@ -706,7 +718,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
                                 $empty_separator = array(
                                     0       => '',
                                     1       => 'read',
-                                    2       => 'separator_' . rand( 200, 1000 ) * 1000,
+                                    2       => 'separator_' . wp_rand( 200, 1000 ) * 1000,
                                     3       => '',
                                     4       => 'wp-menu-separator',
                                     'order' => $separator_order + 0.5,
@@ -749,7 +761,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
             $submenu_settings = $this->menu_settings[$parentname]['submenu'];
             $tempsub = [];
             foreach ( $subitems as $current_menu_item ) {
-                $sub_level = apply_filters( 'adminify/menu_editor', [
+                $sub_level = apply_filters( 'pxlbsadminify/menu_editor', [
                     'sub_level' => false,
                 ] );
                 if ( !empty( $sub_level['sub_level'] ) ) {
@@ -919,9 +931,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
             // Normalize disabled_for array
             $disabled_for_arr = [];
             foreach ( $disabled_for as $v ) {
-                $disabled_for_arr[] = jlt_adminify_sluggify_with_underscores( $v );
+                $disabled_for_arr[] = Utils::sluggify_with_underscores( $v );
             }
-            $slugify_user_login = jlt_adminify_sluggify_with_underscores( $current_user->user_login );
+            $slugify_user_login = Utils::sluggify_with_underscores( $current_user->user_login );
             // Check Username
             if ( in_array( $current_user->user_login, $disabled_for_arr ) || in_array( $slugify_user_login, $disabled_for_arr ) ) {
                 return true;
@@ -1323,6 +1335,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
 										<div class="select is-small">
 
 											<?php 
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- generate_user_rules_select_field() returns a trusted <select> template with form inputs that wp_kses_post() would strip; values inside are escaped.
             echo $this->generate_user_rules_select_field( $menu_id, $disabled_for );
             ?>
 
@@ -1459,7 +1472,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
 														<?php 
                 }
             } else {
-                $adminify_icon = WP_ADMINIFY_ASSETS_IMAGE . 'logos/menu-icon.svg';
+                $adminify_icon = PXLBSADMINIFY_ASSETS_IMAGE . 'logos/menu-icon.svg';
                 if ( empty( $icons[$default_icons] ) ) {
                     echo '<i class=""><img width="24" height="24" src=' . esc_url( $adminify_icon ) . ' ></i>';
                 } else {
@@ -1485,7 +1498,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
             $upgrade_pro = '';
             $separator_name_attr = '';
             $upgrade_pro = 'upgrade-pro';
-            $separator_name_attr = Utils::adminify_upgrade_pro( 'Add Separator' );
+            $separator_name_attr = Utils::upgrade_pro_notice( 'Add Separator' );
             ?>
 
 									<div class='column <?php 
@@ -1495,9 +1508,9 @@ if ( !class_exists( 'MenuEditor' ) ) {
             echo esc_attr( $name_attr );
             ?>">
 											<?php 
-            $separator_content = apply_filters( 'adminify/menu_editor/add_separator', $separator_name_attr, $separator );
+            $separator_content = apply_filters( 'pxlbsadminify/menu_editor/add_separator', $separator_name_attr, $separator );
             // Apply the filter
-            echo $separator_content;
+            echo wp_kses_post( $separator_content || "" );
             ?>
 										</label>
 									</div>
@@ -1607,6 +1620,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
 
 									<div class="select is-small">
 										<?php 
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- generate_user_rules_select_field() returns a trusted <select> template with form inputs that wp_kses_post() would strip; values inside are escaped.
             echo $this->generate_user_rules_select_field( $menu_id, $disabled_for );
             ?>
 									</div>
@@ -1720,6 +1734,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
 
 										<div class="select is-small">
 											<?php 
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- generate_user_rules_select_field() returns a trusted <select> template with form inputs that wp_kses_post() would strip; values inside are escaped.
             echo $this->generate_user_rules_select_field( $menu_id, $disabled_for, 'sub_menu' );
             ?>
 										</div>
@@ -1778,15 +1793,15 @@ if ( !class_exists( 'MenuEditor' ) ) {
          * Add New Menu Item.
          */
         public function render_add_new_menu_item( $submenu = false ) {
-            $add_item = apply_filters( 'adminify/menu_editor', [
-                'upgrade_pro'   => Utils::adminify_upgrade_pro( ' ' ),
+            $add_item = apply_filters( 'pxlbsadminify/menu_editor', [
+                'upgrade_pro'   => Utils::upgrade_pro_notice( ' ' ),
                 'upgrade_class' => 'upgrade-pro',
             ] );
             ?>
 			<div class="adminify-accordion adminify-add-new-menu-editor-item  upgrade-pro adminify-field adminify-field-switcher adminify-depend-visible adminify-depend-on adminify-pro-notice <?php 
             echo esc_attr( ( $submenu ? 'submenu' : '' ) );
             ?> <?php 
-            echo Utils::wp_kses_custom( $add_item['upgrade_class'] );
+            echo esc_attr( $add_item['upgrade_class'] );
             ?>">
 				<div class="inner-text">
 					<i class="dashicons dashicons-plus-alt"></i>
@@ -1795,7 +1810,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
             ?></span>
 				</div>
 				<?php 
-            echo Utils::wp_kses_custom( $add_item['upgrade_pro'] );
+            echo wp_kses( $add_item['upgrade_pro'], Utils::kses_allowed_html() );
             ?>
 			</div>
 		<?php 
@@ -1812,12 +1827,13 @@ if ( !class_exists( 'MenuEditor' ) ) {
 			<div class="adminify-flex adminify-flex-center adminify-justify-between">
 				<div class="adminify-menu-editor-help-urls adminify-flex adminify-flex-center adminify-gap-2">
 					<?php 
-            echo Utils::adminfiy_help_urls(
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- help_urls() returns a trusted template containing inline SVG icons that wp_kses_post() would strip; URLs inside are passed through esc_url().
+            echo Utils::help_urls(
                 __( 'Menu Editor', 'adminify' ),
                 'https://wpadminify.com/kb/wordpress-dashboard-menu-editor/',
                 'https://www.youtube.com/playlist?list=PLqpMw0NsHXV-EKj9Xm1DMGa6FGniHHly8',
                 'https://www.facebook.com/groups/jeweltheme',
-                \WPAdminify\Inc\Admin\AdminSettings::support_url()
+                esc_url( \PXLBSAdminify\Inc\Admin\AdminSettings::support_url() )
             );
             ?>
 				</div>
@@ -1875,7 +1891,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
 					</svg>
 
 					<?php 
-            esc_html_e( 'If you have WP Adminify Menu Module disabled, icons and label dividers won\'t change.', 'adminify' );
+            esc_html_e( 'If you have Adminify Menu Module disabled, icons and label dividers won\'t change.', 'adminify' );
             ?>
 
 				</p>
@@ -1885,7 +1901,7 @@ if ( !class_exists( 'MenuEditor' ) ) {
 		<?php 
         }
 
-        public function jltwp_adminify_menu_editor_contents() {
+        public function menu_editor_contents() {
             ?>
 
 			<div class="wrap">

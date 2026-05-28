@@ -18,7 +18,7 @@ if ( ! class_exists( 'ADMINIFY_Field_palette' ) ) {
 
       $palette = ( ! empty( $this->field['options'] ) ) ? $this->field['options'] : array();
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       if ( ! empty( $palette ) ) {
 
@@ -41,7 +41,7 @@ if ( ! class_exists( 'ADMINIFY_Field_palette' ) ) {
 
           }
 
-          echo '<input type="radio" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $key ) .'"'. $this->field_attributes() . esc_attr( $checked ) .'/>';
+          echo '<input type="radio" name="'. esc_attr( $this->field_name() ) .'" value="'. esc_attr( $key ) .'"'. $this->field_attributes() . esc_attr( $checked ) .'/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
           echo '</div>';
 
         }
@@ -50,7 +50,7 @@ if ( ! class_exists( 'ADMINIFY_Field_palette' ) ) {
 
       }
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

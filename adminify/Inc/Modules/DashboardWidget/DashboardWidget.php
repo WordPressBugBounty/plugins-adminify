@@ -1,10 +1,10 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\DashboardWidget;
+namespace PXLBSAdminify\Inc\Modules\DashboardWidget;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Classes\Multisite_Helper;
-use WPAdminify\Inc\Modules\DashboardWidget\DashboardWidgetModel;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Classes\Multisite_Helper;
+use PXLBSAdminify\Inc\Modules\DashboardWidget\DashboardWidgetModel;
 
 // no direct access allowed
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPAdminify
+ * PXLBSAdminify
  *
  * @package Module: Dashboard Widget
  *
@@ -30,7 +30,7 @@ class DashboardWidget extends DashboardWidgetModel {
 		$this->options = ( new DashboardWidget_Setttings() )->get();
 
 		if ( is_admin() ) {
-			add_action( 'admin_enqueue_scripts', [ $this, 'jltwp_adminify_enqueue_scripts' ] );
+			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 			add_action( 'wp_dashboard_setup', [ $this, 'create_dashboard_widgets' ], 999 );
             add_action( 'wp_network_dashboard_setup', [ $this, 'create_dashboard_widgets' ], 999 );
 
@@ -39,12 +39,13 @@ class DashboardWidget extends DashboardWidgetModel {
 			}
 
 			// Welcome Panel Initialize
-			if( ! get_user_meta( get_current_user_id(), 'jltwp_adminify_dismissed_welcome_panel', true )){
-				add_action( 'admin_init', [ $this, 'jltwp_adminify_welcome_init' ] );
+			if( ! get_user_meta( get_current_user_id(), 'pxlbsadminify_dismissed_welcome_panel', true )){
+				add_action( 'admin_init', [ $this, 'welcome_init' ] );
 			}
 			add_action('admin_init', function() {
-				if (isset($_GET['welcome']) && $_GET['welcome'] == '0') {
-						update_user_meta(get_current_user_id(), 'jltwp_adminify_dismissed_welcome_panel', true);
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
+				if ( isset( $_GET['welcome'] ) && '0' === sanitize_text_field( wp_unslash( $_GET['welcome'] ) ) ) {
+						update_user_meta(get_current_user_id(), 'pxlbsadminify_dismissed_welcome_panel', true);
 				}
 			});
 		}
@@ -83,7 +84,7 @@ class DashboardWidget extends DashboardWidgetModel {
 	/**
 	 * Welcome Panel Initialize
 	 */
-	public function jltwp_adminify_welcome_init() {
+	public function welcome_init() {
 		if ( empty( $this->options['dashboard_widget_types'] ) ) {
 			return;
 		}
@@ -129,7 +130,7 @@ class DashboardWidget extends DashboardWidgetModel {
 			<?php if($latest_wordpress_version >= '6.2'){ ?>
 				<div class="welcome-panel-header">
 					<?php if ( current_user_can( 'edit_theme_options' ) ) { ?>
-						<a class="welcome-panel-close" href="<?php echo esc_url( admin_url( '?welcome=0' ) ); ?>"><?php esc_html_e( 'Dismiss' ); ?></a>
+						<a class="welcome-panel-close" href="<?php echo esc_url( admin_url( '?welcome=0' ) ); ?>"><?php esc_html_e( 'Dismiss', 'adminify' ); ?></a>
 					<?php } ?>
 					<?php $this->render_welcome_template(); ?>
 				</div>
@@ -150,7 +151,7 @@ class DashboardWidget extends DashboardWidgetModel {
 			<?php } else{ ?>
 
 				<?php if ( current_user_can( 'edit_theme_options' ) ) { ?>
-					<a class="welcome-panel-close" href="<?php echo esc_url( admin_url( '?welcome=0' ) ); ?>"><?php esc_html_e( 'Dismiss' ); ?></a>
+					<a class="welcome-panel-close" href="<?php echo esc_url( admin_url( '?welcome=0' ) ); ?>"><?php esc_html_e( 'Dismiss', 'adminify' ); ?></a>
 				<?php }
 				$this->render_welcome_template();
 			} ?>
@@ -181,21 +182,21 @@ class DashboardWidget extends DashboardWidgetModel {
 			}
 
 			$css = ''; // Initialize the CSS variable
-			$css = apply_filters('dashboard_widgets/welcome_css', $css); // Apply the filter
+			$css = apply_filters('pxlbsadminify_dashboard_widgets/welcome_css', $css); // Apply the filter
 
 			echo '<style>';
-			echo Utils::wp_kses_custom($css); // Output the filtered CSS
+			echo Utils::kses_custom($css); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped.
 			echo '</style>';
 
 			// echo '<style>';
 			// $css = '';
-			// echo apply_filters('dashboard_widgets/dismissible', $css);
+			// echo apply_filters('pxlbsadminify_dashboard_widgets/dismissible', $css);
 			// echo '</style>';
 
 
 			if ( $switch_blog ) {
-				global $blueprint;
-				switch_to_blog( $blueprint );
+				global $pxlbsadminify_blueprint;
+				switch_to_blog( $pxlbsadminify_blueprint );
 			}
 
 			switch ( $option['widget_template_type'] ) {
@@ -205,7 +206,7 @@ class DashboardWidget extends DashboardWidgetModel {
 					// 	$page    = get_page( $page_id );
 					// 	$content = apply_filters( 'the_content', $page->post_content );
 					// 	$content = str_replace( ']]>', ']]&gt;', $content );
-					// 	echo wp_specialchars_decode( Utils::wp_kses_custom( $content ) );
+					// 	echo wp_specialchars_decode( Utils::kses_custom( $content ) );
 					// }
 
 					$panel_height = !empty( $option['panel_height'] ) ? $option['panel_height'] : 600;
@@ -215,7 +216,7 @@ class DashboardWidget extends DashboardWidgetModel {
 					printf('<iframe class="wp-adminify--admin-page" src="%s"></iframe>', esc_url( $link ) );
 					echo '<style>
 						.welcome-panel-header{
-							height: '. $panel_height .'px;
+							height: '. esc_attr( $panel_height ) .'px;
 							overflow: hidden;
 						}
 						#wpbody{
@@ -241,7 +242,7 @@ class DashboardWidget extends DashboardWidgetModel {
 							$elementor->frontend->register_styles();
 							$elementor->frontend->enqueue_styles();
 
-							echo Utils::wp_kses_custom( $elementor->frontend->get_builder_content( $template_id, true ) );
+							echo Utils::kses_custom( $elementor->frontend->get_builder_content( $template_id, true ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped.
 
 							$elementor->frontend->register_scripts();
 							$elementor->frontend->enqueue_scripts();
@@ -256,7 +257,7 @@ class DashboardWidget extends DashboardWidgetModel {
 							$elementor->frontend->register_styles();
 							$elementor->frontend->enqueue_styles();
 
-							echo Utils::wp_kses_custom( $elementor->frontend->get_builder_content( $template_id, true ) );
+							echo Utils::kses_custom( $elementor->frontend->get_builder_content( $template_id, true ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped.
 
 							$elementor->frontend->register_scripts();
 							$elementor->frontend->enqueue_scripts();
@@ -271,7 +272,7 @@ class DashboardWidget extends DashboardWidgetModel {
 							$elementor->frontend->register_styles();
 							$elementor->frontend->enqueue_styles();
 
-							echo Utils::wp_kses_custom( $elementor->frontend->get_builder_content( $template_id, true ) );
+							echo Utils::kses_custom( $elementor->frontend->get_builder_content( $template_id, true ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses_custom() is a wp_kses() wrapper; output already escaped.
 
 							$elementor->frontend->register_scripts();
 							$elementor->frontend->enqueue_scripts();
@@ -322,7 +323,7 @@ class DashboardWidget extends DashboardWidgetModel {
 				$dash_widget_position = isset( $value['widget_pos'] ) ? $value['widget_pos'] : 'normal';
 
 				add_meta_box(
-					'adminify_widget_' . Utils::jltwp_adminify_class_cleanup( $dash_widget_title ),
+					'adminify_widget_' . Utils::class_cleanup( $dash_widget_title ),
 					$dash_widget_title,
 					[ $this, 'render_dashboard_widget' ],
 					'dashboard',
@@ -343,23 +344,23 @@ class DashboardWidget extends DashboardWidgetModel {
 				break;
 
 			case 'icon':
-				do_action('dashboard_widgets/render_icon', $value);
+				do_action('pxlbsadminify_dashboard_widgets/render_icon', $value);
 				break;
 
 			case 'video':
-				do_action('dashboard_widgets/render_video', $value);
+				do_action('pxlbsadminify_dashboard_widgets/render_video', $value);
 				break;
 
 			case 'shortcode':
-				do_action('dashboard_widgets/render_shortcode', $value);
+				do_action('pxlbsadminify_dashboard_widgets/render_shortcode', $value);
 				break;
 
 			case 'rss_feed':
-				do_action('dashboard_widgets/render_rss_feed', $value);
+				do_action('pxlbsadminify_dashboard_widgets/render_rss_feed', $value);
 				break;
 
 			case 'script':
-				do_action('dashboard_widgets/render_script', $value);
+				do_action('pxlbsadminify_dashboard_widgets/render_script', $value);
 				break;
 		}
 	}
@@ -370,11 +371,13 @@ class DashboardWidget extends DashboardWidgetModel {
 	/**
 	 * Scripst / Styles
 	 */
-	public function jltwp_adminify_enqueue_scripts() {
+	public function enqueue_scripts() {
 		global $pagenow;
 
 		// Load Scripts/Styles only WP Adminify Dashboard Widget
-		if ( ( 'admin.php' === $pagenow ) && ( 'adminify-dashboard-widgets' === $_GET['page'] ) ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
+		$current_page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+		if ( ( 'admin.php' === $pagenow ) && ( 'adminify-dashboard-widgets' === $current_page ) ) {
 			$this->dashboard_widgets_admin_script();
 		}
 	}

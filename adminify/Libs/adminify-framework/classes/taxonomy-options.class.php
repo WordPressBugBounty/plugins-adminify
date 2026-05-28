@@ -34,7 +34,7 @@ if ( ! class_exists( 'ADMINIFY_Taxonomy_Options' ) ) {
       $this->args       = apply_filters( "adminify_{$this->unique}_args", wp_parse_args( $params['args'], $this->args ), $this );
       $this->sections   = apply_filters( "adminify_{$this->unique}_sections", $params['sections'], $this );
       $this->taxonomies = ( is_array( $this->args['taxonomy'] ) ) ? $this->args['taxonomy'] : array_filter( (array) $this->args['taxonomy'] );
-      $this->taxonomy   = ( ! empty( $_REQUEST[ 'taxonomy' ] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST[ 'taxonomy' ] ) ) : '';
+      $this->taxonomy   = ( ! empty( $_REQUEST[ 'taxonomy' ] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST[ 'taxonomy' ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
       $this->pre_fields = $this->pre_fields( $this->sections );
 
       if ( ! empty( $this->taxonomies ) && in_array( $this->taxonomy, $this->taxonomies ) ) {
@@ -124,8 +124,8 @@ if ( ! class_exists( 'ADMINIFY_Taxonomy_Options' ) ) {
           $section_icon  = ( ! empty( $section['icon'] ) ) ? '<i class="adminify-section-icon '. esc_attr( $section['icon'] ) .'"></i>' : '';
           $section_title = ( ! empty( $section['title'] ) ) ? $section['title'] : '';
 
-          echo ( $section_title || $section_icon ) ? '<div class="adminify-section-title"><h3>'. $section_icon . $section_title .'</h3></div>' : '';
-          echo ( ! empty( $section['description'] ) ) ? '<div class="adminify-field adminify-section-description">'. $section['description'] .'</div>' : '';
+          echo ( $section_title || $section_icon ) ? '<div class="adminify-section-title"><h3>'. wp_kses_post( $section_icon ) . esc_html( $section_title ) .'</h3></div>' : '';
+          echo ( ! empty( $section['description'] ) ) ? '<div class="adminify-field adminify-section-description">'. wp_kses_post( $section['description'] ) .'</div>' : '';
 
           if ( ! empty( $section['fields'] ) ) {
             foreach ( $section['fields'] as $field ) {
@@ -164,9 +164,14 @@ if ( ! class_exists( 'ADMINIFY_Taxonomy_Options' ) ) {
         return $term_id;
       }
 
+      // Authorization: a valid nonce proves intent, not permission.
+      if ( ! current_user_can( 'edit_term', $term_id ) ) {
+        return $term_id;
+      }
+
       // XSS ok.
       // No worries, This "POST" requests is sanitizing in the below foreach.
-      $request = ( ! empty( $_POST[ $this->unique ] ) ) ? $_POST[ $this->unique ] : array();
+      $request = ( ! empty( $_POST[ $this->unique ] ) ) ? wp_unslash( $_POST[ $this->unique ] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- each field is sanitized individually by the framework's per-field sanitize handlers.
 
       if ( ! empty( $request ) ) {
 
@@ -196,7 +201,12 @@ if ( ! class_exists( 'ADMINIFY_Taxonomy_Options' ) ) {
 
                 } else {
 
-                  $data[$field_id] = $field_value;
+                  // A sanitize callback was declared but is not callable; never store raw input.
+                  if ( is_array( $field_value ) ) {
+                    $data[$field_id] = wp_kses_post_deep( $field_value );
+                  } else {
+                    $data[$field_id] = wp_kses_post( $field_value );
+                  }
 
                 }
 

@@ -1,7 +1,7 @@
 <?php
-namespace WPAdminify\Inc\Classes\Notifications;
+namespace PXLBSAdminify\Inc\Classes\Notifications;
 
-use WPAdminify\Inc\Classes\Notifications\Base\Data;
+use PXLBSAdminify\Inc\Classes\Notifications\Base\Data;
 
 // No, Direct access Sir !!!
 if ( ! defined( 'ABSPATH' ) ) {

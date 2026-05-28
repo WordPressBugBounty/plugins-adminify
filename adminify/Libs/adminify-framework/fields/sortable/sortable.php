@@ -16,7 +16,7 @@ if ( ! class_exists( 'ADMINIFY_Field_sortable' ) ) {
 
     public function render() {
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       echo '<div class="adminify-sortable" data-depend-id="'. esc_attr( $this->field['id'] ) .'">';
 
@@ -71,7 +71,7 @@ if ( ! class_exists( 'ADMINIFY_Field_sortable' ) ) {
 
       echo '</div>';
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

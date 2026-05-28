@@ -26,7 +26,7 @@ if ( ! class_exists( 'ADMINIFY_Field_image_select' ) ) {
 
       $value = ( is_array( $this->value ) ) ? $this->value : array_filter( (array) $this->value );
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       if ( ! empty( $args['options'] ) ) {
 
@@ -44,7 +44,7 @@ if ( ! class_exists( 'ADMINIFY_Field_image_select' ) ) {
           echo '<div class="adminify--sibling adminify--image'. esc_attr( $active ) .'">';
             echo '<figure>';
               echo '<img src="'. esc_url( $option ) .'" alt="img-'. esc_attr( $num++ ) .'" />';
-              echo '<input type="'. esc_attr( $type ) .'" name="'. esc_attr( $this->field_name( $extra ) ) .'" value="'. esc_attr( $key ) .'"'. $this->field_attributes() . esc_attr( $checked ) .'/>';
+              echo '<input type="'. esc_attr( $type ) .'" name="'. esc_attr( $this->field_name( $extra ) ) .'" value="'. esc_attr( $key ) .'"'. $this->field_attributes() . esc_attr( $checked ) .'/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
             echo '</figure>';
           echo '</div>';
 
@@ -54,7 +54,7 @@ if ( ! class_exists( 'ADMINIFY_Field_image_select' ) ) {
 
       }
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

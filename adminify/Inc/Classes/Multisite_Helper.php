@@ -1,6 +1,6 @@
 <?php
 
-namespace WPAdminify\Inc\Classes;
+namespace PXLBSAdminify\Inc\Classes;
 
 // no direct access allowed
 if ( ! defined( 'ABSPATH' ) ) {
@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * @package WPAdminify
+ * @package PXLBSAdminify
  * Multisite Helper
  *
  * @author Jewel Theme <support@jeweltheme.com>
@@ -30,7 +30,7 @@ class Multisite_Helper {
 	 * @return void
 	 */
 	public function is_multisite_supported() {
-		return ( $this->is_network_active() && apply_filters( 'wp_adminify_ms_support', false ) ? true : false );
+		return ( $this->is_network_active() && apply_filters( 'pxlbsadminify_ms_support', false ) ? true : false );
 	}
 
 	/**
@@ -43,9 +43,9 @@ class Multisite_Helper {
 			return false;
 		}
 
-		global $blueprint;
+		global $pxlbsadminify_blueprint;
 
-		if ( empty( $blueprint ) || get_current_blog_id() === $blueprint ) {
+		if ( empty( $pxlbsadminify_blueprint ) || get_current_blog_id() === $pxlbsadminify_blueprint ) {
 			return false;
 		}
 
@@ -58,17 +58,17 @@ class Multisite_Helper {
 	 * @return array The array of excluded sites.
 	 */
 	public function get_excluded_sites() {
-		global $blueprint;
+		global $pxlbsadminify_blueprint;
 
 		$array = [];
 
 		// Include blueprint site if it is defined.
-		if ( ! empty( $blueprint ) ) {
-			$array[] = $blueprint;
+		if ( ! empty( $pxlbsadminify_blueprint ) ) {
+			$array[] = $pxlbsadminify_blueprint;
 		}
 
-		if ( get_site_option( 'wp_adminify_multisite_exclude' ) ) {
-			$excluded_sites = get_site_option( 'wp_adminify_multisite_exclude' );
+		if ( get_site_option( 'pxlbsadminify_multisite_exclude' ) ) {
+			$excluded_sites = get_site_option( 'pxlbsadminify_multisite_exclude' );
 			$excluded_sites = str_replace( ' ', '', $excluded_sites );
 			$excluded_sites = explode( ',', $excluded_sites );
 		} else {

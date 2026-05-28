@@ -34,21 +34,21 @@ if ( ! class_exists( 'ADMINIFY_Field_link' ) ) {
 
       $maybe_hidden = ( empty( $hidden ) ) ? ' hidden' : '';
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       echo '<textarea readonly="readonly" class="adminify--link hidden"></textarea>';
 
-      echo '<div class="'. esc_attr( $maybe_hidden ) .'"><div class="adminify--result">'. sprintf( '{url:"%s", text:"%s", target:"%s"}', $value['url'], $value['text'], $value['target'] ) .'</div></div>';
+      echo '<div class="'. esc_attr( $maybe_hidden ) .'"><div class="adminify--result">'. esc_html( sprintf( '{url:"%s", text:"%s", target:"%s"}', $value['url'], $value['text'], $value['target'] ) ) .'</div></div>';
 
-      echo '<input type="hidden" name="'. esc_attr( $this->field_name( '[url]' ) ) .'" value="'. esc_attr( $value['url'] ) .'"'. $this->field_attributes( array( 'class' => 'adminify--url' ) ) .' />';
+      echo '<input type="hidden" name="'. esc_attr( $this->field_name( '[url]' ) ) .'" value="'. esc_attr( $value['url'] ) .'"'. $this->field_attributes( array( 'class' => 'adminify--url' ) ) .' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field_attributes() escapes each attribute via esc_attr()
       echo '<input type="hidden" name="'. esc_attr( $this->field_name( '[text]' ) ) .'" value="'. esc_attr( $value['text'] ) .'" class="adminify--text" />';
       echo '<input type="hidden" name="'. esc_attr( $this->field_name( '[target]' ) ) .'" value="'. esc_attr( $value['target'] ) .'" class="adminify--target" />';
 
-      echo '<a href="#" class="button button-primary adminify--add'. esc_attr( $hidden ) .'">'. $args['add_title'] .'</a> ';
-      echo '<a href="#" class="button adminify--edit'. esc_attr( $maybe_hidden ) .'">'. $args['edit_title'] .'</a> ';
-      echo '<a href="#" class="button adminify-warning-primary adminify--remove'. esc_attr( $maybe_hidden ) .'">'. $args['remove_title'] .'</a>';
+      echo '<a href="#" class="button button-primary adminify--add'. esc_attr( $hidden ) .'">'. esc_html( $args['add_title'] ) .'</a> ';
+      echo '<a href="#" class="button adminify--edit'. esc_attr( $maybe_hidden ) .'">'. esc_html( $args['edit_title'] ) .'</a> ';
+      echo '<a href="#" class="button adminify-warning-primary adminify--remove'. esc_attr( $maybe_hidden ) .'">'. esc_html( $args['remove_title'] ) .'</a>';
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 

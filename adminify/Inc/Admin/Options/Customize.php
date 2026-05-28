@@ -1,9 +1,9 @@
 <?php
 
-namespace WPAdminify\Inc\Admin\Options;
+namespace PXLBSAdminify\Inc\Admin\Options;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Admin\AdminSettingsModel;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Admin\AdminSettingsModel;
 
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -78,7 +78,7 @@ if ( ! class_exists( 'Customize' ) ) {
 					'admin_ui_mode'                => 'light',
 					'admin_ui_logo_type'           => 'image_logo',
 					'admin_ui_light_mode'          => [
-						'admin_ui_light_logo_text'      => __('WP Adminify', 'adminify'),
+						'admin_ui_light_logo_text'      => __('Adminify', 'adminify'),
 						'admin_ui_light_logo_text_typo' => '',
 						'admin_ui_light_logo'           => [
 							'url'  => ''
@@ -91,7 +91,7 @@ if ( ! class_exists( 'Customize' ) ) {
 						]
 					],
 					'admin_ui_dark_mode'           => [
-						'admin_ui_dark_logo_text'      => __('WP Adminify', 'adminify'),
+						'admin_ui_dark_logo_text'      => __('Adminify', 'adminify'),
 						'admin_ui_dark_logo_text_typo' => '',
 						'admin_ui_dark_logo'           => '',
 						'mini_admin_ui_dark_logo'      => '',
@@ -129,12 +129,12 @@ if ( ! class_exists( 'Customize' ) ) {
 			$fields[] = [
 				'id'      => 'layout_mode_setting_subheading',
 				'type'    => 'subheading',
-				'content' => Utils::adminfiy_help_urls(
+				'content' => Utils::help_urls(
 					'<span></span>',
 					'https://wpadminify.com/docs/adminify/customize/adminify-ui-templates',
 					'https://www.youtube.com/watch?v=jeWdKbEHYVU',
 					'https://www.facebook.com/groups/jeweltheme',
-					\WPAdminify\Inc\Admin\AdminSettings::support_url()
+					\PXLBSAdminify\Inc\Admin\AdminSettings::support_url()
 				),
 			];
 
@@ -155,16 +155,16 @@ if ( ! class_exists( 'Customize' ) ) {
 				'type'    => 'image_select',
 				'title'    => __('Adminify UI Templates', 'adminify'),
 				'options' => [
-					'preset1' => WP_ADMINIFY_ASSETS_IMAGE . 'presets/preset-1.png',
-					'preset2' => WP_ADMINIFY_ASSETS_IMAGE . 'presets/preset-2.png',
-					'preset3' => WP_ADMINIFY_ASSETS_IMAGE . 'presets/preset-3.png',
-					'preset4' => WP_ADMINIFY_ASSETS_IMAGE . 'presets/preset-4.png',
-					'preset5' => WP_ADMINIFY_ASSETS_IMAGE . 'presets/preset-5.png',
-					'preset6' => WP_ADMINIFY_ASSETS_IMAGE . 'presets/preset-6.png',
-					'preset7' => WP_ADMINIFY_ASSETS_IMAGE . 'presets/preset-7.png',
-					'preset8' => WP_ADMINIFY_ASSETS_IMAGE . 'presets/preset-8.png',
-					'preset9' => WP_ADMINIFY_ASSETS_IMAGE . 'presets/preset-9.png',
-					'custom'  => WP_ADMINIFY_ASSETS_IMAGE . 'presets/preset-10.png',
+					'preset1' => PXLBSADMINIFY_ASSETS_IMAGE . 'presets/preset-1.png',
+					'preset2' => PXLBSADMINIFY_ASSETS_IMAGE . 'presets/preset-2.png',
+					'preset3' => PXLBSADMINIFY_ASSETS_IMAGE . 'presets/preset-3.png',
+					'preset4' => PXLBSADMINIFY_ASSETS_IMAGE . 'presets/preset-4.png',
+					'preset5' => PXLBSADMINIFY_ASSETS_IMAGE . 'presets/preset-5.png',
+					'preset6' => PXLBSADMINIFY_ASSETS_IMAGE . 'presets/preset-6.png',
+					'preset7' => PXLBSADMINIFY_ASSETS_IMAGE . 'presets/preset-7.png',
+					'preset8' => PXLBSADMINIFY_ASSETS_IMAGE . 'presets/preset-8.png',
+					'preset9' => PXLBSADMINIFY_ASSETS_IMAGE . 'presets/preset-9.png',
+					'custom'  => PXLBSADMINIFY_ASSETS_IMAGE . 'presets/preset-10.png',
 				],
 				'default' => $this->get_default_field('adminify_theme'),
 				'dependency' => ['admin_ui', '==', 'true'],
@@ -175,13 +175,14 @@ if ( ! class_exists( 'Customize' ) ) {
 				// 'title'      => __(' ', 'adminify'),
 				// 'type'       => 'notice',
 				// 'style'      => 'warning',
-				// 'content'    => Utils::adminify_upgrade_pro(),
+				// 'content'    => Utils::upgrade_pro_notice(),
 				// 'dependency' => [ 'adminify_theme|adminify_theme', '!=|!=', 'preset1|preset2', 'any'],
 
 				'id'         => 'adminify_theme_custom_colors',
 				'type'       => 'color_group',
 				'class'		 => 'adminify-pro-fieldset',
-				'title'      => sprintf(__('Custom Color Preset %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: pro upgrade badge HTML */
+				'title'      => sprintf(__('Custom Color Preset %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'subtitle'   => __('Custom Template Color Presets', 'adminify'),
 				'options'    => [
 					'--adminify-preset-background'    => __('Body BG', 'adminify'),
@@ -204,7 +205,7 @@ if ( ! class_exists( 'Customize' ) ) {
 				'title'   => __('Glass Effect', 'adminify'),
 				'type'    => 'notice',
 				'style'   => 'warning',
-				'content' => Utils::adminify_upgrade_pro(),
+				'content' => Utils::upgrade_pro_notice(),
 			];
 		}
 
@@ -254,7 +255,8 @@ if ( ! class_exists( 'Customize' ) ) {
 				'id'         => 'body_fields',
 				'type'       => 'fieldset',
 				'class'      => 'adminify-nopadding',
-				'title'      => sprintf(__('Custom Background %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: pro upgrade badge HTML */
+				'title'      => sprintf(__('Custom Background %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'subtitle'   => __('Choose to Enable Custom Background for your Dashboard.', 'adminify'),
 				'fields'     => $background_settings,
 				'dependency' => ['admin_ui', '==', 'true', 'true'],
@@ -264,7 +266,8 @@ if ( ! class_exists( 'Customize' ) ) {
 				'id'             => 'admin_general_google_font',
 				'type'           => 'typography',
 				'class'		     => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
-				'title'    	     => sprintf(__('Body Font %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: pro upgrade badge HTML */
+				'title'    	     => sprintf(__('Body Font %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'line_height'    => false,
 				'text_align'     => false,
 				'text_transform' => false,
@@ -280,7 +283,8 @@ if ( ! class_exists( 'Customize' ) ) {
 				'id'           => 'admin_favicon_logo',
 				'type'         => 'media',
 				'class'		   => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
-				'title'        => sprintf(__('Admin Favicon %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: pro upgrade badge HTML */
+				'title'        => sprintf(__('Admin Favicon %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'subtitle'     => __('Admin Area Favicon Icon', 'adminify'),
 				'library'      => 'image',
 				'preview_size' => 'thumbnail',
@@ -293,7 +297,8 @@ if ( ! class_exists( 'Customize' ) ) {
 			$fields[] = [
 				'id'           => 'gutenberg_editor_logo',
 				'type'         => 'media',
-				'title'        => sprintf(__('Gutenberg Editor Logo %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: pro upgrade badge HTML */
+				'title'        => sprintf(__('Gutenberg Editor Logo %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'		   => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
 				'subtitle'     => __('Replace Gutenberg Post/Page WordPress Logo', 'adminify'),
 				'library'      => 'image',
@@ -312,7 +317,7 @@ if ( ! class_exists( 'Customize' ) ) {
 			$fields[] = [
 				'id'         => 'adminify_custom_bg',
 				'type'       => 'switcher',
-				'title'      => __('', 'adminify'),
+				'title'      => '',
 				'class'      => '!adminify-flex adminify-pt-0 adminify-pl-0 adminify-pro-feature',
 				'subtitle'   => __('Choose to Enable Custom Background for your Dashboard.', 'adminify'),
 				'text_on'    => __('Show', 'adminify'),
@@ -325,7 +330,7 @@ if ( ! class_exists( 'Customize' ) ) {
 			$fields[] = [
 				'id'      => 'admin_general_bg',
 				'type'    => 'button_set',
-				'class'   => Utils::upgrade_pro_class(),
+				'class'   => Utils::upgrade_pro_notice_class(),
 				'title'   => 'Background Type',
 				'options' => [
 					// 'color'     => __('Color', 'adminify'),
@@ -350,7 +355,7 @@ if ( ! class_exists( 'Customize' ) ) {
 			$fields[] = [
 				'id'                    => 'admin_general_bg_gradient',
 				'type'                  => 'background',
-				'class'                 => Utils::upgrade_pro_class(),
+				'class'                 => Utils::upgrade_pro_notice_class(),
 				'title'                 => __('Gradient Color', 'adminify'),
 				'background_color'      => true,
 				'background_image'      => false,
@@ -370,7 +375,7 @@ if ( ! class_exists( 'Customize' ) ) {
 			$fields[] = [
 				'id'                    => 'admin_general_bg_image',
 				'type'                  => 'background',
-				'class'                 => Utils::upgrade_pro_class() . ' adminify-pro-pointer',
+				'class'                 => Utils::upgrade_pro_notice_class() . ' adminify-pro-pointer',
 				'title'                 => __('Background Image', 'adminify'),
 				'background_color'      => false,
 				'background_image'      => true,
@@ -454,7 +459,7 @@ if ( ! class_exists( 'Customize' ) ) {
 
 			$dark_light_data[] = [
 				'id'     => 'admin_ui_light_mode',
-				'title'  => __(' ', 'adminify'),
+				'title'  => ' ',
 				'class'  => 'adminify-one-col adminify-pl-0',
 				'type'   => 'fieldset',
 				'fields' => [
@@ -521,7 +526,7 @@ if ( ! class_exists( 'Customize' ) ) {
 			$dark_light_data[] = [
 				'id'     => 'admin_ui_dark_mode',
 				'type'   => 'fieldset',
-				'title'  => __(' ', 'adminify'),
+				'title'  => ' ',
 				'class'  => 'adminify-one-col adminify-pl-0',
 				'fields' => [
 					[
@@ -582,7 +587,8 @@ if ( ! class_exists( 'Customize' ) ) {
 
 					[
 						'id'     => 'schedule_dark_mode',
-						'title'  => sprintf(__('Schedule Dark Mode %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+						/* translators: %s: pro upgrade badge HTML */
+						'title'  => sprintf(__('Schedule Dark Mode %s', 'adminify'), Utils::upgrade_pro_badge()),
 						'type'   => 'fieldset',
 						'class'  => 'adminify-mt-10',
 						'fields' => [
@@ -599,7 +605,7 @@ if ( ! class_exists( 'Customize' ) ) {
 								'id'         => 'schedule_dark_mode_type',
 								'title'      => __('Schedule Type', 'adminify'),
 								'type'       => 'button_set',
-								'class'		=> Utils::upgrade_pro_class(),
+								'class'		=> Utils::upgrade_pro_notice_class(),
 								'options'    => [
 									'system' => __('System', 'adminify'),
 									'custom' => __('Custom', 'adminify'),
@@ -610,7 +616,7 @@ if ( ! class_exists( 'Customize' ) ) {
 							[
 								'id'         => 'schedule_dark_mode_start_time',
 								'type'       => 'datetime',
-								'class'		=> Utils::upgrade_pro_class() . ' adminify-pro-pointer',
+								'class'		=> Utils::upgrade_pro_notice_class() . ' adminify-pro-pointer',
 								'title'      => __('Start Time', 'adminify'),
 								'settings'   => [
 									'noCalendar' => true,
@@ -629,7 +635,7 @@ if ( ! class_exists( 'Customize' ) ) {
 							[
 								'id'         => 'schedule_dark_mode_end_time',
 								'type'       => 'datetime',
-								'class'		=> Utils::upgrade_pro_class() . ' adminify-pro-pointer',
+								'class'		=> Utils::upgrade_pro_notice_class() . ' adminify-pro-pointer',
 								'title'      => __('End Time', 'adminify'),
 								'settings'   => [
 									'noCalendar' => true,
@@ -676,7 +682,8 @@ if ( ! class_exists( 'Customize' ) ) {
 				'id'       => 'post_status_bg_colors',
 				'type'     => 'color_group',
 				'class'		=> 'adminify-pro-fieldset',
-				'title'    => sprintf(__('Post Status Background Colors %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: pro upgrade badge HTML */
+				'title'    => sprintf(__('Post Status Background Colors %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'subtitle' => __('Background Color by Post Status type', 'adminify'),
 				'options'  => [
 					'publish' => __('Publish BG Color', 'adminify'),
@@ -716,9 +723,9 @@ if ( ! class_exists( 'Customize' ) ) {
 			$this->admin_bar_settings($fields);
 			// $this->gutenberg_editor_customization($fields);
 
-			$fields = apply_filters('adminify_settings/customize', $fields, $this);
+			$fields = apply_filters('pxlbsadminify_settings/customize', $fields, $this);
 			$this->post_status_bg_colors($fields);
-			$fields = apply_filters('adminify_settings/post_status', $fields, $this);
+			$fields = apply_filters('pxlbsadminify_settings/post_status', $fields, $this);
 
 			// Admin UI Section
 			\ADMINIFY::createSection(

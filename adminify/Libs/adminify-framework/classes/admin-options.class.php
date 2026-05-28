@@ -204,18 +204,19 @@ if ( ! class_exists( 'ADMINIFY_Options' ) ) {
     // set options
     public function set_options( $ajax = false ) {
 
-      // XSS ok.
-      // No worries, This "POST" requests is sanitizing in the below foreach. see #L337 - #L341
-      $response  = ( $ajax && ! empty( $_POST['data'] ) ) ? json_decode( wp_unslash( trim( $_POST['data'] ) ), true ) : $_POST;
+      // The payload is only read here; the nonce + capability are verified below (see the wp_verify_nonce
+      // guard) before any value is used, and every field is sanitized individually inside that block.
+      // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce/capability verified below; each field sanitized per-field afterwards.
+      $response  = ( $ajax && ! empty( $_POST['data'] ) ) ? json_decode( trim( wp_unslash( $_POST['data'] ) ), true ) : $_POST;
 
       // Set variables.
       $data      = array();
       $noncekey  = 'adminify_options_nonce'. $this->unique;
-      $nonce     = ( ! empty( $response[$noncekey] ) ) ? $response[$noncekey] : '';
+      $nonce     = ( ! empty( $response[$noncekey] ) ) ? sanitize_text_field( wp_unslash( $response[$noncekey] ) ) : '';
       $options   = ( ! empty( $response[$this->unique] ) ) ? $response[$this->unique] : array();
       $transient = ( ! empty( $response['adminify_transient'] ) ) ? $response['adminify_transient'] : array();
 
-      if ( wp_verify_nonce( $nonce, 'adminify_options_nonce' ) ) {
+      if ( wp_verify_nonce( $nonce, 'adminify_options_nonce' ) && current_user_can( $this->args['menu_capability'] ) ) {
 
         $importing  = false;
         $section_id = ( ! empty( $transient['section'] ) ) ? $transient['section'] : '';
@@ -291,7 +292,12 @@ if ( ! class_exists( 'ADMINIFY_Options' ) ) {
 
               } else {
 
-                $data[$field_id] = $field_value;
+                // A sanitize callback was declared but is not callable; never store raw input.
+                if ( is_array( $field_value ) ) {
+                  $data[$field_id] = wp_kses_post_deep( $field_value );
+                } else {
+                  $data[$field_id] = wp_kses_post( $field_value );
+                }
 
               }
 
@@ -501,7 +507,7 @@ if ( ! class_exists( 'ADMINIFY_Options' ) ) {
         echo '<div class="adminify-header-inner">';
 
           echo '<div class="adminify-header-left">';
-          echo '<h1>'. $this->args['framework_title'] .'</h1>';
+          echo '<h1>'. wp_kses_post( $this->args['framework_title'] ) .'</h1>';
           echo '</div>';
 
           echo '<div class="adminify-header-right">';
@@ -509,7 +515,7 @@ if ( ! class_exists( 'ADMINIFY_Options' ) ) {
             $notice_class = ( ! empty( $this->notice ) ) ? 'adminify-form-show' : '';
             $notice_text  = ( ! empty( $this->notice ) ) ? $this->notice : '';
 
-            echo '<div class="adminify-form-result adminify-form-success '. esc_attr( $notice_class ) .'">'. $notice_text .'</div>';
+            echo '<div class="adminify-form-result adminify-form-success '. esc_attr( $notice_class ) .'">'. wp_kses_post( $notice_text ) .'</div>';
 
             echo ( $this->args['show_form_warning'] ) ? '<div class="adminify-form-result adminify-form-warning">'. esc_html__( 'You have unsaved changes, save your changes!', 'adminify' ) .'</div>' : '';
 
@@ -547,7 +553,7 @@ if ( ! class_exists( 'ADMINIFY_Options' ) ) {
 
                   echo '<li class="adminify-tab-item">';
 
-                    echo '<a href="#tab='. esc_attr( $tab_id ) .'" data-tab-id="'. esc_attr( $tab_id ) .'" class="adminify-arrow">'. $tab_icon . $tab['title'] . $tab_error .'</a>';
+                    echo '<a href="#tab='. esc_attr( $tab_id ) .'" data-tab-id="'. esc_attr( $tab_id ) .'" class="adminify-arrow">'. wp_kses_post( $tab_icon ) . esc_html( $tab['title'] ) . wp_kses_post( $tab_error ) .'</a>';
 
                     echo '<ul>';
 
@@ -557,7 +563,7 @@ if ( ! class_exists( 'ADMINIFY_Options' ) ) {
                       $sub_error = $this->error_check( $sub );
                       $sub_icon  = ( ! empty( $sub['icon'] ) ) ? '<i class="adminify-tab-icon '. esc_attr( $sub['icon'] ) .'"></i>' : '';
 
-                      echo '<li><a href="#tab='. esc_attr( $sub_id ) .'" data-tab-id="'. esc_attr( $sub_id ) .'">'. $sub_icon . $sub['title'] . $sub_error .'</a></li>';
+                      echo '<li><a href="#tab='. esc_attr( $sub_id ) .'" data-tab-id="'. esc_attr( $sub_id ) .'">'. wp_kses_post( $sub_icon ) . esc_html( $sub['title'] ) . wp_kses_post( $sub_error ) .'</a></li>';
 
                     }
 
@@ -567,7 +573,7 @@ if ( ! class_exists( 'ADMINIFY_Options' ) ) {
 
                 } else {
 
-                  echo '<li class="adminify-tab-item"><a href="#tab='. esc_attr( $tab_id ) .'" data-tab-id="'. esc_attr( $tab_id ) .'">'. $tab_icon . $tab['title'] . $tab_error .'</a></li>';
+                  echo '<li class="adminify-tab-item"><a href="#tab='. esc_attr( $tab_id ) .'" data-tab-id="'. esc_attr( $tab_id ) .'">'. wp_kses_post( $tab_icon ) . esc_html( $tab['title'] ) . wp_kses_post( $tab_error ) .'</a></li>';
 
                 }
 
@@ -596,7 +602,7 @@ if ( ! class_exists( 'ADMINIFY_Options' ) ) {
 
               echo '<div class="adminify-section hidden'. esc_attr( $section_onload . $section_class ) .'" data-section-id="'. esc_attr( $section_parent . $section_slug ) .'">';
 
-              echo ( ! empty( $section['description'] ) ) ? '<div class="adminify-field adminify-section-description">'. $section['description'] .'</div>' : '';
+              echo ( ! empty( $section['description'] ) ) ? '<div class="adminify-field adminify-section-description">'. wp_kses_post( $section['description'] ) .'</div>' : '';
 
               if ( ! empty( $section['fields'] ) ) {
 
@@ -648,7 +654,7 @@ if ( ! class_exists( 'ADMINIFY_Options' ) ) {
           echo ( $this->args['show_reset_all'] ) ? '<input type="submit" name="adminify_transient[reset]" class="button adminify-warning-primary adminify-reset-all adminify-confirm" value="'. ( ( $this->args['show_reset_section'] ) ? esc_html__( 'Reset All', 'adminify' ) : esc_html__( 'Reset', 'adminify' ) ) .'" data-confirm="'. esc_html__( 'Are you sure you want to reset all settings to default values?', 'adminify' ) .'">' : '';
           echo '</div>';
 
-          echo ( ! empty( $this->args['footer_text'] ) ) ? '<div class="adminify-copyright">'. $this->args['footer_text'] .'</div>' : '';
+          echo ( ! empty( $this->args['footer_text'] ) ) ? '<div class="adminify-copyright">'. wp_kses_post( $this->args['footer_text'] ) .'</div>' : '';
 
           echo '<div class="clear"></div>';
           echo '</div>';
@@ -661,7 +667,7 @@ if ( ! class_exists( 'ADMINIFY_Options' ) ) {
 
         echo '<div class="clear"></div>';
 
-        echo ( ! empty( $this->args['footer_after'] ) ) ? $this->args['footer_after'] : '';
+        echo ( ! empty( $this->args['footer_after'] ) ) ? wp_kses_post( $this->args['footer_after'] ) : '';
 
       echo '</div>';
 

@@ -113,8 +113,8 @@ if ( ! class_exists( 'ADMINIFY_Nav_Menu_Options' ) ) {
 
           echo '<div class="adminify-fields">';
 
-          echo ( $section_title || $section_icon ) ? '<div class="adminify-nav-menu-title"><h4>'. $section_icon . $section_title .'</h4></div>' : '';
-          echo ( ! empty( $section['description'] ) ) ? '<div class="adminify-field adminify-section-description">'. $section['description'] .'</div>' : '';
+          echo ( $section_title || $section_icon ) ? '<div class="adminify-nav-menu-title"><h4>'. wp_kses_post( $section_icon ) . esc_html( $section_title ) .'</h4></div>' : '';
+          echo ( ! empty( $section['description'] ) ) ? '<div class="adminify-field adminify-section-description">'. wp_kses_post( $section['description'] ) .'</div>' : '';
 
           if ( ! empty( $section['fields'] ) ) {
 
@@ -154,9 +154,14 @@ if ( ! class_exists( 'ADMINIFY_Nav_Menu_Options' ) ) {
         return $menu_item_db_id;
       }
 
+      // Authorization: a valid nonce proves intent, not permission.
+      if ( ! current_user_can( 'edit_theme_options' ) ) {
+        return $menu_item_db_id;
+      }
+
       // XSS ok.
       // No worries, This "POST" requests is sanitizing in the below foreach.
-      $request = ( ! empty( $_POST[ $this->unique ][ $menu_item_db_id ] ) ) ? $_POST[ $this->unique ][ $menu_item_db_id ] : array();
+      $request = ( ! empty( $_POST[ $this->unique ][ $menu_item_db_id ] ) ) ? wp_unslash( $_POST[ $this->unique ][ $menu_item_db_id ] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- each field is sanitized individually by the framework's per-field sanitize handlers.
 
       if ( ! empty( $request ) ) {
 
@@ -186,7 +191,12 @@ if ( ! class_exists( 'ADMINIFY_Nav_Menu_Options' ) ) {
 
                 } else {
 
-                  $data[$field_id] = $field_value;
+                  // A sanitize callback was declared but is not callable; never store raw input.
+                  if ( is_array( $field_value ) ) {
+                    $data[$field_id] = wp_kses_post_deep( $field_value );
+                  } else {
+                    $data[$field_id] = wp_kses_post( $field_value );
+                  }
 
                 }
 

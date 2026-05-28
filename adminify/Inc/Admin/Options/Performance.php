@@ -1,9 +1,9 @@
 <?php
 
-namespace WPAdminify\Inc\Admin\Options;
+namespace PXLBSAdminify\Inc\Admin\Options;
 
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Admin\AdminSettingsModel;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Admin\AdminSettingsModel;
 
 
 if (!defined('ABSPATH')) {
@@ -75,7 +75,7 @@ if (!class_exists('Performance')) {
                     'id'         => 'disable_gutenberg_enable',
                     'type'       => 'switcher',
                     'class'      => 'adminify-pl-0 adminify-pt-0',
-                    'title'      => __('', 'adminify'),
+                    'title'      => '',
                     'text_on'    => __('Show', 'adminify'),
                     'text_off'   => __('Hide', 'adminify'),
                     'text_width' => 80,
@@ -84,7 +84,7 @@ if (!class_exists('Performance')) {
                 [
                     'id'         => 'disable_for',
                     'type'       => 'checkbox',
-                    'title'      => __('', 'adminify'),
+                    'title'      => '',
                     'class'      => 'adminify-one-col',
                     'options'    => $disable_gutenberg_for,
                     // 'default'    => $this->get_default_field('disable_gutenberg')['disable_for'],
@@ -124,7 +124,7 @@ if (!class_exists('Performance')) {
                     'id'         => 'performance_enable',
                     'type'       => 'switcher',
                     'class'      => 'adminify-pl-0 adminify-pt-0',
-                    'title'      => __('', 'adminify'),
+                    'title'      => '',
                     'text_on'    => __('Show', 'adminify'),
                     'text_off'   => __('Hide', 'adminify'),
                     'text_width' => 80
@@ -132,7 +132,7 @@ if (!class_exists('Performance')) {
                 [
                     'id'         => 'performance_data',
                     'type'       => 'checkbox',
-                    'title'      => __('', 'adminify'),
+                    'title'      => '',
                     'class'      => 'adminify-one-col',
                     'options'    => $performance_data,
                     'dependency' => ['performance_enable', '==', 'true', true],
@@ -164,12 +164,12 @@ if (!class_exists('Performance')) {
             $disable_embeds[] = [
 				'id'      => 'performance_subheading',
                 'type'    => 'subheading',
-                'content' => Utils::adminfiy_help_urls(
+                'content' => Utils::help_urls(
                     '<span></span>',
                     'https://wpadminify.com/docs/adminify/performance/disable-embeds',
                     'https://www.youtube.com/watch?v=xALg4WWZ_bE',
                     'https://www.facebook.com/groups/jeweltheme',
-                    \WPAdminify\Inc\Admin\AdminSettings::support_url()
+                    \PXLBSAdminify\Inc\Admin\AdminSettings::support_url()
                 ),
 			];
 
@@ -177,7 +177,8 @@ if (!class_exists('Performance')) {
                 'id'         => 'disable_embeds',
                 'type'       => 'switcher',
                 'class'      => 'adminify-pro-fieldset adminify-pro-notice',
-                'title'      => sprintf(__('Disable Embeds %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+                /* translators: %s: pro upgrade badge HTML */
+                'title'      => sprintf(__('Disable Embeds %s', 'adminify'), Utils::upgrade_pro_badge()),
                 'subtitle'   => __('Disable all Embeds from everywhere like - REST API, Head Tag, Tinymce Editor, Remote results etc.', 'adminify'),
                 'text_on'    => __('Yes', 'adminify'),
                 'text_off'   => __('No', 'adminify'),
@@ -191,7 +192,7 @@ if (!class_exists('Performance')) {
                 'id'         => 'enabled',
                 'type'       => 'switcher',
                 'class'      => 'adminify-pt-0 adminify-pl-0',
-                'title'      => __('', 'adminify'),
+                'title'      => '',
                 'text_on'    => __('Show', 'adminify'),
                 'text_off'   => __('Hide', 'adminify'),
                 'text_width' => 80,
@@ -201,7 +202,7 @@ if (!class_exists('Performance')) {
                 'id'       => 'backend',
                 'type'     => 'radio',
                 'inline'   => true,
-                'class'    => Utils::upgrade_pro_class(),
+                'class'    => Utils::upgrade_pro_notice_class(),
                 'title'    => __('WordPress Dashboard', 'adminify'),
                 'subtitle' => __('Backend Post Types', 'adminify'),
                 'options'    => [
@@ -233,7 +234,7 @@ if (!class_exists('Performance')) {
             $fields[] = [
                 'id'       => 'on_post_create',
                 'type'     => 'radio',
-                'class'      => Utils::upgrade_pro_class(),
+                'class'      => Utils::upgrade_pro_notice_class(),
                 'inline'   => true,
                 'title'    => __('Create Post Editor', 'adminify'),
                 'subtitle' => __('On post creation and edit screens', 'adminify'),
@@ -267,7 +268,7 @@ if (!class_exists('Performance')) {
             $fields[] = [
                 'id'       => 'on_frontend',
                 'type'     => 'radio',
-                'class'    => Utils::upgrade_pro_class(),
+                'class'    => Utils::upgrade_pro_notice_class(),
                 'inline'   => true,
                 'title'    => __('Frontend', 'adminify'),
                 'subtitle' => __('Frontend Heartbits', 'adminify'),
@@ -311,7 +312,8 @@ if (!class_exists('Performance')) {
                 'id'       => 'heartbeat_api',
                 'type'     => 'fieldset',
                 'class'    => 'adminify-nopadding',
-                'title'    => sprintf(__('Control Heartbeat API %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+                /* translators: %s: pro upgrade badge HTML */
+                'title'    => sprintf(__('Control Heartbeat API %s', 'adminify'), Utils::upgrade_pro_badge()),
                 'class'    => 'adminify-pro-fieldset',
                 'subtitle' => __('Modify the interval of the WordPress Heartbeat API or disable it on admin pages, post creation/edit screens, and the frontend to reduce CPU load on the server', 'adminify'),
                 'fields'   => $heartbeat_settings
@@ -329,7 +331,7 @@ if (!class_exists('Performance')) {
                 'id'         => 'revisions_enable',
                 'type'       => 'switcher',
                 'class'      => 'adminify-p-0 adminify-pro-feature',
-                'title'      => __('', 'adminify'),
+                'title'      => '',
                 'text_on'    => __('Show', 'adminify'),
                 'text_off'   => __('Hide', 'adminify'),
                 'text_width' => 80,
@@ -352,7 +354,7 @@ if (!class_exists('Performance')) {
                 'title'      => __('Apply for Post Types', 'adminify'),
                 'class'      => 'adminify-pro-feature adminify-pro-notice',
                 'subtitle'   => __('Disable all Embeds from everywhere like - REST API, Head Tag, Tinymce Editor, Remote results etc.', 'adminify'),
-                'options'    => 'WPAdminify\Inc\Admin\Options\Productivity::get_all_post_types',
+                'options'    => 'PXLBSAdminify\Inc\Admin\Options\Productivity::get_all_post_types',
                 'default'    => $this->get_default_field('revisions')['post_types'],
                 'dependency' => ['revisions_enable', '==', 'true', 'true'],
             ];
@@ -369,7 +371,8 @@ if (!class_exists('Performance')) {
             $fields[] = array(
                 'id'       => 'revisions',
                 'type'     => 'fieldset',
-                'title'    => sprintf(__('Control Revisions %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+                /* translators: %s: pro upgrade badge HTML */
+                'title'    => sprintf(__('Control Revisions %s', 'adminify'), Utils::upgrade_pro_badge()),
                 'subtitle' => __('Limit the number of revisions kept for post types supporting revisions to prevent database bloat.', 'adminify'),
                 'fields'   => $revisions_settings,
                 'default'  => $this->get_default_field('revisions'),
@@ -392,7 +395,7 @@ if (!class_exists('Performance')) {
             $this->gutenberg_settings($fields);
 
 
-            $fields = apply_filters('adminify_settings/performance', $fields, $this);
+            $fields = apply_filters('pxlbsadminify_settings/performance', $fields, $this);
 
             // Optimization Section
             \ADMINIFY::createSection(

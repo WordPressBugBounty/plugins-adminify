@@ -1,12 +1,12 @@
 <?php
 
-namespace WPAdminify\Inc\Admin\Options;
+namespace PXLBSAdminify\Inc\Admin\Options;
 
-use WPAdminify\Inc\Classes\Helper;
-use WPAdminify\Inc\Utils;
-use WPAdminify\Inc\Admin\Options\Productivity\Duplicate_Post;
-use WPAdminify\Inc\Admin\Options\Productivity\PostTypesOrder;
-use WPAdminify\Inc\Admin\AdminSettingsModel;
+use PXLBSAdminify\Inc\Classes\Helper;
+use PXLBSAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Admin\Options\Productivity\Duplicate_Post;
+use PXLBSAdminify\Inc\Admin\Options\Productivity\PostTypesOrder;
+use PXLBSAdminify\Inc\Admin\AdminSettingsModel;
 
 
 if (!defined('ABSPATH')) {
@@ -91,19 +91,20 @@ if (!class_exists('Productivity')) {
 			$fields[] = [
 				'id'      => 'productivity_sub_heading',
 				'type'    => 'subheading',
-				'content' => Utils::adminfiy_help_urls(
+				'content' => Utils::help_urls(
 					'<span></span>',
 					'https://wpadminify.com/docs/adminify/productivity/hide-admin-notices',
 					'https://www.youtube.com/watch?v=49Cd3dYzYHs',
 					'https://www.facebook.com/groups/jeweltheme',
-					\WPAdminify\Inc\Admin\AdminSettings::support_url()
+					\PXLBSAdminify\Inc\Admin\AdminSettings::support_url()
 				),
 			];
 
 			$fields[] = [
 				'id'         => 'hide_notices',
 				'type'       => 'switcher',
-				'title'      => sprintf(__('Hide "Admin Notices"? %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: PRO badge label */
+				'title'      => sprintf(__('Hide "Admin Notices"? %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'subtitle'   => __('Hide Admin Notices to make your Dashboard Clean. ', 'adminify'),
 				'class'      => 'adminify-pro-fieldset adminify-pro-notice',
 				'text_on'    => __('Yes', 'adminify'),
@@ -114,25 +115,33 @@ if (!class_exists('Productivity')) {
 			$fields[] = [
 				'id'         => 'hide_notices_non_admin',
 				'type'       => 'checkbox',
-				'label'      => sprintf(__('Also, Hide for Non-Admin Users? %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
+				/* translators: %s: PRO upgrade notice markup */
+				'label'      => sprintf(__('Also, Hide for Non-Admin Users? %s', 'adminify'), Utils::upgrade_pro_class()),
 				'title'		=> ' ',
 				'default'    => $this->get_default_field('hide_notices_non_admin'),
 				'dependency' => ['hide_notices', '==', 'true', 'true'],
 			];
 
 			$other_notices_data = [
-				'welcome_panel'        => sprintf(__('Remove Welcome Panel %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
-				'php_nag'              => sprintf(__('Remove "PHP Update Required" Notice %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
-				'core_update_notice'   => sprintf(__('Hide Core Update Notice %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
-				'plugin_update_notice' => sprintf(__('Hide Plugin Update Notice %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
-				'theme_update_notice'  => sprintf(__('Hide Theme Update Notice %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
-				'site_health'          => sprintf(__('Disable Site Health checks %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
+				/* translators: %s: PRO upgrade notice markup */
+				'welcome_panel'        => sprintf(__('Remove Welcome Panel %s', 'adminify'), Utils::upgrade_pro_class()),
+				/* translators: %s: PRO upgrade notice markup */
+				'php_nag'              => sprintf(__('Remove "PHP Update Required" Notice %s', 'adminify'), Utils::upgrade_pro_class()),
+				/* translators: %s: PRO upgrade notice markup */
+				'core_update_notice'   => sprintf(__('Hide Core Update Notice %s', 'adminify'), Utils::upgrade_pro_class()),
+				/* translators: %s: PRO upgrade notice markup */
+				'plugin_update_notice' => sprintf(__('Hide Plugin Update Notice %s', 'adminify'), Utils::upgrade_pro_class()),
+				/* translators: %s: PRO upgrade notice markup */
+				'theme_update_notice'  => sprintf(__('Hide Theme Update Notice %s', 'adminify'), Utils::upgrade_pro_class()),
+				/* translators: %s: PRO upgrade notice markup */
+				'site_health'          => sprintf(__('Disable Site Health checks %s', 'adminify'), Utils::upgrade_pro_class()),
 			];
 
 			$fields[] = [
 				'id'         => 'other_notices',
 				'type'       => 'checkbox',
-				'title'      => sprintf(__('Other Notices %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: PRO badge label */
+				'title'      => sprintf(__('Other Notices %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'subtitle'   => __('Show/Remove Dashboard Welcome Panel, Hide WordPress Themes,Plugins,Core Update Notices', 'adminify'),
 				'options'    => $other_notices_data,
 				'default'    => $this->get_default_field('other_notices'),
@@ -147,20 +156,23 @@ if (!class_exists('Productivity')) {
 		public function screen_options(&$fields)
 		{
 			$screen_options_settings = [
-				'hide_screen_options' => sprintf(__('Hide Screen Options %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
-				'hide_help_tab'       => sprintf(__('Hide Help Tab %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
+				/* translators: %s: PRO upgrade notice markup */
+				'hide_screen_options' => sprintf(__('Hide Screen Options %s', 'adminify'), Utils::upgrade_pro_class()),
+				/* translators: %s: PRO upgrade notice markup */
+				'hide_help_tab'       => sprintf(__('Hide Help Tab %s', 'adminify'), Utils::upgrade_pro_class()),
 			];
 
 			$fields[] = [
 				'id'       => 'screen_help_tab',
-				'title'    => sprintf(__('Screen Options and Help Tab %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: PRO badge label */
+				'title'    => sprintf(__('Screen Options and Help Tab %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'subtitle' => __('Screen Options and Help Tab', 'adminify'),
 				'type'     => 'fieldset',
 				'fields'   => [
 					[
 						'id'         => 'enable_for_screen',
 						'type'       => 'switcher',
-						'title'      => __('', 'adminify'),
+						'title'      => '',
 						'class'      => 'adminify-pl-0 adminify-pt-0 adminify-pro-feature',
 						'text_on'    => __('Show', 'adminify'),
 						'text_off'   => __('Hide', 'adminify'),
@@ -171,7 +183,7 @@ if (!class_exists('Productivity')) {
 						'id'         => 'screen_help_data',
 						'type'       => 'checkbox',
 						'class'      => 'adminify-one-col',
-						'title'      => __('', 'adminify'),
+						'title'      => '',
 						'options'    => $screen_options_settings,
 						'default'    => $this->get_default_field('screen_help_tab')['screen_help_data'],
 						'dependency' => ['enable_for_screen', '==', 'true', 'true']
@@ -196,7 +208,7 @@ if (!class_exists('Productivity')) {
 					[
 						'id'         => 'enable_folders',
 						'type'       => 'switcher',
-						'title'      => __('', 'adminify'),
+						'title'      => '',
 						'class'      => 'adminify-pl-0',
 						'text_on'    => __('Show', 'adminify'),
 						'text_off'   => __('Hide', 'adminify'),
@@ -208,7 +220,7 @@ if (!class_exists('Productivity')) {
 						'type'       => 'checkbox',
 						'title'      => __('Enable for', 'adminify'),
 						'subtitle'   => __('Select Post Types for enabling Folders', 'adminify'),
-						'options'    => 'WPAdminify\Inc\Admin\Options\Productivity::get_all_post_types',
+						'options'    => 'PXLBSAdminify\Inc\Admin\Options\Productivity::get_all_post_types',
 						'default'    => $this->get_default_field('folders')['enable_for'],
 						'dependency' => ['enable_folders', '==', 'true', 'true']
 					],
@@ -230,7 +242,8 @@ if (!class_exists('Productivity')) {
 			$fields[] = [
 				'id'         => 'admin_pages',
 				'type'       => 'switcher',
-				'title'      => sprintf(__('Admin Pages %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: PRO badge label */
+				'title'      => sprintf(__('Admin Pages %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-notice adminify-pro-fieldset',
 				'text_on'    => __('Yes', 'adminify'),
 				'text_off'   => __('No', 'adminify'),
@@ -251,7 +264,7 @@ if (!class_exists('Productivity')) {
 
 			$post_types_order_fieldset[] = [
 				'id'         => 'enable_pto',
-				'title'      => __('', 'adminify'),
+				'title'      => '',
 				'class'      => 'adminify-pl-0',
 				'type'       => 'switcher',
 				'text_on'    => __('Show', 'adminify'),
@@ -265,7 +278,7 @@ if (!class_exists('Productivity')) {
 				'type'       => 'checkbox',
 				'title'      => __( 'Sortable Post Types', 'adminify' ),
 				'subtitle'   => __( 'Select Post Types for sorting', 'adminify' ),
-				'options'    => 'WPAdminify\Inc\Admin\Options\Productivity::get_all_post_types',
+				'options'    => 'PXLBSAdminify\Inc\Admin\Options\Productivity::get_all_post_types',
 				'default'    => $this->get_default_field('post_types_order')['pto_posts'],
 				'dependency' => ['enable_pto', '==', 'true', 'true'],
 			];
@@ -285,9 +298,10 @@ if (!class_exists('Productivity')) {
 			$post_types_order_fieldset[] = [
 				'id'         => 'pto_taxonomies',
 				'type'       => 'checkbox',
-				'title'      => sprintf(__('Sortable Taxonomies %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				/* translators: %s: PRO badge label */
+				'title'      => sprintf(__('Sortable Taxonomies %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'subtitle'   => __('Select for Sortable Taxonomies', 'adminify'),
-				'options'    => 'WPAdminify\Inc\Admin\Options\Productivity::get_all_taxonomies',
+				'options'    => 'PXLBSAdminify\Inc\Admin\Options\Productivity::get_all_taxonomies',
 				'query_args' => [
 					'orderby' => 'post_title',
 					'order'   => 'ASC',
@@ -337,10 +351,10 @@ if (!class_exists('Productivity')) {
 					$post_type_names[$post_type->name] = $post_type->label;
 				} else {
 					$is_pro = false;
-					if(class_exists('\\WPAdminify\\Pro\\Adminify_Pro')){
-						$is_pro = \WPAdminify\Pro\Adminify_Pro::is_premium();
+					if(class_exists('\\PXLBSAdminify\\Pro\\Adminify_Pro')){
+						$is_pro = \PXLBSAdminify\Pro\Adminify_Pro::is_premium();
 					}
-					$pro_notice = empty($is_pro) ? Utils::adminify_upgrade_pro_class() : '';
+					$pro_notice = empty($is_pro) ? Utils::upgrade_pro_class() : '';
 					$post_type_names[$post_type->name] = $post_type->label . $pro_notice;
 				}
 			}
@@ -361,10 +375,10 @@ if (!class_exists('Productivity')) {
 				}
 
 				$is_pro = false;
-				if (class_exists('\\WPAdminify\\Pro\\Adminify_Pro')) {
-					$is_pro = \WPAdminify\Pro\Adminify_Pro::is_premium();
+				if (class_exists('\\PXLBSAdminify\\Pro\\Adminify_Pro')) {
+					$is_pro = \PXLBSAdminify\Pro\Adminify_Pro::is_premium();
 				}
-				$pro_notice = empty($is_pro) ? Utils::adminify_upgrade_pro_class() : '';
+				$pro_notice = empty($is_pro) ? Utils::upgrade_pro_class() : '';
 				$taxonomy_names[ $taxonomy->name ] = $taxonomy->label . $pro_notice;
 
 			}
@@ -399,7 +413,7 @@ if (!class_exists('Productivity')) {
 					[
 						'id'         => 'enable_post_duplicator',
 						'type'       => 'switcher',
-						'title'      => __('', 'adminify'),
+						'title'      => '',
 						'class'      => 'adminify-pl-0',
 						'text_on'    => __('Show', 'adminify'),
 						'text_off'   => __('Hide', 'adminify'),
@@ -411,16 +425,17 @@ if (!class_exists('Productivity')) {
 						'type'       => 'checkbox',
 						'title'      => __('Enable for Post Types', 'adminify'),
 						'subtitle'   => __('Select Post Types for Enabling Duplicate feature', 'adminify'),
-						'options'    => 'WPAdminify\Inc\Admin\Options\Productivity::get_all_post_types',
+						'options'    => 'PXLBSAdminify\Inc\Admin\Options\Productivity::get_all_post_types',
 						'default'    => $this->get_default_field('post_duplicator')['post_types'],
 						'dependency'  => ['enable_post_duplicator', '==', 'true', 'true'],
 					],
 					[
 						'id'         => 'taxonomies',
 						'type'       => 'checkbox',
-						'title'      => sprintf(__('Enable for Taxonomies %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+						/* translators: %s: PRO badge label */
+						'title'      => sprintf(__('Enable for Taxonomies %s', 'adminify'), Utils::upgrade_pro_badge()),
 						'subtitle'   => __('Enable for Taxonomies', 'adminify'),
-						'options'    => 'WPAdminify\Inc\Admin\Options\Productivity::get_all_taxonomies',
+						'options'    => 'PXLBSAdminify\Inc\Admin\Options\Productivity::get_all_taxonomies',
 						'query_args' => [
 							'orderby' => 'post_title',
 							'order'   => 'ASC',
@@ -451,7 +466,7 @@ if (!class_exists('Productivity')) {
 						'id'         => 'enable',
 						'type'       => 'switcher',
 						'class'      => 'adminify-pl-0',
-						'title'      => __('', 'adminify'),
+						'title'      => '',
 						'text_on'    => __('Show', 'adminify'),
 						'text_off'   => __('Hide', 'adminify'),
 						'text_width' => 80,
@@ -461,12 +476,15 @@ if (!class_exists('Productivity')) {
 						'id'      => 'columns_data',
 						'type'    => 'checkbox',
 						'class'   => 'adminify-one-col',
-						'title'   => __('', 'adminify'),
+						'title'   => '',
 						'options' => [
-							'post_thumb_column'   => sprintf(__('Show Post Thumbnails Column? %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
-							'post_page_id_column' => sprintf(__('Show Post/Page ID Column. Display "ID" column for post and page table lists. %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
+							/* translators: %s: PRO upgrade notice markup */
+							'post_thumb_column'   => sprintf(__('Show Post Thumbnails Column? %s', 'adminify'), Utils::upgrade_pro_class()),
+							/* translators: %s: PRO upgrade notice markup */
+							'post_page_id_column' => sprintf(__('Show Post/Page ID Column. Display "ID" column for post and page table lists. %s', 'adminify'), Utils::upgrade_pro_class()),
 							'comment_id_column'   => __('Show "Comment ID" Column for Comment, Also show "Parent ID"', 'adminify'),
-							'last_login_column'   => sprintf(__('Show "Last Login" Column for Users %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
+							/* translators: %s: PRO upgrade notice markup */
+							'last_login_column'   => sprintf(__('Show "Last Login" Column for Users %s', 'adminify'), Utils::upgrade_pro_class()),
 							'taxonomy_id_column'  => __('Show "Taxonomy ID" Column for all possible types of taxonomies', 'adminify'),
 							'posts_slug_column'   => __('Show "URL Path" Column for Post Types', 'adminify'),
 						],
@@ -490,7 +508,7 @@ if (!class_exists('Productivity')) {
 						'type'       => 'checkbox',
 						'title'      => __('"URL Path" Column for Post Types', 'adminify'),
 						'subtitle'   => __('Select Post Types for Enabling "URL Path" Column Slug', 'adminify'),
-						'options'    => 'WPAdminify\Inc\Admin\Options\Productivity::get_all_post_types',
+						'options'    => 'PXLBSAdminify\Inc\Admin\Options\Productivity::get_all_post_types',
 						'default'    => $this->get_default_field('custom_admin_columns')['slug_column_post_types'],
 						'dependency' => array('columns_data', 'any', 'posts_slug_column', 'true'),
 					],
@@ -527,7 +545,7 @@ if (!class_exists('Productivity')) {
 					[
 						'id'         => 'disable_gutenberg_editor',
 						'type'       => 'switcher',
-						'label'      => sprintf(__('<h4>%s</h4>', 'adminify'), __('Disable Gutenberg Editor for Widgets', 'adminify')),
+						'label'      => sprintf('<h4>%s</h4>', __('Disable Gutenberg Editor for Widgets', 'adminify')),
 						'class'      => 'adminify-pl-0 adminify-col-fit',
 						'text_on'    => __('Yes', 'adminify'),
 						'text_off'   => __('No', 'adminify'),
@@ -539,8 +557,8 @@ if (!class_exists('Productivity')) {
 						'id'         => 'sidebar_widgets_list',
 						'type'       => 'checkbox',
 						'class'      => 'adminify-one-col',
-						'title'      => __('', 'adminify'),
-						'options'    => '\WPAdminify\Inc\Classes\Sidebar_Widgets::render_sidebar_checkboxes',
+						'title'      => '',
+						'options'    => '\PXLBSAdminify\Inc\Classes\Sidebar_Widgets::render_sidebar_checkboxes',
 						'default'    => $this->get_default_field('remove_widgets')['sidebar_widgets_list'],
 						'dependency' => ['remove_widgets_type|disable_gutenberg_editor', '==|==', 'sidebar|true', true],
 					],
@@ -548,8 +566,8 @@ if (!class_exists('Productivity')) {
 						'id'         => 'dashboard_widgets_list',
 						'type'       => 'checkbox',
 						'class'      => "adminify-one-col",
-						'title'      => __('', 'adminify'),
-						'options'    => '\WPAdminify\Inc\Classes\Remove_DashboardWidgets::render_dashboard_checkboxes',
+						'title'      => '',
+						'options'    => '\PXLBSAdminify\Inc\Classes\Remove_DashboardWidgets::render_dashboard_checkboxes',
 						'default'    => $this->get_default_field('remove_widgets')['dashboard_widgets_list'],
 						'dependency' => ['remove_widgets_type', '==', 'dashboard', true],
 					],
@@ -567,17 +585,21 @@ if (!class_exists('Productivity')) {
 		{
 
 			$allowed_upload_files_type = [
-				'svg'  => sprintf(__('SVG Files %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
-				'avif' => sprintf(__('AVIF Files %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
-				'ico'  => sprintf(__('ICO Files %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
-				'webp' => sprintf(__('WEBP Files %s', 'adminify'), Utils::adminify_upgrade_pro_class()),
+				/* translators: %s: PRO upgrade notice markup */
+				'svg'  => sprintf(__('SVG Files %s', 'adminify'), Utils::upgrade_pro_class()),
+				/* translators: %s: PRO upgrade notice markup */
+				'avif' => sprintf(__('AVIF Files %s', 'adminify'), Utils::upgrade_pro_class()),
+				/* translators: %s: PRO upgrade notice markup */
+				'ico'  => sprintf(__('ICO Files %s', 'adminify'), Utils::upgrade_pro_class()),
+				/* translators: %s: PRO upgrade notice markup */
+				'webp' => sprintf(__('WEBP Files %s', 'adminify'), Utils::upgrade_pro_class()),
 			];
 
 			$attachment_fields_data = [
 				[
 					'id'         => 'enable_media',
 					'type'       => 'switcher',
-					'title'      => __('', 'adminify'),
+					'title'      => '',
 					'class'      => 'adminify-pl-0',
 					'text_on'    => __('Show', 'adminify'),
 					'text_off'   => __('Hide', 'adminify'),
@@ -587,7 +609,8 @@ if (!class_exists('Productivity')) {
 				[
 					'id'         => 'media_ininite_scroll',
 					'type'       => 'switcher',
-					'title'      => sprintf(__('Infinite Scroll for Media Library? %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+					/* translators: %s: PRO badge label */
+					'title'      => sprintf(__('Infinite Scroll for Media Library? %s', 'adminify'), Utils::upgrade_pro_badge()),
 					'class'      => 'adminify-pl-0 adminify-pt-0 adminify-pro-fieldset adminify-pro-notice',
 					'text_on'    => __('Yes', 'adminify'),
 					'text_off'   => __('No', 'adminify'),
@@ -599,7 +622,8 @@ if (!class_exists('Productivity')) {
 				[
 					'id'         => 'media_replace',
 					'type'       => 'switcher',
-					'title'      => sprintf(__('Media Replace %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+					/* translators: %s: PRO badge label */
+					'title'      => sprintf(__('Media Replace %s', 'adminify'), Utils::upgrade_pro_badge()),
 					'class'      => 'adminify-pl-0 adminify-pt-0 adminify-pro-fieldset adminify-pro-notice',
 					'text_on'    => __('Yes', 'adminify'),
 					'text_off'   => __('No', 'adminify'),
@@ -611,7 +635,8 @@ if (!class_exists('Productivity')) {
 				[
 					'id'         => 'media_replace_backup_limit',
 					'type'       => 'number',
-					'title'      => sprintf(__('Backup Restore Limit %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+					/* translators: %s: PRO badge label */
+					'title'      => sprintf(__('Backup Restore Limit %s', 'adminify'), Utils::upgrade_pro_badge()),
 					'class'      => 'adminify-pl-0 adminify-pro-feature adminify-pro-notice',
 					'subtitle'   => __('Set how many backups to store per file. (Default: 1)', 'adminify'),
 					'min'        => 1,
@@ -637,7 +662,7 @@ if (!class_exists('Productivity')) {
 				// 	'id'         => 'allowed_upload_files',
 				// 	'type'       => 'checkbox',
 				// 	'class'      => 'adminify-pl-0',
-				// 	'title'      => sprintf(__('Allowed Files Uploads %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				// 	'title'      => sprintf(__('Allowed Files Uploads %s', 'adminify'), Utils::upgrade_pro_badge()),
 				// 	'subtitle'   => __('Allow SVG/JPEG/WEBP/ICO/AVIF Files Upload', 'adminify'),
 				// 	'options'    => $allowed_upload_files_type,
 				// 	'default'    => $this->get_default_field('media_attachments')['allowed_upload_files'],
@@ -651,7 +676,7 @@ if (!class_exists('Productivity')) {
 				// 	'text_off'   => __('No', 'adminify'),
 				// 	'text_width' => 80,
 				// 	'class'      => 'adminify-pl-0',
-				// 	'title'      => sprintf(__('Convert to WEBP %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				// 	'title'      => sprintf(__('Convert to WEBP %s', 'adminify'), Utils::upgrade_pro_badge()),
 				// 	'subtitle'   => __('Convert Uploaded image to WEBP', 'adminify'),
 				// 	'default'    => $this->get_default_field('media_attachments')['convert_to_webp'],
 				// 	'dependency' => ['enable_media', '==', 'true', true],
@@ -664,7 +689,7 @@ if (!class_exists('Productivity')) {
 				// 	'text_off'   => __('No', 'adminify'),
 				// 	'text_width' => 80,
 				// 	'class'      => 'adminify-pl-0',
-				// 	'title'      => sprintf(__('Link Featured Images to Post %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				// 	'title'      => sprintf(__('Link Featured Images to Post %s', 'adminify'), Utils::upgrade_pro_badge()),
 				// 	'subtitle'   => __('Wrap featured images in your theme in links to posts.', 'adminify'),
 				// 	'default'    => $this->get_default_field('media_attachments')['featured_to_post'],
 				// 	'dependency' => ['enable_media', '==', 'true', true],
@@ -672,7 +697,7 @@ if (!class_exists('Productivity')) {
 				// [
 				// 	'id'         => 'media_lowercase',
 				// 	'type'       => 'switcher',
-				// 	'title'      => sprintf(__('Lowercase Filenames for Uploads %s', 'adminify'), Utils::adminify_upgrade_pro_badge()),
+				// 	'title'      => sprintf(__('Lowercase Filenames for Uploads %s', 'adminify'), Utils::upgrade_pro_badge()),
 				// 	'subtitle'   => __('Make all the filenames of new uploads to lowercase', 'adminify'),
 				// 	'class'      => 'adminify-pl-0',
 				// 	'text_on'    => __('Yes', 'adminify'),
@@ -729,7 +754,7 @@ if (!class_exists('Productivity')) {
 
 			$this->gutenberg_settings($fields);
 
-			$fields = apply_filters('adminify_settings/productivity', $fields, $this);
+			$fields = apply_filters('pxlbsadminify_settings/productivity', $fields, $this);
 
             // Productivity Section
             \ADMINIFY::createSection(

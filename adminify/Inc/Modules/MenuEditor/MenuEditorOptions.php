@@ -1,8 +1,12 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\MenuEditor;
+namespace PXLBSAdminify\Inc\Modules\MenuEditor;
 
-use WPAdminify\Inc\Base_Model;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
+use PXLBSAdminify\Inc\Base_Model;
 
 class MenuEditorOptions extends MenuEditorModel {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace WPAdminify\Libs;
+namespace PXLBSAdminify\Libs;
 
 // No, Direct access Sir !!!
 if (!defined('ABSPATH')) {
@@ -25,8 +25,6 @@ if (!class_exists('Addons')) {
         public $sub_menu;
         public $menu_order;
 
-        public $server_url = 'https://coupon.wpadminify.com/';
-
 
         /**
          * Constructor method
@@ -48,51 +46,74 @@ if (!class_exists('Addons')) {
             } else {
                 add_action('admin_menu', array($this, 'admin_menu'), 1000);
             }
-            add_action('wp_ajax_jltwp_adminify_addons_upgrade_plugin', array($this, 'jltwp_adminify_addons_upgrade_plugin'));
-            add_action('wp_ajax_jltwp_adminify_addons_activate_plugin', array($this, 'jltwp_adminify_addons_activate_plugin'));
-            add_action('plugins_loaded', array($this, 'maybe_replace_addons_path'), 1000); // 1000 is important
-            add_action( 'rest_api_init', array( $this , 'jltwp_adminify_addons_rest_routes') );
+            add_action('wp_ajax_pxlbsadminify_addons_upgrade_plugin', array($this, 'pxlbsadminify_addons_upgrade_plugin'));
+            add_action('wp_ajax_pxlbsadminify_addons_activate_plugin', array($this, 'pxlbsadminify_addons_activate_plugin'));
+            // Notify the site admin when a renamed legacy addon is detected
+            // alongside its replacement. Per WordPress.org plugin guidelines,
+            // we must not deactivate or activate plugins automatically; the
+            // user has to perform the swap themselves from the Plugins screen.
+            add_action('admin_notices', array($this, 'maybe_renamed_addon_notice'));
+            add_action( 'rest_api_init', array( $this , 'addons_rest_routes') );
         }
 
-        public function jltwp_adminify_addons_rest_routes() {
+        public function addons_rest_routes() {
             register_rest_route('adminify/v1', '/get-addons-list', array(
                 'methods'             => 'GET',
-                'callback'            => [$this, 'jltwp_adminify_get_addons_plugins_list'],
-                'permission_callback' => [$this, 'adminify_is_admin_user'],
+                'callback'            => [$this, 'get_addons_plugins_list'],
+                'permission_callback' => [$this, 'check_is_admin_user'],
             ));
 
             register_rest_route('adminify/v1', '/install-addons', array(
                 'methods'             => 'POST',
-                'callback'            => [$this, 'jltwp_adminify_install_addons'],
-                'permission_callback' => [$this, 'adminify_verify_nonce_and_permissions'],
+                'callback'            => [$this, 'install_addons'],
+                'permission_callback' => [$this, 'check_verify_nonce_and_permissions'],
             ));
         }
 
-        public function adminify_is_admin_user() {
-            return current_user_can('manage_options');
+        public function check_is_admin_user() {
+            if ( is_multisite() && ! is_super_admin() ) {
+                return new \WP_Error('rest_forbidden', __('You are not allowed to access this resource.', 'adminify'), array('status' => 403));
+            }
+            if ( ! current_user_can('manage_options') ) {
+                return new \WP_Error('rest_forbidden', __('You are not allowed to access this resource.', 'adminify'), array('status' => 403));
+            }
+            return true;
         }
 
-        public function adminify_verify_nonce_and_permissions() {
-            // Check user
-            if ( ! current_user_can('manage_options') ) {
-                return new WP_Error('forbidden', 'You are not allowed to do this.', array('status' => 403));
+        public function check_verify_nonce_and_permissions() {
+            // The install-addons endpoint may both install AND activate
+            // addons depending on each addon's current status, so the
+            // caller must hold BOTH capabilities. On multisite this also
+            // requires super admin.
+            if ( is_multisite() && ! is_super_admin() ) {
+                return new \WP_Error('rest_forbidden', __('Super admin required.', 'adminify'), array('status' => 403));
+            }
+            if ( ! current_user_can('install_plugins') ) {
+                return new \WP_Error('rest_forbidden', __('You are not allowed to install plugins.', 'adminify'), array('status' => 403));
+            }
+            if ( ! current_user_can('activate_plugins') ) {
+                return new \WP_Error('rest_forbidden', __('You are not allowed to activate plugins.', 'adminify'), array('status' => 403));
             }
 
-            // Check nonce from header
-            $nonce = $_SERVER['HTTP_X_WP_NONCE'] ?? '';
-            if ( ! wp_verify_nonce($nonce, 'wp_rest') ) {
-                return new WP_Error('rest_cookie_invalid_nonce', __('Invalid nonce.'), array('status' => 403));
-            }
-            if ( is_multisite() && ! is_super_admin() ) {
-                return new WP_Error('not_allowed', 'Super admin only on multisite.', array('status' => 403));
+            // Nonce check from header. Sanitize and unslash before verifying.
+            $nonce = isset($_SERVER['HTTP_X_WP_NONCE'])
+                ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_WP_NONCE'] ) )
+                : '';
+            if ( ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+                return new \WP_Error('rest_cookie_invalid_nonce', __('Invalid nonce.', 'adminify'), array('status' => 403));
             }
 
             return true;
         }
 
 
-        public function jltwp_adminify_get_addons_plugins_list() {
-            $plugins = $this->plugins_list;
+        public function get_addons_plugins_list() {
+            // Fetch the catalogue on demand. This callback only runs on the
+            // Add-ons page (a user action), so the remote request is not made on
+            // routine admin page loads.
+            $plugins = ( method_exists( $this, 'get_adminify_plugins_lists' ) )
+                ? (array) $this->get_adminify_plugins_lists()
+                : (array) $this->plugins_list;
             unset($plugins['master-addons']);
             $all_plugins = get_plugins();
             $active_plugins = get_option('active_plugins');
@@ -116,99 +137,121 @@ if (!class_exists('Addons')) {
         }
 
 
-        public function jltwp_adminify_install_addons( $request ) {
-            $addons = $request->get_param('addons'); 
-            if ( empty($addons) || !is_array($addons) ) {
-                return new WP_Error('no_addons', 'No addons were selected.', array('status' => 400));
+        public function install_addons( $request ) {
+            $addons = $request->get_param('addons');
+            if ( empty($addons) || ! is_array($addons) ) {
+                return new \WP_Error('no_addons', __('No addons were selected.', 'adminify'), array('status' => 400));
             }
 
-            $plugins_list = $this->jltwp_adminify_get_addons_plugins_list()->data;
-            foreach( $addons as $key => $plugin ){
-                if($plugins_list[$plugin]['status'] == "activated") continue;
-                if($plugins_list[$plugin]['status'] == "installed") {
-                    $this->jltwp_adminify_activate_plugin_by_slug($plugin);
+            $plugins_list = $this->get_addons_plugins_list()->data;
+            foreach( $addons as $key => $plugin ) {
+                $plugin = sanitize_key( $plugin );
+                if ( ! isset( $plugins_list[ $plugin ] ) ) {
+                    continue;
+                }
+                if ( $plugins_list[ $plugin ]['status'] === 'activated' ) {
+                    continue;
+                }
+                if ( $plugins_list[ $plugin ]['status'] === 'installed' ) {
+                    $this->activate_plugin_by_slug( $plugin );
                     continue;
                 }
                 $params = [
                     'request_type' => 'rest',
-                    'plugin' => $plugins_list[$plugin]['download_link'],
+                    'plugin'       => $plugins_list[ $plugin ]['download_link'],
                 ];
 
-                $this->jltwp_adminify_addons_upgrade_plugin($params);
+                $this->pxlbsadminify_addons_upgrade_plugin( $params );
             }
-            
-            return rest_ensure_response(['message' => 'Addons installed', 'addons' => $addons]);
+
+            return rest_ensure_response(['message' => __('Addons processed.', 'adminify'), 'addons' => $addons]);
         }
 
-        function jltwp_adminify_activate_plugin_by_slug($slug) {
+        function activate_plugin_by_slug($slug) {
+            // Activation requires the activate_plugins capability in
+            // addition to whatever capability gated the calling endpoint.
+            // On multisite, activation must be performed by a super admin.
+            if ( is_multisite() && ! is_super_admin() ) {
+                return new \WP_Error( 'rest_forbidden', __( 'Super admin required to activate plugins.', 'adminify' ), array( 'status' => 403 ) );
+            }
+            if ( ! current_user_can( 'activate_plugins' ) ) {
+                return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to activate plugins.', 'adminify' ), array( 'status' => 403 ) );
+            }
+
+            // Reject any slug containing path separators / traversal so
+            // $slug cannot escape WP_PLUGIN_DIR.
+            if ( ! is_string( $slug ) || $slug === '' || strpbrk( $slug, "/\\" ) !== false || strpos( $slug, '..' ) !== false ) {
+                return new \WP_Error( 'invalid_slug', __( 'Invalid plugin slug.', 'adminify' ), array( 'status' => 400 ) );
+            }
+
+            // Slug must be present in the trusted addons list.
+            if ( ! array_key_exists( $slug, (array) $this->plugins_list ) ) {
+                return new \WP_Error( 'invalid_slug', __( 'Invalid plugin slug.', 'adminify' ), array( 'status' => 400 ) );
+            }
+
             $plugin_path = WP_PLUGIN_DIR . '/' . $slug;
 
-            if (!is_dir($plugin_path)) {
+            if ( ! is_dir( $plugin_path ) ) {
                 return;
             }
 
-            $plugin_files = glob("$plugin_path/*.php");
-            if (!$plugin_files || empty($plugin_files)) {
+            $installed_plugins = get_plugins( '/' . $slug );
+            if ( empty( $installed_plugins ) ) {
                 return;
             }
 
-            $main_plugin_file = basename($plugin_files[0]);
-            $plugin_relative_path = $slug . '/' . $main_plugin_file;
+            $plugin_relative_path = $slug . '/' . key( $installed_plugins );
 
-            if (is_plugin_active($plugin_relative_path)) {
+            if ( is_plugin_active( $plugin_relative_path ) ) {
                 return;
             }
 
-            activate_plugin($plugin_relative_path);
+            activate_plugin( $plugin_relative_path );
         }
 
-        public function maybe_replace_addons_path() {
-
-            $addons = [
-                'sidebar-generator/adminify-sidebar-generator.php' => 'adminify-sidebar-generator/adminify-sidebar-generator.php'
+        /**
+         * Map of legacy addon slugs that have been renamed to a new slug.
+         *
+         * @return array<string,string>
+         */
+        protected function renamed_addons_map() {
+            return [
+                'sidebar-generator/adminify-sidebar-generator.php' => 'adminify-sidebar-generator/adminify-sidebar-generator.php',
             ];
+        }
 
-            foreach ($addons as $old_plugin => $new_plugin) {
+        /**
+         * Show a non-blocking admin notice if a legacy (renamed) addon is
+         * still installed. We never deactivate or activate plugins on the
+         * user's behalf; the notice points them to the Plugins screen so
+         * they can perform the swap themselves.
+         */
+        public function maybe_renamed_addon_notice() {
+            if ( ! current_user_can('activate_plugins') ) {
+                return;
+            }
 
-                $old_plugin_path = WP_PLUGIN_DIR . '/' . $old_plugin;
-                $new_plugin_path = WP_PLUGIN_DIR . '/' . $new_plugin;
+            $messages = [];
 
-                // Both files exist, delete the old one
-                if ( file_exists($old_plugin_path) && file_exists($new_plugin_path) ) {
-                    unlink(dirname($old_plugin_path));
+            foreach ($this->renamed_addons_map() as $old_plugin => $new_plugin) {
+                $old_exists = file_exists(WP_PLUGIN_DIR . '/' . $old_plugin);
+                if ( ! $old_exists ) {
                     continue;
                 }
 
-                // If the old file exists and the new file doesn't exist, rename the old file to the new file
-                if ( file_exists($old_plugin_path) && !file_exists($new_plugin_path) ) {
-
-                    // check if the old plugin is active
-                    include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-
-                    $is_active = is_plugin_active( $old_plugin );
-
-                    if ( $is_active ) {
-                        // Deactivate the old plugin
-                        deactivate_plugins( $old_plugin );
-                        // Rename the old plugin to the new plugin
-                        rename( dirname($old_plugin_path), dirname($new_plugin_path) );
-
-                        if ( file_exists($new_plugin_path) ) {
-                            // Clear the plugin cache
-                            wp_cache_delete( 'plugins', 'plugins' );
-
-                            // Activate the new plugin
-                            activate_plugin( $new_plugin );
-                        }
-
-                    } else {
-                        // Rename the old plugin to the new plugin
-                        rename( dirname($old_plugin_path), dirname($new_plugin_path) );
-                    }
-                }
-
+                $messages[] = sprintf(
+                    /* translators: 1: old plugin slug, 2: new plugin slug */
+                    esc_html__('"%1$s" has been renamed to "%2$s". Please deactivate and remove the old version, then install the new one from the Adminify Addons screen.', 'adminify'),
+                    esc_html(dirname($old_plugin)),
+                    esc_html(dirname($new_plugin))
+                );
             }
 
+            if ( empty($messages) ) {
+                return;
+            }
+
+            echo '<div class="notice notice-warning"><p><strong>' . esc_html__('Adminify', 'adminify') . ':</strong> ' . esc_html(implode('<br>', $messages)) . '</p></div>';
         }
 
         /**
@@ -218,15 +261,16 @@ if (!class_exists('Addons')) {
          */
         public function includes()
         {
-            // if (!function_exists('install_plugin_install_status')) {
-            // require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-            require_once(ABSPATH . '/wp-load.php');
-            require_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
-            require_once(ABSPATH . 'wp-admin/includes/file.php');
-            require_once(ABSPATH . 'wp-admin/includes/misc.php');
-            require_once(ABSPATH . 'wp-admin/includes/plugin.php');
-            require_once(ABSPATH . 'wp-admin/includes/class-wp-upgrader.php');
-            // }
+            // wp-load.php must never be required from within a plugin: the
+            // plugin already runs inside WordPress. The wp-admin includes
+            // below are required for plugin install/upgrade APIs used by
+            // this class and are loaded with require_once immediately
+            // before the functions from each file are called.
+            require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            require_once ABSPATH . 'wp-admin/includes/misc.php';
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+            require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
         }
 
         /**
@@ -276,24 +320,8 @@ if (!class_exists('Addons')) {
          * @return void
          */
 
-        public function jltwp_adminify_addons_check()
+        public function addons_check()
         {
-
-            $license = jltwp_adminify()->_get_license();
-
-            if (!is_object($license) || !$license->is_valid() || !$license->is_active()) return;
-
-            if ( $this->is_eligible_for_coupon() ) {
-                // Get the coupon
-                $coupon = $this->maybe_create_and_get_coupon();
-                if (!empty($coupon) && !empty($coupon['code'])) {
-                    echo sprintf(
-                        __('<h3>Coupon Code: <strong style="color: red">%s</strong> Redeem this coupon code to get free access to all our premium addons (Except Admin Bar Editor, RoleMaster Suite and Master Addons). Learn how to <a href="https://wpadminify.com/redeem-addons-using-coupon-code/" target="_blank">redeem coupon code?</a></h3> ', 'adminify'),
-                        esc_attr($coupon['code'])
-                    );
-                }
-            }
-
             echo '<style>
 			#fs_addons .fs-cards-list{ display: flex; }
 			#fs_addons .fs-cards-list .fs-card .fs-inner .fs-cta .button{
@@ -304,69 +332,6 @@ if (!class_exists('Addons')) {
 			}</style>';
         }
 
-        public function is_eligible_for_coupon() {
-
-            $is_eligible = get_option('wp_adminify_addon__is_eligible_for_coupon', null);
-
-            if ( $is_eligible !== null ) return wp_validate_boolean($is_eligible);
-            $args = [
-                'license' => base64_encode(json_encode(jltwp_adminify()->_get_license())),
-                'action' => 'check_eligibility'
-            ];
-
-            $request_uri = add_query_arg($args, $this->server_url);
-
-            $response = wp_remote_get($request_uri);
-
-            if (!is_wp_error($response) && $response['response']['code'] === 200) {
-                $file_contents = wp_remote_retrieve_body($response);
-                $is_eligible = json_decode($file_contents, true);
-                update_option('wp_adminify_addon__is_eligible_for_coupon', wp_validate_boolean($is_eligible));
-                return $is_eligible;
-            }
-
-            return false;
-        }
-
-        public function maybe_delete_corrupted_coupon(){
-            $coupon_delete_check = get_option('wp_adminify_addon__coupon_is_deleted', false);
-            if($coupon_delete_check != true){
-                delete_option('wp_adminify_addon__coupon');
-                update_option('wp_adminify_addon__coupon_is_deleted', true);
-            }
-        }
-
-        public function maybe_create_and_get_coupon()
-        {
-            $this->maybe_delete_corrupted_coupon();
-            $coupon = get_option('wp_adminify_addon__coupon');
-
-            if (!empty($coupon)) return $coupon;
-
-            // communicate hit hserver get coupon
-            $args = [
-                'license' => base64_encode(json_encode(jltwp_adminify()->_get_license())),
-                'action' => 'get_coupon'
-            ];
-
-            $response = wp_remote_get(add_query_arg($args, $this->server_url));
-
-            if (!is_wp_error($response) && $response['response']['code'] === 200) {
-
-                $file_contents = wp_remote_retrieve_body($response);
-                $response_data = json_decode($file_contents, true);
-
-                if (!empty($response_data) && is_array($response_data) && !empty($response_data['id']) && !empty($response_data['code']) ) {
-                    $coupon = [
-                        'id'   => $response_data['id'],
-                        'code' => $response_data['code']
-                    ];
-                    update_option('wp_adminify_addon__coupon', $coupon);
-                }
-            }
-
-            return $coupon;
-        }
 
 
         /**
@@ -378,9 +343,9 @@ if (!class_exists('Addons')) {
             <div class='wp-adminify-addons-header'>
                 <div class='wp-adminify-addons-title'>
                     <h2>
-                        <?php echo esc_html__('Add Ons for WP Adminify', 'adminify'); ?>
+                        <?php echo esc_html__('Add Ons for Adminify', 'adminify'); ?>
                     </h2>
-                    <?php $this->jltwp_adminify_addons_check(); ?>
+                    <?php $this->addons_check(); ?>
                 </div>
                 <div class='wp-adminify-addons-menu'>
                     <div class="wp-filter">
@@ -435,8 +400,17 @@ if (!class_exists('Addons')) {
          */
         public function plugins()
         {
+            // $this->plugins_list is populated at construction only from the
+            // cached catalogue, which is empty until a live fetch runs. The
+            // Add-ons page render is itself an explicit user action, so fall
+            // back to the bundled catalogue here so the cards always show.
+            $plugins_list = $this->plugins_list;
 
-            foreach ($this->plugins_list as $key => $plugin) {
+            if ( empty( $plugins_list ) && method_exists( $this, 'get_adminify_plugins_lists' ) ) {
+                $plugins_list = (array) $this->get_adminify_plugins_lists();
+            }
+
+            foreach ($plugins_list as $key => $plugin) {
                 $install_status = \install_plugin_install_status($plugin);
                 $classes        = implode(' ', $plugin['type']);
 
@@ -578,7 +552,7 @@ if (!class_exists('Addons')) {
          *
          * @author Jewel Theme <support@jeweltheme.com>
          */
-        public function jltwp_adminify_addons_activate_plugin()
+        public function pxlbsadminify_addons_activate_plugin()
         {
             if (empty($_POST['plugin'])) {
                 return;
@@ -586,7 +560,7 @@ if (!class_exists('Addons')) {
             try {
                 $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
 
-                if (!wp_verify_nonce($nonce, 'jltwp_adminify_addons_nonce')) {
+                if (!wp_verify_nonce($nonce, 'pxlbsadminify_addons_nonce')) {
                     wp_send_json_error(array('mess' => __('Nonce is invalid', 'adminify')));
                 }
 
@@ -598,7 +572,18 @@ if (!class_exists('Addons')) {
                 $plugin = sanitize_text_field(wp_unslash($_POST['plugin']));
                 $plugin_links = array_values(wp_list_pluck($this->plugins_list, 'slug'));
 
-                if (!in_array(dirname($plugin), $plugin_links)) {
+                if (!in_array(dirname($plugin), $plugin_links, true)) {
+                    wp_send_json_error(array('mess' => __('Invalid plugin', 'adminify')));
+                }
+
+                // Resolve against the list of actually installed plugins so that
+                // only a known plugin file is ever passed to activate_plugin().
+                if (!function_exists('get_plugins')) {
+                    require_once ABSPATH . 'wp-admin/includes/plugin.php';
+                }
+                $installed_plugins = array_keys(get_plugins());
+
+                if (!in_array($plugin, $installed_plugins, true)) {
                     wp_send_json_error(array('mess' => __('Invalid plugin', 'adminify')));
                 }
 
@@ -661,7 +646,7 @@ if (!class_exists('Addons')) {
          *
          * @author Jewel Theme <support@jeweltheme.com>
          */
-        public function jltwp_adminify_addons_upgrade_plugin( $params = null )
+        public function pxlbsadminify_addons_upgrade_plugin( $params = null )
         {
             if ($params == null && empty($_POST['plugin'])) {
                 return;
@@ -676,7 +661,7 @@ if (!class_exists('Addons')) {
                 if($params == null){
                     $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
 
-                    if (!wp_verify_nonce($nonce, 'jltwp_adminify_addons_nonce')) {
+                    if (!wp_verify_nonce($nonce, 'pxlbsadminify_addons_nonce')) {
                         wp_send_json_error(array('mess' => __('Nonce is invalid', 'adminify')));
                     }
                     $plugin = sanitize_text_field(wp_unslash($_POST['plugin']));
@@ -691,10 +676,18 @@ if (!class_exists('Addons')) {
 
                 $plugin_slug = $this->get_the_plugin_slug( $plugin );
 
-                if ( ! array_key_exists( $plugin_slug, $this->plugins_list) ) {
+                if ( ! array_key_exists( $plugin_slug, $this->plugins_list ) ) {
                     wp_send_json_error(array('mess' => __('Invalid plugin', 'adminify')));
                 }
-                
+
+                // Replace the user-supplied $plugin value with values derived
+                // from our trusted internal addons list, so that arbitrary
+                // input never reaches Plugin_Upgrader::install()/upgrade() or
+                // activate_plugin().
+                $trusted_install_source = isset($this->plugins_list[$plugin_slug]['download_link'])
+                    ? $this->plugins_list[$plugin_slug]['download_link']
+                    : '';
+
                 if($params == null){
                     $type     = isset($_POST['type']) ? sanitize_text_field(wp_unslash($_POST['type'])) : 'install';
                 }else{
@@ -705,7 +698,11 @@ if (!class_exists('Addons')) {
 
                 if ('install' === $type) {
 
-                    $result = $upgrader->install($plugin);
+                    if ( empty( $trusted_install_source ) ) {
+                        wp_send_json_error(array('mess' => __('Invalid plugin', 'adminify')));
+                    }
+
+                    $result = $upgrader->install( $trusted_install_source );
                     if ($params == null){
                         if (empty($result) || empty($upgrader->result)) {
                             wp_send_json_error(
@@ -766,8 +763,18 @@ if (!class_exists('Addons')) {
                     }
                 } else {
 
-                    $is_active = is_plugin_active($plugin);
-                    $result = $upgrader->upgrade($plugin);
+                    // Resolve the trusted plugin file path from the validated
+                    // slug instead of trusting the raw $_POST value, so that
+                    // is_plugin_active(), Plugin_Upgrader::upgrade() and
+                    // activate_plugin() never receive attacker-supplied paths.
+                    $installed_plugins = get_plugins( '/' . $plugin_slug );
+                    if ( empty( $installed_plugins ) ) {
+                        wp_send_json_error(array('mess' => __('Plugin not installed.', 'adminify')));
+                    }
+                    $trusted_plugin_file = $plugin_slug . '/' . key( $installed_plugins );
+
+                    $is_active = is_plugin_active( $trusted_plugin_file );
+                    $result    = $upgrader->upgrade( $trusted_plugin_file );
 
                     if ($params == null){
                         if ( empty($result) || is_wp_error($result) ) {
@@ -779,7 +786,7 @@ if (!class_exists('Addons')) {
                         }
                     }
 
-                    $active_status = activate_plugin($plugin);
+                    $active_status = activate_plugin( $trusted_plugin_file );
 
                     if ($params == null){
                         if ( empty($active_status) || is_wp_error($active_status) ) {

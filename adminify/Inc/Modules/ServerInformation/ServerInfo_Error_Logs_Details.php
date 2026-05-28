@@ -1,8 +1,8 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\ServerInformation;
+namespace PXLBSAdminify\Inc\Modules\ServerInformation;
 
-use WPAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Utils;
 
 // no direct access allowed
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPAdminify
+ * PXLBSAdminify
  *
  * @package Server Information: Error Logs
  *
@@ -26,7 +26,7 @@ class ServerInfo_Error_Logs_Details {
 	public function init() {     ?>
 
 		<div class="wrap">
-			<h1> <?php echo Utils::admin_page_title( esc_html__( 'Error Logs', 'adminify' ) ); ?> </h1>
+			<h1> <?php echo wp_kses_post( Utils::admin_page_title( esc_html__( 'Error Logs', 'adminify' ) ) ); ?> </h1>
 
 			<?php if ( ( defined( 'WP_DEBUG' ) && ! WP_DEBUG ) || ( defined( 'WP_DEBUG_LOG' ) && ! WP_DEBUG_LOG ) ) { ?>
 				<p style="color: #ce2754; font-weight: bold">
@@ -44,10 +44,10 @@ class ServerInfo_Error_Logs_Details {
 		<?php
 
 		// Get the wp "debug.log" file
-		$file = self::jltwp_adminify_error_log();
+		$file = self::custom_error_log();
 
 		// Get the wp "debug.log" file content
-		$file_content = self::jltwp_adminify_error_log_content( $file );
+		$file_content = self::custom_error_log_content( $file );
 
 		// Check for custom "debug.log" file path
 		$custom_file_path = ( defined( 'WP_DEBUG_LOG' ) && WP_DEBUG_LOG != false && WP_DEBUG_LOG != 1 );
@@ -129,7 +129,7 @@ class ServerInfo_Error_Logs_Details {
 
 
 
-	public static function jltwp_adminify_error_log() {
+	public static function custom_error_log() {
 
 		// Get the path of wp "debug.log"
 		$file = get_home_path() . 'wp-content/debug.log';
@@ -146,7 +146,7 @@ class ServerInfo_Error_Logs_Details {
 	/**
 	 * * Get Error Log File Contents
 	 */
-	public static function jltwp_adminify_error_log_content( $file ) {
+	public static function custom_error_log_content( $file ) {
 
 		// Call wp file system
 		global $wp_filesystem;

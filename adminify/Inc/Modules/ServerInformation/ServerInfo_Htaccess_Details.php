@@ -1,9 +1,9 @@
 <?php
 
-namespace WPAdminify\Inc\Modules\ServerInformation;
+namespace PXLBSAdminify\Inc\Modules\ServerInformation;
 
-use WPAdminify\Inc\Classes\ServerInfo;
-use WPAdminify\Inc\Utils;
+use PXLBSAdminify\Inc\Classes\ServerInfo;
+use PXLBSAdminify\Inc\Utils;
 
 // no direct access allowed
 if ( ! defined( 'ABSPATH' ) ) {
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPAdminify
+ * PXLBSAdminify
  *
  * @package Server Information
  *
@@ -39,13 +39,14 @@ class ServerInfo_Htaccess_Details {
 		?>
 		<div class="wrap">
 			<h1>
-				<?php echo Utils::admin_page_title( esc_html__( '.htaccess file', 'adminify' ) ); ?>
+				<?php echo wp_kses_post( Utils::admin_page_title( esc_html__( '.htaccess file', 'adminify' ) ) ); ?>
 			</h1>
 		</div>
 
 		<p style="color: #ce2754; font-weight: bold">
 			<?php
 			$name = '.htaccess';
+			/* translators: %s: File name */
 			printf( wp_kses_post( __( 'For security reasons you can only read the %1$s file! Please connect to your server and modify the file in a file editor.', 'adminify' ) ), esc_html( $name ) );
 			?>
 		</p>
@@ -59,10 +60,10 @@ class ServerInfo_Htaccess_Details {
 		<?php
 
 		// Get the wp ".htaccess" file
-		$file = $this->jltwp_adminify_htaccess_file();
+		$file = $this->htaccess_file();
 
 		// Get the wp ".htaccess" file content
-		$file_content = $this->jltwp_adminify_htaccess_file_content( $file );
+		$file_content = $this->htaccess_file_content( $file );
 
 		if ( $file ) {
 			?>
@@ -81,7 +82,7 @@ class ServerInfo_Htaccess_Details {
 	/**
 	 * htaccess file
 	 */
-	public function jltwp_adminify_htaccess_file() {
+	public function htaccess_file() {
 
 		// Call wp file system
 		global $wp_filesystem;
@@ -105,7 +106,7 @@ class ServerInfo_Htaccess_Details {
 	 * .htaccess file contents
 	 */
 
-	public function jltwp_adminify_htaccess_file_content( $file ) {
+	public function htaccess_file_content( $file ) {
 
 		// Call wp file system
 		global $wp_filesystem;

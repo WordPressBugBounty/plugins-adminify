@@ -38,15 +38,15 @@ if ( ! class_exists( 'ADMINIFY_Field_dimensions' ) ) {
       $unit    = ( count( $args['units'] ) === 1 && ! empty( $args['unit'] ) ) ? $args['units'][0] : '';
       $is_unit = ( ! empty( $unit ) ) ? ' adminify--is-unit' : '';
 
-      echo $this->field_before();
+      echo wp_kses_post( $this->field_before() );
 
       echo '<div class="adminify--inputs" data-depend-id="'. esc_attr( $this->field['id'] ) .'">';
 
       if ( ! empty( $args['width'] ) ) {
         $placeholder = ( ! empty( $args['width_placeholder'] ) ) ? ' placeholder="'. esc_attr( $args['width_placeholder'] ) .'"' : '';
         echo '<div class="adminify--input">';
-        echo ( ! empty( $args['width_icon'] ) ) ? '<span class="adminify--label adminify--icon">'. $args['width_icon'] .'</span>' : '';
-        echo '<input type="number" name="'. esc_attr( $this->field_name( '[width]' ) ) .'" value="'. esc_attr( $value['width'] ) .'"'. $placeholder .' class="adminify-input-number'. esc_attr( $is_unit ) .'" step="any" />';
+        echo ( ! empty( $args['width_icon'] ) ) ? '<span class="adminify--label adminify--icon">'. wp_kses_post( $args['width_icon'] ) .'</span>' : '';
+        echo '<input type="number" name="'. esc_attr( $this->field_name( '[width]' ) ) .'" value="'. esc_attr( $value['width'] ) .'"'. $placeholder .' class="adminify-input-number'. esc_attr( $is_unit ) .'" step="any" />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attribute value pre-escaped with esc_attr() where built.
         echo ( ! empty( $unit ) ) ? '<span class="adminify--label adminify--unit">'. esc_attr( $args['units'][0] ) .'</span>' : '';
         echo '</div>';
       }
@@ -54,8 +54,8 @@ if ( ! class_exists( 'ADMINIFY_Field_dimensions' ) ) {
       if ( ! empty( $args['height'] ) ) {
         $placeholder = ( ! empty( $args['height_placeholder'] ) ) ? ' placeholder="'. esc_attr( $args['height_placeholder'] ) .'"' : '';
         echo '<div class="adminify--input">';
-        echo ( ! empty( $args['height_icon'] ) ) ? '<span class="adminify--label adminify--icon">'. $args['height_icon'] .'</span>' : '';
-        echo '<input type="number" name="'. esc_attr( $this->field_name( '[height]' ) ) .'" value="'. esc_attr( $value['height'] ) .'"'. $placeholder .' class="adminify-input-number'. esc_attr( $is_unit ) .'" step="any" />';
+        echo ( ! empty( $args['height_icon'] ) ) ? '<span class="adminify--label adminify--icon">'. wp_kses_post( $args['height_icon'] ) .'</span>' : '';
+        echo '<input type="number" name="'. esc_attr( $this->field_name( '[height]' ) ) .'" value="'. esc_attr( $value['height'] ) .'"'. $placeholder .' class="adminify-input-number'. esc_attr( $is_unit ) .'" step="any" />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attribute value pre-escaped with esc_attr() where built.
         echo ( ! empty( $unit ) ) ? '<span class="adminify--label adminify--unit">'. esc_attr( $args['units'][0] ) .'</span>' : '';
         echo '</div>';
       }
@@ -73,7 +73,7 @@ if ( ! class_exists( 'ADMINIFY_Field_dimensions' ) ) {
 
       echo '</div>';
 
-      echo $this->field_after();
+      echo wp_kses_post( $this->field_after() );
 
     }
 
