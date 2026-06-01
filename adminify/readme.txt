@@ -4,7 +4,7 @@ Tags: white label, admin menu editor, login customizer, admin columns, custom da
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.2.4
+Stable tag: 4.2.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -184,6 +184,15 @@ When you select a Google font and save Adminify settings, the plugin downloads t
 7. The module settings page showing available addons such as Activity Logs.
 
 == Changelog ==
+= Adminify - 4.2.5 (01-06-2026) =
+* Fixed: Resolved an admin UI layout display issue.
+* Improved: Compatibility with WordPress 7.0 and the updated block editor.
+* Fixed: Dark mode now saves correctly and applies consistently across the admin area and the block editor.
+* Added: Adminify admin bar shortcut now opens the WordPress command palette.
+* Improved: Editor spacing and frame edges in the Adminify admin interface.
+* Improved: FluentCRM toolbar alignment inside the Adminify admin interface.
+* Fixed: Plugin dependency activation notice now displays correctly.
+
 = Adminify - 4.2.4 (28-05-2026) =
 * Security: Hardened the release build for the WordPress.org directory.
 

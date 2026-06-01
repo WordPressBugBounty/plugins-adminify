@@ -825,8 +825,9 @@ class Utils
 			return $presets[$theme];
 		}
 
-		// specific preset not found
-		return [];
+		// specific preset not found (Pro-only/custom theme saved while Pro add-on inactive).
+		// Fall back to base preset so core CSS vars (--adminify-menu-width) always emit.
+		return isset($presets['preset1']) ? $presets['preset1'] : $common_var;
 	}
 
 	public static function get_page_templates($type = '')

@@ -33,7 +33,12 @@ class OutputCSS
 	public function add_body_classes($classes)
 	{
 		$folded				= $this->options['menu_layout_settings']['menu_mode'] === 'icon_menu' ? 'folded' : '';
-		$color_mode         = !empty($this->options['light_dark_mode']['admin_ui_mode']) ? $this->options['light_dark_mode']['admin_ui_mode'] : 'light';
+		// Per-user color_mode meta (saved by the topbar toggle) overrides the global
+		// admin_ui_mode. Without this, toggling Dark would not persist visually on
+		// reload because the body class would stay at the global default ('light').
+		$global_color_mode  = !empty($this->options['light_dark_mode']['admin_ui_mode']) ? $this->options['light_dark_mode']['admin_ui_mode'] : 'light';
+		$user_color_mode    = get_user_meta(get_current_user_id(), 'color_mode', true);
+		$color_mode         = !empty($user_color_mode) ? $user_color_mode : $global_color_mode;
 		$color_preset       = !empty($this->options['adminify_theme']) ? $this->options['adminify_theme'] : 'preset1';
 		// $icon_style         = !empty($this->options['menu_layout_settings']['icon_style']) ? $this->options['menu_layout_settings']['icon_style'] : 'classic';
 		// $menu_hover_submenu = !empty($this->options['menu_layout_settings']['menu_hover_submenu']) ? $this->options['menu_layout_settings']['menu_hover_submenu'] : 'classic';

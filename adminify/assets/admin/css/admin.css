@@ -115,7 +115,8 @@ html[frame-adminify-app=true] #wpfooter {
 }
 #frame-adminify-app .adminify-frame-wrapper {
   display: grid;
-  grid-template-columns: var(--adminify-menu-width) 1fr;
+  grid-template-columns: 260px 1fr;
+  grid-template-columns: var(--adminify-menu-width, 260px) 1fr;
   background: var(--adminify-menu-bg);
   transition: all 0.3s;
 }
@@ -275,7 +276,8 @@ body.wp-adminify {
 }
 .adminify-toolbar-wrapper {
   display: grid;
-  grid-template-columns: var(--adminify-menu-width) 1fr;
+  grid-template-columns: 260px 1fr;
+  grid-template-columns: var(--adminify-menu-width, 260px) 1fr;
   transition: grid-template-columns 0.3s;
   padding: 0 1rem;
   background: var(--adminify-menu-bg);
@@ -1936,4 +1938,33 @@ body.wp-adminify {
     border: 0;
     border-top: 1px solid #dedee7;
   }
+}
+body.wp-adminify.adminify-ui.block-editor-page #frame-adminify-app .adminify-frame-content,
+body.wp-adminify.adminify-ui.post-php #frame-adminify-app .adminify-frame-content,
+body.wp-adminify.adminify-ui.post-new-php #frame-adminify-app .adminify-frame-content {
+  padding-top: 0;
+}
+body.wp-adminify.adminify-ui.block-editor-page #frame-adminify-app--iframe,
+body.wp-adminify.adminify-ui.post-php #frame-adminify-app--iframe,
+body.wp-adminify.adminify-ui.post-new-php #frame-adminify-app--iframe {
+  border-top: 0;
+  border-left: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+body.wp-adminify.adminify-ui.block-editor-page #frame-adminify-app .adminify-frame-content,
+body.wp-adminify.adminify-ui.post-php #frame-adminify-app .adminify-frame-content,
+body.wp-adminify.adminify-ui.post-new-php #frame-adminify-app .adminify-frame-content {
+  padding-top: 0;
+}
+body.wp-adminify.adminify-ui.block-editor-page #frame-adminify-app--iframe,
+body.wp-adminify.adminify-ui.post-php #frame-adminify-app--iframe,
+body.wp-adminify.adminify-ui.post-new-php #frame-adminify-app--iframe {
+  border-top: 0;
+  border-left: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0;
 }

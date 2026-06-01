@@ -329,7 +329,19 @@ class AdminBar extends AdminSettingsModel
 	 */
 	public function color_mode()
 	{
-		if (defined('DOING_AJAX') && DOING_AJAX && check_ajax_referer('pxlbsadminify-admin-bar-security-nonce', 'security') > 0) {
+		if (defined('DOING_AJAX') && DOING_AJAX) {
+			// Two callers post to this handler with different nonce objects:
+			//  - dev/admin/wp-adminify.js   uses PXLBSADMINIFY_ADMINBAR.security_nonce
+			//    (action: pxlbsadminify-admin-bar-security-nonce)
+			//  - dev/admin/frame/utils/uitls.js (React frame topbar dropdown)
+			//    uses PXLBSADMINIFY_FRAME.security_nonce (action: adminify_nonce)
+			// Accept either — both are user-bound; failing only one strands the
+			// React frame toggle (the dark-mode dropdown silently 403s).
+			$nonce_ok = ( check_ajax_referer('pxlbsadminify-admin-bar-security-nonce', 'security', false) > 0 )
+				|| ( check_ajax_referer('adminify_nonce', 'security', false) > 0 );
+			if ( ! $nonce_ok ) {
+				wp_send_json_error( array( 'mess' => __( 'Invalid request.', 'adminify' ) ), 403 );
+			}
 			// Color mode is per-user preference; require the caller to be
 			// a logged-in user with admin-bar access.
 			if ( ! is_user_logged_in() || ! current_user_can( 'read' ) ) {

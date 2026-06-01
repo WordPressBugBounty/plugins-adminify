@@ -86,8 +86,17 @@ if (!class_exists('Latest_Updates')) {
 			}
 
 			if("dismissed" !== $forever_notice){
-				$pxlbsadminify_changelog_message = sprintf(
-					/* translators: %1$s: changelogs page URL. %2$s: link anchor text. %3$s: plugin update heading HTML. %4$s, %5$s, %6$s, %7$s %8$s %9$s %10$s %11$s: changelog list item HTML. */
+				$pxlbsadminify_changelog_items =
+				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Resolved an admin UI layout display issue. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> Compatibility with WordPress 7.0 and the updated block editor. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Dark mode now saves correctly and applies consistently across the admin area and the block editor. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Added:</strong> Adminify admin bar shortcut now opens the WordPress command palette. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> Editor spacing and frame edges in the Adminify admin interface. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> FluentCRM toolbar alignment inside the Adminify admin interface. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Plugin dependency activation notice now displays correctly. </span><br>', 'adminify');
+
+			$pxlbsadminify_changelog_message = sprintf(
+					/* translators: %1$s: changelogs page URL. %2$s: link anchor text. %3$s: plugin update heading HTML. %4$s: changelog list items HTML. */
 					__('%3$s %4$s <br> <strong>Check Changelogs for </strong> <a href="%1$s" target="__blank">%2$s</a>', 'adminify'),
 					esc_url_raw('https://wpadminify.com/changelogs'),
 					__('More about Updates ', 'adminify'),
@@ -97,7 +106,7 @@ if (!class_exists('Latest_Updates')) {
 
 					'<h3 class="adminify-update-head">' . PXLBSADMINIFY . ' <span><small><em>v' . esc_html(PXLBSADMINIFY_VER) . '</em></small>' . __(' has some updates..', 'adminify') . '</span></h3><br>', // %3$s
 					// changelogs
-					__('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Admin Bar Editor with Adminify UI white screen issue fixed. </span><br>', 'adminify'),
+					$pxlbsadminify_changelog_items
 				);
 				printf(wp_kses_post($pxlbsadminify_changelog_message));
 			}

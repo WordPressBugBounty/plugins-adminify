@@ -24,6 +24,17 @@ class DarkModeConflicts
     {
         add_action('admin_enqueue_scripts', array($this, 'darkmode_scripts'), 100);
         add_action( 'enqueue_block_editor_assets', array($this, "gutenberg_block_editor_darkmode_assets"));
+        // WP 6.3+/7.0: the block editor canvas runs in an iframe. The AdminifyDarkMode
+        // script has no built-in iframe support, so inject the same script INTO the
+        // iframe and call .enable() from inside — that way Darkreader runs over the
+        // iframe DOM the same dynamic way it runs on the parent admin.
+        // Use admin_footer (not enqueue_block_editor_assets — wp_add_inline_script
+        // silently dropped the bridge) and direct-print via wp_print_inline_script_tag.
+        add_action('admin_footer', array($this, 'inject_darkmode_into_editor_iframe'), 999);
+        // customize.php controls: Adminify scripts are skipped there by design
+        // (Assets::should_skip_adminify_scripts), so enqueue dark-mode only on this
+        // dedicated hook to keep the customize panel dark without the rest of Adminify.
+        add_action('customize_controls_enqueue_scripts', array($this, 'customize_controls_darkmode_enqueue'));
     }
 
     public function darkmode_scripts()
@@ -400,6 +411,7 @@ class DarkModeConflicts
      * Gutenberg Block Editor Dark Mode CSS
      */
     function gutenberg_block_editor_darkmode_assets () {
+
         wp_register_style('adminify-gutenberg-dark', false, array(), PXLBSADMINIFY_VER);
         wp_enqueue_style('adminify-gutenberg-dark');
 
@@ -414,5 +426,86 @@ class DarkModeConflicts
             $parent_selector .commands-command-menu__container .commands-command-menu__header svg { fill: black; }
         ";
         wp_add_inline_style('adminify-gutenberg-dark', wp_strip_all_tags($dark_mode_style));
+    }
+
+    /**
+     * Resolve the active light/dark mode for the current user.
+     * Per-user `color_mode` meta takes precedence over the global setting.
+     * Returns 'light' | 'dark' | 'auto' | ''.
+     */
+    public function pxlbsadminify_resolve_color_mode()
+    {
+        $opts        = (array) AdminSettings::get_instance()->get();
+        $global_mode = !empty($opts['light_dark_mode']['admin_ui_mode']) ? $opts['light_dark_mode']['admin_ui_mode'] : 'light';
+        $user_mode   = get_user_meta(get_current_user_id(), 'color_mode', true);
+        return !empty($user_mode) ? $user_mode : $global_mode;
+    }
+
+    /**
+     * Inject the AdminifyDarkMode script INTO the WP 6.3+/7.0 block editor iframe
+     * canvas. The script attaches a global `window.AdminifyDarkMode` and uses a
+     * Darkreader-style dynamic theme that rewrites colors based on the running
+     * document — so it must be loaded inside the iframe's window to darken the
+     * canvas DOM, not just the parent admin chrome.
+     *
+     * The bridge below watches for `iframe[name="editor-canvas"]` (added/changed
+     * across edits or full-site editor route changes), injects the dark-mode JS
+     * into the iframe's document, and calls `AdminifyDarkMode.enable()` once it
+     * loads. `__adminifyDarkInjected` guards against double-injection.
+     */
+    public function inject_darkmode_into_editor_iframe()
+    {
+        if ( $this->pxlbsadminify_resolve_color_mode() !== 'dark' ) {
+            return;
+        }
+        // Only run on block-editor pages (post.php / post-new.php / site editor).
+        $screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+        if ( ! $screen || ! method_exists( $screen, 'is_block_editor' ) || ! $screen->is_block_editor() ) {
+            // also accept Site Editor screen ids
+            $is_site_editor = $screen && in_array( $screen->id, array( 'site-editor', 'gutenberg_page_gutenberg-edit-site' ), true );
+            if ( ! $is_site_editor ) {
+                return;
+            }
+        }
+        $dark_js_url = PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify-dark-mode' . Utils::assets_ext( '.js' );
+        $bridge      = '(function(){'
+            . 'var URL=' . wp_json_encode( $dark_js_url ) . ';'
+            . 'function looksLikeEditor(ifr){try{if(ifr.name==="editor-canvas")return true;var d=ifr.contentDocument;return !!(d&&d.body&&d.body.classList&&(d.body.classList.contains("block-editor-iframe__body")||d.body.classList.contains("editor-styles-wrapper")));}catch(e){return false;}}'
+            . 'function activate(w){try{if(w&&w.AdminifyDarkMode){w.AdminifyDarkMode.enable({brightness:120});return true;}}catch(e){}return false;}'
+            . 'function inject(ifr){try{var d=ifr.contentDocument,w=ifr.contentWindow;if(!d||!w)return;if(w.__adminifyDM){activate(w);return;}w.__adminifyDM=true;if(activate(w))return;var s=d.createElement("script");s.src=URL;s.onload=function(){if(!activate(w)){setTimeout(function(){activate(w);},100);setTimeout(function(){activate(w);},500);}};(d.head||d.documentElement||d.body).appendChild(s);}catch(e){}}'
+            . 'var seen=new WeakSet();'
+            . 'function watch(ifr){if(seen.has(ifr))return;seen.add(ifr);inject(ifr);ifr.addEventListener("load",function(){try{ifr.contentWindow.__adminifyDM=false;}catch(e){}inject(ifr);});}'
+            . 'function scan(){var all=document.querySelectorAll("iframe");for(var i=0;i<all.length;i++){if(looksLikeEditor(all[i]))watch(all[i]);}}'
+            . 'if(document.readyState!=="loading"){scan();}else{document.addEventListener("DOMContentLoaded",scan);}'
+            . 'new MutationObserver(scan).observe(document.documentElement,{childList:true,subtree:true});'
+            . '}());';
+        if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+            wp_print_inline_script_tag( $bridge );
+        } else {
+            echo '<script>' . $bridge . '</script>'; // phpcs:ignore WordPress.WP.EnqueuedResources
+        }
+        return; // sentinel — never reach legacy enqueue path below
+    }
+
+    /**
+     * customize.php controls: Adminify's general scripts are deliberately skipped on
+     * customize.php (Assets::should_skip_adminify_scripts), so dark-mode never reaches
+     * the controls panel. Enqueue dark-mode standalone on the customize controls hook.
+     */
+    public function customize_controls_darkmode_enqueue()
+    {
+        if ($this->pxlbsadminify_resolve_color_mode() !== 'dark') {
+            return;
+        }
+        wp_enqueue_script(
+            'adminify--dark-mode',
+            PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify-dark-mode' . Utils::assets_ext('.js'),
+            array(),
+            PXLBSADMINIFY_VER,
+            false
+        );
+        $inline = 'if(window.AdminifyDarkMode){window.AdminifyDarkMode.enable({brightness:120});}'
+                . 'addEventListener("load",function(){if(window.AdminifyDarkMode){window.AdminifyDarkMode.enable({brightness:120});}});';
+        wp_add_inline_script('adminify--dark-mode', $inline);
     }
 }

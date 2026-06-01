@@ -26,6 +26,10 @@ class ThirdPartyCompatibility {
         add_action( 'admin_enqueue_scripts', [$this, 'reset_theme_conflicts'], 999999 );
         // 28-6-24
         add_action( 'admin_head', [$this, 'plugin_conflicts'], 999999 );
+        // Inject layout-tightening CSS INTO the block editor iframe (parent CSS
+        // cannot reach inside). Closes the huge top gap between the editor toolbar
+        // and the post title that's amplified inside the Adminify iframe wrapper.
+        add_filter( 'block_editor_settings_all', [$this, 'block_editor_iframe_layout_tweaks'] );
         if ( Utils::is_plugin_active( 'gravityforms/gravityforms.php' ) ) {
             add_filter(
                 'update_footer',
@@ -121,13 +125,44 @@ class ThirdPartyCompatibility {
 					body.adminify-ui #wpbody-content #fct_admin_menu_holder .fct_admin_menu_wrap {width:100%;top:0;left:0;}
 				</style>';
             }
+            // Fluent CRM
+            if ( Utils::is_plugin_active( 'fluent-crm/fluent-crm.php' ) ) {
+                echo '<style>
+					.wp-adminify.adminify-ui .fcrm_topbar {top:0;}
+				</style>';
+            }
+            // WP 7.0+ Command Palette: kill the focus border on the cmdk input
+            // (Adminify UI input styles bleed in) and wire the Adminify topbar
+            // item (#adminify-top-menu-command-palette) to open the palette.
+            echo '<style>
+				.wp-adminify .commands-command-menu__container input[cmdk-input],
+				.wp-adminify .commands-command-menu__container input[cmdk-input]:focus,
+				.wp-adminify .commands-command-menu__container input[cmdk-input]:focus-visible {
+					border: 0 !important;
+					outline: 0 !important;
+					box-shadow: none !important;
+				}
+			</style>';
+            $pxlbsadminify_cmdk_js = "(function(){function openCmd(){try{if(window.wp&&wp.data&&wp.data.dispatch('core/commands')){wp.data.dispatch('core/commands').open();return;}}catch(e){}var isMac=/Mac|iPod|iPhone|iPad/.test(navigator.platform);document.dispatchEvent(new KeyboardEvent('keydown',{key:'k',code:'KeyK',keyCode:75,which:75,ctrlKey:!isMac,metaKey:isMac,bubbles:true,cancelable:true}));}document.addEventListener('click',function(e){var t=e.target&&e.target.closest&&e.target.closest('#adminify-top-menu-command-palette a, .adminify-top-menu-command-palette a');if(!t)return;e.preventDefault();openCmd();});}());";
+            if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+                wp_print_inline_script_tag( $pxlbsadminify_cmdk_js );
+            } else {
+                echo '<script>' . $pxlbsadminify_cmdk_js . '</script>';
+                // phpcs:ignore WordPress.WP.EnqueuedResources
+            }
+            // WP 7.0 block editor interface skeleton: pin to 0/0 inside Adminify UI.
+            // WP's default left/top offsets are for the WP admin bar + sidebar which
+            // Adminify hides — without this, the editor shifts off-origin.
+            echo '<style>
+				body.wp-adminify.adminify-ui .editor-editor-interface.edit-post-layout.interface-interface-skeleton,
+				body.wp-adminify.adminify-ui .interface-interface-skeleton {
+					left: 0 !important;
+					top: 0 !important;
+				}
+			</style>';
         }
         if ( Utils::is_plugin_active( 'squirrly-seo/squirrly.php' ) ) {
-            echo '<style>
-            .wp-adminify.adminify-ui.block-editor-page .interface-interface-skeleton {
-                top: 0 !important;
-            }
-            </style>';
+            // kept as-is for squirrly compat; the generic adminify-ui rule below covers all editor pages
         }
         if ( Utils::is_plugin_active( 'surecart/surecart.php' ) || Utils::is_plugin_active( 'suremember/suremember.php' ) ) {
             if ( !empty( $adminify_ui ) ) {
@@ -767,6 +802,34 @@ class ThirdPartyCompatibility {
                 }
             }
         }
+    }
+
+    /**
+     * Inject layout-tightening CSS INTO the WP 6.3+/7.0 block editor iframe canvas.
+     *
+     * The Gutenberg canvas runs inside an iframe; styles enqueued via
+     * `enqueue_block_editor_assets` only reach the parent admin chrome. The
+     * `block_editor_settings_all` `styles` array IS injected into the iframe.
+     *
+     * The default Gutenberg post-title wrapper carries large block padding which,
+     * inside Adminify's iframe wrapper (already framed by topbar + sidebar),
+     * reads as a huge dead area between the editor toolbar and "Add title".
+     * Compress that wrapper + leading content padding so the title sits close
+     * under the toolbar.
+     */
+    public function block_editor_iframe_layout_tweaks( $settings ) {
+        // Iframe body padding (Gutenberg ~50-60px default) + root container's first-child
+        // margin-block-start are the two real sources of the gap above "Add title".
+        // Multiple selectors cover WP 6.x ("edit-post-*") and WP 7.0+ ("editor-*", new
+        // "block-editor-iframe__body" body class on the iframe) class renames.
+        $css = 'html body.block-editor-iframe__body,' . 'html body.editor-styles-wrapper,' . '.block-editor-iframe__body,' . '.editor-styles-wrapper{padding-top:12px !important;margin-top:0 !important;}' . '.is-root-container,' . '.editor-styles-wrapper>.is-root-container,' . '.block-editor-block-list__layout.is-root-container,' . '.is-root-container.is-layout-flow,' . '.is-root-container.is-layout-constrained{padding-top:0 !important;margin-top:0 !important;}' . '.is-root-container>*:first-child,' . '.is-root-container>[data-block]:first-child,' . '.editor-styles-wrapper>[data-block]:first-child,' . '.editor-styles-wrapper>.wp-block:first-child{margin-block-start:0 !important;margin-top:0 !important;padding-top:0 !important;}' . '.wp-block-post-title,' . 'h1.wp-block-post-title,' . '.editor-post-title,' . 'h1.editor-post-title,' . '.editor-post-title__input,' . 'h1.editor-post-title__input{margin:0 !important;margin-block-start:0 !important;padding-top:0 !important;}' . '.edit-post-visual-editor,' . '.editor-visual-editor,' . '.edit-post-visual-editor__post-title-wrapper,' . '.editor-visual-editor__post-title-wrapper,' . '.edit-post-visual-editor__content-area,' . '.editor-visual-editor__content-area{padding-top:0 !important;margin-top:0 !important;}';
+        if ( !isset( $settings['styles'] ) || !is_array( $settings['styles'] ) ) {
+            $settings['styles'] = array();
+        }
+        $settings['styles'][] = array(
+            'css' => $css,
+        );
+        return $settings;
     }
 
 }
