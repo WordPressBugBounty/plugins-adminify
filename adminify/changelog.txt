@@ -1,4 +1,8 @@
 == Changelog ==
+= Adminify - 4.2.6 (02-06-2026) =
+* Added: WordPress Playground live preview support — try Adminify directly from the WordPress.org plugin page.
+* Improved: Reliability of the Adminify admin interface across different browser environments.
+
 = Adminify - 4.2.5 (01-06-2026) =
 * Fixed: Resolved an admin UI layout display issue.
 * Improved: Compatibility with WordPress 7.0 and the updated block editor.

@@ -1267,11 +1267,29 @@ class Utils
 	 */
 	public static function is_iframe()
 	{
-			return isset($_SERVER["HTTP_SEC_FETCH_DEST"]) && strtolower(sanitize_text_field(wp_unslash($_SERVER["HTTP_SEC_FETCH_DEST"]))) === "iframe";
-		// $isIframe =  isset($_SERVER["HTTP_SEC_FETCH_DEST"]) && strtolower($_SERVER["HTTP_SEC_FETCH_DEST"]) === "iframe";
-			// if ( $isIframe ) return true;
-			// if ( isset($_GET['adminify-iframe']) ) return true;
-			// return false;
+		// Adminify-tagged iframe URL: Templates.php injects a JS interceptor that
+		// rewrites every iframe src to include ?adminify-iframe=1. Authoritative
+		// when present and works regardless of browser headers (covers WordPress
+		// Playground where Sec-Fetch-Dest + Referer are stripped by the SW). The
+		// param is read-only intent; no sanitization concern beyond isset.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only flag.
+		if ( isset($_GET['adminify-iframe']) ) {
+			return true;
+		}
+		// Fetch Metadata Request Headers (modern browsers): authoritative.
+		if ( isset($_SERVER["HTTP_SEC_FETCH_DEST"]) ) {
+			return strtolower(sanitize_text_field(wp_unslash($_SERVER["HTTP_SEC_FETCH_DEST"]))) === "iframe";
+		}
+		// Header absent (older browsers): fall back to a same-host /wp-admin Referer.
+		if ( ! empty($_SERVER['HTTP_REFERER']) ) {
+			$referer      = wp_unslash($_SERVER['HTTP_REFERER']);
+			$referer_host = wp_parse_url($referer, PHP_URL_HOST);
+			$self_host    = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
+			if ( $referer_host && $self_host && strtolower($referer_host) === strtolower($self_host) && strpos($referer, '/wp-admin') !== false ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
