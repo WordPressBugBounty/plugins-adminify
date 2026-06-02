@@ -87,15 +87,7 @@ if (!class_exists('Latest_Updates')) {
 
 			if("dismissed" !== $forever_notice){
 				$pxlbsadminify_changelog_items =
-				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Added:</strong> WordPress Playground live preview support — try Adminify directly from the WordPress.org plugin page. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> Reliability of the Adminify admin interface across different browser environments. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Resolved an admin UI layout display issue. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> Compatibility with WordPress 7.0 and the updated block editor. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Dark mode now saves correctly and applies consistently across the admin area and the block editor. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Added:</strong> Adminify admin bar shortcut now opens the WordPress command palette. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> Editor spacing and frame edges in the Adminify admin interface. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> FluentCRM toolbar alignment inside the Adminify admin interface. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Plugin dependency activation notice now displays correctly. </span><br>', 'adminify');
+				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Iframe issue fixed. </span><br>', 'adminify');
 
 			$pxlbsadminify_changelog_message = sprintf(
 					/* translators: %1$s: changelogs page URL. %2$s: link anchor text. %3$s: plugin update heading HTML. %4$s: changelog list items HTML. */

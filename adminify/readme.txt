@@ -4,7 +4,7 @@ Tags: white label, admin menu editor, login customizer, admin columns, custom da
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.2.6
+Stable tag: 4.2.7
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -184,9 +184,8 @@ When you select a Google font and save Adminify settings, the plugin downloads t
 7. The module settings page showing available addons such as Activity Logs.
 
 == Changelog ==
-= Adminify - 4.2.6 (02-06-2026) =
-* Added: WordPress Playground live preview support — try Adminify directly from the WordPress.org plugin page.
-* Improved: Reliability of the Adminify admin interface across different browser environments.
+= Adminify - 4.2.7 (03-06-2026) =
+* Fixed: Iframe issue fixed.
 
 = Adminify - 4.2.5 (01-06-2026) =
 * Fixed: Resolved an admin UI layout display issue.
