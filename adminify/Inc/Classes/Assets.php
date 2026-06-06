@@ -28,6 +28,7 @@ class Assets extends AdminSettingsModel
 		$this->dark_mode = empty(get_user_meta(get_current_user_id(), 'color_mode', true)) ? $global_dark_mode : get_user_meta(get_current_user_id(), 'color_mode', true);
 		add_action('admin_enqueue_scripts', array($this, 'pxlbsadminify_admin_scripts'), 100);
 		add_action('wp_ajax_pxlbsadminify_addons_install_active', array( $this, 'pxlbsadminify_addons_install_active' ) );
+		add_action('wp_ajax_pxlbsadminify_ssl_check', array( $this, 'pxlbsadminify_ssl_check' ) );
 
 		if ($this->is_dark_mode() || $this->classic_editor || $this->block_editor) {
 			add_action('admin_head', array($this, 'header_scripts'));
@@ -374,6 +375,24 @@ class Assets extends AdminSettingsModel
 		}
 		wp_enqueue_style('adminify-simple-line-icons');
 
+		// Adminify UI HTTPS gate — only on the main settings screen where the switcher lives.
+		if (isset($screen->id) && false !== strpos($screen->id, 'wp-adminify-settings')) {
+			wp_enqueue_script('adminify-ui-ssl-check', PXLBSADMINIFY_ASSETS . 'admin/js/adminify-ui-ssl-check.js', array('jquery'), PXLBSADMINIFY_VER, true);
+			wp_localize_script(
+				'adminify-ui-ssl-check',
+				'PXLBSADMINIFY_SSL',
+				array(
+					'ajax_url' => admin_url('admin-ajax.php'),
+					'nonce'    => wp_create_nonce('adminify_nonce'),
+					'field_id' => 'admin_ui',
+					'i18n'     => array(
+						'label'         => esc_html__('Adminify UI needs HTTPS:', 'adminify'),
+						'generic_error' => esc_html__('Could not verify HTTPS right now. Please try again.', 'adminify'),
+					),
+				)
+			);
+		}
+
 		if ($screen->id === 'adminify_page_wp-adminify-addons-plugins' || $screen->id === 'adminify-pro_page_wp-adminify-addons-plugins') {
 			// JS Files .
 			wp_enqueue_script('adminify-addons', PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify-addons' . Utils::assets_ext('.js'), array('jquery'), PXLBSADMINIFY_VER, true);
@@ -387,6 +406,43 @@ class Assets extends AdminSettingsModel
 				)
 			);
 		}
+	}
+
+	/**
+	 * AJAX: verify the site is HTTPS-ready before enabling the Adminify UI.
+	 *
+	 * Called from assets/admin/js/adminify-ui-ssl-check.js when the user flips
+	 * the "Adminify UI" switcher on. Returns success only when the dashboard
+	 * frame would actually load (see Utils::adminify_ui_https_status()).
+	 */
+	public function pxlbsadminify_ssl_check()
+	{
+		$nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
+
+		if (!wp_verify_nonce($nonce, 'adminify_nonce')) {
+			wp_send_json_error(array(
+				'https_ready' => false,
+				'message'     => esc_html__('Security check failed. Please reload the page and try again.', 'adminify'),
+			));
+		}
+
+		if (!current_user_can('manage_options')) {
+			wp_send_json_error(array(
+				'https_ready' => false,
+				'message'     => esc_html__('You do not have permission to change this setting.', 'adminify'),
+			));
+		}
+
+		$status = Utils::adminify_ui_https_status();
+
+		if (!empty($status['ready'])) {
+			wp_send_json_success(array('https_ready' => true));
+		}
+
+		wp_send_json_error(array(
+			'https_ready' => false,
+			'message'     => $status['message'],
+		));
 	}
 
 	// WP Adminify Options Page Style

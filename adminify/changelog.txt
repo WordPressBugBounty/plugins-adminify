@@ -1,4 +1,8 @@
 == Changelog ==
+= Adminify - 4.2.8 (06-06-2026) =
+Fixed: Resolved the custom URL redirect issue.
+Updated: Improved Adminify UI by adding HTTPS URL validation check.
+
 = Adminify - 4.2.7 (03-06-2026) =
 * Fixed: Iframe issue fixed.
 

@@ -872,6 +872,39 @@ class Utils
 		return array_fill_keys(array_values($attrs), true);
 	}
 
+	/**
+	 * Whether the site is served over HTTPS well enough to run the Adminify UI.
+	 *
+	 * Mirrors the exact condition that gates the dashboard frame in
+	 * Inc/Admin/Admin.php ( is_ssl() + an https:// site URL ), so the AJAX
+	 * gate behaviour stays consistent with where the UI actually loads.
+	 *
+	 * @return array{ready:bool,message:string}
+	 */
+	public static function adminify_ui_https_status()
+	{
+		$is_ssl     = is_ssl();
+		$site_https = ( 0 === stripos( (string) site_url(), 'https://' ) );
+
+		if ( $is_ssl && $site_https ) {
+			return [
+				'ready'   => true,
+				'message' => '',
+			];
+		}
+
+		if ( ! $site_https ) {
+			$message = esc_html__( 'Site URL is not HTTPS. Switch to HTTPS first.', 'adminify' );
+		} else {
+			$message = esc_html__( 'Open the dashboard over HTTPS first.', 'adminify' );
+		}
+
+		return [
+			'ready'   => false,
+			'message' => $message,
+		];
+	}
+
 	public static function kses_allowed_html()
 	{
 		/**
