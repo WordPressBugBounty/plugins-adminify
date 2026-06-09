@@ -31,10 +31,21 @@ class DarkModeConflicts
         // Use admin_footer (not enqueue_block_editor_assets — wp_add_inline_script
         // silently dropped the bridge) and direct-print via wp_print_inline_script_tag.
         add_action('admin_footer', array($this, 'inject_darkmode_into_editor_iframe'), 999);
+        // Classic editor (TinyMCE) renders the Visual tab inside its own iframe
+        // (#content_ifr). Same iframe-isolation problem as the block canvas: the
+        // parent Darkreader run can't reach the iframe DOM, so the editor body
+        // stays white in dark mode. Inject the same script into TinyMCE iframes.
+        add_action('admin_footer', array($this, 'inject_darkmode_into_classic_editor_iframe'), 999);
         // customize.php controls: Adminify scripts are skipped there by design
         // (Assets::should_skip_adminify_scripts), so enqueue dark-mode only on this
         // dedicated hook to keep the customize panel dark without the rest of Adminify.
         add_action('customize_controls_enqueue_scripts', array($this, 'customize_controls_darkmode_enqueue'));
+        // customize.php PREVIEW: the right-side theme preview renders inside its own
+        // iframe (a full frontend render). The controls-panel enqueue above never
+        // reaches it, so the previewed site stays light in dark mode. customize_preview_init
+        // fires inside the preview frame context — enqueue dark-mode there to darken the
+        // previewed theme the same dynamic Darkreader way, matching the classic editor.
+        add_action('customize_preview_init', array($this, 'customize_preview_darkmode_enqueue'));
     }
 
     public function darkmode_scripts()
@@ -488,11 +499,70 @@ class DarkModeConflicts
     }
 
     /**
+     * Inject the AdminifyDarkMode script INTO every classic-editor TinyMCE iframe.
+     *
+     * The TinyMCE Visual tab renders post content inside an iframe (`#content_ifr`,
+     * generally `{editor_id}_ifr`) whose body carries the `mce-content-body` class.
+     * As with the block-editor canvas, the parent Darkreader run never touches the
+     * iframe document, so the editor background stays white in dark mode. The bridge
+     * below watches for TinyMCE iframes (created lazily, and re-created when toggling
+     * Visual/Text or initializing extra editors), injects the dark-mode JS into each
+     * iframe's document and calls `AdminifyDarkMode.enable()` from inside. `__adminifyDM`
+     * guards against double-injection per iframe window.
+     */
+    public function inject_darkmode_into_classic_editor_iframe()
+    {
+        if ( $this->pxlbsadminify_resolve_color_mode() !== 'dark' ) {
+            return;
+        }
+        $dark_js_url = PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify-dark-mode' . Utils::assets_ext( '.js' );
+        $bridge      = '(function(){'
+            . 'var URL=' . wp_json_encode( $dark_js_url ) . ';'
+            . 'function looksLikeMCE(ifr){try{if(/_ifr$/.test(ifr.id||""))return true;var d=ifr.contentDocument;return !!(d&&d.body&&d.body.classList&&d.body.classList.contains("mce-content-body"));}catch(e){return false;}}'
+            . 'function activate(w){try{if(w&&w.AdminifyDarkMode){w.AdminifyDarkMode.enable({brightness:120});return true;}}catch(e){}return false;}'
+            . 'function inject(ifr){try{var d=ifr.contentDocument,w=ifr.contentWindow;if(!d||!w||!d.body)return;if(w.__adminifyDM){activate(w);return;}w.__adminifyDM=true;if(activate(w))return;var s=d.createElement("script");s.src=URL;s.onload=function(){if(!activate(w)){setTimeout(function(){activate(w);},100);setTimeout(function(){activate(w);},500);}};(d.head||d.documentElement||d.body).appendChild(s);}catch(e){}}'
+            . 'var seen=new WeakSet();'
+            . 'function watch(ifr){if(seen.has(ifr))return;seen.add(ifr);inject(ifr);ifr.addEventListener("load",function(){try{ifr.contentWindow.__adminifyDM=false;}catch(e){}inject(ifr);});}'
+            . 'function scan(){var all=document.querySelectorAll("iframe");for(var i=0;i<all.length;i++){if(looksLikeMCE(all[i]))watch(all[i]);}}'
+            . 'if(document.readyState!=="loading"){scan();}else{document.addEventListener("DOMContentLoaded",scan);}'
+            . 'new MutationObserver(scan).observe(document.documentElement,{childList:true,subtree:true});'
+            . '}());';
+        if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+            wp_print_inline_script_tag( $bridge );
+        } else {
+            echo '<script>' . $bridge . '</script>'; // phpcs:ignore WordPress.WP.EnqueuedResources
+        }
+    }
+
+    /**
      * customize.php controls: Adminify's general scripts are deliberately skipped on
      * customize.php (Assets::should_skip_adminify_scripts), so dark-mode never reaches
      * the controls panel. Enqueue dark-mode standalone on the customize controls hook.
      */
     public function customize_controls_darkmode_enqueue()
+    {
+        if ($this->pxlbsadminify_resolve_color_mode() !== 'dark') {
+            return;
+        }
+        wp_enqueue_script(
+            'adminify--dark-mode',
+            PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify-dark-mode' . Utils::assets_ext('.js'),
+            array(),
+            PXLBSADMINIFY_VER,
+            false
+        );
+        $inline = 'if(window.AdminifyDarkMode){window.AdminifyDarkMode.enable({brightness:120});}'
+                . 'addEventListener("load",function(){if(window.AdminifyDarkMode){window.AdminifyDarkMode.enable({brightness:120});}});';
+        wp_add_inline_script('adminify--dark-mode', $inline);
+    }
+
+    /**
+     * customize.php preview: the previewed theme renders inside the preview iframe,
+     * which the controls-panel enqueue never reaches. customize_preview_init runs in
+     * the preview frame's frontend context, so enqueue the dark-mode JS here and call
+     * .enable() to darken the previewed site dynamically — same as the classic editor.
+     */
+    public function customize_preview_darkmode_enqueue()
     {
         if ($this->pxlbsadminify_resolve_color_mode() !== 'dark') {
             return;
