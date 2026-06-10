@@ -4,7 +4,7 @@ Tags: white label, admin menu editor, login customizer, admin columns, custom da
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.2.9
+Stable tag: 4.2.10
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -184,6 +184,11 @@ When you select a Google font and save Adminify settings, the plugin downloads t
 7. The module settings page showing available addons such as Activity Logs.
 
 == Changelog ==
+= Adminify - 4.2.10 (10-06-2026) =
+* Fixed: Dark mode now applies in the classic editor and Customizer when using System (OS preference) mode.
+* Fixed: Settings header showed two logos in System mode; now displays a single logo matching the OS preference.
+* Security: Enforced per-user read-capability checks in the global admin search so lower roles can no longer access other authors' unpublished posts, unapproved comments, user list, or plugin inventory.
+
 = Adminify - 4.2.9 (09-06-2026) =
 * Added: Dark mode support for the Customizer controls panel, theme preview, and classic editor.
 

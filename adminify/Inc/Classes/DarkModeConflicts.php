@@ -466,7 +466,12 @@ class DarkModeConflicts
      */
     public function inject_darkmode_into_editor_iframe()
     {
-        if ( $this->pxlbsadminify_resolve_color_mode() !== 'dark' ) {
+        $mode = $this->pxlbsadminify_resolve_color_mode();
+        if ( $mode === 'auto' ) {
+            $mode = 'system';
+        }
+        // 'dark' = always on; 'system' = follow OS prefers-color-scheme (decided client-side).
+        if ( $mode !== 'dark' && $mode !== 'system' ) {
             return;
         }
         // Only run on block-editor pages (post.php / post-new.php / site editor).
@@ -479,7 +484,13 @@ class DarkModeConflicts
             }
         }
         $dark_js_url = PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify-dark-mode' . Utils::assets_ext( '.js' );
+        // For 'system' mode, only proceed when the OS currently prefers dark; otherwise bail
+        // out of the bridge entirely so the iframe stays light (matches the parent admin).
+        $apply_guard = ( $mode === 'system' )
+            ? 'if(!(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)){return;}'
+            : '';
         $bridge      = '(function(){'
+            . $apply_guard
             . 'var URL=' . wp_json_encode( $dark_js_url ) . ';'
             . 'function looksLikeEditor(ifr){try{if(ifr.name==="editor-canvas")return true;var d=ifr.contentDocument;return !!(d&&d.body&&d.body.classList&&(d.body.classList.contains("block-editor-iframe__body")||d.body.classList.contains("editor-styles-wrapper")));}catch(e){return false;}}'
             . 'function activate(w){try{if(w&&w.AdminifyDarkMode){w.AdminifyDarkMode.enable({brightness:120});return true;}}catch(e){}return false;}'
@@ -512,11 +523,22 @@ class DarkModeConflicts
      */
     public function inject_darkmode_into_classic_editor_iframe()
     {
-        if ( $this->pxlbsadminify_resolve_color_mode() !== 'dark' ) {
+        $mode = $this->pxlbsadminify_resolve_color_mode();
+        if ( $mode === 'auto' ) {
+            $mode = 'system';
+        }
+        // 'dark' = always on; 'system' = follow OS prefers-color-scheme (decided client-side).
+        if ( $mode !== 'dark' && $mode !== 'system' ) {
             return;
         }
         $dark_js_url = PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify-dark-mode' . Utils::assets_ext( '.js' );
+        // For 'system' mode, only proceed when the OS currently prefers dark; otherwise bail
+        // out of the bridge entirely so the iframe stays light (matches the parent admin).
+        $apply_guard = ( $mode === 'system' )
+            ? 'if(!(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)){return;}'
+            : '';
         $bridge      = '(function(){'
+            . $apply_guard
             . 'var URL=' . wp_json_encode( $dark_js_url ) . ';'
             . 'function looksLikeMCE(ifr){try{if(/_ifr$/.test(ifr.id||""))return true;var d=ifr.contentDocument;return !!(d&&d.body&&d.body.classList&&d.body.classList.contains("mce-content-body"));}catch(e){return false;}}'
             . 'function activate(w){try{if(w&&w.AdminifyDarkMode){w.AdminifyDarkMode.enable({brightness:120});return true;}}catch(e){}return false;}'
@@ -541,7 +563,11 @@ class DarkModeConflicts
      */
     public function customize_controls_darkmode_enqueue()
     {
-        if ($this->pxlbsadminify_resolve_color_mode() !== 'dark') {
+        $mode = $this->pxlbsadminify_resolve_color_mode();
+        if ($mode === 'auto') {
+            $mode = 'system';
+        }
+        if ($mode !== 'dark' && $mode !== 'system') {
             return;
         }
         wp_enqueue_script(
@@ -551,9 +577,21 @@ class DarkModeConflicts
             PXLBSADMINIFY_VER,
             false
         );
-        $inline = 'if(window.AdminifyDarkMode){window.AdminifyDarkMode.enable({brightness:120});}'
-                . 'addEventListener("load",function(){if(window.AdminifyDarkMode){window.AdminifyDarkMode.enable({brightness:120});}});';
-        wp_add_inline_script('adminify--dark-mode', $inline);
+        wp_add_inline_script('adminify--dark-mode', $this->darkmode_enable_inline($mode));
+    }
+
+    /**
+     * Build the inline enable() snippet. For 'dark' it always enables; for 'system' it
+     * enables only when the OS currently prefers dark (prefers-color-scheme), matching
+     * the parent-admin behavior in Assets::header_scripts.
+     */
+    private function darkmode_enable_inline($mode)
+    {
+        $enable = ($mode === 'system')
+            ? 'if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){window.AdminifyDarkMode.enable({brightness:120});}'
+            : 'window.AdminifyDarkMode.enable({brightness:120});';
+        return 'if(window.AdminifyDarkMode){' . $enable . '}'
+            . 'addEventListener("load",function(){if(window.AdminifyDarkMode){' . $enable . '}});';
     }
 
     /**
@@ -564,7 +602,11 @@ class DarkModeConflicts
      */
     public function customize_preview_darkmode_enqueue()
     {
-        if ($this->pxlbsadminify_resolve_color_mode() !== 'dark') {
+        $mode = $this->pxlbsadminify_resolve_color_mode();
+        if ($mode === 'auto') {
+            $mode = 'system';
+        }
+        if ($mode !== 'dark' && $mode !== 'system') {
             return;
         }
         wp_enqueue_script(
@@ -574,8 +616,6 @@ class DarkModeConflicts
             PXLBSADMINIFY_VER,
             false
         );
-        $inline = 'if(window.AdminifyDarkMode){window.AdminifyDarkMode.enable({brightness:120});}'
-                . 'addEventListener("load",function(){if(window.AdminifyDarkMode){window.AdminifyDarkMode.enable({brightness:120});}});';
-        wp_add_inline_script('adminify--dark-mode', $inline);
+        wp_add_inline_script('adminify--dark-mode', $this->darkmode_enable_inline($mode));
     }
 }

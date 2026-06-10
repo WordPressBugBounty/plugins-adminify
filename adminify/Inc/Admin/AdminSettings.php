@@ -52,6 +52,28 @@ if ( !class_exists( 'AdminSettings' ) ) {
                 10,
                 2
             );
+            // System mode shows BOTH header logos (see system_mode_logo_styles). Run after
+            // the framework registers its 'adminify' stylesheet (default priority 10).
+            add_action( 'admin_enqueue_scripts', array($this, 'system_mode_logo_styles'), 100 );
+        }
+
+        /**
+         * Fix the settings-header logo in System mode.
+         *
+         * The header prints both a light and a dark logo; the framework CSS hides one
+         * based on the body's .adminify-light-mode / .adminify-dark-mode class. System
+         * mode adds NEITHER class, so neither hide-rule fires and both logos show.
+         *
+         * These fallbacks are scoped under .wp-adminify-settings with lower specificity
+         * than the mode-class rules, so they only take effect when no mode class is
+         * present (i.e. System) and pick a single logo from the OS prefers-color-scheme.
+         */
+        public function system_mode_logo_styles() {
+            if ( !wp_style_is( 'adminify', 'enqueued' ) && !wp_style_is( 'adminify', 'registered' ) ) {
+                return;
+            }
+            $css = '.wp-adminify-settings img.adminify-settings-dark-logo{display:none}' . '.wp-adminify-settings img.adminify-settings-light-logo{display:inline-block}' . '@media (prefers-color-scheme: dark){' . '.wp-adminify-settings img.adminify-settings-light-logo{display:none}' . '.wp-adminify-settings img.adminify-settings-dark-logo{display:inline-block}' . '}';
+            wp_add_inline_style( 'adminify', $css );
         }
 
         /**

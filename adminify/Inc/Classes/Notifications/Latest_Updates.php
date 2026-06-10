@@ -87,7 +87,9 @@ if (!class_exists('Latest_Updates')) {
 
 			if("dismissed" !== $forever_notice){
 				$pxlbsadminify_changelog_items =
-				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Added:</strong> Dark mode support for the Customizer controls panel, theme preview, and classic editor. </span><br>', 'adminify');
+				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Dark mode now applies in the classic editor and Customizer when using System (OS preference) mode. </span><br>', 'adminify')
+					. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Settings header showed two logos in System mode; now displays a single logo matching the OS preference. </span><br>', 'adminify')
+					. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Security:</strong> Enforced per-user read-capability checks in the global admin search so lower roles can no longer access other authors unpublished posts, unapproved comments, user list, or plugin inventory. </span><br>', 'adminify');
 
 			$pxlbsadminify_changelog_message = sprintf(
 					/* translators: %1$s: changelogs page URL. %2$s: link anchor text. %3$s: plugin update heading HTML. %4$s: changelog list items HTML. */

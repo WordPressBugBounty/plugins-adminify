@@ -432,6 +432,10 @@ class AdminBar extends AdminSettingsModel
 				'numberposts' => -1,
 				's'           => $search_text,
 				'post_status' => ['publish', 'pending', 'draft', 'future', 'private', 'inherit'],
+				// Restrict non-public statuses (private/draft/pending/future) to posts the
+				// current user is allowed to read. Without this, any role holding edit_posts
+				// (e.g. Contributor) could read other authors' unpublished post titles.
+				'perm'        => 'readable',
 			];
 
 			// All Post Types
@@ -443,11 +447,14 @@ class AdminBar extends AdminSettingsModel
 			// All Categories/Taxonomies
 			$all_taxonomies = get_taxonomies();
 
-			// Get Comments
-			$all_comments = get_comments();
+			// Get Comments — only for users who can moderate them. Otherwise the search
+			// would expose unapproved/pending comment content to roles that cannot see it
+			// in the WordPress admin (e.g. Contributor).
+			$all_comments = current_user_can('moderate_comments') ? get_comments() : [];
 
-			// Get All Users
-			$all_users = get_users();
+			// Get All Users — only for users who can list users. Prevents leaking user
+			// logins/display names to roles without the list_users capability.
+			$all_users = current_user_can('list_users') ? get_users() : [];
 
 			// All Users
 			// $blogusers = get_users();
@@ -460,12 +467,15 @@ class AdminBar extends AdminSettingsModel
 			// // All Menus
 			// $all_admin_menus = self::get_wp_admin_menus();
 
-			// All Plugins
-
-			if (!function_exists('get_plugins')) {
-				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			// All Plugins — only for users who can manage plugins. Prevents leaking the
+			// site's plugin inventory to roles without the activate_plugins capability.
+			$all_plugins = [];
+			if (current_user_can('activate_plugins')) {
+				if (!function_exists('get_plugins')) {
+					require_once ABSPATH . 'wp-admin/includes/plugin.php';
+				}
+				$all_plugins = get_plugins();
 			}
-			$all_plugins = get_plugins();
 
 			$foundposts = get_posts($args);
 
@@ -709,6 +719,11 @@ class AdminBar extends AdminSettingsModel
 	{
 		$all_posts = [];
 		foreach ($foundposts as $key => $post) {
+			// Defense in depth alongside the query's perm=readable: never surface a post
+			// the current user cannot read (e.g. another author's unpublished content).
+			if (!current_user_can('read_post', $post->ID)) {
+				continue;
+			}
 			$edit_url = get_edit_post_link($post);
 			$all_posts[$key]['title'] = get_the_title($post->ID);
 			$all_posts[$key]['link'] = $edit_url;

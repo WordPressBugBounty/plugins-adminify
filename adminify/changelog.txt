@@ -1,4 +1,9 @@
 == Changelog ==
+= Adminify - 4.2.10 (10-06-2026) =
+* Fixed: Dark mode now applies in the classic editor and Customizer when using System (OS preference) mode.
+* Fixed: Settings header showed two logos in System mode; now displays a single logo matching the OS preference.
+* Security: Enforced per-user read-capability checks in the global admin search so lower roles can no longer access other authors unpublished posts, unapproved comments, user list, or plugin inventory.
+
 = Adminify - 4.2.9 (09-06-2026) =
 * Added: Dark mode support for the Customizer controls panel, theme preview, and classic editor.
 
