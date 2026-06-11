@@ -24,13 +24,11 @@ class DarkModeConflicts
     {
         add_action('admin_enqueue_scripts', array($this, 'darkmode_scripts'), 100);
         add_action( 'enqueue_block_editor_assets', array($this, "gutenberg_block_editor_darkmode_assets"));
-        // WP 6.3+/7.0: the block editor canvas runs in an iframe. The AdminifyDarkMode
-        // script has no built-in iframe support, so inject the same script INTO the
-        // iframe and call .enable() from inside — that way Darkreader runs over the
-        // iframe DOM the same dynamic way it runs on the parent admin.
-        // Use admin_footer (not enqueue_block_editor_assets — wp_add_inline_script
-        // silently dropped the bridge) and direct-print via wp_print_inline_script_tag.
-        add_action('admin_footer', array($this, 'inject_darkmode_into_editor_iframe'), 999);
+        // Block editor canvas (iframe[name="editor-canvas"]) is a frontend style
+        // PREVIEW — Adminify is an admin-focus plugin, so dark mode must NOT darken
+        // the previewed content. Only the controller chrome (sidebar/panels) goes
+        // dark, handled by the parent-admin dark mode + gutenberg_block_editor_darkmode_assets.
+        // (Intentionally no iframe injection into the block canvas.)
         // Classic editor (TinyMCE) renders the Visual tab inside its own iframe
         // (#content_ifr). Same iframe-isolation problem as the block canvas: the
         // parent Darkreader run can't reach the iframe DOM, so the editor body
@@ -40,12 +38,6 @@ class DarkModeConflicts
         // (Assets::should_skip_adminify_scripts), so enqueue dark-mode only on this
         // dedicated hook to keep the customize panel dark without the rest of Adminify.
         add_action('customize_controls_enqueue_scripts', array($this, 'customize_controls_darkmode_enqueue'));
-        // customize.php PREVIEW: the right-side theme preview renders inside its own
-        // iframe (a full frontend render). The controls-panel enqueue above never
-        // reaches it, so the previewed site stays light in dark mode. customize_preview_init
-        // fires inside the preview frame context — enqueue dark-mode there to darken the
-        // previewed theme the same dynamic Darkreader way, matching the classic editor.
-        add_action('customize_preview_init', array($this, 'customize_preview_darkmode_enqueue'));
     }
 
     public function darkmode_scripts()
@@ -429,12 +421,61 @@ class DarkModeConflicts
         // $parent_selector = 'body.wp-adminify.adminify-dark-mode';
         $parent_selector = 'body.wp-adminify';
 
-        $dark_mode_style = "$parent_selector .components-modal__content .components-text, 
+        $dark_mode_style = "$parent_selector .components-modal__content .components-text,
             $parent_selector .components-popover__content .components-text { color: black!important; }
             $parent_selector .block-editor-block-inspector .components-tools-panel { border-top-color: #e0e0e0; }
             $parent_selector .admin-ui-navigable-region .components-panel__header > div > button { color: black; }
-            $parent_selector .editor-sidebar__panel .editor-post-card-panel__header svg, 
+            $parent_selector .editor-sidebar__panel .editor-post-card-panel__header svg,
             $parent_selector .commands-command-menu__container .commands-command-menu__header svg { fill: black; }
+            /** Typography & Size */
+            $parent_selector .components-toggle-group-control {
+                background: #1e1e1e!important; border-color: #4a4a4a!important;
+            }
+            /* Advanced > ADDITIONAL CSS textarea + WIDTH/number/unit inputs render white
+               (the dark engine skips them), clashing with the dark inspector. Force dark. */
+            $parent_selector .block-editor-block-inspector textarea,
+            $parent_selector .block-editor-block-inspector .components-textarea-control__input,
+            $parent_selector .block-editor-block-inspector input[type=\"number\"],
+            $parent_selector .block-editor-block-inspector input[type=\"text\"],
+            $parent_selector .block-editor-block-inspector .components-input-control__input,
+            $parent_selector .block-editor-block-inspector .components-unit-control input {
+                background: #1e1e1e!important; color: #f0f0f1!important; border-color: #4a4a4a!important;
+            }
+            /* Unit suffix/select (the \"px\" box) is a separate element the engine leaves
+               white — force it dark to match the WIDTH input. */
+            $parent_selector .block-editor-block-inspector .components-unit-control__unit-select,
+            $parent_selector .block-editor-block-inspector .components-unit-control select,
+            $parent_selector .block-editor-block-inspector .components-input-control__suffix,
+            $parent_selector .block-editor-block-inspector .components-input-control__suffix * {
+                background: #1e1e1e!important; color: #f0f0f1!important; border-color: #4a4a4a!important;
+            }
+            /* ToolsPanel \"Settings\" three-dot dropdown menu: item labels (e.g. WIDTH) render
+               dark on the dark popover and disappear — force them light. The newer block
+               editor uses an Ariakit menu with hashed class names (css-*-Item-baseItem), so
+               target the ARIA roles too, not just the legacy .components-menu-item__item. */
+            $parent_selector .components-dropdown-menu__menu .components-menu-item__item,
+            $parent_selector .components-menu-group .components-menu-item__item,
+            $parent_selector [role=\"menu\"] .components-menu-item__item,
+            $parent_selector [role=\"menu\"] [role=\"menuitem\"],
+            $parent_selector [role=\"menu\"] [role=\"menuitemcheckbox\"],
+            $parent_selector [role=\"menu\"] [role=\"menuitemradio\"],
+            $parent_selector [role=\"menu\"] [role=\"menuitem\"] *,
+            $parent_selector [role=\"menu\"] [role=\"menuitemcheckbox\"] *,
+            $parent_selector [role=\"menu\"] [role=\"menuitemradio\"] * {
+                color: #f0f0f1!important;
+            }
+            /* Block card description (text under the block name, e.g. \"A single column
+               within a columns block\") renders too dark to read — force a light color. */
+            $parent_selector .block-editor-block-inspector .block-editor-block-card__description,
+            $parent_selector .block-editor-block-card__description {
+                color: #c0c0c5!important;
+            }
+            /* Inspector tab icons (Settings gear / Styles) render dark on the dark panel —
+               force a light fill so they stay visible. */
+            $parent_selector .block-editor-block-inspector [role=\"tab\"] svg,
+            $parent_selector .block-editor-block-inspector-tabs__tablist svg {
+                fill: #e0e0e0!important;
+            }
         ";
         wp_add_inline_style('adminify-gutenberg-dark', wp_strip_all_tags($dark_mode_style));
     }
@@ -450,63 +491,6 @@ class DarkModeConflicts
         $global_mode = !empty($opts['light_dark_mode']['admin_ui_mode']) ? $opts['light_dark_mode']['admin_ui_mode'] : 'light';
         $user_mode   = get_user_meta(get_current_user_id(), 'color_mode', true);
         return !empty($user_mode) ? $user_mode : $global_mode;
-    }
-
-    /**
-     * Inject the AdminifyDarkMode script INTO the WP 6.3+/7.0 block editor iframe
-     * canvas. The script attaches a global `window.AdminifyDarkMode` and uses a
-     * Darkreader-style dynamic theme that rewrites colors based on the running
-     * document — so it must be loaded inside the iframe's window to darken the
-     * canvas DOM, not just the parent admin chrome.
-     *
-     * The bridge below watches for `iframe[name="editor-canvas"]` (added/changed
-     * across edits or full-site editor route changes), injects the dark-mode JS
-     * into the iframe's document, and calls `AdminifyDarkMode.enable()` once it
-     * loads. `__adminifyDarkInjected` guards against double-injection.
-     */
-    public function inject_darkmode_into_editor_iframe()
-    {
-        $mode = $this->pxlbsadminify_resolve_color_mode();
-        if ( $mode === 'auto' ) {
-            $mode = 'system';
-        }
-        // 'dark' = always on; 'system' = follow OS prefers-color-scheme (decided client-side).
-        if ( $mode !== 'dark' && $mode !== 'system' ) {
-            return;
-        }
-        // Only run on block-editor pages (post.php / post-new.php / site editor).
-        $screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-        if ( ! $screen || ! method_exists( $screen, 'is_block_editor' ) || ! $screen->is_block_editor() ) {
-            // also accept Site Editor screen ids
-            $is_site_editor = $screen && in_array( $screen->id, array( 'site-editor', 'gutenberg_page_gutenberg-edit-site' ), true );
-            if ( ! $is_site_editor ) {
-                return;
-            }
-        }
-        $dark_js_url = PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify-dark-mode' . Utils::assets_ext( '.js' );
-        // For 'system' mode, only proceed when the OS currently prefers dark; otherwise bail
-        // out of the bridge entirely so the iframe stays light (matches the parent admin).
-        $apply_guard = ( $mode === 'system' )
-            ? 'if(!(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)){return;}'
-            : '';
-        $bridge      = '(function(){'
-            . $apply_guard
-            . 'var URL=' . wp_json_encode( $dark_js_url ) . ';'
-            . 'function looksLikeEditor(ifr){try{if(ifr.name==="editor-canvas")return true;var d=ifr.contentDocument;return !!(d&&d.body&&d.body.classList&&(d.body.classList.contains("block-editor-iframe__body")||d.body.classList.contains("editor-styles-wrapper")));}catch(e){return false;}}'
-            . 'function activate(w){try{if(w&&w.AdminifyDarkMode){w.AdminifyDarkMode.enable({brightness:120});return true;}}catch(e){}return false;}'
-            . 'function inject(ifr){try{var d=ifr.contentDocument,w=ifr.contentWindow;if(!d||!w)return;if(w.__adminifyDM){activate(w);return;}w.__adminifyDM=true;if(activate(w))return;var s=d.createElement("script");s.src=URL;s.onload=function(){if(!activate(w)){setTimeout(function(){activate(w);},100);setTimeout(function(){activate(w);},500);}};(d.head||d.documentElement||d.body).appendChild(s);}catch(e){}}'
-            . 'var seen=new WeakSet();'
-            . 'function watch(ifr){if(seen.has(ifr))return;seen.add(ifr);inject(ifr);ifr.addEventListener("load",function(){try{ifr.contentWindow.__adminifyDM=false;}catch(e){}inject(ifr);});}'
-            . 'function scan(){var all=document.querySelectorAll("iframe");for(var i=0;i<all.length;i++){if(looksLikeEditor(all[i]))watch(all[i]);}}'
-            . 'if(document.readyState!=="loading"){scan();}else{document.addEventListener("DOMContentLoaded",scan);}'
-            . 'new MutationObserver(scan).observe(document.documentElement,{childList:true,subtree:true});'
-            . '}());';
-        if ( function_exists( 'wp_print_inline_script_tag' ) ) {
-            wp_print_inline_script_tag( $bridge );
-        } else {
-            echo '<script>' . $bridge . '</script>'; // phpcs:ignore WordPress.WP.EnqueuedResources
-        }
-        return; // sentinel — never reach legacy enqueue path below
     }
 
     /**
@@ -592,30 +576,5 @@ class DarkModeConflicts
             : 'window.AdminifyDarkMode.enable({brightness:120});';
         return 'if(window.AdminifyDarkMode){' . $enable . '}'
             . 'addEventListener("load",function(){if(window.AdminifyDarkMode){' . $enable . '}});';
-    }
-
-    /**
-     * customize.php preview: the previewed theme renders inside the preview iframe,
-     * which the controls-panel enqueue never reaches. customize_preview_init runs in
-     * the preview frame's frontend context, so enqueue the dark-mode JS here and call
-     * .enable() to darken the previewed site dynamically — same as the classic editor.
-     */
-    public function customize_preview_darkmode_enqueue()
-    {
-        $mode = $this->pxlbsadminify_resolve_color_mode();
-        if ($mode === 'auto') {
-            $mode = 'system';
-        }
-        if ($mode !== 'dark' && $mode !== 'system') {
-            return;
-        }
-        wp_enqueue_script(
-            'adminify--dark-mode',
-            PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify-dark-mode' . Utils::assets_ext('.js'),
-            array(),
-            PXLBSADMINIFY_VER,
-            false
-        );
-        wp_add_inline_script('adminify--dark-mode', $this->darkmode_enable_inline($mode));
     }
 }

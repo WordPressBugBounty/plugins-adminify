@@ -97,7 +97,7 @@ if ( !class_exists( 'WP_Adminify' ) ) {
         public function pxlbsadminify_plugin_row_meta( $plugin_meta, $plugin_file ) {
             if ( PXLBSADMINIFY_BASE === $plugin_file ) {
                 $row_meta = array(
-                    'docs'       => sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url_raw( 'https://wpadminify.com/kb' ), __( 'Docs', 'adminify' ) ),
+                    'docs'       => sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url_raw( 'https://wpadminify.com/docs/adminify/getting-started' ), __( 'Docs', 'adminify' ) ),
                     'changelogs' => sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url_raw( 'https://wpadminify.com/changelogs/' ), __( 'Changelogs', 'adminify' ) ),
                     'tutorials'  => '<a href="https://www.youtube.com/playlist?list=PLqpMw0NsHXV-EKj9Xm1DMGa6FGniHHly8" aria-label="' . esc_attr( __( 'View Adminify Video Tutorials', 'adminify' ) ) . '" target="_blank">' . __( 'Video Tutorials', 'adminify' ) . '</a>',
                 );

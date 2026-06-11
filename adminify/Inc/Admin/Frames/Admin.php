@@ -267,7 +267,7 @@ if (!class_exists('Admin')) {
 
             // Admin Bar Exits
             if ( Utils::is_plugin_active('admin-bar/admin-bar.php') ) {
-                $admin_bar_items                  = get_option('pxlbsadminify_adminbar_settings');
+                $admin_bar_items                  = get_option('_jltadminbar_settings');
 
                 // Only build the customized admin bar when settings exist.
                 // Otherwise fall through so the default admin bar data is still

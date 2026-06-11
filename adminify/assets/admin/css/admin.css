@@ -1953,18 +1953,3 @@ body.wp-adminify.adminify-ui.post-new-php #frame-adminify-app--iframe {
   border-top-right-radius: 0;
   border-bottom-left-radius: 0;
 }
-
-body.wp-adminify.adminify-ui.block-editor-page #frame-adminify-app .adminify-frame-content,
-body.wp-adminify.adminify-ui.post-php #frame-adminify-app .adminify-frame-content,
-body.wp-adminify.adminify-ui.post-new-php #frame-adminify-app .adminify-frame-content {
-  padding-top: 0;
-}
-body.wp-adminify.adminify-ui.block-editor-page #frame-adminify-app--iframe,
-body.wp-adminify.adminify-ui.post-php #frame-adminify-app--iframe,
-body.wp-adminify.adminify-ui.post-new-php #frame-adminify-app--iframe {
-  border-top: 0;
-  border-left: 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  border-bottom-left-radius: 0;
-}

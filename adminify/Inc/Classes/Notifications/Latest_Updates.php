@@ -87,9 +87,10 @@ if (!class_exists('Latest_Updates')) {
 
 			if("dismissed" !== $forever_notice){
 				$pxlbsadminify_changelog_items =
-				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Dark mode now applies in the classic editor and Customizer when using System (OS preference) mode. </span><br>', 'adminify')
-					. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Settings header showed two logos in System mode; now displays a single logo matching the OS preference. </span><br>', 'adminify')
-					. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Security:</strong> Enforced per-user read-capability checks in the global admin search so lower roles can no longer access other authors unpublished posts, unapproved comments, user list, or plugin inventory. </span><br>', 'adminify');
+				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> Block editor dark mode now applies only to the editor controls (sidebar/panels); the content preview keeps its real frontend styles instead of being darkened. </span><br>', 'adminify')
+					. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> Removed dark mode support from the Customizer preview; the previewed site now keeps its real frontend styles. </span><br>', 'adminify')
+					. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Several block editor controls (Typography/Heading toggles, inspector inputs, block description, tab icons, and dropdown menus) had visibility and contrast issues in dark mode. </span><br>', 'adminify')
+					. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Admin Bar Editor plugin\'s top bar menus were hidden by the Adminify UI; they now display correctly. </span><br>', 'adminify');
 
 			$pxlbsadminify_changelog_message = sprintf(
 					/* translators: %1$s: changelogs page URL. %2$s: link anchor text. %3$s: plugin update heading HTML. %4$s: changelog list items HTML. */
