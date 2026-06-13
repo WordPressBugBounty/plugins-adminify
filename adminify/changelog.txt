@@ -1,4 +1,7 @@
 == Changelog ==
+= Adminify - 4.2.12 (13-06-2026) =
+Added: Username Changer Feature Added.
+
 = Adminify - 4.2.11 (11-06-2026) =
 * Improved: Block editor dark mode now applies only to the editor controls (sidebar/panels); the content preview keeps its real frontend styles instead of being darkened.
 * Improved: Removed dark mode support from the Customizer preview; the previewed site now keeps its real frontend styles.

@@ -93,8 +93,9 @@ if ( ! class_exists( 'Security' ) ) {
 				],
 				'security_feed'        => false,
 				'users_security'       => [
-					'limit_logins'    => false,
+					'enable_users_security' => false,
 					'change_username' => false,
+					// 'limit_logins'    => false,
 				],
 				'disable_automatic_emails'        => false,
 				'disable_language_switcher_login' => false,
@@ -568,6 +569,17 @@ if ( ! class_exists( 'Security' ) ) {
 		public function security_user_security(&$users){
 
 			$users_settings[] = [
+				'id'         => 'enable_users_security',
+				'type'       => 'switcher',
+				'text_on'    => __('Show', 'adminify'),
+				'text_off'   => __('Hide', 'adminify'),
+				'class'      => 'adminify-pl-0 adminify-pt-0',
+				'text_width' => 80,
+				'title'      => __('', 'adminify'),
+				'default'    => $this->get_default_field('users_security')['enable_users_security'],
+			];
+
+			$users_settings[] = [
 				'id'         => 'change_username',
 				'type'       => 'switcher',
 				'text_on'    => __('Show', 'adminify'),
@@ -577,18 +589,20 @@ if ( ! class_exists( 'Security' ) ) {
 				/* translators: %s: URL to the documentation page */
 				'subtitle'   => sprintf(__('Remove Comments for Media attachment Template <a href="%s">More Details</a> ', 'adminify'), esc_url('https://wpadminify.com/docs')),
 				'default'    => $this->get_default_field('users_security')['change_username'],
+				'dependency' => ['enable_users_security', '==', 'true', 'true']
 			];
-			$users_settings[] = [
-				'id'         => 'limit_logins',
-				'type'       => 'switcher',
-				'text_on'    => __('Show', 'adminify'),
-				'text_off'   => __('Hide', 'adminify'),
-				'text_width' => 80,
-				'title'      => __('Limit Login Attempts', 'adminify'),
-				/* translators: %s: URL to the documentation page */
-				'subtitle'   => sprintf(__('Prevent brute force attacks by limiting the number of failed login attempts per IP address. <a href="%s">More Details</a> ', 'adminify'), esc_url('https://wpadminify.com/docs')),
-				'default'    => $this->get_default_field('users_security')['limit_logins'],
-			];
+			// $users_settings[] = [
+			// 	'id'         => 'limit_logins',
+			// 	'type'       => 'switcher',
+			// 	'text_on'    => __('Show', 'adminify'),
+			// 	'text_off'   => __('Hide', 'adminify'),
+			// 	'text_width' => 80,
+			// 	'title'      => __('Limit Login Attempts', 'adminify'),
+			// 	/* translators: %s: URL to the documentation page */
+			// 	'subtitle'   => sprintf(__('Prevent brute force attacks by limiting the number of failed login attempts per IP address. <a href="%s">More Details</a> ', 'adminify'), esc_url('https://wpadminify.com/docs')),
+			// 	'default'    => $this->get_default_field('users_security')['limit_logins'],
+			// 	'dependency' => ['enable_users_security', '==', 'true', 'true']
+			// ];
 
 			$users[] = array(
 				'id'       => 'users_security',
@@ -886,9 +900,9 @@ if ( ! class_exists( 'Security' ) ) {
 			];
 
 			$this->security_redirect_urls( $fields );
-			  // $this->security_user_security( $fields );
+			$this->security_user_security( $fields );
 			$this->security_head_fields( $fields );
-            $this->security_feed_fields( $fields );
+      $this->security_feed_fields( $fields );
 			$this->security_rest_api_fields( $fields );
 			$this->security_disable_comments( $fields );
 			$this->security_archive_fields( $fields );
