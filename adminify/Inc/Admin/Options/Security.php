@@ -64,9 +64,7 @@ if ( ! class_exists( 'Security' ) ) {
 			return [
 				'security_head'		=>	[
 					'enable_security_head' => false,
-					'security_head_data'   => [
-						'generator_wp_version'
-					],
+					'security_head_data'   => [],
 					'self_ping_sites' => ''
 				],
 				'security_rest_api' => [
@@ -95,7 +93,6 @@ if ( ! class_exists( 'Security' ) ) {
 				'users_security'       => [
 					'enable_users_security' => false,
 					'change_username' => false,
-					// 'limit_logins'    => false,
 				],
 				'disable_automatic_emails'        => false,
 				'disable_language_switcher_login' => false,
@@ -587,29 +584,20 @@ if ( ! class_exists( 'Security' ) ) {
 				'text_width' => 80,
 				'title'      => __('Username Change', 'adminify'),
 				/* translators: %s: URL to the documentation page */
-				'subtitle'   => sprintf(__('Remove Comments for Media attachment Template <a href="%s">More Details</a> ', 'adminify'), esc_url('https://wpadminify.com/docs')),
+				'subtitle'   => sprintf(__('Remove Comments for Media attachment Template <a href="%s">More Details</a> ', 'adminify'), esc_url('https://wpadminify.com/docs/adminify/security/change-wordpress-username')),
+				'class'      => 'adminify-pl-0',
 				'default'    => $this->get_default_field('users_security')['change_username'],
 				'dependency' => ['enable_users_security', '==', 'true', 'true']
 			];
-			// $users_settings[] = [
-			// 	'id'         => 'limit_logins',
-			// 	'type'       => 'switcher',
-			// 	'text_on'    => __('Show', 'adminify'),
-			// 	'text_off'   => __('Hide', 'adminify'),
-			// 	'text_width' => 80,
-			// 	'title'      => __('Limit Login Attempts', 'adminify'),
-			// 	/* translators: %s: URL to the documentation page */
-			// 	'subtitle'   => sprintf(__('Prevent brute force attacks by limiting the number of failed login attempts per IP address. <a href="%s">More Details</a> ', 'adminify'), esc_url('https://wpadminify.com/docs')),
-			// 	'default'    => $this->get_default_field('users_security')['limit_logins'],
-			// 	'dependency' => ['enable_users_security', '==', 'true', 'true']
-			// ];
 
 			$users[] = array(
 				'id'       => 'users_security',
 				'type'     => 'fieldset',
-				'title'    => __('Users Security', 'adminify'),
+				/* translators: %1$s: Pro upgrade badge HTML; %2$s: New badge HTML */
+				'title'    => sprintf(__('Users Security %1$s %2$s', 'adminify'), Utils::upgrade_pro_badge(), Utils::new_badge()),
 				'subtitle' => __('Security for Users, Login/Logout etc.', 'adminify'),
 				'fields'   => $users_settings,
+				'class'   => 'adminify-two-columns adminify-pro-fieldset adminify-pro-notice adminify-items-start',
 				'default'  => $this->get_default_field('users_security'),
 			);
 		}

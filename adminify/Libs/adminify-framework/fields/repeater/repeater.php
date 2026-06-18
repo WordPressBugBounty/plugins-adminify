@@ -88,7 +88,7 @@ if ( ! class_exists( 'ADMINIFY_Field_repeater' ) ) {
 
         echo '<div class="adminify-repeater-alert adminify-repeater-max">'. esc_html__( 'You cannot add more.', 'adminify' ) .'</div>';
         echo '<div class="adminify-repeater-alert adminify-repeater-min">'. esc_html__( 'You cannot remove more.', 'adminify' ) .'</div>';
-        echo '<a href="#" class="button button-primary adminify-repeater-add">'. esc_html( $args['button_title'] ) .'</a>';
+        echo '<a href="#" class="button button-primary adminify-repeater-add">'. wp_kses( $args['button_title'], [ 'i' => [ 'class' => [] ] ] ) .'</a>';
 
         echo wp_kses_post( $this->field_after() );
 

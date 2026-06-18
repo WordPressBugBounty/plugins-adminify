@@ -4,7 +4,7 @@ Tags: white label, admin menu editor, login customizer, admin columns, custom da
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.2.12
+Stable tag: 4.2.13
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -184,6 +184,14 @@ When you select a Google font and save Adminify settings, the plugin downloads t
 7. The module settings page showing available addons such as Activity Logs.
 
 == Changelog ==
+= Adminify - 4.2.13 (18-06-2026) =
+* Fixed: Body font typography (font-family) was not applying because the inline style output was HTML-escaped.
+* Fixed: Repeater "Add" button showed raw HTML instead of the circle-plus icon.
+* Fixed: Gutenberg post title alignment issue (title shifted to the left side).
+* Improved: Added Pro badge to the Username Changer options.
+* Improved: Default value field is now unchecked by default.
+* Added: WPML (Multilingual CMS) compatibility - switching the admin language from the topbar now reloads the window so the whole admin updates.
+
 = Adminify - 4.2.12 (13-06-2026) =
 Added: Username Changer Feature Added.
 

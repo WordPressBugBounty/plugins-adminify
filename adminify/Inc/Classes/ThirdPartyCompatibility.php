@@ -29,7 +29,7 @@ class ThirdPartyCompatibility {
         // Inject layout-tightening CSS INTO the block editor iframe (parent CSS
         // cannot reach inside). Closes the huge top gap between the editor toolbar
         // and the post title that's amplified inside the Adminify iframe wrapper.
-        add_filter( 'block_editor_settings_all', [$this, 'block_editor_iframe_layout_tweaks'] );
+        // add_filter('block_editor_settings_all', [$this, 'block_editor_iframe_layout_tweaks']); // TODO: comment because not product this issue. if we product this issue then think about why create this this and solve it all type of users
         if ( Utils::is_plugin_active( 'gravityforms/gravityforms.php' ) ) {
             add_filter(
                 'update_footer',
@@ -160,6 +160,20 @@ class ThirdPartyCompatibility {
 					top: 0 !important;
 				}
 			</style>';
+            // WPML (sitepress-multilingual-cms) admin language switcher
+            // (#WPML_ALS) is mirrored into the Adminify topbar. Its language
+            // links otherwise switch inside the iframe, so the parent admin
+            // chrome keeps the old language. Force a full top-window reload to
+            // the chosen language URL so the whole admin re-renders.
+            if ( Utils::is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+                $pxlbsadminify_wpml_js = "(function(){document.addEventListener('click',function(e){var li=e.target&&e.target.closest&&e.target.closest('[id^=\"adminify-top-menu-WPML_ALS_\"]');if(!li)return;var a=li.querySelector('a')||(e.target.closest('a'));if(!a)return;var href=a.getAttribute('href')||a.href;if(!href||href==='#')return;e.preventDefault();e.stopPropagation();window.top.location.href=href;},true);}());";
+                if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+                    wp_print_inline_script_tag( $pxlbsadminify_wpml_js );
+                } else {
+                    echo '<script>' . $pxlbsadminify_wpml_js . '</script>';
+                    // phpcs:ignore WordPress.WP.EnqueuedResources
+                }
+            }
         }
         if ( Utils::is_plugin_active( 'squirrly-seo/squirrly.php' ) ) {
             // kept as-is for squirrly compat; the generic adminify-ui rule below covers all editor pages

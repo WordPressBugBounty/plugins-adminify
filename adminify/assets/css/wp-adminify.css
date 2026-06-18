@@ -2090,7 +2090,8 @@ body {
 .adminify-ui #updraft-backupnow-modal a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):not(.wpb_switch-to-composer):not(.wpb_switch-to-front-composer):not(.wpb_switch-to-gutenberg),
 .adminify-ui .updraft-disk-space-actions a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):not(.wpb_switch-to-composer):not(.wpb_switch-to-front-composer):not(.wpb_switch-to-gutenberg),
 .adminify-ui .popular-tags a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):not(.wpb_switch-to-composer):not(.wpb_switch-to-front-composer):not(.wpb_switch-to-gutenberg),
-.adminify-ui .metabox-prefs a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):not(.wpb_switch-to-composer):not(.wpb_switch-to-front-composer):not(.wpb_switch-to-gutenberg) {
+.adminify-ui .metabox-prefs a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):not(.wpb_switch-to-composer):not(.wpb_switch-to-front-composer):not(.wpb_switch-to-gutenberg),
+.adminify-ui #profile-page a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):not(.wpb_switch-to-composer):not(.wpb_switch-to-front-composer):not(.wpb_switch-to-gutenberg) {
   outline: none;
   color: var(--adminify-primary) !important;
   -webkit-text-decoration: none;
@@ -2116,7 +2117,8 @@ body {
 .adminify-ui #updraft-backupnow-modal a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):not(.wpb_switch-to-composer):not(.wpb_switch-to-front-composer):not(.wpb_switch-to-gutenberg):focus,
 .adminify-ui .updraft-disk-space-actions a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):not(.wpb_switch-to-composer):not(.wpb_switch-to-front-composer):not(.wpb_switch-to-gutenberg):focus,
 .adminify-ui .popular-tags a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):not(.wpb_switch-to-composer):not(.wpb_switch-to-front-composer):not(.wpb_switch-to-gutenberg):focus,
-.adminify-ui .metabox-prefs a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):not(.wpb_switch-to-composer):not(.wpb_switch-to-front-composer):not(.wpb_switch-to-gutenberg):focus {
+.adminify-ui .metabox-prefs a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):not(.wpb_switch-to-composer):not(.wpb_switch-to-front-composer):not(.wpb_switch-to-gutenberg):focus,
+.adminify-ui #profile-page a:not(.button-primary):not(.notice-dismiss):not(.mi-dw-btn-large):not(.aioseo-button):not(.trash a):not(.sq-nav-item):not(.adminify-active):not(.wpb_switch-to-composer):not(.wpb_switch-to-front-composer):not(.wpb_switch-to-gutenberg):focus {
   box-shadow: none !important;
 }
 .adminify-ui input[type=text],

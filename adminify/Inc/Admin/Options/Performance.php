@@ -26,10 +26,7 @@ if (!class_exists('Performance')) {
             return [
                 'performance'       => [
                     'performance_enable' => true,
-                    'performance_data'   => [
-                        'version_strings',
-                        'emoji',
-                    ]
+                    'performance_data'   => []
                 ],
                 'disable_embeds'    => false,   // Gutenberg
                 // Gutenberg

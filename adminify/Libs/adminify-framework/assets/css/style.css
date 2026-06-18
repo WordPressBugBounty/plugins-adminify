@@ -338,6 +338,9 @@ body.wp-adminify {
   width: 13px;
   height: 13px;
 }
+.wp-adminify-settings .adminify-items-start {
+  align-items: flex-start;
+}
 .wp-adminify-settings .wp-adminify--menu--editor--settings:has(.adminify-pro-notice) .adminify-add-new-menu-editor-item {
   display: flex;
   align-items: center;
@@ -380,6 +383,15 @@ body.wp-adminify {
 .adminify-section .adminify-field .adminify-pro-badge {
   background: #cdcdfd;
   color: #3a3ae9;
+  padding: 3px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+  font-size: 13px;
+  margin-left: 4px;
+}
+.adminify-section .adminify-field .adminify-new-badge {
+  background: #d1fae5;
+  color: #047857;
   padding: 3px 6px;
   border-radius: 3px;
   font-weight: 600;

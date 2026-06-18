@@ -1242,6 +1242,14 @@ class Utils
 		return '';
 	}
 
+	public static function new_badge($badge_text = 'New') {
+		if( empty( $badge_text ) ) {
+			return '';
+		}
+		
+		return '<span class="adminify-new-badge">' . esc_html($badge_text) . '</span>';
+	}
+
 	/*
 	* Compares the version of WordPress running to the $version specified.
 	* Usage: Utils::check_wp_version('>=', '4.0')
