@@ -1,4 +1,7 @@
 == Changelog ==
+= Adminify - 4.2.15 (22-06-2026) =
+* Fixed: Fluent Support (and other hash-router SPA plugins) Tickets/top-bar menu got stuck on infinite loading inside the Adminify admin UI iframe.
+
 = Adminify - 4.2.14 (19-06-2026) =
 * Fixed: Resolved an update issue that could cause an error in some setups.
 
