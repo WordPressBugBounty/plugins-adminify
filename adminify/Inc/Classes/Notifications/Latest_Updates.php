@@ -87,7 +87,10 @@ if (!class_exists('Latest_Updates')) {
 
 			if("dismissed" !== $forever_notice){
 				$pxlbsadminify_changelog_items =
-				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Fluent Support (and other hash-router SPA plugins) Tickets/top-bar menu got stuck on infinite loading inside the Adminify admin UI iframe. </span><br>', 'adminify');
+				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Security:</strong> Made logo uploads in the setup wizard safer and more reliable; your logo is now saved straight into the Media Library. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Security:</strong> Made dismissing notices more secure. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Security:</strong> Strengthened the Admin Pages role settings against misuse. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Fixed an error that could show up when using the Admin Bar Editor add-on. </span><br>', 'adminify');
 
 			$pxlbsadminify_changelog_message = sprintf(
 					/* translators: %1$s: changelogs page URL. %2$s: link anchor text. %3$s: plugin update heading HTML. %4$s: changelog list items HTML. */

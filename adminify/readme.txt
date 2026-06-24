@@ -4,7 +4,7 @@ Tags: white label, admin menu editor, login customizer, admin columns, custom da
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.2.15
+Stable tag: 4.2.16
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -184,6 +184,12 @@ When you select a Google font and save Adminify settings, the plugin downloads t
 7. The module settings page showing available addons such as Activity Logs.
 
 == Changelog ==
+= Adminify - 4.2.16 (24-06-2026) =
+* Security: Hardened the setup wizard logo upload - validates the data URI, strictly decodes the base64 payload, sanitizes the filename, enforces an image-type allowlist (jpg/jpeg/png/gif/webp), and now stores the logo as a proper Media Library attachment.
+* Security: Made the nonce check mandatory when dismissing notices ("hide forever"); requests without a valid nonce are now rejected.
+* Security: Blocked PHP object injection in the Admin Pages user-roles metabox by disallowing classes during unserialize().
+* Fixed: Resolved a fatal error triggered by the Admin Bar Editor add-on when a submenu option was not an array.
+
 = Adminify - 4.2.15 (22-06-2026) =
 * Fixed: Fluent Support (and other hash-router SPA plugins) Tickets/top-bar menu got stuck on infinite loading inside the Adminify admin UI iframe.
 

@@ -108,10 +108,10 @@ function pxlbsadminify_build_menu($menu, $submenu, $menu_options) {
                 $sub_key_id = isset($sub_item['key']) ? $sub_item['key'] : $sub_slug;
                 $external_link = false;
                 // Look up external_link setting using unique key first, then fall back to slug
-                if( isset($optiongroup['submenu'][$sub_key_id])){
-                    $external_link = ($optiongroup['submenu'][$sub_key_id]['external_link'] == 1) ? true : false;
-                } elseif( isset($optiongroup['submenu'][$sub_slug])){
-                    $external_link = ($optiongroup['submenu'][$sub_slug]['external_link'] == 1) ? true : false;
+                if( isset($optiongroup['submenu'][$sub_key_id]) && is_array($optiongroup['submenu'][$sub_key_id])){
+                    $external_link = (!empty($optiongroup['submenu'][$sub_key_id]['external_link']) && $optiongroup['submenu'][$sub_key_id]['external_link'] == 1) ? true : false;
+                } elseif( isset($optiongroup['submenu'][$sub_slug]) && is_array($optiongroup['submenu'][$sub_slug])){
+                    $external_link = (!empty($optiongroup['submenu'][$sub_slug]['external_link']) && $optiongroup['submenu'][$sub_slug]['external_link'] == 1) ? true : false;
                 }
                 $sub_title = $sub_item[0];
                 $sub_name  = isset($sub_item[5]) ? $sub_item[5] : '';

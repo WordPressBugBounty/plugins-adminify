@@ -41,28 +41,62 @@ class Adminify_Setup_Wizard {
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce verified above; settings array recursively sanitized via wp_kses_post_deep().
 		$data_source = empty($_POST['settings']) ? [] : (array) wp_kses_post_deep(wp_unslash($_POST['settings']));
 
-		$base64_image = $data_source['image_data'];
+		$base64_image = isset($data_source['image_data']) ? (string) $data_source['image_data'] : '';
+
+		// Validate the data URI shape before parsing.
+		if (strpos($base64_image, ';') === false || strpos($base64_image, ',') === false) {
+			wp_send_json_error(__('Invalid image data.', 'adminify'));
+		}
 
 		// Extract the base64 data (remove the data URI scheme)
 		list($type, $data) = explode(';', $base64_image);
 		list(, $data) = explode(',', $data);
-		$decoded_data = base64_decode($data);
+		$decoded_data = base64_decode($data, true);
 
-		// Define the output file path
-		$upload_dir = wp_upload_dir();
-		$upload_path = $upload_dir['path'] . '/' . $data_source['image_name'];
-
-		// Save the image to the file
-		if (file_put_contents($upload_path, $decoded_data) === false) {
-			wp_send_json_error('Failed to save the image.');
+		if ($decoded_data === false) {
+			wp_send_json_error(__('Invalid image data.', 'adminify'));
 		}
 
-		// Get the URL of the uploaded image
-		$upload_url = $upload_dir['url'] . '/' . basename($upload_path);
+		// Sanitize the filename: strip any path components and enforce an image extension allowlist.
+		$raw_name  = isset($data_source['image_name']) ? (string) $data_source['image_name'] : '';
+		$safe_name = sanitize_file_name(basename($raw_name));
 
-		wp_send_json_success($upload_url);
+		$filetype = wp_check_filetype($safe_name);
+		$allowed  = array('jpg', 'jpeg', 'png', 'gif', 'webp');
+		if (empty($safe_name) || !in_array(strtolower((string) $filetype['ext']), $allowed, true)) {
+			wp_send_json_error(__('Invalid image file type.', 'adminify'));
+		}
 
-		wp_die();
+		// Write the decoded bytes into the uploads dir (handles unique filename + path).
+		$uploaded = wp_upload_bits($safe_name, null, $decoded_data);
+		if (!empty($uploaded['error']) || empty($uploaded['file'])) {
+			wp_send_json_error(__('Failed to save the image.', 'adminify'));
+		}
+
+		// Register the file as a Media Library attachment so it behaves like a normal upload.
+		$attachment = array(
+			'post_mime_type' => $filetype['type'],
+			'post_title'     => sanitize_text_field(pathinfo($safe_name, PATHINFO_FILENAME)),
+			'post_content'   => '',
+			'post_status'    => 'inherit',
+		);
+
+		$attachment_id = wp_insert_attachment($attachment, $uploaded['file']);
+		if (is_wp_error($attachment_id) || !$attachment_id) {
+			wp_send_json_error(__('Failed to register the image in the media library.', 'adminify'));
+		}
+
+		// Generate thumbnails/metadata for the attachment.
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		$metadata = wp_generate_attachment_metadata($attachment_id, $uploaded['file']);
+		wp_update_attachment_metadata($attachment_id, $metadata);
+
+		wp_send_json_success(
+			array(
+				'id'  => $attachment_id,
+				'url' => wp_get_attachment_url($attachment_id),
+			)
+		);
 	}
 
 	public function validate_before_save($settings) {
@@ -87,6 +121,24 @@ class Adminify_Setup_Wizard {
 	// TEXT validation
 	public function text_validation($text) {
 		return sanitize_text_field( wp_unslash( $text ?? '' ) );
+	}
+
+	// Build the full CSF media field value from an attachment id.
+	public function build_media_value($attachment_id) {
+		$attachment_id = absint($attachment_id);
+		$full          = wp_get_attachment_image_src($attachment_id, 'full');
+		$thumb         = wp_get_attachment_image_src($attachment_id, 'thumbnail');
+
+		return array(
+			'id'          => $attachment_id,
+			'url'         => $full ? $full[0] : wp_get_attachment_url($attachment_id),
+			'width'       => $full ? $full[1] : '',
+			'height'      => $full ? $full[2] : '',
+			'thumbnail'   => $thumb ? $thumb[0] : '',
+			'alt'         => (string) get_post_meta($attachment_id, '_wp_attachment_image_alt', true),
+			'title'       => get_the_title($attachment_id),
+			'description' => '',
+		);
 	}
 
 	public function pxlbsadminify_save_wizard_data() {
@@ -117,7 +169,16 @@ class Adminify_Setup_Wizard {
 				$settings['light_dark_mode']['admin_ui_light_mode']['admin_ui_light_logo_text'] = $this->text_validation( $validate_settings['admin_ui_light_mode']['admin_ui_light_logo_text'] );
 			}
 			if($validate_settings['admin_ui_logo_type'] === 'image_logo') {
-				$settings['light_dark_mode']['admin_ui_light_mode']['admin_ui_light_logo']['url'] = wp_http_validate_url($validate_settings['admin_ui_light_mode']['admin_ui_light_logo']['url']);
+				$logo_value     = $validate_settings['admin_ui_light_mode']['admin_ui_light_logo'];
+				$attachment_id  = isset($logo_value['id']) ? absint($logo_value['id']) : 0;
+
+				if ($attachment_id && wp_attachment_is_image($attachment_id)) {
+					// Rebuild the full media value from the attachment so the CSF
+					// media field has every key it renders (thumbnail drives the preview).
+					$settings['light_dark_mode']['admin_ui_light_mode']['admin_ui_light_logo'] = $this->build_media_value($attachment_id);
+				} else {
+					$settings['light_dark_mode']['admin_ui_light_mode']['admin_ui_light_logo']['url'] = wp_http_validate_url($logo_value['url']);
+				}
 			}
 
 		}

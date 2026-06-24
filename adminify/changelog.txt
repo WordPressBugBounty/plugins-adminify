@@ -1,4 +1,10 @@
 == Changelog ==
+= Adminify - 4.2.16 (24-06-2026) =
+* Security: Made logo uploads in the setup wizard safer and more reliable; your logo is now saved straight into the Media Library.
+* Security: Made dismissing notices more secure.
+* Security: Strengthened the Admin Pages role settings against misuse.
+* Fixed: Fixed an error that could show up when using the Admin Bar Editor add-on.
+
 = Adminify - 4.2.15 (22-06-2026) =
 * Fixed: Fluent Support (and other hash-router SPA plugins) Tickets/top-bar menu got stuck on infinite loading inside the Adminify admin UI iframe.
 
