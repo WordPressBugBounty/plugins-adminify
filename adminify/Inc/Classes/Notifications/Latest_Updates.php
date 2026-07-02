@@ -87,10 +87,11 @@ if (!class_exists('Latest_Updates')) {
 
 			if("dismissed" !== $forever_notice){
 				$pxlbsadminify_changelog_items =
-				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Security:</strong> Made logo uploads in the setup wizard safer and more reliable; your logo is now saved straight into the Media Library. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Security:</strong> Made dismissing notices more secure. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Security:</strong> Strengthened the Admin Pages role settings against misuse. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Fixed an error that could show up when using the Admin Bar Editor add-on. </span><br>', 'adminify');
+				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Changes you make to the account menu (the "Howdy" menu) now show up correctly in the Adminify admin - hiding items, renaming them, limiting them to certain user roles, and adding your own menu items all work as expected. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Your own account menu items without an icon no longer show a random letter next to them. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The account menu now closes properly when you click somewhere else on the page after moving to another page. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The search box now works reliably. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The logo now shows correctly in the block editor. </span><br>', 'adminify');
 
 			$pxlbsadminify_changelog_message = sprintf(
 					/* translators: %1$s: changelogs page URL. %2$s: link anchor text. %3$s: plugin update heading HTML. %4$s: changelog list items HTML. */

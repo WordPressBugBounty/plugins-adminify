@@ -71,7 +71,7 @@ if (!class_exists('Admin')) {
 
             $localize_array_data = [
                 'ajax_url'  => admin_url('admin-ajax.php'),
-                'security_nonce' => wp_create_nonce('adminify_nonce')
+                'security_nonce' => wp_create_nonce('pxlbsadminify_frame_nonce')
             ];
 
             wp_localize_script( 'frame-adminify--admin', 'PXLBSADMINIFY_FRAME', $localize_array_data );

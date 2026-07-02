@@ -351,7 +351,7 @@ class Assets extends AdminSettingsModel
 			'settings'    => [
 				'adminify_ui'  => !empty($this->options['admin_ui']) ? true : false,
 			],
-			'admin_nonce' => wp_create_nonce('adminify_nonce'),
+			'admin_nonce' => wp_create_nonce('pxlbsadminify_frame_nonce'),
 			'is_pro'      => (class_exists('\\PXLBSAdminify\\Pro\\Adminify_Pro') && !empty(\PXLBSAdminify\Pro\Adminify_Pro::is_premium())) ? true : false,
 			'local_fonts' => $local_fonts_data
 		];
@@ -383,7 +383,7 @@ class Assets extends AdminSettingsModel
 				'PXLBSADMINIFY_SSL',
 				array(
 					'ajax_url' => admin_url('admin-ajax.php'),
-					'nonce'    => wp_create_nonce('adminify_nonce'),
+					'nonce'    => wp_create_nonce('pxlbsadminify_frame_nonce'),
 					'field_id' => 'admin_ui',
 					'i18n'     => array(
 						'label'         => esc_html__('Adminify UI needs HTTPS:', 'adminify'),
@@ -419,7 +419,7 @@ class Assets extends AdminSettingsModel
 	{
 		$nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
 
-		if (!wp_verify_nonce($nonce, 'adminify_nonce')) {
+		if (!wp_verify_nonce($nonce, 'pxlbsadminify_frame_nonce')) {
 			wp_send_json_error(array(
 				'https_ready' => false,
 				'message'     => esc_html__('Security check failed. Please reload the page and try again.', 'adminify'),

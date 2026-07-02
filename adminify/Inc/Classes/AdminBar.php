@@ -288,7 +288,7 @@ class AdminBar extends AdminSettingsModel
 	{
 		return [
 			'ajax_url'       => admin_url('admin-ajax.php'),
-			'security_nonce' => wp_create_nonce('pxlbsadminify-admin-bar-security-nonce'),
+			'security_nonce' => wp_create_nonce('pxlbsadminify_frame_nonce'),
 			'notice_nonce'   => wp_create_nonce('pxlbsadminify-notice-nonce'),
 		];
 	}
@@ -330,16 +330,10 @@ class AdminBar extends AdminSettingsModel
 	public function color_mode()
 	{
 		if (defined('DOING_AJAX') && DOING_AJAX) {
-			// Two callers post to this handler with different nonce objects:
-			//  - dev/admin/wp-adminify.js   uses PXLBSADMINIFY_ADMINBAR.security_nonce
-			//    (action: pxlbsadminify-admin-bar-security-nonce)
-			//  - dev/admin/frame/utils/uitls.js (React frame topbar dropdown)
-			//    uses PXLBSADMINIFY_FRAME.security_nonce (action: adminify_nonce)
-			// Accept either — both are user-bound; failing only one strands the
-			// React frame toggle (the dark-mode dropdown silently 403s).
-			$nonce_ok = ( check_ajax_referer('pxlbsadminify-admin-bar-security-nonce', 'security', false) > 0 )
-				|| ( check_ajax_referer('adminify_nonce', 'security', false) > 0 );
-			if ( ! $nonce_ok ) {
+			// Both callers (classic admin bar wp-adminify.js and the React frame
+			// dropdown dev/admin/frame/utils/uitls.js) post the
+			// pxlbsadminify_frame_nonce nonce.
+			if ( check_ajax_referer('pxlbsadminify_frame_nonce', 'security', false) <= 0 ) {
 				wp_send_json_error( array( 'mess' => __( 'Invalid request.', 'adminify' ) ), 403 );
 			}
 			// Color mode is per-user preference; require the caller to be
@@ -406,7 +400,12 @@ class AdminBar extends AdminSettingsModel
 	 */
 	public function all_search()
 	{
-		if (defined('DOING_AJAX') && DOING_AJAX && check_ajax_referer('pxlbsadminify-admin-bar-security-nonce', 'security') > 0) {
+		if (defined('DOING_AJAX') && DOING_AJAX) {
+			// Both the classic admin bar and the React frame search (SearchForm.jsx)
+			// post the pxlbsadminify_frame_nonce nonce.
+			if ( check_ajax_referer('pxlbsadminify_frame_nonce', 'security', false) <= 0 ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid request.', 'adminify' ) ), 403 );
+			}
 			// Security check - only users who can edit posts should access admin search
 			if (!current_user_can('edit_posts')) {
 				wp_send_json_error(array('message' => __('You do not have permission to perform this action.', 'adminify')));
@@ -501,210 +500,6 @@ class AdminBar extends AdminSettingsModel
 			wp_send_json_success(
 				[
 					'data' => wp_json_encode($output_data),
-				]
-			);
-
-			return;
-
-			ob_start();
-		?>
-
-			<p><span class="count"></span><?php echo count($foundposts) . wp_kses_post(' item<span>s</span> found'); ?></p>
-
-			<table class="top-header-result-table" style="height:500px;">
-				<thead>
-					<tr class="has-text-left">
-						<th><?php esc_html_e('Title', 'adminify'); ?></th>
-						<th><?php esc_html_e('Type', 'adminify'); ?></th>
-						<th><?php esc_html_e('User', 'adminify'); ?></th>
-						<th><?php esc_html_e('Date', 'adminify'); ?></th>
-					</tr>
-				</thead>
-				<tbody>
-
-					<?php
-					foreach ($foundposts as $item) {
-						$author_id = $item->post_author;
-						$editurl   = get_edit_post_link($item);
-						$public    = get_permalink($item);
-					?>
-						<tr>
-							<td><span class="table-title"><a href="<?php echo esc_url($editurl); ?>"><?php echo wp_kses_post(get_the_title($item)); ?></a></span></td>
-							<td><span class="type"><?php echo wp_kses_post(get_post_type($item)); ?></span></td>
-							<td><span class="user"><?php echo wp_kses_post(the_author_meta('user_login', $author_id)); ?></span></td>
-							<td><span class="date"><?php echo wp_kses_post(get_the_date(get_option('date_format'), $item)); ?></span></td>
-						</tr>
-					<?php } ?>
-
-					<?php
-					foreach ($all_taxonomies as $tax_name) {
-						$terms = get_terms(
-							[
-								'taxonomy'   => $tax_name,
-								'hide_empty' => 1,
-							]
-						);
-						foreach ($terms as $cat) {
-							if (strpos(strtolower($cat->name), strtolower($term)) === false) {
-								continue;
-							}
-							// $user = get_userdata($cat->term_id);
-					?>
-							<tr>
-								<td>
-									<span class="table-title">
-										<a href="<?php echo esc_url(get_term_link($cat->slug, $cat->taxonomy)); ?>">
-											<?php echo esc_html($cat->name); ?>
-										</a>
-									</span>
-								</td>
-								<td>
-									<span class="type"><?php echo esc_html($cat->taxonomy); ?></span>
-								</td>
-								<td>
-									<span class="user">
-										<?php esc_html_e('N/A', 'adminify'); ?>
-									</span>
-								</td>
-								<td>
-									<span class="date">
-										<?php esc_html_e('N/A', 'adminify'); ?>
-									</span>
-								</td>
-								<td>
-								</td>
-							</tr>
-					<?php
-						}
-					}
-					?>
-
-
-					<!-- Get Comments  -->
-					<?php
-					foreach ($all_comments as $comment) {
-						if (strpos(strtolower($comment->comment_content), strtolower($term)) === false) {
-							continue;
-						}
-					?>
-						<tr>
-							<td>
-								<span class="table-title">
-									<a href="<?php echo esc_url(admin_url('comment.php?action=editcomment&c=' . esc_attr($comment->comment_ID))); ?>">
-										<?php echo wp_kses_post($comment->comment_content); ?>
-									</a>
-								</span>
-							</td>
-							<td>
-								<span class="type">
-									<?php echo wp_kses_post(ucwords($comment->comment_type)); ?>
-								</span>
-							</td>
-							<td>
-								<span class="user">
-									<?php echo wp_kses_post(the_author_meta('display_name', $comment->user_id)); ?>
-								</span>
-							</td>
-							<td>
-								<span class="date">
-									<?php echo esc_html(get_the_date(get_option('date_format'), $comment->comment_date)); ?>
-								</span>
-							</td>
-						</tr>
-					<?php } ?>
-
-
-
-					<!-- Get Users  -->
-					<?php
-
-					foreach ($all_users as $user) {
-						if (strpos(strtolower($user->user_login), strtolower($term)) === false) {
-							continue;
-						}
-					?>
-						<tr>
-							<td>
-								<span class="table-title">
-									<a href="<?php echo esc_url(admin_url('user-edit.php?user_id=' . $user->ID)); ?>">
-										<?php echo esc_html($user->display_name); ?>
-									</a>
-								</span>
-							</td>
-							<td>
-								<span class="type">
-									<?php echo wp_kses_post(ucwords($comment->comment_type)); ?>
-								</span>
-							</td>
-							<td>
-								<span class="user">
-									<?php echo wp_kses_post(the_author_meta('display_name', $comment->user_id)); ?>
-								</span>
-							</td>
-							<td>
-								<span class="date">
-									<?php echo wp_kses_post(get_the_date(get_option('date_format'), $user->user_registered)); ?>
-								</span>
-							</td>
-						</tr>
-					<?php } ?>
-
-
-
-					<!-- Get Plugins  -->
-					<?php
-					foreach ($all_plugins as $plugin) {
-						if (strpos(strtolower($plugin['Name']), strtolower($term)) === false) {
-							continue;
-						}
-					?>
-						<tr>
-							<td>
-								<span class="table-title">
-									<a href="<?php echo esc_url(admin_url('plugins.php')); ?>">
-										<?php echo esc_html($plugin['Name']); ?>
-									</a>
-								</span>
-							</td>
-							<td>
-								<span class="type">
-									<?php esc_html_e('Plugin', 'adminify'); ?>
-								</span>
-							</td>
-							<td>
-								<span class="user">
-									<?php echo esc_html($plugin['AuthorName']); ?>
-								</span>
-							</td>
-							<td>
-								<span class="date">
-									<?php esc_html_e('N/A', 'adminify'); ?>
-								</span>
-							</td>
-						</tr>
-					<?php } ?>
-
-
-				</tbody>
-			</table>
-
-
-		<?php
-
-			// $output_data = ob_get_clean();
-
-			// $output_data = [
-			// 	'foundposts'	=> $foundposts,
-			// 	'all_taxonomies' => $all_taxonomies,
-			// 	'all_comments' => $all_comments,
-			// 	'all_users' => $all_users,
-			// 	'all_plugins' => $all_plugins,
-			// ];
-			// echo json_encode($output_data);
-			echo wp_json_encode($foundposts);
-			wp_send_json_success(
-				[
-					'data' => $foundposts,
 				]
 			);
 		}

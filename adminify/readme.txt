@@ -4,7 +4,7 @@ Tags: white label, admin menu editor, login customizer, admin columns, custom da
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.2.16
+Stable tag: 4.2.17
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -184,6 +184,13 @@ When you select a Google font and save Adminify settings, the plugin downloads t
 7. The module settings page showing available addons such as Activity Logs.
 
 == Changelog ==
+= Adminify - 4.2.17 (02-07-2026) =
+* Fixed: Changes you make to the account menu (the "Howdy" menu) now show up correctly in the Adminify admin - hiding items, renaming them, limiting them to certain user roles, and adding your own menu items all work as expected.
+* Fixed: Your own account menu items without an icon no longer show a random letter next to them.
+* Fixed: The account menu now closes properly when you click somewhere else on the page after moving to another page.
+* Fixed: The search box now works reliably.
+* Fixed: The logo now shows correctly in the block editor.
+
 = Adminify - 4.2.16 (24-06-2026) =
 * Security: Hardened the setup wizard logo upload - validates the data URI, strictly decodes the base64 payload, sanitizes the filename, enforces an image-type allowlist (jpg/jpeg/png/gif/webp), and now stores the logo as a proper Media Library attachment.
 * Security: Made the nonce check mandatory when dismissing notices ("hide forever"); requests without a valid nonce are now rejected.
