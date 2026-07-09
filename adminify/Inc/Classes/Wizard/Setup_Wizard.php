@@ -32,6 +32,10 @@ class Setup_Wizard
 			esc_html__( 'Setup Wizard', 'adminify' ),
 			apply_filters( 'pxlbsadminify_capability', 'manage_options' ),
 			'wp-adminify-setup-wizard',
+			// The wizard renders (and exits) from setup_wizard() on admin_init, so this
+			// callback never runs. It must still be a callable: WP only links the submenu
+			// to admin.php?page=<slug> when get_plugin_page_hook() finds a registered action.
+			'__return_null',
 			$submenu_position
 		);
 

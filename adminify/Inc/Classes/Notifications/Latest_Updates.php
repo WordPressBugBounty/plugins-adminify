@@ -87,11 +87,9 @@ if (!class_exists('Latest_Updates')) {
 
 			if("dismissed" !== $forever_notice){
 				$pxlbsadminify_changelog_items =
-				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Changes you make to the account menu (the "Howdy" menu) now show up correctly in the Adminify admin - hiding items, renaming them, limiting them to certain user roles, and adding your own menu items all work as expected. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Your own account menu items without an icon no longer show a random letter next to them. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The account menu now closes properly when you click somewhere else on the page after moving to another page. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The search box now works reliably. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The logo now shows correctly in the block editor. </span><br>', 'adminify');
+				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Clicking "Edit with Elementor" in the block editor did nothing and kept you on the same page; it now takes you to the Elementor editor. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The Setup Wizard now opens when you click it in the menu, and no longer shows a warning message on the page. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The option that hides the "PHP update required" notice now actually hides it. </span><br>', 'adminify');
 
 			$pxlbsadminify_changelog_message = sprintf(
 					/* translators: %1$s: changelogs page URL. %2$s: link anchor text. %3$s: plugin update heading HTML. %4$s: changelog list items HTML. */

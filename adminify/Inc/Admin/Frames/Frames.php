@@ -35,21 +35,31 @@ if (!class_exists('Frames')) {
             }
         }
 
-        static function render_reload_script() {
+        public static function render_reload_script() {
             self::custom_plugin_change_reload();
         }
 
-        static function custom_plugin_change_reload($actual_link = null) {
-            if (!is_null($actual_link)) {
-                $safe_link = esc_url_raw($actual_link);
-                echo "<script type='text/javascript'>
-                    parent.location.replace('" . esc_js($safe_link) . "');
-                </script>";
+        /**
+         * Break the current page out of the Adminify UI iframe.
+         *
+         * @param string|null $actual_link Optional. URL to send the parent window to.
+         *                                 When null, the parent simply reloads.
+         * @return void
+         */
+        public static function custom_plugin_change_reload( $actual_link = null ) {
+            if ( null !== $actual_link ) {
+                // wp_json_encode(), not esc_js(): esc_js() turns "&" into "&amp;",
+                // which a classic <script> does not decode, breaking query args.
+                echo '<script>parent.location.replace(' . wp_json_encode(
+                    esc_url_raw( $actual_link ),
+                    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+                ) . ');</script>';
+
+                // The reload() below would abort the replace() navigation above.
+                return;
             }
 
-            echo '<script type="text/javascript">
-                parent.location.reload();
-            </script>';
+            echo '<script>parent.location.reload();</script>';
         }
 
         public function load_scripts()
