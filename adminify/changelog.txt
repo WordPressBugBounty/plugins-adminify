@@ -1,4 +1,10 @@
 == Changelog ==
+= Adminify - 4.2.19 (11-07-2026) =
+* Fixed: Uploading files from Media > Add New failed; uploads now finish normally.
+* Fixed: "Preview" and "View" on the posts list opened the site inside the admin area; they now open the site itself, like the default WordPress admin.
+* Fixed: The Elementor page in the admin had an extra gap above its header; the header now sits at the top where it belongs.
+* Updated: Freemius SDK to 2.13.4.
+
 = Adminify - 4.2.18 (09-07-2026) =
 * Fixed: Clicking "Edit with Elementor" in the block editor did nothing and kept you on the same page; it now takes you to the Elementor editor.
 * Fixed: The Setup Wizard now opens when you click it in the menu, and no longer shows a warning message on the page.

@@ -1316,6 +1316,47 @@ class Utils
 	}
 
 	/**
+	 * Whether the current request renders a full admin page.
+	 *
+	 * Endpoints like async-upload.php run through wp-admin/admin.php (so `admin_init`
+	 * fires) but answer with a raw payload - an attachment ID, JSON, an HTML fragment.
+	 * Printing the Admin UI frame into those responses corrupts them: the media uploader
+	 * on media-new.php reads the response as an attachment ID and gives up when it is not
+	 * numeric. `wp_doing_ajax()` does not catch these: async-upload.php only defines
+	 * DOING_AJAX for the `upload-attachment` action, which media-new.php does not send.
+	 *
+	 * @return bool
+	 */
+	public static function is_admin_page_request()
+	{
+		if ( wp_doing_ajax() || wp_doing_cron() || wp_is_json_request() ) {
+			return false;
+		}
+
+		if ( ( defined('REST_REQUEST') && REST_REQUEST ) || ( defined('XMLRPC_REQUEST') && XMLRPC_REQUEST ) || ( defined('WP_CLI') && WP_CLI ) ) {
+			return false;
+		}
+
+		$pagenow = isset($GLOBALS['pagenow']) ? $GLOBALS['pagenow'] : '';
+
+		if ( empty($pagenow) && isset($_SERVER['PHP_SELF']) ) {
+			$pagenow = basename( sanitize_text_field( wp_unslash($_SERVER['PHP_SELF']) ) );
+		}
+
+		$raw_response_endpoints = [
+			'admin-ajax.php',
+			'admin-post.php',
+			'async-upload.php',
+			'load-scripts.php',
+			'load-styles.php',
+			'ms-files.php',
+			'wp-cron.php',
+		];
+
+		return ! in_array( $pagenow, $raw_response_endpoints, true );
+	}
+
+	/**
 	 * Load a template file.
 	 *
 	 * @param string $template_name The name of the template file to load.

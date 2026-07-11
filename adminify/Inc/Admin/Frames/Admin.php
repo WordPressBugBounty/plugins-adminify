@@ -184,6 +184,12 @@ if (!class_exists('Admin')) {
          */
         public function load_template()
         {
+            // async-upload.php & friends fire admin_init but answer with a raw payload,
+            // so the frame markup would be read as part of the response.
+            if ( ! Utils::is_admin_page_request() ) {
+                return;
+            }
+
             Utils::load_template('Templates.php');
         }
 

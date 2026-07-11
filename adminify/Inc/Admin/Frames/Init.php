@@ -33,6 +33,10 @@ if (!class_exists('Init')) {
         public function __construct()
         {
 
+            if ( ! Utils::is_admin_page_request() ) {
+                return;
+            }
+
             if ( ! $this->is_allowed() ) {
                 if ( Utils::is_iframe() ) {
                     $http_host   = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';

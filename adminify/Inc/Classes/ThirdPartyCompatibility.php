@@ -548,6 +548,7 @@ class ThirdPartyCompatibility {
 								body.adminify-ui.e-has-sidebar-navigation #wpwrap #wpcontent #editor-one-top-bar > header {
 									top: 0!important;
 								}
+								body.adminify-ui #wpbody-content #elementor-home-app main header {top: 0!important}
             </style>';
         }
         if ( Utils::is_plugin_active( 'one-click-demo-import/one-click-demo-import.php' ) ) {

@@ -4,7 +4,7 @@ Tags: white label, admin menu editor, login customizer, admin columns, custom da
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.2.18
+Stable tag: 4.2.19
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -184,6 +184,12 @@ When you select a Google font and save Adminify settings, the plugin downloads t
 7. The module settings page showing available addons such as Activity Logs.
 
 == Changelog ==
+= Adminify - 4.2.19 (11-07-2026) =
+* Fixed: Uploading files from Media > Add New failed; uploads now finish normally.
+* Fixed: "Preview" and "View" on the posts list opened the site inside the admin area; they now open the site itself, like the default WordPress admin.
+* Fixed: The Elementor page in the admin had an extra gap above its header; the header now sits at the top where it belongs.
+* Updated: Freemius SDK to 2.13.4.
+
 = Adminify - 4.2.18 (09-07-2026) =
 * Fixed: Clicking "Edit with Elementor" in the block editor did nothing and kept you on the same page; it now takes you to the Elementor editor.
 * Fixed: The Setup Wizard now opens when you click it in the menu, and no longer shows a warning message on the page.
