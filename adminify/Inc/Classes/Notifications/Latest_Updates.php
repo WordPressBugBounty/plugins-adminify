@@ -87,10 +87,7 @@ if (!class_exists('Latest_Updates')) {
 
 			if("dismissed" !== $forever_notice){
 				$pxlbsadminify_changelog_items =
-				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Uploading files from Media > Add New failed; uploads now finish normally. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> "Preview" and "View" on the posts list opened the site inside the admin area; they now open the site itself, like the default WordPress admin. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The Elementor page in the admin had an extra gap above its header; the header now sits at the top where it belongs. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Updated:</strong> Freemius SDK to 2.13.4. </span><br>', 'adminify');
+				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> "Disable Site Health checks" now hides Site Health completely - the Tools > Site Health page, the dashboard widget, and the weekly background check are all turned off, so your clients never see it. </span><br>', 'adminify');
 
 			$pxlbsadminify_changelog_message = sprintf(
 					/* translators: %1$s: changelogs page URL. %2$s: link anchor text. %3$s: plugin update heading HTML. %4$s: changelog list items HTML. */

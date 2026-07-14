@@ -1,4 +1,7 @@
 == Changelog ==
+= Adminify - 4.2.20 (14-07-2026) =
+* Improved: "Disable Site Health checks" now hides Site Health completely - the Tools > Site Health page, the dashboard widget, and the weekly background check are all turned off, so your clients never see it.
+
 = Adminify - 4.2.19 (11-07-2026) =
 * Fixed: Uploading files from Media > Add New failed; uploads now finish normally.
 * Fixed: "Preview" and "View" on the posts list opened the site inside the admin area; they now open the site itself, like the default WordPress admin.
