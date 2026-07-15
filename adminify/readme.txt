@@ -4,7 +4,7 @@ Tags: white label, admin menu editor, login customizer, admin columns, custom da
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.2.20
+Stable tag: 4.2.21
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -184,6 +184,10 @@ When you select a Google font and save Adminify settings, the plugin downloads t
 7. The module settings page showing available addons such as Activity Logs.
 
 == Changelog ==
+= Adminify - 4.2.21 (15-07-2026) =
+* Fixed: Drag-and-drop ordering for categories and tags now saves and stays in place after you reload the page.
+* Fixed: Reordering media files on the Media list view now saves; your new order is remembered.
+
 = Adminify - 4.2.20 (14-07-2026) =
 * Improved: "Disable Site Health checks" now hides Site Health completely - the Tools > Site Health page, the dashboard widget, and the weekly background check are all turned off, so your clients never see it.
 

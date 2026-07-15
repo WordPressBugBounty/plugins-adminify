@@ -39,6 +39,11 @@ class PostTypesOrder extends AdminSettingsModel {
 		// reorder post types
 		add_action( 'pre_get_posts', [ $this, 'pto_pre_get_posts' ] );
 
+		// Order the admin taxonomy list (edit-tags.php) by term_order so
+		// drag-sorted taxonomies persist visibly. Front-end term ordering
+		// stays a Pro feature (Pro/Classes/Filters.php).
+		add_filter( 'get_terms', [ $this, 'pto_admin_order_terms' ], 10, 1 );
+
 		add_filter( 'get_previous_post_where', array( $this, 'pto_previous_post_where' ) );
 		add_filter( 'get_previous_post_sort', [ $this, 'pto_previous_post_sort' ] );
 		add_filter( 'get_next_post_where', [ $this, 'pto_next_post_where' ] );
@@ -122,16 +127,17 @@ class PostTypesOrder extends AdminSettingsModel {
 
 	public function refresh() {
 		global $wpdb;
-		$objects = $this->pto_get_options();
+		$objects = $this->pto_get_order_objects();
 
 		if ( ! empty( $objects ) ) {
 			foreach ( $objects as $object ) {
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- direct query required for menu_order aggregate over posts; not cached intentionally.
+				$status_sql = $this->pto_post_status_sql( $object );
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- direct query required for menu_order aggregate over posts; status list is a hardcoded literal, not user input.
 				$result = $wpdb->get_results(
 					$wpdb->prepare(
 						"SELECT count(*) as cnt, max(menu_order) as max, min(menu_order) as min
 						FROM $wpdb->posts
-						WHERE post_type = %s AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')",
+						WHERE post_type = %s AND post_status IN ($status_sql)",
 						$object
 					)
 				);
@@ -139,12 +145,12 @@ class PostTypesOrder extends AdminSettingsModel {
 					continue;
 				}
 
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- direct query required to fetch ordered post IDs; not cached intentionally.
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- direct query required to fetch ordered post IDs; status list is a hardcoded literal, not user input.
 				$results = $wpdb->get_results(
 					$wpdb->prepare(
 						"SELECT ID
 						FROM $wpdb->posts
-						WHERE post_type = %s AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
+						WHERE post_type = %s AND post_status IN ($status_sql)
 						ORDER BY menu_order ASC",
 						$object
 					)
@@ -160,7 +166,7 @@ class PostTypesOrder extends AdminSettingsModel {
 
 
 	function pto_pre_get_posts( $wp_query ) {
-		$objects = $this->pto_get_options();
+		$objects = $this->pto_get_order_objects();
 		if ( empty( $objects ) ) {
 			return false;
 		}
@@ -175,6 +181,11 @@ class PostTypesOrder extends AdminSettingsModel {
 		if ( is_admin() ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
 			if ( isset( $wp_query->query['post_type'] ) && ! isset( $_GET['orderby'] ) ) {
+				// Don't reorder the ajax media modal / grid (query-attachments);
+				// only the upload.php list view, which is a normal page load.
+				if ( 'attachment' === $wp_query->query['post_type'] && wp_doing_ajax() ) {
+					return;
+				}
 				if ( in_array( $wp_query->query['post_type'], $objects ) ) {
 					$wp_query->set( 'orderby', 'menu_order' );
 					$wp_query->set( 'order', 'ASC' );
@@ -273,25 +284,27 @@ class PostTypesOrder extends AdminSettingsModel {
 		}
 
 		// same number check
-		$post_type = get_post_type( $id );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- direct query required for menu_order duplicate detection; not cached intentionally.
+		$post_type  = get_post_type( $id );
+		$status_sql = $this->pto_post_status_sql( $post_type );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- direct query required for menu_order duplicate detection; status list is a hardcoded literal, not user input.
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT COUNT(menu_order) AS mo_count, post_type, menu_order FROM $wpdb->posts
-				 WHERE post_type = %s AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
-				 AND menu_order > 0 GROUP BY post_type, menu_order HAVING (mo_count) > 1",
+				 WHERE post_type = %s AND post_status IN ($status_sql)
+				 GROUP BY post_type, menu_order HAVING (mo_count) > 1",
 				$post_type
 			)
 		);
 		if ( count( $results ) > 0 ) {
+			$sort_ids = [];
 
 			// menu_order refresh
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- direct query required to fetch ordered post IDs; not cached intentionally.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- direct query required to fetch ordered post IDs; status list is a hardcoded literal, not user input.
 			$results = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT ID, menu_order FROM $wpdb->posts
-					 WHERE post_type = %s AND post_status IN ('publish', 'pending', 'draft', 'private', 'future')
-					 AND menu_order > 0 ORDER BY menu_order",
+					 WHERE post_type = %s AND post_status IN ($status_sql)
+					 ORDER BY menu_order",
 					$post_type
 				)
 			);
@@ -368,6 +381,7 @@ class PostTypesOrder extends AdminSettingsModel {
 			)
 		);
 		if ( count( $results ) > 0 ) {
+			$sort_ids = [];
 			// term_order refresh
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- direct query required to fetch ordered term IDs; not cached intentionally.
 			$results = $wpdb->get_results(
@@ -438,9 +452,10 @@ class PostTypesOrder extends AdminSettingsModel {
 			return true;
 		}
 
-		$objects = $this->pto_get_options();
+		$objects    = $this->pto_get_options();
+		$taxonomies = $this->pto_get_taxonomy_options();
 
-		if ( empty( $objects ) ) {
+		if ( empty( $objects ) && empty( $taxonomies ) ) {
 			return false;
 		}
 
@@ -462,12 +477,85 @@ class PostTypesOrder extends AdminSettingsModel {
 			}
 		}
 
+		// Taxonomy list page (edit-tags.php) — Sortable Taxonomies.
+		if ( ! empty( $taxonomies ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
+			if ( 'edit-tags.php' === $pagenow && isset( $_GET['taxonomy'] ) && in_array( sanitize_text_field( wp_unslash( $_GET['taxonomy'] ) ), $taxonomies, true ) ) {
+				$active = true;
+			}
+		}
+
 		return $active;
 	}
 
 	function pto_get_options() {
 		$objects = isset( $this->options['pto_posts'] ) && is_array( $this->options['pto_posts'] ) ? $this->options['pto_posts'] : [];
 		return $objects;
+	}
+
+	/**
+	 * get_terms filter — order the admin taxonomy list by term_order for
+	 * taxonomies the user opted into. Admin only; bails when a column sort
+	 * (orderby) is active. Front-end ordering remains a Pro feature.
+	 */
+	public function pto_admin_order_terms( $terms ) {
+		if ( ! is_admin() || empty( $terms ) || ! is_array( $terms ) ) {
+			return $terms;
+		}
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check, no state change.
+		if ( isset( $_GET['orderby'] ) ) {
+			return $terms;
+		}
+
+		$taxonomies = $this->pto_get_taxonomy_options();
+		if ( empty( $taxonomies ) ) {
+			return $terms;
+		}
+
+		// Only reorder when every returned term is an object in an opted-in
+		// taxonomy (get_terms may return IDs or mixed taxonomies).
+		foreach ( $terms as $term ) {
+			if ( ! is_object( $term ) || ! isset( $term->taxonomy ) || ! in_array( $term->taxonomy, $taxonomies, true ) ) {
+				return $terms;
+			}
+		}
+
+		usort( $terms, [ $this, 'pto_taxonomy_compare' ] );
+		return $terms;
+	}
+
+	// Stable comparator on term_order.
+	public function pto_taxonomy_compare( $a, $b ) {
+		$ao = isset( $a->term_order ) ? (int) $a->term_order : 0;
+		$bo = isset( $b->term_order ) ? (int) $b->term_order : 0;
+		if ( $ao === $bo ) {
+			return 0;
+		}
+		return ( $ao < $bo ) ? -1 : 1;
+	}
+
+	// Post types whose menu_order should be seeded/reordered.
+	// Includes 'attachment' when Sortable Media Files is enabled.
+	function pto_get_order_objects() {
+		$objects = $this->pto_get_options();
+		if ( ! empty( $this->options['pto_media'] ) && ! in_array( 'attachment', $objects, true ) ) {
+			$objects[] = 'attachment';
+		}
+		return $objects;
+	}
+
+	// Status SQL fragment per post type. Attachments live under
+	// 'inherit', so they are excluded by the default status list.
+	function pto_post_status_sql( $post_type ) {
+		if ( 'attachment' === $post_type ) {
+			return "'inherit'";
+		}
+		return "'publish', 'pending', 'draft', 'private', 'future'";
+	}
+
+	function pto_get_taxonomy_options() {
+		$taxonomies = isset( $this->options['pto_taxonomies'] ) && is_array( $this->options['pto_taxonomies'] ) ? $this->options['pto_taxonomies'] : [];
+		return $taxonomies;
 	}
 
 	function pto_previous_post_where( $where ) {

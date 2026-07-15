@@ -87,7 +87,8 @@ if (!class_exists('Latest_Updates')) {
 
 			if("dismissed" !== $forever_notice){
 				$pxlbsadminify_changelog_items =
-				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> "Disable Site Health checks" now hides Site Health completely - the Tools > Site Health page, the dashboard widget, and the weekly background check are all turned off, so your clients never see it. </span><br>', 'adminify');
+				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Drag-and-drop ordering for categories and tags now saves and stays in place after you reload the page. </span><br>', 'adminify')
+				  . __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Reordering media files on the Media list view now saves; your new order is remembered. </span><br>', 'adminify');
 
 			$pxlbsadminify_changelog_message = sprintf(
 					/* translators: %1$s: changelogs page URL. %2$s: link anchor text. %3$s: plugin update heading HTML. %4$s: changelog list items HTML. */
