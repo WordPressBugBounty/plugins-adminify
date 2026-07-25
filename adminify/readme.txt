@@ -1,18 +1,18 @@
 === Adminify – White Label, Admin Menu Editor, Login Customizer ===
 Contributors: pixarlabs, litonice13
-Tags: white label, admin menu editor, login customizer, admin columns, custom dashboard
+Tags: white label, admin menu editor, login customizer, admin columns, dark mode
 Requires at least: 5.0
 Tested up to: 7.0
+Stable tag: 4.2.22
 Requires PHP: 7.4
-Stable tag: 4.2.21
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Customize the WordPress admin area with white-label branding, a drag-and-drop menu editor, login page designer, media folders, and security tools.
+White label WordPress admin, admin menu editor, login page customizer, admin dark mode, media library folders, admin columns.
 
 == Description ==
 
-Adminify is an admin customization plugin for WordPress agencies, freelance developers, and power users. It lets you rebrand the admin area, reorganize menus, design a custom login screen, organize the media library, add security controls, and more - all from a single settings panel.
+Adminify is a white label WordPress admin customization plugin built for agencies, freelance developers, and site owners who want a custom WordPress admin without touching code. One plugin gives you a drag and drop admin menu editor, a login customizer, admin dark mode, a dashboard customizer, media library folders, and an admin columns editor - all controlled from a single admin panel. If you need to rebrand WordPress for a client, build a client portal, or simply run a cleaner admin interface for your own team, Adminify covers the whole job.
 
 [Upgrade to Adminify Pro](https://wpadminify.com/pricing/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify) | [Documentation](https://wpadminify.com/docs?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify) | [Live Demo](https://demo.pixarlabs.com/?pl-product=adminify) | [Support](https://wpadminify.com/contact)
 
@@ -20,91 +20,87 @@ Adminify is an admin customization plugin for WordPress agencies, freelance deve
 
 [youtube https://www.youtube.com/watch?v=wytlIbQY4SY]
 
-= Key Features =
+= Why Choose Adminify for Admin Customization? =
 
-**[White Label Admin Area](https://wpadminify.com/features/white-label?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify):** Replace the admin logo and favicon with your own branding, change menu labels, customize the footer text, and replace the "Howdy" greeting to create a fully branded experience for your clients.
+Most admin customization jobs need several single-purpose plugins stitched together: one for white label branding, one for the login screen, one for the dashboard, one for media folders, one for admin columns. Adminify replaces that whole stack with one custom admin panel. Every admin customization setting - menus, login screen, dashboard, colors, columns, notices - lives in the same place, so you're not hunting through five different settings pages to customize admin behavior across a site. Agencies use it to rebrand WordPress for clients and build a simplified client dashboard; solo site owners use it to get a calmer, more usable admin interface for themselves. Either way, the admin panel becomes the control center for the entire WordPress backend.
 
-**[Drag and Drop Admin Menu Editor](https://wpadminify.com/features/admin-menu-editor?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify):** Visually rearrange, rename, and hide admin menu items. Add new items, set role-based visibility rules, and assign custom icons - no coding required.
+= White Label WordPress: Rebrand the Entire Admin Area =
 
-**[Login Page Customizer - Loginfy](https://wpadminify.com/loginfy?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify):** Design a custom login screen with your own logo, background image or color, custom form styles, and button colors.
+[White label WordPress](https://wpadminify.com/features/white-label?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify) starts with the basics: replace the admin bar logo, the sidebar logo, and the favicon with your own branding. From there, Adminify lets you go further - customize the admin footer text with your own copy or copyright notice, and swap the default "Howdy" greeting for something that matches your agency or client's brand. This is what turns a stock install into a real white label dashboard for every client site you manage.
 
-**[Dashboard UI Themes](https://wpadminify.com/features/dashboard-customization?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify):** Apply pre-built skins (Light, Dark, Gradient, Glass), enable dark mode, schedule light/dark switching, and customize colors and fonts.
+White label branding in Adminify isn't limited to the dashboard. Pair it with the login customizer for a white label login page (the white label login can be done with loginfy addon), and the result is a fully rebranded custom admin experience from the moment a client logs in to the moment they land on their dashboard. Agencies that need to rebrand WordPress across multiple client sites can apply the same white label settings consistently, so every custom admin panel feels like a product you built rather than a plugin someone installed. For teams that want white label WordPress without hiring a developer, this is the fastest route: no code, no child themes, just a settings screen for logo, favicon, footer text, and greeting text.
 
-**[Productivity Tools](https://wpadminify.com/features/productivity?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify):** Organize media files in drag-and-drop folders, hide admin notices, duplicate posts and pages, and add custom dashboard widgets.
+= Admin Menu Editor: Drag and Drop Menu Control =
 
-**[Security Controls](https://wpadminify.com/features/security?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify):** Change the login URL, set role-based login and logout redirects, disable comments globally, control the Heartbeat API, and clean up the head section.
+The [admin menu editor](https://wpadminify.com/features/admin-menu-editor?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify) lets you visually rearrange, rename, and hide any admin menu item without writing a line of code. Drag a menu item up the list, rename it to something a client will actually understand, or hide admin menu entries that don't apply to a particular role. It's a menu editor built for real client work, not just a demo screen.
 
-**[Admin Columns Editor](https://wpadminify.com/admin-columns-editor?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify):** Add, remove, and reorder columns in post and page list views. Display custom field values from ACF, MetaBox, and Pods. Includes WooCommerce product list support.
+Role based menu control is where the admin menu editor earns its keep. Build a different custom menu layout for each user role, including custom roles, so an editor sees a simplified admin menu while an administrator sees everything. Add custom menu items that link to internal pages, external URLs, or page builder pages, assign a Dashicon or upload your own SVG icon, group related items with separators, and set any item to open in a new tab. Combined with role based menu visibility, the admin menu editor is one of the fastest ways to hide admin menu clutter and restrict admin access for the roles that shouldn't see it - all without editing a single PHP file.
 
-= Detailed Feature Breakdown =
+= Login Customizer: Build a Custom Login Screen =
 
-**White Label and Dashboard UI**
+Adminify's [login customizer, Loginfy](https://wpadminify.com/loginfy?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify), is a dedicated login page customizer for the WordPress login screen. Upload your own logo, choose a background color, image, gradient, or slideshow, and style the login form's width, background, border radius, shadow, buttons, and labels. Every change appears in a live preview, so you can see the custom login screen taking shape as you build it rather than saving blind.
 
-* Replace the admin bar logo, sidebar logo, and favicon with your own branding
-* Change the admin footer text to your own content, links, or copyright notice
-* Apply pre-designed skins: Light, Dark, Gradient, and Glass morphism styles
-* Per-user light and dark mode preference with optional auto-scheduling
-* Add custom CSS and JavaScript to the admin area without editing theme files
+Because the login page customizer covers every visible element - logo, background, form styling, buttons, and error messages - it's straightforward to build a custom login page that matches a client's brand exactly, and to pair that custom login screen with your white label dashboard for one continuous brand experience from login to logout. Developers who want extra control can add custom CSS directly inside the login customizer. Security-conscious teams can also change the login URL to a custom slug, add a login attempt limiter, and set role based login redirects and logout redirects so each role lands on the right page after signing in or out - the login redirect and logout redirect settings work independently, so a client can log in to their custom dashboard and log out to a different page entirely.
 
-**Admin Menu Editor**
+= Admin Dark Mode and WordPress Admin Theme =
 
-* Drag and drop to reorder menus and submenus
-* Create custom menu items linking to internal pages, external URLs, or page builder pages
-* Show or hide menus and submenus per user role - useful for client-facing dashboards
-* Assign Dashicons or upload SVG icons to any menu item
-* Add separators to group related menu items
-* Set individual menu items to open in a new tab
+Adminify ships several ready-made [WordPress admin theme](https://wpadminify.com/features/dashboard-customization?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify) skins - Light, Dark, Gradient, and Glass - so you can apply a different admin theme without writing custom CSS. On top of the theme skins sits a dedicated admin dark mode toggle: per-user dark mode preference, optional auto-scheduling between light and dark by time of day, and custom colors and fonts for teams that want their own look.
 
-**Login Page Customizer (Loginfy)**
+This is real dark mode for the WordPress admin, not a CSS filter slapped over the default screens - the admin dark mode setting works alongside the block editor and every WordPress admin theme skin, so dark mode looks correct no matter which admin theme is active. Toggle it from the toolbar, schedule it automatically, or set it per user so each person on a team gets the dark mode or light mode they actually prefer.
 
-* Upload a custom logo for the login screen
-* Set a background image, color, gradient, or slideshow
-* Customize form width, background, border radius, and shadow
-* Customize button colors and labels
-* Add custom CSS for precise styling control
+= Dashboard Customizer: Build a Custom Dashboard =
 
-**Media Library Folders**
+The [dashboard customizer](https://wpadminify.com/features/dashboard-customization?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify) shapes a custom dashboard for every role - it's admin customization aimed squarely at the busiest screen in WordPress. Remove the default welcome panel, add your own dashboard widgets (text, RSS feed, or iframe embeds), and control colors, fonts, and layout entirely through the visual dashboard customizer, with no custom CSS and no theme files required.
 
-* Create folders and subfolders; drag and drop files into them
-* Filter and browse media by folder
-* Bulk move files between folders
-* Media Replace: swap out any image or file while keeping its original URL and ID intact
-* Folder support inside the Elementor media picker, Classic Editor popup, and Customizer
+A custom dashboard matters most on client sites: replace the welcome panel with onboarding content that actually helps a client, add dashboard widgets that show what they need to see, and remove the ones they don't. The result is a clean client dashboard rather than the stock WordPress screen full of plugin promotions. Agencies building a full client portal experience typically combine the dashboard customizer with the admin menu editor and white label settings so the custom dashboard, the menu, and the branding all match. Add dashboard widgets and that you prefer to keep on your admin.
 
-**Productivity and Admin Management**
+Customize admin can be your priority if you or your cleints prefer a cleaner WordPress Dashboard panel. 
 
-* Admin Notices Manager: hide promotional and update notifications from plugins and core
-* Remove the Welcome to WordPress dashboard panel
-* Hide Screen Options and Help tabs
-* Duplicate posts, pages, and custom post types with one click
-* Duplicate categories, tags, and custom taxonomies
-* Custom dashboard widgets: text, RSS feed, and iframe embeds
+= Media Library Folders and Media Management =
 
-**Security and Performance**
+[Media library folders](https://wpadminify.com/features/media-folders?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify) bring simple, drag-and-drop organization to the WordPress media library. Create folders and subfolders, drag files into media folders, filter and browse by folder, and bulk move files between them. If a site has years of uploads sitting in one flat list, media library folders turn that into something a client can actually navigate.
 
-* Change the default login URL to a custom slug to reduce brute-force exposure
-* Set login and logout redirect URLs per user role
-* Disable comments globally across the entire site
-* Control the Heartbeat API interval per screen area to reduce server load
-* Disable oEmbeds
-* Remove unnecessary head tags: RSS links, RSD, WLW Manifest, shortlinks, generator tag, and emoji scripts
-* Login attempt limiter to protect the login screen
+Media Replace, bundled with the media folders feature, swaps out any image or file while keeping its original URL and ID intact - useful for updating a logo or a PDF without breaking every link that points to it. Folder support isn't limited to the main media screen either: media folders work inside the Elementor media picker, the Classic Editor popup, and the Customizer, so the organization holds up everywhere media gets selected.
 
-**Admin Columns Editor**
+= Admin Bar Editor and Toolbar Control =
 
-* Add, remove, and reorder columns in list views for any post type or custom post type
-* Display values from ACF, MetaBox, Pods, and other custom field plugins
-* WooCommerce support: show SKU, stock status, price, or weight in product lists
+The **Admin Bar Editor** addon puts the WordPress toolbar under full control. Rename admin bar links, reorder them, or hide admin bar items per user role - useful when a client's toolbar is cluttered with links only a developer needs. Combined with the admin menu editor and role based menu settings, the admin bar editor lets you hide admin bar clutter for clients while keeping full access for admins, closing the loop on a properly customized admin interface from top toolbar to side menu.
+
+= Productivity: Notices, Username Changer, and More =
+
+Admin notices pile up fast - plugin update nags, theme promotions, core update reminders. Adminify's notices tool lets you hide admin notices with one toggle, or disable admin notices for specific user roles only, so clients never see upgrade prompts meant for developers. The hide admin notices setting covers the block editor as well as classic admin screens, and agencies commonly use it to disable admin notices across every client site they manage.
+
+Beyond admin notices, Adminify includes a built-in username changer that renames any WordPress login username directly, username changer is suitable for multi user websites, including administrator accounts, with no database edits and no need to create a new account. You can also replace the welcome panel with your own onboarding content, hide Screen Options and Help tabs for a cleaner admin interface, and use the instant admin menu search to jump straight to any settings screen.
+
+Adminify's duplicate post feature clones any post, page, or custom post type in one click - content, template, featured image, and metadata all carry over to the copy. Need a new landing page based on an existing one? Run duplicate post and edit the copy without ever touching the original. The same one-click cloning covers categories, tags, and custom taxonomies too, and editors who publish recurring layouts lean on the duplicate post button to skip rebuilding the same structure every time. Every duplicate post starts as a draft, so the live site never shows a half-edited copy.
+
+= Admin Columns Editor =
+
+The [admin columns editor](https://wpadminify.com/admin-columns-editor?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify) adds, removes, and reorders admin columns in post and page list views for any post type. Pull in custom fields from ACF, MetaBox, and Pods so the values that matter - a price, a status, a custom field - show up right in the list view instead of being buried inside each post.
+
+Key columns are sortable, including the featured image column and custom field columns, which makes large list views far easier to scan and manage. WooCommerce sites get direct support too: show SKU, stock status, price, or weight as admin columns on the product list, so store admins can review inventory without opening every product individually.
+
+= Security Controls =
+
+Security settings round out the admin panel: change the default login URL to a custom slug to cut down on brute-force attempts, add a login attempt limiter, and disable comments globally across posts, pages, and media in one switch. Role based login redirects and logout redirects send each user to the right place after they sign in or sign out, admin access can be restricted by role, and the Heartbeat API can be tuned per screen area to reduce unnecessary admin-side requests. A cleanup toggle also removes unneeded head tags - RSS links, RSD, WLW Manifest, shortlinks, the generator tag, and emoji scripts - and can disable oEmbeds site-wide.
+
+= Built for Agencies: Client Portal and Client Dashboard =
+
+Agencies managing several WordPress installs don't want to jump between five different plugins to customize admin screens - Adminify keeps the admin menu editor, white label branding, login customizer, and dashboard customizer in one custom admin panel. Used together, they turn the default WordPress backend into a genuine custom WordPress admin experience: a simplified client dashboard, or a fuller client portal, where every menu item, color, and widget is something you chose rather than something WordPress shipped by default.
+
+Restrict admin access by user role, hide admin menu entries with role based menu rules, apply a WordPress admin theme that matches the client's brand, and set login redirects so each client lands on their own client dashboard the moment they sign in. The same custom admin tools work just as well for solo site owners who simply want a calmer, more organized admin interface for themselves - complete WordPress backend customization without writing code. Clients get a friendly, focused admin panel; you keep full control over every setting behind it.
 
 = Addon System =
 
-Adminify's functionality can be extended with dedicated addon plugins.
+Extend Adminify's admin tools with dedicated addon plugins:
 
-* **Admin Bar Editor:** Customize the WordPress toolbar visible at the top of the site when logged in
+* **Admin Bar Editor:** Customize the WordPress toolbar - rename items or hide admin bar elements per role
 * **Activity Logs:** Track user actions including logins, post edits, and plugin activity
-* **Google PageSpeed Insights:** Check site performance scores directly from the dashboard
+* **Google PageSpeed Insights:** Check site performance scores directly from the admin dashboard
 * **RoleMaster Suite:** Create, edit, clone, and manage user roles and capabilities
 * **Header and Footer Scripts:** Add analytics snippets or custom scripts without editing theme files
+
+These are some other admin tools competable with Adminify. 
 
 [Get Adminify Pro - Unlock All Features](https://wpadminify.com/pricing/)
 
@@ -116,25 +112,105 @@ Adminify's functionality can be extended with dedicated addon plugins.
 4. A new **"Adminify"** menu item will appear in the left sidebar. Click it to start customizing.
 5. For additional features, [upgrade to Adminify Pro](https://wpadminify.com/pricing/) to unlock all addons.
 
+
 == Frequently Asked Questions ==
 
 = Can I use the white label features for free? =
-Yes. The free version includes white-labeling options for the logo, footer text, and admin bar. The Pro version unlocks additional branding controls.
+Yes. The free version includes white label options for the logo, admin footer text, and admin bar. The Pro version unlocks the complete white label WordPress toolkit with advanced branding controls.
+
+= Can I rebrand WordPress completely? =
+Yes. Adminify can rebrand WordPress across the login screen, admin area, and toolbar. Combine the white label settings, admin footer text, and a custom admin panel skin, then use the Admin Bar Editor addon for a fully custom WordPress admin. Pro adds even more rebrand WordPress options for agencies.
+
+= How do I hide admin notices? =
+Enable the Notices module to hide admin notices from plugins, themes, and core updates, or disable admin notices for specific roles so clients never see upgrade nags. Agencies often disable admin notices on every client site. The hide admin notices toggle covers the block editor too.
+
+= Does Adminify include dark mode? =
+Yes. Turn on admin dark mode from the toolbar toggle, or schedule WordPress dark mode by time of day. It is a complete WordPress dark mode for the admin area, including the block editor, and it pairs with every WordPress admin theme skin.
+
+= Can I customize the WordPress login page? =
+Yes. The login customizer (Loginfy) styles the entire custom login screen: logo, background color, form styling, and buttons. The login page customizer includes a live preview, so you see the custom login page as you build it, with every change shown instantly on the custom login screen. You can also change the WordPress login URL for extra security.
+
+= Can I change a WordPress username? =
+Yes. The built-in username changer renames any username directly - no database edits, no new account needed. The username changer works on every account, including administrators.
+
+= Can I customize the admin menu for clients? =
+Yes. Use the admin menu editor with role based menu controls to rename, reorder, and hide admin menu items, build custom menu structures, restrict admin access for specific roles, then set login redirects so clients land on their own custom dashboard.
+
+= Can I build a client dashboard or client portal? =
+Yes. The dashboard customizer, admin menu editor, and white label settings combine into a clean client dashboard or client portal - a custom WordPress admin experience where clients only see what they need. Swap the welcome panel for the dashboard widgets they actually use.
+
+= Can I hide admin bar items? =
+Yes. The Admin Bar Editor addon lets you hide admin bar items - or restyle the whole bar - per user role.
+
+= Can I add custom columns to post lists? =
+Yes. The admin columns editor works on all list views. Pull in custom fields from ACF, MetaBox, Pods, and WooCommerce without code.
+
+= Can I redirect users after login or logout? =
+Yes. Set login redirects and logout redirects per role - point the logout redirect to any URL, pair it with a custom login URL, and send each role to the right page after signing in. Logout redirects can differ per role.
+
+= Can I disable comments? =
+Yes. Disable comments globally with one switch - comments globally disappear from posts, pages, and media.
+
+= Can I organize the media library into folders? =
+Yes. Create unlimited media folders and subfolders, filter by folder, and bulk move files. Media library folders even work inside the Elementor and Classic Editor pickers. Need to swap a file? Media Replace keeps the original URL intact, and the media replace tool works right from the grid view.
+
+= Can I duplicate posts and pages? =
+Yes. One-click duplicate for posts, pages, custom post types, and taxonomies - each duplicate post keeps its content, template, and metadata.
 
 = Will this plugin slow down my website? =
 No. Adminify only loads its assets on admin-facing pages. Your frontend site speed is not affected.
 
 = Is it compatible with my theme and other plugins? =
-Adminify is designed to be compatible with standard WordPress themes and most popular plugins. Check the changelog for specific compatibility additions.
+Adminify is designed to be compatible with standard WordPress themes and most popular plugins, including WooCommerce, Elementor, and ACF - all styled to match the Adminify admin interface. Check the changelog for specific compatibility additions.
 
 = Do I need coding skills to use it? =
-No coding required. Adminify provides a point-and-click settings interface. Custom CSS and JavaScript fields are available for developers who want additional control.
+No coding required. Adminify provides a point-and-click settings interface for every admin customization option. Custom CSS and JavaScript fields are available for developers who want more control over the admin panel without editing theme files.
 
 = How do I get support? =
 [Contact us here](https://wpadminify.com/contact). Pro users receive priority support.
 
 = Where do I report security bugs found in this plugin? =
 Please report security bugs found in the source code of this plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/e46a7f01-9fee-4047-9d43-2c4de76b2c7d). The Patchstack team will assist with verification, CVE assignment, and notifying the plugin developers.
+
+== Screenshots ==
+
+1. The main Adminify settings panel - the control center for all customization options.
+2. The drag and drop Admin Menu Editor in action.
+3. The Login Page Customizer (Loginfy) interface.
+4. WordPress admin security settings: custom login URL, redirects, and more.
+5. Media Library Folders - organizing files with a drag-and-drop folder system.
+6. The White Label settings page showing admin footer branding options.
+7. The module settings page showing available addons such as Activity Logs.
+
+== Changelog ==
+= Adminify - 4.2.22 (25-07-2026) =
+* Fixed: The "Last Login" column on the Users page now shows the time in your site's own time zone and date format, instead of a different time.
+* Fixed: The profile picture in the top bar no longer shows a broken image when a user has no picture; a default one is shown instead.
+
+= Adminify - 4.2.21 (15-07-2026) =
+* Fixed: Drag-and-drop ordering for categories and tags now saves and stays in place after you reload the page.
+* Fixed: Reordering media files on the Media list view now saves; your new order is remembered.
+
+= Adminify - 4.2.20 (14-07-2026) =
+* Improved: "Disable Site Health checks" now hides Site Health completely - the Tools > Site Health page, the dashboard widget, and the weekly background check are all turned off, so your clients never see it.
+
+= Adminify - 4.2.19 (11-07-2026) =
+* Fixed: Uploading files from Media > Add New failed; uploads now finish normally.
+* Fixed: "Preview" and "View" on the posts list opened the site inside the admin area; they now open the site itself, like the default WordPress admin.
+* Fixed: The Elementor page in the admin had an extra gap above its header; the header now sits at the top where it belongs.
+* Updated: Freemius SDK to 2.13.4.
+
+= Adminify - 4.2.18 (09-07-2026) =
+* Fixed: Clicking "Edit with Elementor" in the block editor did nothing and kept you on the same page; it now takes you to the Elementor editor.
+* Fixed: The Setup Wizard now opens when you click it in the menu, and no longer shows a warning message on the page.
+* Fixed: The option that hides the "PHP update required" notice now actually hides it.
+
+[View Full Changelog](https://wpadminify.com/changelogs?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)
+
+== Upgrade Notice ==
+
+= 4.2.0 =
+Adminify Update with major changes with Database Migrations, Please backup first
 
 == Source Code ==
 
@@ -171,206 +247,3 @@ When you select a Google font and save Adminify settings, the plugin downloads t
 * Data sent: the requested font family and weights via a standard HTTP GET to Google Fonts. No personal data is sent.
 * Triggered: when you save Adminify settings with a Google font selected.
 * [Google Terms](https://policies.google.com/terms) | [Google Privacy Policy](https://policies.google.com/privacy)
-
-
-== Screenshots ==
-
-1. The main Adminify settings panel - the control center for all customization options.
-2. The drag and drop Admin Menu Editor in action.
-3. The Login Page Customizer (Loginfy) interface.
-4. WordPress admin security settings: custom login URL, redirects, and more.
-5. Media Library Folders - organizing files with a drag-and-drop folder system.
-6. The White Label settings page showing admin footer branding options.
-7. The module settings page showing available addons such as Activity Logs.
-
-== Changelog ==
-= Adminify - 4.2.21 (15-07-2026) =
-* Fixed: Drag-and-drop ordering for categories and tags now saves and stays in place after you reload the page.
-* Fixed: Reordering media files on the Media list view now saves; your new order is remembered.
-
-= Adminify - 4.2.20 (14-07-2026) =
-* Improved: "Disable Site Health checks" now hides Site Health completely - the Tools > Site Health page, the dashboard widget, and the weekly background check are all turned off, so your clients never see it.
-
-= Adminify - 4.2.19 (11-07-2026) =
-* Fixed: Uploading files from Media > Add New failed; uploads now finish normally.
-* Fixed: "Preview" and "View" on the posts list opened the site inside the admin area; they now open the site itself, like the default WordPress admin.
-* Fixed: The Elementor page in the admin had an extra gap above its header; the header now sits at the top where it belongs.
-* Updated: Freemius SDK to 2.13.4.
-
-= Adminify - 4.2.18 (09-07-2026) =
-* Fixed: Clicking "Edit with Elementor" in the block editor did nothing and kept you on the same page; it now takes you to the Elementor editor.
-* Fixed: The Setup Wizard now opens when you click it in the menu, and no longer shows a warning message on the page.
-* Fixed: The option that hides the "PHP update required" notice now actually hides it.
-
-= Adminify - 4.2.17 (02-07-2026) =
-* Fixed: Changes you make to the account menu (the "Howdy" menu) now show up correctly in the Adminify admin - hiding items, renaming them, limiting them to certain user roles, and adding your own menu items all work as expected.
-* Fixed: Your own account menu items without an icon no longer show a random letter next to them.
-* Fixed: The account menu now closes properly when you click somewhere else on the page after moving to another page.
-* Fixed: The search box now works reliably.
-* Fixed: The logo now shows correctly in the block editor.
-
-= Adminify - 4.2.16 (24-06-2026) =
-* Security: Hardened the setup wizard logo upload - validates the data URI, strictly decodes the base64 payload, sanitizes the filename, enforces an image-type allowlist (jpg/jpeg/png/gif/webp), and now stores the logo as a proper Media Library attachment.
-* Security: Made the nonce check mandatory when dismissing notices ("hide forever"); requests without a valid nonce are now rejected.
-* Security: Blocked PHP object injection in the Admin Pages user-roles metabox by disallowing classes during unserialize().
-* Fixed: Resolved a fatal error triggered by the Admin Bar Editor add-on when a submenu option was not an array.
-
-= Adminify - 4.2.15 (22-06-2026) =
-* Fixed: Fluent Support (and other hash-router SPA plugins) Tickets/top-bar menu got stuck on infinite loading inside the Adminify admin UI iframe.
-
-= Adminify - 4.2.14 (19-06-2026) =
-* Fixed: Resolved an update issue that could cause an error in some setups.
-
-= Adminify - 4.2.13 (18-06-2026) =
-* Fixed: Body font typography (font-family) was not applying because the inline style output was HTML-escaped.
-* Fixed: Repeater "Add" button showed raw HTML instead of the circle-plus icon.
-* Fixed: Gutenberg post title alignment issue (title shifted to the left side).
-* Improved: Added Pro badge to the Username Changer options.
-* Improved: Default value field is now unchecked by default.
-* Added: WPML (Multilingual CMS) compatibility - switching the admin language from the topbar now reloads the window so the whole admin updates.
-
-= Adminify - 4.2.12 (13-06-2026) =
-Added: Username Changer Feature Added.
-
-= Adminify - 4.2.11 (11-06-2026) =
-* Improved: Block editor dark mode now applies only to the editor controls (sidebar/panels); the content preview keeps its real frontend styles instead of being darkened.
-* Improved: Removed dark mode support from the Customizer preview; the previewed site now keeps its real frontend styles.
-* Fixed: Several block editor controls (Typography/Heading toggles, inspector inputs, block description, tab icons, and dropdown menus) had visibility and contrast issues in dark mode.
-* Fixed: Admin Bar Editor plugin's top bar menus were hidden by the Adminify UI; they now display correctly.
-
-= Adminify - 4.2.10 (10-06-2026) =
-* Fixed: Dark mode now applies in the classic editor and Customizer when using System (OS preference) mode.
-* Fixed: Settings header showed two logos in System mode; now displays a single logo matching the OS preference.
-* Security: Enforced per-user read-capability checks in the global admin search so lower roles can no longer access other authors' unpublished posts, unapproved comments, user list, or plugin inventory.
-
-= Adminify - 4.2.9 (09-06-2026) =
-* Added: Dark mode support for the Customizer controls panel, theme preview, and classic editor.
-
-= Adminify - 4.2.8 (06-06-2026) =
-Fixed: Resolved the custom URL redirect issue.
-Updated: Improved Adminify UI by adding HTTPS URL validation check.
-
-= Adminify - 4.2.7 (03-06-2026) =
-* Fixed: Iframe issue fixed.
-
-= Adminify - 4.2.5 (01-06-2026) =
-* Fixed: Resolved an admin UI layout display issue.
-* Improved: Compatibility with WordPress 7.0 and the updated block editor.
-* Fixed: Dark mode now saves correctly and applies consistently across the admin area and the block editor.
-* Added: Adminify admin bar shortcut now opens the WordPress command palette.
-* Improved: Editor spacing and frame edges in the Adminify admin interface.
-* Improved: FluentCRM toolbar alignment inside the Adminify admin interface.
-* Fixed: Plugin dependency activation notice now displays correctly.
-
-= Adminify - 4.2.4 (28-05-2026) =
-* Security: Hardened the release build for the WordPress.org directory.
-
-= Adminify - 4.2.3 (27-05-2026) =
-* Security: Security Bugs fixed
-
-= Adminify - 4.2.2 (21-05-2026) =
-* Fixed: Admin Bar Editor with Adminify UI white screen issue fixed.
-
-= Adminify - 4.2.0 (20-05-2026) =
-* Security: Used $wpdb->prepare() for all dynamic post-type and taxonomy database queries.
-* Security: Validated the activate_plugin() target against the list of installed plugins.
-* Security: Added nonce and capability checks to the media-folder and options-save AJAX handlers.
-* Security: Sanitized raw $_POST and $_SERVER inputs across multiple modules.
-* Security: Escaped echoed variables and options throughout the framework field templates.
-* Compliance: Bundled FontAwesome, CodeMirror, Leaflet, and Web Font Loader locally instead of loading them from a remote CDN.
-* Compliance: Served the setup-wizard video thumbnail and custom avatar from local assets instead of remote services.
-* Compliance: Documented the GitHub add-ons list as an external service in the readme.
-
-= Adminify - 4.1.17 (13-05-2026) =
-* Compliance: Renamed the plugin display name to "Adminify – White Label, Admin Menu Editor, Login Customizer" per WordPress.org plugin naming guidelines.
-* Compliance: Rendered Pro-only settings as visually-locked, non-functional controls in the free build (no DB writes for locked keys, lock overlay + Upgrade CTA).
-* Compliance: Documented external services (Google Fonts, Jewel Theme, GitHub) in the readme.
-* Compliance: Hid the Freemius Add-Ons tab from the Account screen.
-
-= V4.1.16 (04-05-2026) =
-* Fixed: Fluent Plugins with Adminify UI white screen issue fixed.
-* Fixed: Multisite Setup Wizard wrong url issue fixed.
-* Fixed: Setup Wizard not hiding after completed issue fixed.
-
-= V4.1.15 (29-04-2026) =
-* Added: Media Replace feature added.
-* Fixed: Adminify UI with Fluent Support header style issue fixed.
-* Fixed: Adminify UI with Fluent Cart header style issue fixed.
-* Fixed: Adminify UI with Fluent Affiliate header style issue fixed.
-
-= V4.1.14 (28-04-2026) =
-* Fixed: Gravity Form plugin Add New Form compatibility.
-
-= V4.1.13 (28-04-2026) =
-* Fixed: Gravity Form compatibility.
-
-= V4.1.12 (25-04-2026) =
-* Fixed: Gutenberg Editor page system dark mode color issue fixed.
-* Fixed: Dashboard Dark/Light toggle default logo color issue fixed.
-* Fixed: Header Modify warning issue fixed.
-
-= V4.1.11 (23-04-2026) =
-* Fixed: Folder Module with conflict customizer page not loading issue fixed.
-* Fixed: Admin Pages Meta Boxes issue fixed.
-
-= V4.1.10 (11-04-2026) =
-* Fixed: Gutenberg block editor some Dark Mode style issue fixed.
-
-= V4.1.9 (31-03-2026) =
-* Fixed: WP Dashboard Notes plugin not create "+ add notes" issue fixed.
-* Fixed: Folder Module style broken issue fixed.
-* Fixed: Folder Module second time not loading on the elementor issue fixed.
-
-= V4.1.8 (30-03-2026) =
-* Fixed: Some menu items are not hidden issue Fixed (ex: Yoast SEO).
-
-= V4.1.7 (13-03-2026) =
-* Added: Admin Menu Search feature added.
-* Fixed: Resolved the white screen issue that occurred when installing and activating Admin Bar Editor Pro addons.
-* Fixed: Divi Theme with Adminify UI Topbar Menu show unnecessary Divi Theme menu showing issue fixed.
-
-= V4.1.6 (11-03-2026) =
-* Fixed: Divi Theme page builder not reloading issue fixed in Adminify UI.
-
-= V4.1.5 (10-03-2026) =
-* Fixed: WP Rocket plugin CSS issue with Gutenberg Editor checkbox in Adminify UI.
-
-= V4.1.4 (09-03-2026) =
-* Added: Media Folder organization now works inside the Elementor editor's media picker - find and organize your images without leaving the page customization screen.
-* Added: Classic Editor users can now browse and use media folders directly from the media insert popup in the WordPress admin panel.
-* Added: The WordPress Customizer page now supports media folder organization, making it easier to pick the right file while customizing your site.
-* Fixed: Resolved an issue where the Media Folder module was not appearing correctly for custom post types created by Adminify Pro.
-
-= V4.1.3 (15-02-2026) =
-* Fixed: Media Library folder module in the popup now displays correctly for right-to-left (RTL) language WordPress admin panel users.
-* Fixed: Certain sidebar submenu items were not displaying correctly when using the Adminify custom admin panel UI - now fully resolved.
-
-= V4.1.2 (08-02-2026) =
-* Feature: The WordPress Media Library page now supports infinite scroll, letting you browse all your uploaded files without clicking through pages.
-* Improved: The folder panel in the WordPress Media Library is now sticky, staying visible as you scroll through your media files in the admin panel.
-* Fixed: Compatibility issue resolved - third-party media folder plugins (such as FileBird, Folders, and Real Media Library) no longer auto-hide when Adminify's folder module is active in the admin panel.
-* Fixed: Clicking items in the Admin Bar secondary menu now correctly navigates to the intended page within the WordPress admin panel.
-
-= V4.1.1 (07-02-2026) =
-* Fixed: The custom WordPress login registration URL now correctly loads the full registration form without any issues.
-* Fixed: Query strings in the custom registration URL no longer get an unwanted trailing slash added, ensuring clean and accurate admin login URLs.
-* Fixed: A URL generation issue where the protocol was being incorrectly inserted before query parameters in the WordPress admin panel has been resolved.
-* Fixed: Multisite WordPress registration pages now load correctly when a custom register URL is configured in the admin panel settings.
-* Fixed: Login and logout redirect fields no longer trigger PHP warnings for new installations using default values in the WordPress admin customization panel.
-* Fixed: Login and logout redirect fields now correctly show the expected pre-selected values for new entries in the admin panel.
-* Improved: The new Register URL field placeholder now auto-updates based on the custom Login URL you enter, making WordPress admin panel setup more intuitive.
-* Improved: The upgrade notification now includes "Notify Me" and "Don't Show Again" options for a cleaner, less intrusive WordPress admin dashboard experience.
-
-= V4.1.0 (03-02-2026) =
-* Fixed: Addon plugin installation from the Adminify panel now works correctly without errors.
-* Fixed: The Adminify update notice was not dismissing properly - now resolved for a cleaner WordPress admin dashboard experience.
-* Fixed: Using Ctrl/Cmd + Click to open WordPress admin panel links in a new browser window now works as expected.
-* Fixed: Links within subdomains sharing the same origin now correctly open in a new tab from the WordPress admin bar.
-* Fixed: Clearing cache via the Redis Object Cache plugin no longer incorrectly redirects to its settings page in the WordPress admin panel.
-
-[View Full Changelog](https://wpadminify.com/changelogs?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify)
-
-
-== Upgrade Notice ==
-= 4.2.0 =
-Adminify Update with major changes with Database Migrations, Please backup first

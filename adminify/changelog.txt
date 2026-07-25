@@ -1,4 +1,8 @@
 == Changelog ==
+= Adminify - 4.2.22 (25-07-2026) =
+* Fixed: The "Last Login" column on the Users page now shows the time in your site's own time zone and date format, instead of a different time.
+* Fixed: The profile picture in the top bar no longer shows a broken image when a user has no picture; a default one is shown instead.
+
 = Adminify - 4.2.21 (15-07-2026) =
 * Fixed: Drag-and-drop ordering for categories and tags now saves and stays in place after you reload the page.
 * Fixed: Reordering media files on the Media list view now saves; your new order is remembered.

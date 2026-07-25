@@ -87,8 +87,8 @@ if (!class_exists('Latest_Updates')) {
 
 			if("dismissed" !== $forever_notice){
 				$pxlbsadminify_changelog_items =
-				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Drag-and-drop ordering for categories and tags now saves and stays in place after you reload the page. </span><br>', 'adminify')
-				  . __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Reordering media files on the Media list view now saves; your new order is remembered. </span><br>', 'adminify');
+				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The "Last Login" column on the Users page now shows the time in your site\'s own time zone and date format, instead of a different time. </span><br>', 'adminify')
+				  . __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The profile picture in the top bar no longer shows a broken image when a user has no picture; a default one is shown instead. </span><br>', 'adminify');
 
 			$pxlbsadminify_changelog_message = sprintf(
 					/* translators: %1$s: changelogs page URL. %2$s: link anchor text. %3$s: plugin update heading HTML. %4$s: changelog list items HTML. */
