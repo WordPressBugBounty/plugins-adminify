@@ -1120,6 +1120,9 @@ body.wp-adminify {
 #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-admin-menu-wrapper .frame-adminify-admin-main-menu ul.frame-adminify-admin-menu li.frame-adminify-menu-item .frame-adminify-submenu-wrapper .frame-adminify-submenu .frame-adminify-submenu-item > a .adminify-addons-text {
   color: #ffa500;
 }
+#frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-admin-menu-wrapper .frame-adminify-admin-main-menu ul.frame-adminify-admin-menu li.frame-adminify-menu-item .frame-adminify-submenu-wrapper .frame-adminify-submenu .frame-adminify-submenu-item > a span[style*=color] {
+  color: inherit !important;
+}
 #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-admin-menu-wrapper .frame-adminify-admin-main-menu ul.frame-adminify-admin-menu li.frame-adminify-menu-item .frame-adminify-submenu-wrapper .frame-adminify-submenu .frame-adminify-submenu-item > a :last-child {
   position: inherit !important;
 }
@@ -1732,6 +1735,9 @@ body.wp-adminify {
   justify-content: space-between;
   gap: 4px;
   min-width: 160px;
+}
+.adminify-horizontal-menu-wrapper > ul li.frame-adminify-menu-item .frame-adminify-submenu-wrapper ul.frame-adminify-submenu li.frame-adminify-submenu-item a span[style*=color] {
+  color: inherit !important;
 }
 .adminify-horizontal-menu-wrapper > ul li.frame-adminify-menu-item .frame-adminify-submenu-wrapper ul.frame-adminify-submenu li.frame-adminify-submenu-item a :last-child {
   position: inherit !important;

@@ -3,7 +3,7 @@ Contributors: pixarlabs, litonice13
 Tags: white label, admin menu editor, login customizer, admin columns, dark mode
 Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 4.2.22
+Stable tag: 4.2.23
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -183,6 +183,11 @@ Please report security bugs found in the source code of this plugin through the 
 7. The module settings page showing available addons such as Activity Logs.
 
 == Changelog ==
+= Adminify - 4.2.23 (04-08-2026) =
+* Fixed: Ctrl+Click (Windows) and Cmd+Click (Mac) on admin links now open them in a new tab as expected - post and product lists, the sidebar menu, the top bar, and search results.
+* Fixed: The ID column for categories and tags now shows up on their list screens when the option is turned on.
+* Fixed: Shield Security plugin submenu active color issue fixed.
+
 = Adminify - 4.2.22 (25-07-2026) =
 * Fixed: The "Last Login" column on the Users page now shows the time in your site's own time zone and date format, instead of a different time.
 * Fixed: The profile picture in the top bar no longer shows a broken image when a user has no picture; a default one is shown instead.

@@ -1,4 +1,9 @@
 == Changelog ==
+= Adminify - 4.2.23 (04-08-2026) =
+* Fixed: Ctrl+Click (Windows) and Cmd+Click (Mac) on admin links now open them in a new tab as expected - post and product lists, the sidebar menu, the top bar, and search results.
+* Fixed: The ID column for categories and tags now shows up on their list screens when the option is turned on.
+* Fixed: Shield Security plugin submenu active color issue fixed.
+
 = Adminify - 4.2.22 (25-07-2026) =
 * Fixed: The "Last Login" column on the Users page now shows the time in your site's own time zone and date format, instead of a different time.
 * Fixed: The profile picture in the top bar no longer shows a broken image when a user has no picture; a default one is shown instead.
