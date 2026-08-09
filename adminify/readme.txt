@@ -3,7 +3,7 @@ Contributors: pixarlabs, litonice13
 Tags: white label, admin menu editor, login customizer, admin columns, dark mode
 Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 4.2.23
+Stable tag: 4.2.24
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -183,6 +183,10 @@ Please report security bugs found in the source code of this plugin through the 
 7. The module settings page showing available addons such as Activity Logs.
 
 == Changelog ==
+= Adminify - 4.2.24 (09-08-2026) =
+* Fixed: Playground duplicate sidebar & topbar issue fixed.
+* Improved: Dark mode color improve in gutenberg block editor.
+
 = Adminify - 4.2.23 (04-08-2026) =
 * Fixed: Ctrl+Click (Windows) and Cmd+Click (Mac) on admin links now open them in a new tab as expected - post and product lists, the sidebar menu, the top bar, and search results.
 * Fixed: The ID column for categories and tags now shows up on their list screens when the option is turned on.

@@ -421,7 +421,13 @@ class DarkModeConflicts
         // $parent_selector = 'body.wp-adminify.adminify-dark-mode';
         $parent_selector = 'body.wp-adminify';
 
-        $dark_mode_style = "$parent_selector .components-modal__content .components-text,
+        $dark_mode_style = "$parent_selector .editor-document-bar__title .editor-document-bar__post-title {color: black;}
+            $parent_selector .interface-complementary-area {border-left: 1px solid #dedee7!important;}
+            $parent_selector .block-editor-inserter__main-area .block-editor-tabbed-sidebar .block-editor-tabbed-sidebar__tablist button, .block-editor-tabbed-sidebar .block-editor-tabbed-sidebar__tab {color: black;}
+            $parent_selector .block-editor-inserter__main-area .block-editor-inserter__category-tablist button {color: black;}
+            $parent_selector .interface-interface-skeleton__body .interface-interface-skeleton__secondary-sidebar {border-right: 1px solid #e0e0e0;}
+            $parent_selector .block-editor__container .edit-post-header {border-bottom: 1px solid #e0e0e0}
+            $parent_selector .components-modal__content .components-text,
             $parent_selector .components-popover__content .components-text { color: black!important; }
             $parent_selector .block-editor-block-inspector .components-tools-panel { border-top-color: #e0e0e0; }
             $parent_selector .admin-ui-navigable-region .components-panel__header > div > button { color: black; }
@@ -443,6 +449,7 @@ class DarkModeConflicts
             }
             /* Unit suffix/select (the \"px\" box) is a separate element the engine leaves
                white — force it dark to match the WIDTH input. */
+            $parent_selector .css-dkbncl-Menu-Menu,
             $parent_selector .block-editor-block-inspector .components-unit-control__unit-select,
             $parent_selector .block-editor-block-inspector .components-unit-control select,
             $parent_selector .block-editor-block-inspector .components-input-control__suffix,

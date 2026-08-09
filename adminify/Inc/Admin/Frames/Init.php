@@ -38,17 +38,31 @@ if (!class_exists('Init')) {
             }
 
             if ( ! $this->is_allowed() ) {
-                if ( Utils::is_iframe() ) {
+                if ( Utils::is_iframe() || ! Utils::has_fetch_metadata() ) {
                     $http_host   = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
                     $request_uri = isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '';
                     $scheme      = empty($_SERVER['HTTPS']) ? 'http' : 'https';
                     $actual_link = $scheme . '://' . $http_host . $request_uri;
-                    Frames::custom_plugin_change_reload($actual_link);
+
+                    if ( Utils::is_iframe() ) {
+                        Frames::custom_plugin_change_reload($actual_link);
+                    } else {
+                        // No Fetch Metadata to go by - let the browser decide
+                        // whether this really is the Adminify iframe.
+                        Frames::maybe_break_out_of_frame($actual_link);
+                    }
                 }
                 return;
             }
 
-            if ( Utils::is_iframe() ) {
+            // Without Fetch Metadata a POST is treated as coming from the frame:
+            // the shell template prints during `admin_init`, so rendering it for a
+            // form submission sends output before WordPress can redirect and the
+            // request dead-ends on a blank page. Submissions in a running Adminify
+            // UI always originate inside the iframe anyway.
+            $is_frame = Utils::is_iframe() || ( ! Utils::has_fetch_metadata() && ! Utils::is_get_request() );
+
+            if ( $is_frame ) {
                 $this->frame = new Frames();
             } else {
                 $this->admin = new Admin();

@@ -1316,6 +1316,36 @@ class Utils
 	}
 
 	/**
+	 * Whether the request carries Fetch Metadata headers at all.
+	 *
+	 * `Sec-Fetch-*` is attached by the browser below the Service Worker layer, so
+	 * installs served through a Service Worker - WordPress Playground, offline
+	 * setups - never pass it to PHP. Older browsers do not send it either. When it
+	 * is missing, is_iframe() cannot tell an iframe request from a top-level one
+	 * and the client has to settle it instead.
+	 *
+	 * @return bool
+	 */
+	public static function has_fetch_metadata()
+	{
+		return isset( $_SERVER['HTTP_SEC_FETCH_DEST'] )
+			|| isset( $_SERVER['HTTP_SEC_FETCH_MODE'] )
+			|| isset( $_SERVER['HTTP_SEC_FETCH_SITE'] );
+	}
+
+	/**
+	 * Whether this is a plain GET request.
+	 *
+	 * @return bool
+	 */
+	public static function is_get_request()
+	{
+		$method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) : 'GET';
+
+		return 'GET' === $method || 'HEAD' === $method;
+	}
+
+	/**
 	 * Whether the current request renders a full admin page.
 	 *
 	 * Endpoints like async-upload.php run through wp-admin/admin.php (so `admin_init`

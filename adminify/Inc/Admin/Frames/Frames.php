@@ -62,6 +62,28 @@ if (!class_exists('Frames')) {
             echo '<script>parent.location.reload();</script>';
         }
 
+        /**
+         * Break out of the Adminify UI iframe, decided by the browser.
+         *
+         * Same job as custom_plugin_change_reload(), for requests that could not
+         * be classified server-side because the environment strips Fetch Metadata
+         * headers (see Utils::has_fetch_metadata()). The script checks the frame
+         * it actually runs in, so a genuine top-level load is left alone.
+         *
+         * @param string $actual_link URL to send the parent window to.
+         * @return void
+         */
+        public static function maybe_break_out_of_frame( $actual_link ) {
+            $url = wp_json_encode(
+                esc_url_raw( $actual_link ),
+                JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+            );
+
+            echo '<script>(function(){var f;try{f=window.frameElement;}catch(e){return;}'
+                . 'if(!f||f.id!=="frame-adminify-app--iframe")return;'
+                . 'parent.location.replace(' . $url . ');})();</script>';
+        }
+
         public function load_scripts()
         {
             wp_enqueue_style('frame-adminify--frame', PXLBSADMINIFY_ASSETS . 'admin/css/frame' . Utils::assets_ext('.css'), [], PXLBSADMINIFY_VER);
