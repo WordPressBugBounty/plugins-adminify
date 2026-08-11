@@ -151,6 +151,10 @@ if (!class_exists('Admin')) {
                     'url' => '*',
                     'query_params' => ['page' => 'suretriggers']
                 ],
+                [
+                    'url' => '*',
+                    'query_params' => ['tab' => 'plugin-information', 'TB_iframe' => 'true']
+                ],
                 // [
                 //     'url' => '/wp-admin/post-new.php',
                 //     'post_type' => ['post', 'page']

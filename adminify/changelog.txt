@@ -1,4 +1,10 @@
 == Changelog ==
+= Adminify - 4.2.25 (11-08-2026) =
+* Fixed: The "Set featured image" button in the media library popup is now visible on mobile devices when the Adminify UI is enabled.
+* Fixed: Plugin details page not scroll, link, button click issue fixed.
+* Fixed: Search box extra margin top issue fixed.
+* Fixed: Duplicate Publish button in the block editor pre-publish panel on mobile devices.
+
 = Adminify - 4.2.24 (09-08-2026) =
 * Fixed: Playground duplicate sidebar & topbar issue fixed.
 * Improved: Dark mode color improve in gutenberg block editor.

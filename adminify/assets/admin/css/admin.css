@@ -91,6 +91,7 @@ html[frame-adminify-app=true] #wpfooter {
   position: fixed;
   width: 100%;
   height: 100%;
+  height: 100dvh;
   top: 0;
   left: 0;
   z-index: 999;
@@ -135,7 +136,10 @@ html[frame-adminify-app=true] #wpfooter {
 #frame-adminify-app .adminify-frame-wrapper .adminify-frame-content {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100vh - 56px);
+  height: calc(100vh - var(--adminify-topbar-height, 56px));
+  height: calc(100dvh - 56px);
+  height: calc(100dvh - var(--adminify-topbar-height, 56px));
   padding-bottom: 16px;
   position: relative;
 }

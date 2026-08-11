@@ -3,7 +3,7 @@ Contributors: pixarlabs, litonice13
 Tags: white label, admin menu editor, login customizer, admin columns, dark mode
 Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 4.2.24
+Stable tag: 4.2.25
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -94,11 +94,14 @@ Restrict admin access by user role, hide admin menu entries with role based menu
 
 Extend Adminify's admin tools with dedicated addon plugins:
 
-* **Admin Bar Editor:** Customize the WordPress toolbar - rename items or hide admin bar elements per role
-* **Activity Logs:** Track user actions including logins, post edits, and plugin activity
-* **Google PageSpeed Insights:** Check site performance scores directly from the admin dashboard
-* **RoleMaster Suite:** Create, edit, clone, and manage user roles and capabilities
-* **Header and Footer Scripts:** Add analytics snippets or custom scripts without editing theme files
+* **[Admin Bar Editor](https://jeweltheme.com/admin-bar-editor):** Customize the WordPress toolbar - rename items or hide admin bar elements per role
+* **[Loginfy](https://wpadminify.com/loginfy):** Customize the WordPress login page - logo, background, form styling, custom login URL, and role based login redirects
+* **[Admin Columns Editor](https://wpadminify.com/admin-columns-editor):** Add, remove, reorder, and sort admin columns in list views, including ACF, MetaBox, Pods, and WooCommerce fields
+* **[Quick Menu](https://wpadminify.com/quick-menu):** Pin your most-used admin screens to a floating quick access menu and jump to any settings page in one click
+* **[Activity Logs](https://wpadminify.com/activity-logs):** Track user actions including logins, post edits, and plugin activity
+* **[Google PageSpeed Insights](https://wpadminify.com/google-pagespeed-insights):** Check site performance scores directly from the admin dashboard
+* **[RoleMaster Suite](https://wpadminify.com/rolemaster-suite):** Create, edit, clone, and manage user roles and capabilities
+* **[Header and Footer Scripts](https://wpadminify.com/header-footer-scripts):** Add analytics snippets or custom scripts without editing theme files
 
 These are some other admin tools competable with Adminify. 
 
@@ -183,6 +186,12 @@ Please report security bugs found in the source code of this plugin through the 
 7. The module settings page showing available addons such as Activity Logs.
 
 == Changelog ==
+= Adminify - 4.2.25 (11-08-2026) =
+* Fixed: The "Set featured image" button in the media library popup is now visible on mobile devices when the Adminify UI is enabled.
+* Fixed: Plugin details page not scroll, link, button click issue fixed.
+* Fixed: Search box extra margin top issue fixed.
+* Fixed: Duplicate Publish button in the block editor pre-publish panel on mobile devices.
+
 = Adminify - 4.2.24 (09-08-2026) =
 * Fixed: Playground duplicate sidebar & topbar issue fixed.
 * Improved: Dark mode color improve in gutenberg block editor.
@@ -227,21 +236,9 @@ This plugin uses compiled and minified JavaScript and CSS files built with webpa
 
 The full unminified source code is publicly available at: **https://github.com/litonarefin/adminify-free**
 
-To build from source:
-
-1. Clone the repository
-2. Run `npm install`
-3. Run `npm run build`
-
 == External services ==
 
 Adminify relies on the following third-party / external services. Each entry describes what the service is, what data is sent, when it happens, and links to the provider's terms and privacy policy.
-
-**Freemius**
-Adminify uses the Freemius SDK to handle plugin licensing and updates (and, for the premium version, account management). Validating a license or checking for updates sends your license key, site URL, basic environment details (WordPress and PHP versions) and the plugin version to Freemius. Any anonymous usage data is shared only if you choose to opt in.
-
-* Triggered: on activation, license actions and update checks.
-* [Freemius Terms](https://freemius.com/terms/) | [Freemius Privacy Policy](https://freemius.com/privacy/)
 
 **Optional usage diagnostics (Pixar Labs)**
 This is OFF by default. Only if a site administrator explicitly opts in by clicking "Allow" on the "What we collect" admin notice does Adminify send the administrator email address and basic, non-sensitive site information (for example WordPress version, active plugins and site name) to help us understand how the plugin is used and improve it. Nothing is sent unless you opt in.
@@ -249,10 +246,3 @@ This is OFF by default. Only if a site administrator explicitly opts in by click
 * Data sent: administrator email and basic site information — only after you click "Allow".
 * Triggered: only on the explicit "Allow" opt-in; never automatically.
 * [Pixar Labs Terms](https://pixarlabs.com/terms-of-use) | [Pixar Labs Privacy Policy](https://pixarlabs.com/privacy-policy)
-
-**Google Fonts (optional local font hosting)**
-When you select a Google font and save Adminify settings, the plugin downloads the chosen font files from Google so they can be served locally from your own site (better privacy and performance). This only happens when you save settings with a Google font selected.
-
-* Data sent: the requested font family and weights via a standard HTTP GET to Google Fonts. No personal data is sent.
-* Triggered: when you save Adminify settings with a Google font selected.
-* [Google Terms](https://policies.google.com/terms) | [Google Privacy Policy](https://policies.google.com/privacy)

@@ -1513,10 +1513,6 @@ a {
   margin: 0;
   padding: 16px 0;
 }
-.adminify-ui .search-box {
-  position: relative;
-  top: 12px;
-}
 .adminify-ui .wp-list-table,
 .adminify-ui .widefat {
   border-color: #dedee7;
