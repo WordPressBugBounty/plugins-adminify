@@ -3,7 +3,7 @@ Contributors: pixarlabs, litonice13
 Tags: white label, admin menu editor, login customizer, admin columns, dark mode
 Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 4.2.25
+Stable tag: 4.2.26
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -58,7 +58,7 @@ Customize admin can be your priority if you or your cleints prefer a cleaner Wor
 
 = Media Library Folders and Media Management =
 
-[Media library folders](https://wpadminify.com/features/media-folders?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify) bring simple, drag-and-drop organization to the WordPress media library. Create folders and subfolders, drag files into media folders, filter and browse by folder, and bulk move files between them. If a site has years of uploads sitting in one flat list, media library folders turn that into something a client can actually navigate.
+[Media library folders](https://wpadminify.com/features/wordpress-media-folder?utm_source=wordpressorg&utm_medium=readme&utm_campaign=adminify) bring simple, drag-and-drop organization to the WordPress media library. Create folders and subfolders, drag files into media folders, filter and browse by folder, and bulk move files between them. If a site has years of uploads sitting in one flat list, media library folders turn that into something a client can actually navigate.
 
 Media Replace, bundled with the media folders feature, swaps out any image or file while keeping its original URL and ID intact - useful for updating a logo or a PDF without breaking every link that points to it. Folder support isn't limited to the main media screen either: media folders work inside the Elementor media picker, the Classic Editor popup, and the Customizer, so the organization holds up everywhere media gets selected.
 
@@ -186,6 +186,11 @@ Please report security bugs found in the source code of this plugin through the 
 7. The module settings page showing available addons such as Activity Logs.
 
 == Changelog ==
+= Adminify - 4.2.26 (12-08-2026) =
+* Fixed: On phones and tablets, the menu items at the bottom of the sidebar were hidden behind the browser bar and could not be reached on sites with a lot of plugins. The menu now scrolls all the way to the last item.
+* Fixed: With the Two Step menu, opening a menu or a sub-item after scrolling down the sidebar hid the panel heading, so there was no way back to the main menu. The heading now always stays at the top of the panel.
+* Improved: On phones and tablets, the sidebar now slides closed by itself after you tap a menu or submenu link, so you land straight on the page you picked.
+
 = Adminify - 4.2.25 (11-08-2026) =
 * Fixed: The "Set featured image" button in the media library popup is now visible on mobile devices when the Adminify UI is enabled.
 * Fixed: Plugin details page not scroll, link, button click issue fixed.

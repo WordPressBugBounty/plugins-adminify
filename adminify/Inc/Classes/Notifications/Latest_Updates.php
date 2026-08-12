@@ -87,10 +87,9 @@ if (!class_exists('Latest_Updates')) {
 
 			if("dismissed" !== $forever_notice){
 				$pxlbsadminify_changelog_items =
-				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The "Set featured image" button in the media library popup is now visible on mobile devices when the Adminify UI is enabled. </span><br>', 'adminify')
-					. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Plugin details page not scroll, link, button click issue fixed. </span><br>', 'adminify')
-					. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Search box extra margin top issue fixed. </span><br>', 'adminify')
-					. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Duplicate Publish button in the block editor pre-publish panel on mobile devices. </span><br>', 'adminify');
+				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> On phones and tablets, the menu items at the bottom of the sidebar were hidden behind the browser bar and could not be reached on sites with a lot of plugins. The menu now scrolls all the way to the last item. </span><br>', 'adminify')
+					. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> With the Two Step menu, opening a menu or a sub-item after scrolling down the sidebar hid the panel heading, so there was no way back to the main menu. The heading now always stays at the top of the panel. </span><br>', 'adminify')
+					. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> On phones and tablets, the sidebar now slides closed by itself after you tap a menu or submenu link, so you land straight on the page you picked. </span><br>', 'adminify');
 
 			$pxlbsadminify_changelog_message = sprintf(
 					/* translators: %1$s: changelogs page URL. %2$s: link anchor text. %3$s: plugin update heading HTML. %4$s: changelog list items HTML. */

@@ -1,4 +1,9 @@
 == Changelog ==
+= Adminify - 4.2.26 (12-08-2026) =
+* Fixed: On phones and tablets, the menu items at the bottom of the sidebar were hidden behind the browser bar and could not be reached on sites with a lot of plugins. The menu now scrolls all the way to the last item.
+* Fixed: With the Two Step menu, opening a menu or a sub-item after scrolling down the sidebar hid the panel heading, so there was no way back to the main menu. The heading now always stays at the top of the panel.
+* Improved: On phones and tablets, the sidebar now slides closed by itself after you tap a menu or submenu link, so you land straight on the page you picked.
+
 = Adminify - 4.2.25 (11-08-2026) =
 * Fixed: The "Set featured image" button in the media library popup is now visible on mobile devices when the Adminify UI is enabled.
 * Fixed: Plugin details page not scroll, link, button click issue fixed.

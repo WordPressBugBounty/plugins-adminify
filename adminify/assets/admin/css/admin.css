@@ -871,6 +871,9 @@ body.wp-adminify {
 #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-admin-menu-wrapper .frame-adminify-admin-main-menu {
   width: var(--adminify-menu-width);
   height: calc(100vh - 78px);
+  height: calc(100vh - var(--adminify-sidebar-offset, 78px));
+  height: calc(100dvh - 78px);
+  height: calc(100dvh - var(--adminify-sidebar-offset, 78px));
   transition: width 0.3s;
 }
 #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-admin-menu-wrapper .frame-adminify-admin-main-menu ul.frame-adminify-admin-menu {
@@ -1182,22 +1185,28 @@ body.wp-adminify {
 #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap[data-menu-mode=two_step] .frame-adminify-admin-menu .frame-adminify-menu-item .frame-adminify-submenu-wrapper {
   position: absolute;
   content: "";
-  top: 0;
+  top: 0px;
+  top: var(--adminify-menu-scroll-top, 0px);
   left: 0;
   width: 100%;
   height: calc(100vh - 78px);
+  height: calc(100vh - var(--adminify-sidebar-offset, 78px));
+  height: calc(100dvh - 78px);
+  height: calc(100dvh - var(--adminify-sidebar-offset, 78px));
   transform: translateX(100%);
   margin: 0;
   padding: 16px;
   padding-top: 8px;
   visibility: hidden;
-  transition: all 0.3s;
+  transition: transform 0.3s, visibility 0.3s;
   background: var(--adminify-menu-bg);
   z-index: 9999;
-  overflow-y: scroll;
+  overflow: hidden;
 }
 #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap[data-menu-mode=two_step] .frame-adminify-admin-menu .frame-adminify-menu-item .frame-adminify-submenu-wrapper .frame-adminify-submenu {
   height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding-left: 8px !important;
   padding-top: 0 !important;
 }
@@ -1256,6 +1265,10 @@ body.wp-adminify {
 }
 #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap[data-menu-mode=two_step] .frame-adminify-admin-menu .frame-adminify-menu-item .frame-adminify-submenu-wrapper .frame-adminify-submenu .frame-adminify-submenu-item:first-child {
   margin-left: 0;
+}
+#frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap[data-menu-mode=two_step] .frame-adminify-admin-menu .frame-adminify-menu-item .frame-adminify-submenu-wrapper .frame-adminify-submenu::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
 }
 #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap[data-menu-mode=two_step] .frame-adminify-admin-menu .frame-adminify-menu-item .frame-adminify-submenu-wrapper::-webkit-scrollbar {
   width: 0px;
@@ -1492,14 +1505,21 @@ body.wp-adminify {
   transition: transform 0.3s ease;
   background: var(--adminify-submenu-wrapper-bg);
   z-index: 10;
+  overflow: hidden;
 }
 .frame-adminify-sidebar-wrap[data-menu-mode=two_step] .frame-adminify-submenu-wrapper .frame-adminify-third-level-panel-container.frame-adminify-third-level-visible {
   transform: translateX(0);
 }
 .frame-adminify-sidebar-wrap[data-menu-mode=two_step] .frame-adminify-submenu-wrapper .frame-adminify-third-level-panel-container .frame-adminify-third-level-panel {
   height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding-left: 8px !important;
   padding-top: 0 !important;
+}
+.frame-adminify-sidebar-wrap[data-menu-mode=two_step] .frame-adminify-submenu-wrapper .frame-adminify-third-level-panel-container .frame-adminify-third-level-panel::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
 }
 .frame-adminify-sidebar-wrap[data-menu-mode=two_step] .frame-adminify-submenu-wrapper .frame-adminify-third-level-panel-container .frame-adminify-third-level-panel .frame-adminify-two-step {
   margin-bottom: 12px;
@@ -1576,16 +1596,42 @@ body.wp-adminify {
     position: absolute !important;
     top: 0;
     left: 0;
+    bottom: 0;
+    height: auto;
     width: 260px !important;
+    display: flex;
+    flex-direction: column;
     transform: translateX(-100%);
     transition: transform 0.4s;
     z-index: 9999;
   }
   #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-admin-menu-wrapper {
-    height: 100vh;
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
   #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-admin-menu-wrapper .frame-adminify-admin-main-menu {
     width: 260px !important;
+    height: auto;
+    min-height: 100%;
+  }
+  #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap .frame-adminify-admin-menu-wrapper ul.frame-adminify-admin-menu {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(var(--adminify-menu-wrapper-padding-bottom, 16px) + env(safe-area-inset-bottom, 0px));
+  }
+  #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap[data-menu-mode=two_step] .frame-adminify-admin-menu .frame-adminify-menu-item .frame-adminify-submenu-wrapper {
+    top: 0px;
+    top: var(--adminify-menu-scroll-top, 0px);
+    bottom: auto;
+    height: 100%;
+    height: var(--adminify-menu-viewport-height, 100%);
+  }
+  #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap[data-menu-mode=two_step]:has(.frame-adminify--menu-show):not(.adminify-sidebar-folded) .frame-adminify-admin-menu-wrapper {
+    height: auto;
+    overflow-y: hidden;
   }
   #frame-adminify-app .adminify-frame-wrapper .frame-adminify-sidebar-wrap.adminify-sidebar-collapse {
     transform: translateX(0) !important;
@@ -1862,8 +1908,12 @@ body.wp-adminify {
     position: fixed;
     top: 0;
     left: 0;
+    bottom: 0;
     width: 260px;
-    height: 100%;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
     padding: 12px 0;
     padding-right: 4px;
     background-color: var(--adminify-menu-bg);
@@ -1879,8 +1929,13 @@ body.wp-adminify {
     margin: 0;
     padding: 0 16px;
     padding-right: 12px;
-    height: calc(100vh - 24px);
-    overflow-y: scroll;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
   .frame-adminify-app .adminify-horizontal-menu .adminify-horizontal-menu-wrapper > ul .frame-adminify-menu-item {
     width: 100%;
