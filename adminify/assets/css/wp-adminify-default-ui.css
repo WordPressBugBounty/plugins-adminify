@@ -585,6 +585,25 @@ body.wp-adminify {
 /*
 * Useable Mixin
 */
+.wp-adminify {
+  /**
+   * WordPress pins #wpfooter with `position: absolute; bottom: 0` and reserves a
+   * flat 65px for it via #wpbody-content's bottom padding (wp-admin/css/common.css).
+   * That budget assumes core's single line of text. Adminify's footer carries the
+   * credit line plus a system info row - and wraps to more rows on narrow screens -
+   * so the extra height grows upward and lands on top of whatever the page ends
+   * with, typically a plugin's pagination.
+   *
+   * Letting it flow in normal document order removes the overlap for good, at any
+   * height and any screen width, instead of guessing a taller fixed reservation.
+   */
+}
+.wp-adminify #wpfooter {
+  position: static;
+}
+.wp-adminify #wpbody-content {
+  padding-bottom: 20px;
+}
 .wp-adminify .adminify-copyright {
   display: flex;
   flex-direction: column;
@@ -602,6 +621,8 @@ body.wp-adminify {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 24px;
 }
 .wp-adminify .adminify--footer .adminify-footer-right {
   float: right;
@@ -652,6 +673,81 @@ body.wp-adminify {
 }
 .adminify-cloneable-item .adminify-cloneable-helper .adminify-cloneable-remove::before {
   color: #f04438;
+}
+
+/**
+ * Options-framework metabox tab navigation.
+ *
+ * The framework prints `.adminify-nav.adminify-nav-metabox > ul > li > a` and its
+ * JavaScript toggles `.adminify-active` on the anchor, but the layout rules for
+ * `.adminify-nav` are commented out in the framework stylesheet, so the tabs fall
+ * back to bare links. These rules give them a proper tab bar.
+ *
+ * Laid out horizontally rather than as the framework's 225px sidebar: a metabox is
+ * wide and short, and in the block editor's Meta Boxes panel a side column wastes
+ * most of the row. Scoped to `.adminify-metabox` so the settings screen, which has
+ * its own navigation design, is untouched.
+ */
+.adminify-metabox .adminify-nav-metabox {
+  float: none;
+  width: 100%;
+  margin: 0 0 20px;
+  border-bottom: 1px solid #dcdcde;
+}
+.adminify-metabox .adminify-nav-metabox > ul {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.adminify-metabox .adminify-nav-metabox > ul > li {
+  margin: 0;
+}
+.adminify-metabox .adminify-nav-metabox > ul > li > a {
+  position: relative;
+  display: block;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #50575e;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+.adminify-metabox .adminify-nav-metabox > ul > li > a:hover {
+  color: #1d2327;
+  background-color: #f0f0f1;
+}
+.adminify-metabox .adminify-nav-metabox > ul > li > a:focus {
+  box-shadow: none;
+  outline: none;
+}
+.adminify-metabox .adminify-nav-metabox > ul > li > a:focus-visible {
+  outline: 2px solid #3858e9;
+  outline-offset: -2px;
+}
+.adminify-metabox .adminify-nav-metabox > ul > li > a.adminify-active {
+  margin-bottom: -1px;
+  padding-bottom: 11px;
+  color: #1d2327;
+  background-color: #fff;
+  border-color: #dcdcde;
+}
+.adminify-metabox .adminify-nav-metabox .adminify-tab-icon {
+  margin-right: 6px;
+}
+.adminify-metabox .adminify-nav-metabox .adminify-label-error {
+  margin-left: 6px;
+  vertical-align: top;
+}
+.adminify-metabox .adminify-nav-metabox + .adminify-content {
+  margin-left: 0;
 }
 
 .wp-adminify #_wp_adminify_admin_page_display .inside {
@@ -1302,6 +1398,10 @@ a {
 }
 #evo_et1_color .evo_et1_color_circle {
   border-color: var(--adminify-menu-border);
+}
+
+.CodeMirror {
+  border: 1px solid #dcdcde;
 }
 
 #wp-adminify-color-mode-wrapper {

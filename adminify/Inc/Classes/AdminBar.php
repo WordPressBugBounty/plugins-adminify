@@ -57,13 +57,38 @@ class AdminBar extends AdminSettingsModel
 		// }
 
 		if (is_admin()) {
-			// Switcher for Default UI
-			if (empty($this->adminify_ui)) {
-				if (!empty($this->options['admin_bar_dark_light_btn'])) {
-					add_action('admin_bar_menu', [$this, 'dark_mode_switcher_icon']);
-				}
+			// Light/Dark Mode switcher add
+			if (!empty($this->options['admin_bar_dark_light_btn'])) {
+				add_action('admin_bar_menu', [$this, 'dark_mode_switcher_icon']);
+			}
+			// Add Frontend Site Preview Icon for UI.
+			// Priority 10000: nodes render in the order they are added, and core fills
+			// top-secondary late - my-account at 9991, recovery mode at 9992, search at
+			// 9999 - so anything lower than this lands before them instead of last.
+			if (!empty($this->adminify_ui)) {
+				add_action('admin_bar_menu', [$this, 'preview_icon'], 10000);
 			}
 		}
+	}
+
+	public function preview_icon($wp_admin_bar) {
+		$args = [
+			'parent' => 'top-secondary',
+			'id'     => 'adminify-frontend-site-preview',
+			// Icon only. ab-icon is what WordPress uses to size and align admin bar
+			// glyphs; the label stays for screen readers.
+			'title'  => '<span class="ab-icon dashicons dashicons-visibility" aria-hidden="true"></span><span class="screen-reader-text">' . esc_html__('Preview', 'adminify') . '</span>',
+			'href'   => home_url('/'),
+			'meta'   => [
+				// Opens the site in a new tab so the admin screen stays put.
+				// noopener keeps the new tab from reaching back via window.opener.
+				'target' => '_blank',
+				'rel'    => 'noopener',
+				'title'  => esc_attr__('Preview site in a new tab', 'adminify'),
+			],
+		];
+
+		$wp_admin_bar->add_node($args);
 	}
 
 

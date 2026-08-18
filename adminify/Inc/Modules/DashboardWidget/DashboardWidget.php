@@ -312,11 +312,17 @@ class DashboardWidget extends DashboardWidgetModel {
 		foreach ( $options as $value ) {
 			if ( is_array( $value ) && ! empty( $value ) ) {
 
-				// Restricted for User Roles
+				// Allowed User Roles. An empty list means the widget is not limited to
+				// particular roles, so it shows for everyone — that is the field's
+				// default, and without this check a newly created widget would never
+				// appear. Anything else is treated as an allow list.
+				//
+				// `continue`, not `return`: skipping one widget must not stop the rest
+				// of the list from being registered.
 				$restricted_for_dash_widget = ! empty( $value['user_roles'] ) ? $value['user_roles'] : '';
 
-				if ( ! Utils::restricted_for( $restricted_for_dash_widget ) ) {
-					return;
+				if ( ! empty( $restricted_for_dash_widget ) && ! Utils::restricted_for( $restricted_for_dash_widget ) ) {
+					continue;
 				}
 
 				$dash_widget_title    = isset( $value['title'] ) ? $value['title'] : '';

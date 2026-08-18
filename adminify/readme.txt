@@ -3,7 +3,7 @@ Contributors: pixarlabs, litonice13
 Tags: white label, admin menu editor, login customizer, admin columns, dark mode
 Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 4.2.26
+Stable tag: 4.3.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -186,6 +186,17 @@ Please report security bugs found in the source code of this plugin through the 
 7. The module settings page showing available addons such as Activity Logs.
 
 == Changelog ==
+= Adminify - 4.3.0 (18-08-2026) =
+* Improved: Performance improved.
+* Improved: Dashboard Widget & Admin Pages Icons Picker improved.
+* Improved: Adminify UI with Admin Bar Editor Secondary menu hidden for logo-out icon show.
+* Fixed: The tabs inside the Admin Page setting boxes now look like proper tabs instead of plain links.
+* Fixed: The code editor box for Custom CSS/JS now has a visible border again.
+* Fixed: Free version after update auto deactivate issue fixed.
+* Fixed: Adminify UI Admin Menu reload with auto collapse issue fixed.
+* Fixed: Footer text overlap content issue fixed.
+
+
 = Adminify - 4.2.26 (12-08-2026) =
 * Fixed: On phones and tablets, the menu items at the bottom of the sidebar were hidden behind the browser bar and could not be reached on sites with a lot of plugins. The menu now scrolls all the way to the last item.
 * Fixed: With the Two Step menu, opening a menu or a sub-item after scrolling down the sidebar hid the panel heading, so there was no way back to the main menu. The heading now always stays at the top of the panel.

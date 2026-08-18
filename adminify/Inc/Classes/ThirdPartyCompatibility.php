@@ -38,6 +38,8 @@ class ThirdPartyCompatibility {
                 3
             );
         }
+        // YITH Plugin Framework panels rendered on WP list pages.
+        add_action( 'in_admin_header', [$this, 'reorder_notice_wrapper_for_yith_panel'], 0 );
         // All Fluent Plugin Assets Supports
         $this->whitelist_assets_in_fluent_plugins();
     }
@@ -89,6 +91,60 @@ class ThirdPartyCompatibility {
             return $footer_text . '</div>';
         }
         return $footer_text;
+    }
+
+    /**
+     * YITH Plugin Framework panel pages (YITH WooCommerce Multi Vendor, Booking,
+     * Membership, ... — anything using plugin-fw) render blank while the
+     * "Hide Admin Notices" option is on.
+     *
+     * YIT_Plugin_Panel::print_panel_tabs_in_wp_pages() hooks all_admin_notices at
+     * priority 10 and opens page wrapper <div>s on purpose — they stay open until
+     * admin_footer. Adminify closes its own .adminify-notices-wrapper on
+     * all_admin_notices at priority 99999999, so that </div> lands inside YITH's
+     * markup and closes YITH's .wrap instead. The notice wrapper then never closes
+     * and swallows the rest of the page, which Adminify hides through
+     * `.adminify-notices-wrapper > *:not(...) { display: none !important; }`.
+     *
+     * Fix: close the notice wrapper before YITH opens its own markup, so both
+     * outputs stay balanced. Notices printed after that point are not wrapped,
+     * which costs nothing here — plugin-fw moves every notice into its own
+     * #yith-plugin-fw__panel__notices box with JS on these screens anyway.
+     *
+     * @return void
+     */
+    public function reorder_notice_wrapper_for_yith_panel() {
+        global $wp_filter;
+        if ( empty( $wp_filter['all_admin_notices'] ) || empty( $wp_filter['all_admin_notices']->callbacks ) ) {
+            return;
+        }
+        $hooked_callbacks = $wp_filter['all_admin_notices']->callbacks;
+        // Priority YITH opens its unclosed page wrapper at, if it does at all.
+        $yith_priority = null;
+        foreach ( $hooked_callbacks as $priority => $callbacks ) {
+            foreach ( $callbacks as $callback ) {
+                if ( is_array( $callback['function'] ) && isset( $callback['function'][1] ) && 'print_panel_tabs_in_wp_pages' === $callback['function'][1] ) {
+                    $yith_priority = (int) $priority;
+                    break 2;
+                }
+            }
+        }
+        // No YITH panel on this screen, or no room left to close before it.
+        if ( null === $yith_priority || $yith_priority < 1 ) {
+            return;
+        }
+        // Move Adminify's notice wrapper closer ahead of YITH's opening markup.
+        foreach ( $hooked_callbacks as $priority => $callbacks ) {
+            if ( (int) $priority <= $yith_priority ) {
+                continue;
+            }
+            foreach ( $callbacks as $callback ) {
+                if ( is_array( $callback['function'] ) && isset( $callback['function'][1] ) && 'finish_notice_capture' === $callback['function'][1] ) {
+                    remove_action( 'all_admin_notices', $callback['function'], $priority );
+                    add_action( 'all_admin_notices', $callback['function'], $yith_priority - 1 );
+                }
+            }
+        }
     }
 
     public function plugin_conflicts() {

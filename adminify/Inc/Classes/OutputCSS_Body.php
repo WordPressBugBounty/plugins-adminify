@@ -18,11 +18,10 @@ class OutputCSS_Body
 
     public function __construct()
     {
-        $this->options = (array) AdminSettings::get_instance()->get();
-		$this->adminify_ui = Utils::check_modules($this->options['admin_ui']);
+      $this->options = (array) AdminSettings::get_instance()->get();
+			$this->adminify_ui = Utils::check_modules($this->options['admin_ui']);
 
-		add_action('admin_enqueue_scripts', [$this, 'admin_ui_preset_vars_enqueue']);
-		add_action('admin_head', [$this, 'admin_ui_preset_vars_styles']);
+			add_action('admin_head', [$this, 'admin_ui_preset_vars_styles']);
     }
 
 
@@ -436,75 +435,66 @@ class OutputCSS_Body
 		return $light_logo_css . $dark_logo_css;
 	}
 
-
-    /**
-     * Enqueue scripts for admin UI preset vars
-     */
-    public function admin_ui_preset_vars_enqueue() {
-        global $pagenow;
-        if ($pagenow == 'wp-login.php' || $pagenow == 'wp-register.php' || $pagenow == 'customize.php') {
-            return;
-        }
-
-        // CSS for Adminify UI
-        if (!empty($this->options['admin_ui'])) {
-            wp_enqueue_script('adminify-theme-presetter', PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify-theme-presetter.js', ['jquery'], PXLBSADMINIFY_VER, true);
-            wp_localize_script('adminify-theme-presetter', 'PXLBSADMINIFY_PRESET_THEMES', Utils::get_theme_presets());
-        }
-    }
-
     /**
      * Output styles in admin_head to avoid headers already sent issues
      */
     public function admin_ui_preset_vars_styles() {
         global $pagenow;
-        if ($pagenow == 'wp-login.php' || $pagenow == 'wp-register.php' || $pagenow == 'customize.php') {
+
+				// 1. Handle pages where get_current_screen() doesn't exist
+        $auth_pages = ['wp-login.php', 'wp-signup.php', 'wp-activate.php'];
+        if (in_array($pagenow, $auth_pages)) {
+            return;
+        }
+        
+        // 2. Handle customize.php
+        if ($pagenow === 'customize.php') {
             return;
         }
 
-        // CSS for Adminify UI
-        if (!empty($this->options['admin_ui'])) {
-            if (array_key_exists('adminify_theme', $this->options) && !empty($this->options['adminify_theme'])) {
-                $theme = $this->options['adminify_theme'];
-            } else {
-                $theme = 'preset1'; // get the default value dynamically
-            }
-
-            $preset = (array) Utils::get_theme_presets($theme);
-
-			// Dynamic Css Variables Array
-			$css_var = $this->output_styles();
-
-			$preset_style = '';
-
-			foreach ($preset as $prop => $val) {
-				// Check Duplicate Array
-				if( !array_key_exists($prop, $css_var) ) {
-				   $preset_style .= sprintf('%s:%s;', esc_attr($prop), esc_attr($val));
+			// CSS for Adminify UI
+			if (!empty($this->options['admin_ui'])) {
+				if (array_key_exists('adminify_theme', $this->options) && !empty($this->options['adminify_theme'])) {
+						$theme = $this->options['adminify_theme'];
+				} else {
+						$theme = 'preset1'; // get the default value dynamically
 				}
+
+				$preset = (array) Utils::get_theme_presets($theme);
+
+				// Dynamic Css Variables Array
+				$css_var = $this->output_styles();
+
+				$preset_style = '';
+
+				foreach ($preset as $prop => $val) {
+					// Check Duplicate Array
+					if( !array_key_exists($prop, $css_var) ) {
+						$preset_style .= sprintf('%s:%s;', esc_attr($prop), esc_attr($val));
+					}
+				}
+
+				foreach ($css_var  as $prop => $val) {
+					$preset_style .= sprintf('%s:%s;', esc_attr($prop), esc_attr($val));
+				}
+
+				if (empty($preset_style)) {
+					return;
+				}
+
+				// Text Logo styles
+				// if($this->options['light_dark_mode']['admin_ui_logo_type'] === 'text_logo') {
+				// 	// $text_logo_css = $this->logo_text_styles();
+
+				// 	if(!empty($text_logo_css)) {
+				// 		printf('<style id="adminify_text_logo">body.adminify-ui{%s}</style>', wp_strip_all_tags($text_logo_css));
+				// 	}
+				// }
+
+				printf('<style>body.wp-adminify{%s}</style>', esc_html( wp_strip_all_tags($preset_style) ));
+      } else {
+				printf('<style>body.wp-adminify{%s}</style>', esc_html( wp_strip_all_tags( $this->output_styles()) ));
 			}
-
-			foreach ($css_var  as $prop => $val) {
-				$preset_style .= sprintf('%s:%s;', esc_attr($prop), esc_attr($val));
-			}
-
-			if (empty($preset_style)) {
-				return;
-			}
-
-			// Text Logo styles
-			// if($this->options['light_dark_mode']['admin_ui_logo_type'] === 'text_logo') {
-			// 	// $text_logo_css = $this->logo_text_styles();
-
-			// 	if(!empty($text_logo_css)) {
-			// 		printf('<style id="adminify_text_logo">body.adminify-ui{%s}</style>', wp_strip_all_tags($text_logo_css));
-			// 	}
-			// }
-
-			printf('<style>body.wp-adminify{%s}</style>', esc_html( wp_strip_all_tags($preset_style) ));
-        } else {
-			printf('<style>body.wp-adminify{%s}</style>', esc_html( wp_strip_all_tags( $this->output_styles()) ));
-		}
 
     }
 }

@@ -30,9 +30,35 @@ class Assets extends AdminSettingsModel
 		add_action('wp_ajax_pxlbsadminify_addons_install_active', array( $this, 'pxlbsadminify_addons_install_active' ) );
 		add_action('wp_ajax_pxlbsadminify_ssl_check', array( $this, 'pxlbsadminify_ssl_check' ) );
 
-		if ($this->is_dark_mode() || $this->classic_editor || $this->block_editor) {
-			add_action('admin_head', array($this, 'header_scripts'));
-		}
+		// Always hooked: header_scripts() prints the dark-mode loader, which the
+		// topbar toggle needs even on pages that booted in light mode.
+		add_action('admin_head', array($this, 'header_scripts'));
+	}
+
+
+	/**
+	 * Resolved light/dark mode for the current user, normalised to
+	 * 'light' | 'dark' | 'system'. The settings UI has used 'auto' as a
+	 * synonym for 'system', so fold that in here.
+	 *
+	 * @return string
+	 */
+	public function color_mode()
+	{
+		$mode = !empty($this->dark_mode) ? $this->dark_mode : 'light';
+
+		return ('auto' === $mode) ? 'system' : $mode;
+	}
+
+
+	/**
+	 * URL of the dark mode (Darkreader) bundle.
+	 *
+	 * @return string
+	 */
+	private function dark_mode_url()
+	{
+		return PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify-dark-mode' . Utils::assets_ext('.js');
 	}
 
 
@@ -150,6 +176,23 @@ class Assets extends AdminSettingsModel
 		return $adminify_dark_mode;
 	}
 
+	/**
+	 * Print the dark-mode loader and boot it for the resolved mode.
+	 *
+	 * The Darkreader bundle is ~110 KB, so it is no longer enqueued on every admin
+	 * page. What ships on every page instead is `window.PXLBSADMINIFYDarkMode`, a few hundred
+	 * bytes that know how to pull the bundle into a window on demand:
+	 *
+	 * - 'dark'   the bundle is already enqueued in the head by
+	 *            pxlbsadminify_admin_scripts(), so this only calls enable().
+	 * - 'system' nothing is enqueued; the browser decides. When the OS prefers dark
+	 *            the loader fetches the bundle, with a pre-paint guard so the page
+	 *            does not flash white while it streams in.
+	 * - 'light'  nothing is fetched at all.
+	 *
+	 * The topbar toggle (classic admin bar and the React frame alike) calls
+	 * PXLBSADMINIFYDarkMode.load() so switching to dark works without a page reload.
+	 */
 	public function header_scripts()
 	{
 		// Skip on excluded pages
@@ -157,44 +200,118 @@ class Assets extends AdminSettingsModel
 			return;
 		}
 
-		if (!empty($this->dark_mode) && $this->dark_mode == 'dark') { ?>
+		$mode = $this->color_mode();
+		?>
+		<script id="adminify-dark-mode-loader">
+			window.PXLBSADMINIFYDarkMode = window.PXLBSADMINIFYDarkMode || (function () {
+				var url = <?php echo wp_json_encode( $this->dark_mode_url() ); ?>;
 
-			<script>
-				window.AdminifyDarkMode.enable({
-					brightness: 120
-				})
+				// Pulls the bundle into `win` (defaults to this window) and hands
+				// AdminifyDarkMode to `cb`. Repeat calls while a fetch is in flight
+				// queue up behind it instead of requesting the file again.
+				function load(win, cb) {
+					win = win || window;
+					cb = cb || function () {};
 
-				addEventListener("load", (event) => {
-					window.AdminifyDarkMode.enable({
-						brightness: 120
-					})
-				});
-			</script>
-		<?php }
+					var doc;
+					try {
+						doc = win.document;
+					} catch (e) {
+						return;
+					}
+					if (!doc) {
+						return;
+					}
 
-		if (!empty($this->dark_mode) && $this->dark_mode == 'system') { ?>
-			<script>
-				const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-				if(!!isDark) {
-					window.AdminifyDarkMode.enable({
-						brightness: 120
-					})
+					if (win.AdminifyDarkMode) {
+						cb(win.AdminifyDarkMode);
+						return;
+					}
 
-					addEventListener("load", (event) => {
-						window.AdminifyDarkMode.enable({
-							brightness: 120
-						})
-					});
-				} else {
-					window.AdminifyDarkMode.disable()
+					if (win.__pxlbsadminifyDarkModeQueue) {
+						win.__pxlbsadminifyDarkModeQueue.push(cb);
+						return;
+					}
+					win.__pxlbsadminifyDarkModeQueue = [cb];
 
-					addEventListener("load", (event) => {
-						window.AdminifyDarkMode.disable()
+					var script = doc.createElement('script');
+					script.src = url;
+					script.async = false;
+					script.onload = function () {
+						var queue = win.__pxlbsadminifyDarkModeQueue || [];
+						win.__pxlbsadminifyDarkModeQueue = null;
+						for (var i = 0; i < queue.length; i++) {
+							try {
+								queue[i](win.AdminifyDarkMode);
+							} catch (e) {}
+						}
+					};
+					script.onerror = function () {
+						win.__pxlbsadminifyDarkModeQueue = null;
+					};
+					(doc.head || doc.documentElement).appendChild(script);
+				}
+
+				function enable(win) {
+					load(win, function (dm) {
+						if (dm) {
+							dm.enable({ brightness: 120 });
+						}
 					});
 				}
 
-			</script>
+				function disable(win) {
+					win = win || window;
+					// Nothing to undo when the bundle was never fetched.
+					if (win.AdminifyDarkMode) {
+						win.AdminifyDarkMode.disable();
+					}
+				}
 
+				return { url: url, load: load, enable: enable, disable: disable };
+			}());
+		</script>
+		<?php if ( 'dark' === $mode ) { ?>
+			<script>
+				window.PXLBSADMINIFYDarkMode.enable();
+				addEventListener("load", function () {
+					window.PXLBSADMINIFYDarkMode.enable();
+				});
+			</script>
+		<?php } elseif ( 'system' === $mode ) { ?>
+			<script>
+				(function () {
+					if (!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+						return;
+					}
+
+					// The bundle is fetched rather than blocking in the head, so paint
+					// the page dark up front and drop the guard once Darkreader owns it.
+					var guard = document.createElement('style');
+					guard.textContent = 'html,body{background-color:#181a1b!important;color:#e8e6e3!important}';
+					(document.head || document.documentElement).appendChild(guard);
+
+					var dropGuard = function () {
+						if (guard && guard.parentNode) {
+							guard.parentNode.removeChild(guard);
+						}
+					};
+
+					window.PXLBSADMINIFYDarkMode.load(window, function (dm) {
+						if (dm) {
+							dm.enable({ brightness: 120 });
+						}
+						dropGuard();
+					});
+
+					// Failsafe: never leave the guard behind if the fetch never lands.
+					setTimeout(dropGuard, 5000);
+
+					addEventListener("load", function () {
+						window.PXLBSADMINIFYDarkMode.enable();
+					});
+				}());
+			</script>
 		<?php }
 
 	}
@@ -243,6 +360,118 @@ class Assets extends AdminSettingsModel
 	}
 
 
+	/**
+	 * Matches a Font Awesome class in any of the shapes Adminify stores:
+	 * "fa fa-gear", "fas fa-rocket", and the URL-encoded "fas%20fa-rocket" that
+	 * WordPress produces when an icon class is handed to add_menu_page().
+	 */
+	const FONTAWESOME_CLASS_PATTERN = '/(?:^|[^a-z0-9-])fa[bsrl]?(?:\s|%20|-)fa-/i';
+
+
+	/**
+	 * Whether Font Awesome has anything to paint on the current screen.
+	 *
+	 * The stylesheet plus its webfonts weigh well over a megabyte, so it is only
+	 * worth loading where Adminify actually renders an icon with it:
+	 *
+	 * - Adminify's own screens, whose section headers and field UI use hardcoded
+	 *   `fas fa-*` classes.
+	 * - The dashboard, but only when a widget is actually configured with a Font
+	 *   Awesome class.
+	 * - Any screen at all when an admin menu item carries a Font Awesome icon,
+	 *   because the sidebar renders on every screen.
+	 *
+	 * Framework option, metabox, taxonomy, widget, customizer, nav-menu, profile
+	 * and comment screens are deliberately not listed: the framework scopes and
+	 * enqueues Font Awesome itself in ADMINIFY::add_admin_enqueue_scripts().
+	 *
+	 * @param \WP_Screen|null $screen Current screen.
+	 * @return bool
+	 */
+	private function needs_fontawesome( $screen ) {
+
+		if ( isset( $screen->id ) && false !== strpos( $screen->id, 'wp-adminify' ) ) {
+			return true;
+		}
+
+		if ( isset( $screen->id ) && 'dashboard' === $screen->id && $this->has_fontawesome_dashboard_widget() ) {
+			return true;
+		}
+
+		// Falls through on the dashboard too: the admin menu renders there as well.
+		return $this->has_fontawesome_menu_icon();
+	}
+
+
+	/**
+	 * Whether any dashboard widget is configured with a Font Awesome class.
+	 *
+	 * Widget icons come from the framework icon field, whose list is still Font
+	 * Awesome (Libs/adminify-framework/functions/actions.php), and the editor and
+	 * script widget types can hold arbitrary markup — so scan the whole saved
+	 * option rather than just the icon keys, or a widget whose body contains
+	 * `<i class="fas fa-star">` would render a blank square.
+	 *
+	 * The option is the one read by DashboardWidgetModel::$prefix, which the
+	 * Dashboard Widget module already loads on every admin page, so this is an
+	 * options-cache hit rather than a query. Only ever called on the dashboard.
+	 *
+	 * @return bool
+	 */
+	private function has_fontawesome_dashboard_widget() {
+
+		$settings = get_option( 'pxlbsadminify_dasboard_widgets' );
+
+		if ( empty( $settings ) ) {
+			return false;
+		}
+
+		// Arrays and objects come back as a serialized string; scalars pass through.
+		$settings = maybe_serialize( $settings );
+
+		if ( ! is_string( $settings ) || '' === $settings ) {
+			return false;
+		}
+
+		return (bool) preg_match( self::FONTAWESOME_CLASS_PATTERN, $settings );
+	}
+
+
+	/**
+	 * Look for a Font Awesome class stored as an admin menu icon.
+	 *
+	 * Pro admin pages pass the picked icon class straight to add_menu_page()
+	 * (Pro/Modules/AdminPages/AdminPages_Output.php), where WordPress treats it as
+	 * an image URL and prints `http://fas%20fa-rocket`; wp-adminify.js turns that
+	 * back into a class. Either shape counts as a hit.
+	 *
+	 * $menu is built during admin_menu, which runs before admin_enqueue_scripts,
+	 * so it is fully populated by the time this is called.
+	 *
+	 * @return bool
+	 */
+	private function has_fontawesome_menu_icon() {
+		global $menu;
+
+		if ( empty( $menu ) || ! is_array( $menu ) ) {
+			return false;
+		}
+
+		foreach ( $menu as $item ) {
+
+			if ( empty( $item[6] ) || ! is_string( $item[6] ) ) {
+				continue;
+			}
+
+			if ( preg_match( self::FONTAWESOME_CLASS_PATTERN, $item[6] ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
 	public function pxlbsadminify_admin_scripts()
 	{
 		// Skip loading scripts on excluded pages (customize.php, login, etc.)
@@ -256,22 +485,10 @@ class Assets extends AdminSettingsModel
 		// Register Styles
 		wp_register_style('adminify-admin', PXLBSADMINIFY_ASSETS . 'css/wp-adminify' . Utils::assets_ext('.css'), false, PXLBSADMINIFY_VER);
 		wp_register_style('adminify-default-ui', PXLBSADMINIFY_ASSETS . 'css/wp-adminify-default-ui' . Utils::assets_ext('.css'), false, PXLBSADMINIFY_VER);
-		// wp_register_style('wp-adminify-admin-bar', PXLBSADMINIFY_ASSETS . 'css/admin-bar' . Utils::assets_ext('.css'), false, PXLBSADMINIFY_VER);
-		wp_register_style('adminify-menu-editor', PXLBSADMINIFY_ASSETS . 'css/adminify-menu-editor' . Utils::assets_ext('.css'), false, PXLBSADMINIFY_VER);
-		// wp_register_style('wp-adminify-dark-mode', PXLBSADMINIFY_ASSETS . 'css/dark-mode' . Utils::assets_ext('.css'), false, PXLBSADMINIFY_VER);
-		// wp_register_style('wp-adminify-rtl', PXLBSADMINIFY_ASSETS . 'css/adminify-rtl' . Utils::assets_ext('.css'), false, PXLBSADMINIFY_VER);
-		// wp_register_style('wp-adminify-responsive', PXLBSADMINIFY_ASSETS . 'css/adminify-responsive' . Utils::assets_ext('.css'), false, PXLBSADMINIFY_VER);
-		// wp_register_style('wp-adminify-animate', PXLBSADMINIFY_ASSETS . 'vendors/animatecss/animate' . Utils::assets_ext('.css'), false, PXLBSADMINIFY_VER);
-		wp_register_style('adminify-tokenize2', PXLBSADMINIFY_ASSETS . 'vendors/tokenize/tokenize2' . Utils::assets_ext('.css'), false, PXLBSADMINIFY_VER);
-		wp_register_style('adminify-select2', PXLBSADMINIFY_ASSETS . 'vendors/select2/select2' . Utils::assets_ext('.css'), false, PXLBSADMINIFY_VER);
 
 
 		// Register Scripts
-		wp_register_script('adminify-tokenize2', PXLBSADMINIFY_ASSETS . 'vendors/tokenize/tokenize2.min.js', array('jquery'), PXLBSADMINIFY_VER, false);
-		wp_register_script('adminify-select2', PXLBSADMINIFY_ASSETS . 'vendors/select2/select2.min.js', array('jquery'), PXLBSADMINIFY_VER, true);
 		wp_register_script('adminify-admin', PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify' . Utils::assets_ext('.js'), array('jquery'), PXLBSADMINIFY_VER, true);
-
-		// wp_register_script('wp-adminify-realtime-server', PXLBSADMINIFY_ASSETS . 'js/adminify-realtime-server.js', array('jquery'), PXLBSADMINIFY_VER, true);
 
 		// Adminify Icon Picker
 		wp_register_style('adminify-simple-line-icons', PXLBSADMINIFY_ASSETS . 'vendors/font-icons/simple-line-icons/css/simple-line-icons' . Utils::assets_ext('.css'), false, PXLBSADMINIFY_VER);
@@ -279,10 +496,7 @@ class Assets extends AdminSettingsModel
 		wp_register_script('adminify-icon-picker', PXLBSADMINIFY_ASSETS . 'vendors/adminify-icon-picker/js/adminify-icon-picker' . Utils::assets_ext('.js'), array('jquery'), PXLBSADMINIFY_VER, true);
 
 		// Dark Mode
-		wp_register_script('adminify--dark-mode', PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify-dark-mode' . Utils::assets_ext('.js'), array(), PXLBSADMINIFY_VER, false);
-
-		// Menu Editor
-		wp_register_script('adminify-menu-editor', PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify-menu-editor' . Utils::assets_ext('.js'), array('jquery', 'jquery-ui-sortable', 'adminify-icon-picker'), PXLBSADMINIFY_VER, true);
+		wp_register_script('adminify--dark-mode', $this->dark_mode_url(), array(), PXLBSADMINIFY_VER, false);
 
 		// Styles Enqueue
 		if (!empty($this->options['admin_ui'])) {
@@ -290,7 +504,6 @@ class Assets extends AdminSettingsModel
 			wp_enqueue_style('adminify-admin');
 			// Commented on: 9-6-24
 			// wp_enqueue_style('wp-adminify-admin-bar');
-			// wp_enqueue_style('wp-adminify-responsive');
 		} else {
 			wp_enqueue_style('adminify-default-ui');
 		}
@@ -304,7 +517,13 @@ class Assets extends AdminSettingsModel
 
 		// Dark Mode Style
 		// wp_enqueue_style('adminify-dark-mode');
-		wp_enqueue_script('adminify--dark-mode');
+
+		// Only a user who is actually in dark mode gets the ~110 KB bundle up front.
+		// 'system' is resolved in the browser and 'light' never needs it at all; both
+		// go through the loader printed by header_scripts().
+		if ('dark' === $this->color_mode()) {
+			wp_enqueue_script('adminify--dark-mode');
+		}
 
 
 		// Get local fonts data for frontend - download if not exists
@@ -365,7 +584,12 @@ class Assets extends AdminSettingsModel
 		wp_enqueue_script('adminify-admin');
 		wp_localize_script( 'adminify-admin', 'PXLBSADMINIFY_ADMIN', $localize_array_data );
 
-		if (!wp_script_is('adminify-fa', 'enqueued') || !wp_script_is('adminify-fa5', 'enqueued')) {
+		// Font Awesome, only on screens that actually paint an icon with it. The
+		// old guard called wp_script_is() on what are styles, so it always passed
+		// and every admin page paid for the font. wp_enqueue_style() is a no-op on
+		// an already-enqueued handle, so no guard is needed against the framework
+		// having enqueued these first.
+		if ($this->needs_fontawesome($screen)) {
 			if (apply_filters('adminify_fa4', false)) {
 				wp_enqueue_style('adminify-fa', PXLBSADMINIFY_ASSETS . 'vendors/fontawesome/fa4/css/font-awesome.min.css', array(), '4.7.0', 'all');
 			} else {
@@ -391,6 +615,10 @@ class Assets extends AdminSettingsModel
 					),
 				)
 			);
+
+			// Adminify UI live theme preset changer
+			wp_enqueue_script('adminify-theme-presetter', PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify-theme-presetter' . Utils::assets_ext('.js'), ['jquery'], PXLBSADMINIFY_VER, true);
+      wp_localize_script('adminify-theme-presetter', 'PXLBSADMINIFY_PRESET_THEMES', Utils::get_theme_presets());
 		}
 
 		if ($screen->id === 'adminify_page_wp-adminify-addons-plugins' || $screen->id === 'adminify-pro_page_wp-adminify-addons-plugins') {

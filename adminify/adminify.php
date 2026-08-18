@@ -4,7 +4,7 @@
  * Plugin Name: Adminify – White Label, Admin Menu Editor, Login Customizer
  * Description: Customize the WordPress admin area with white-label branding, a drag-and-drop menu editor, login customizer, media folders, and security tools.
  * Plugin URI: https://wpadminify.com
- * Version: 4.2.26
+ * Version: 4.3.0
  * Author: Pixar Labs
  * Author URI: https://pixarlabs.com
  * License:     GPLv3 or later
@@ -123,6 +123,11 @@ if ( !defined( 'PXLBSADMINIFY_URI' ) ) {
 if ( !class_exists( '\\PXLBSAdminify\\WP_Adminify' ) ) {
     // Autoload Files
     require_once __DIR__ . '/vendor/autoload.php';
+    // Custom options-framework field types. Loaded straight after the autoloader
+    // because that is where the framework bootstraps (and defines ADMINIFY_Fields);
+    // declaring the class here means the framework picks it up without needing any
+    // change inside Libs/adminify-framework.
+    require_once __DIR__ . '/Inc/Fields/adminify_icon.php';
     // Instantiate WP Adminify Class
     require_once __DIR__ . '/class-wp-adminify.php';
 }

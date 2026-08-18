@@ -420,7 +420,7 @@ if (!class_exists('DashboardWidget_Setttings')) {
 
 			$dashboard_group_fields[] = [
 				'id'         => 'dashw_type_icon',
-				'type'       => 'icon',
+				'type'       => 'adminify_icon',
 				/* translators: %s: Pro upgrade badge */
 				'title'      => sprintf(__('Icon %s', 'adminify'), Utils::upgrade_pro_badge()),
 				'class'      => 'adminify-pro-fieldset  adminify-pro-notice adminify-pro-pointer',

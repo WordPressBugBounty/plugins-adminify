@@ -5,6 +5,7 @@ namespace PXLBSAdminify;
 use PXLBSAdminify\Libs\Featured;
 use PXLBSAdminify\Inc\Admin\Admin;
 use PXLBSAdminify\Inc\Classes\Assets;
+use PXLBSAdminify\Inc\Classes\IconPicker_Assets;
 use PXLBSAdminify\Inc\Classes\Upgrade;
 use PXLBSAdminify\Inc\Classes\Feedback;
 use PXLBSAdminify\Inc\Admin\AdminSettings;
@@ -22,6 +23,8 @@ if ( !class_exists( 'WP_Adminify' ) ) {
 
         private static $instance = null;
 
+        private $was_active_before_update = false;
+
         public function __construct() {
             add_action( 'plugins_loaded', array($this, 'maybe_run_upgrades'), -100 );
             // This should run earlier
@@ -29,6 +32,19 @@ if ( !class_exists( 'WP_Adminify' ) ) {
             // add_action('plugins_loaded', array($this, 'pxlbsadminify_plugins_loaded'), 999);
             add_filter( 'plugin_action_links_' . PXLBSADMINIFY_BASE, array($this, 'plugin_action_links') );
             add_filter( 'network_admin_plugin_action_links_' . PXLBSADMINIFY_BASE, array($this, 'plugin_action_links') );
+            // Freemius drops this plugin from `active_plugins` when it updates itself.
+            add_filter(
+                'upgrader_pre_install',
+                array($this, 'pxlbsadminify_remember_active_state'),
+                1,
+                2
+            );
+            add_filter(
+                'upgrader_post_install',
+                array($this, 'pxlbsadminify_restore_active_state'),
+                20,
+                3
+            );
             add_filter( 'admin_body_class', array($this, 'pxlbsadminify_body_class'), 99 );
             // Load textdomain and include files on init for WP 6.7+ compatibility
             // Textdomain must be loaded before files that use translations
@@ -44,6 +60,53 @@ if ( !class_exists( 'WP_Adminify' ) ) {
                 }
             }
             jltwp_adminify()->add_filter( 'pricing_url', [$this, 'pxlbsadminify_pricing_url'] );
+        }
+
+        /**
+         * Record whether this plugin was active when its own update starts.
+         *
+         * @param bool|\WP_Error $response   Install response.
+         * @param array          $hook_extra Extra arguments passed to hooked filters.
+         *
+         * @return bool|\WP_Error
+         */
+        public function pxlbsadminify_remember_active_state( $response, $hook_extra ) {
+            if ( !empty( $hook_extra['plugin'] ) && PXLBSADMINIFY_BASE === $hook_extra['plugin'] ) {
+                $this->was_active_before_update = in_array( PXLBSADMINIFY_BASE, (array) get_option( 'active_plugins', array() ), true );
+            }
+            return $response;
+        }
+
+        /**
+         * Put this plugin back into `active_plugins` after its own update.
+         *
+         * The Freemius SDK assumes the free and the premium build never run side by side,
+         * so FS_Plugin_Updater::_maybe_update_folder_name() rewrites our `active_plugins`
+         * entry to the premium basename once the free package is updated while Adminify Pro
+         * is installed - which silently deactivates this plugin. Both packages have to stay
+         * active here, so restore the entry the SDK removed.
+         *
+         * Network activations are unaffected: those live in `active_sitewide_plugins`, which
+         * the SDK handler never touches.
+         *
+         * @param bool|\WP_Error $response   Install response.
+         * @param array          $hook_extra Extra arguments passed to hooked filters.
+         * @param array          $result     Installation result data.
+         *
+         * @return bool|\WP_Error
+         */
+        public function pxlbsadminify_restore_active_state( $response, $hook_extra, $result ) {
+            if ( empty( $hook_extra['plugin'] ) || PXLBSADMINIFY_BASE !== $hook_extra['plugin'] || !$this->was_active_before_update ) {
+                return $response;
+            }
+            $active_plugins = (array) get_option( 'active_plugins', array() );
+            if ( !in_array( PXLBSADMINIFY_BASE, $active_plugins, true ) ) {
+                $active_plugins[] = PXLBSADMINIFY_BASE;
+                $active_plugins = array_values( array_unique( $active_plugins ) );
+                sort( $active_plugins );
+                update_option( 'active_plugins', $active_plugins );
+            }
+            return $response;
         }
 
         function pxlbsadminify_pricing_url( $pricing_url ) {
@@ -131,6 +194,7 @@ if ( !class_exists( 'WP_Adminify' ) ) {
 
         public function pxlbsadminify_include_files() {
             new Assets();
+            new IconPicker_Assets();
             new Admin();
             new Featured();
             new Feedback();

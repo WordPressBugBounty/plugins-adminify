@@ -33,23 +33,34 @@ class MenuEditorAssets extends AdminSettingsModel
     public function menu_editor_enqueue_scripts()
     {
         global $pagenow;
-        $screen = get_current_screen();
-        if ($pagenow == 'wp-login.php' || $pagenow == 'wp-register.php' || $pagenow == 'customize.php') {
+
+        // 1. Handle pages where get_current_screen() doesn't exist
+        $auth_pages = ['wp-login.php', 'wp-signup.php', 'wp-activate.php'];
+        if (in_array($pagenow, $auth_pages)) {
+            return;
+        }
+        
+        // 2. Handle customize.php
+        if ($pagenow === 'customize.php') {
             return;
         }
 
-        if ($screen->id === 'toplevel_page_wp-adminify-settings') {
+        $screen = get_current_screen();
+
+        if ($screen && $screen->id === 'toplevel_page_wp-adminify-settings') {
             $this->import_css();
 
             // Enqueue Styles
             wp_enqueue_style('adminify-icon-picker');
-            wp_enqueue_style('adminify-select2');
-            wp_enqueue_style('adminify-menu-editor');
+            wp_enqueue_style('adminify-select2', PXLBSADMINIFY_ASSETS . 'vendors/select2/select2' . Utils::assets_ext('.css'), false, PXLBSADMINIFY_VER);
+            $this->add_select2_inline_style();
+            wp_enqueue_style('adminify-menu-editor', PXLBSADMINIFY_ASSETS . 'css/adminify-menu-editor' . Utils::assets_ext('.css'), false, PXLBSADMINIFY_VER);
 
             // Enqueue Scripts
-            wp_enqueue_script('adminify-select2');
+            wp_enqueue_script('adminify-select2', PXLBSADMINIFY_ASSETS . 'vendors/select2/select2.min.js', array('jquery'), PXLBSADMINIFY_VER, true);
+            $this->add_select2_inline_script();
             wp_enqueue_script('adminify-icon-picker');
-            wp_enqueue_script('adminify-menu-editor');
+            wp_enqueue_script('adminify-menu-editor', PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify-menu-editor' . Utils::assets_ext('.js'), array('jquery', 'jquery-ui-sortable', 'adminify-icon-picker'), PXLBSADMINIFY_VER, true);
 
             wp_localize_script(
                 'adminify-icon-picker',
@@ -257,5 +268,85 @@ class MenuEditorAssets extends AdminSettingsModel
         $menu_editor_custom_css = preg_replace('/\s\s+(.*)/', '$1', $menu_editor_custom_css);
 
         wp_add_inline_style('adminify-menu-editor', wp_strip_all_tags($menu_editor_custom_css));
+    }
+
+    /**
+     * Select 2 Supported script
+     */
+    private function add_select2_inline_script() {
+        ob_start();
+        ?>
+
+        jQuery(function($) {
+            $('.select-field').select2({width: '100%'});
+
+            $('.copy_to').on('change', function() {
+                if ( $(this).val() == 'copy_to_all' ) {
+                    $(this).closest('.wp-clone-sites-options').find('.copy_exclude-field-wrapper').show();
+                } else {
+                    $(this).closest('.wp-clone-sites-options').find('.copy_exclude-field-wrapper').hide();
+                }
+            });
+
+            $('#option_modules_toggle').on('click', function(e) {
+                e.preventDefault();
+                $checkboxes = $(this).closest('.line-single--content').find('input[type="checkbox"]');
+                $checked = $checkboxes.filter(':checked');
+                $status = true;
+                if ( $checked.length == $checkboxes.length ) $status = false;
+                $checkboxes.each(function(){ $(this).prop('checked', $status) });
+            });
+        });
+        <?php
+
+        $script = ob_get_clean();
+
+        wp_add_inline_script('adminify-select2', $script);
+    }
+
+    /**
+     * Select2 supported style
+     */
+    private function add_select2_inline_style() {
+        $output_css = '.wp-adminify-settings .dashicons,.wp-adminify-settings .dashicons-before:before{vertical-align:middle}.adminify-status{background:#fff;padding:12px 10px;margin:30px 0;-webkit-border-radius:4px;border-radius:4px;-webkit-box-shadow:0 0 8px rgba(139,148,169,.15);box-shadow:0 0 8px rgba(139,148,169,.15)}.adminify-status.adminify-status--success{border-left:4px solid #48cf5b}.adminify-status.adminify-status--error{border-left:4px solid #f16b6b}.adminify-status p{margin:0}.adminify-status p:not(:last-child){margin-bottom:10px}.wp-clone-sites-options h1{margin:10px 0 30px}.wp-clone-sites-options{max-width:800px; margin: 50px auto;}.container.wp-clone-sites-options form{padding:30px;background:#fff;margin:20px 0;-webkit-border-radius:4px;border-radius:4px;-webkit-box-shadow:0 0 24px rgba(108,111,120,.15);box-shadow:0 0 24px rgba(108,111,120,.15)}.wp-clone-sites-options .select-field{width:100%}.line-single--wrapper{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;margin-bottom:24px;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;background:#eff0f3;padding:24px 20px;-webkit-border-radius:4px;border-radius:4px}.line-single--title{width:100%;margin-bottom:10px;font-weight:700}.line-single--content{width:100%;display:-webkit-inline-box;display:-webkit-inline-flex;display:-ms-inline-flexbox;display:inline-flex;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap}.line-single--content>div{width:33.333333%;margin-bottom:8px}button#option_modules_toggle{padding:8px 10px;line-height:1;margin-top:5px;border:none;background:#fff;-webkit-border-radius:4px;border-radius:4px;cursor:pointer;-webkit-box-shadow:0 0 4px #ddd;box-shadow:0 0 4px #ddd}';
+
+        // Use wp_add_inline_style instead of printf to prevent "headers already sent" errors
+        wp_add_inline_style('adminify-select2', 'body.toplevel_page_wp-adminify-settings.network-admin{' . wp_strip_all_tags($output_css) . '}');
+
+        $select2_css = '.wp-adminify .select2-container .select2-selection--single .select2-selection__rendered {
+            color: #000;
+            line-height: 34px;
+        }
+
+        .select2-container--default .select2-selection--single, .select2-dropdown, .select2-container--default .select2-search--dropdown .select2-search__field {
+            border: 1px solid #d1d1d1;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 34px;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            line-height: 1.6;
+        }
+
+        .select2-container .select2-selection--multiple .select2-selection__rendered {
+            vertical-align: sub;
+        }
+
+        span.select2-search.select2-search--inline {
+            vertical-align: super;
+        }
+
+        .select2-container--default .select2-search--inline .select2-search__field {
+            background: none !important;
+            padding: 0 !important;
+        }';
+
+        // Combine the values from above and minifiy them.
+        $select2_css = preg_replace('#/\*.*?\*/#s', '', $select2_css);
+        $select2_css = preg_replace('/\s*([{}|:;,])\s+/', '$1', $select2_css);
+        $select2_css = preg_replace('/\s\s+(.*)/', '$1', $select2_css);
+        wp_add_inline_style('adminify-select2', $select2_css);
     }
 }
