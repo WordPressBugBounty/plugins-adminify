@@ -17,21 +17,26 @@ html[frame-adminify-iframe=true] #wpfooter {
 }
 
 /**
- * Pre-publish panel in the block editor on mobile - duplicate Publish button.
+ * Pre-publish panel in the block editor - duplicate Publish button.
  *
- * Below 782px the panel is full-bleed and core anchors it at `top: 46px`, the
- * height of the mobile admin bar, so it covers the editor header and its Publish
- * button. Inside the Adminify frame the admin bar is hidden (above), the editor
- * header moves up to the top of the iframe, and the panel's 46px gap leaves that
- * header - Publish button and all - showing above the panel's own Cancel /
- * Publish row. Anchor the panel to the top of the iframe so it covers the header
- * the way it does in the default admin.
+ * Core anchors the panel below the admin bar - `top: 46px` below 782px where the
+ * panel is full-bleed, `top: 32px` on desktop where it is the right-hand sidebar -
+ * so it lines up with the editor header it is meant to cover. Inside the Adminify
+ * frame the admin bar is hidden (above) and the editor header moves up to the top
+ * of the iframe, so that gap leaves the header - Publish button and all - showing
+ * above the panel's own Cancel / Publish row. Anchor the panel to the top of the
+ * iframe at every width so it covers the header the way it does in the default
+ * admin. Newer core builds drive the offset from `--wp-admin--admin-bar--height`,
+ * so zero that too for anything else keyed to it.
  */
-@media (max-width: 781.98px) {
-  html[frame-adminify-iframe=true] .editor-post-publish-panel {
-    top: 0;
-  }
+html[frame-adminify-iframe=true] {
+  --wp-admin--admin-bar--height: 0px;
 }
+
+html[frame-adminify-iframe=true] .editor-post-publish-panel {
+  top: 0;
+}
+
 /**
  * Media library popup on real mobile devices - breathing room at the bottom.
  *

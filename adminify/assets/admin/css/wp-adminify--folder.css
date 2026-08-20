@@ -68,7 +68,7 @@ body.wp-adminify {
   color: #fff;
   text-align: center;
   padding: 6px 10px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   border: 1px solid var(--adminify-primary);
   background-color: var(--adminify-primary);
   padding: 5px 10px;
@@ -95,7 +95,7 @@ body.wp-adminify {
   color: #fff;
   text-align: center;
   padding: 6px 10px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   border: 1px solid #17b26a;
   background-color: #17b26a;
 }
@@ -106,7 +106,7 @@ body.wp-adminify {
   color: #fff;
   text-align: center;
   padding: 6px 10px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   border: 1px solid #f04438;
   background-color: #f04438;
 }
@@ -129,7 +129,7 @@ body.wp-adminify {
   color: #000;
   text-align: center;
   padding: 6px 10px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   border: 1px solid #e5e5e5;
   background-color: #e5e5e5;
   cursor: pointer;
@@ -141,7 +141,7 @@ body.wp-adminify {
   color: #fff;
   text-align: center;
   padding: 6px 10px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   border: 1px solid #48455f;
   background-color: #48455f;
   cursor: pointer;
@@ -153,7 +153,7 @@ body.wp-adminify {
   width: 100%;
   padding: 6px 32px 6px 16px;
   border-color: #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   font-size: 13px;
   font-weight: 400;
   line-height: 20px;
@@ -168,7 +168,7 @@ body.wp-adminify {
 }
 .wp-adminify .wp-adminify--folder-widget .wp-adminify--folder-app .folder--stats li {
   padding: 8px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .wp-adminify .wp-adminify--folder-widget .wp-adminify--folder-app .folder--stats li a {
   display: flex;
@@ -967,7 +967,7 @@ body.wp-adminify {
   width: -moz-max-content;
   width: max-content;
   padding: 6px 12px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   background-color: #ddd;
   z-index: 5;
 }

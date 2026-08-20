@@ -60,6 +60,10 @@ class AdminBar extends AdminSettingsModel
 			// Light/Dark Mode switcher add
 			if (!empty($this->options['admin_bar_dark_light_btn'])) {
 				add_action('admin_bar_menu', [$this, 'dark_mode_switcher_icon']);
+				// customize.php never fires `admin_enqueue_scripts` - it does not
+				// load admin-header.php - so the switcher's assets have to come in
+				// on the Customizer's own hook. See enqueue_standalone_switcher().
+				add_action('customize_controls_enqueue_scripts', [$this, 'enqueue_standalone_switcher']);
 			}
 			// Add Frontend Site Preview Icon for UI.
 			// Priority 10000: nodes render in the order they are added, and core fills
@@ -110,7 +114,14 @@ class AdminBar extends AdminSettingsModel
 		$global_color_mode = !empty($this->options['light_dark_mode']['admin_ui_mode']) ? $this->options['light_dark_mode']['admin_ui_mode'] : 'light';
 		$color_mode = empty(get_user_meta(get_current_user_id(), 'color_mode', true))? $global_color_mode : get_user_meta(get_current_user_id(), 'color_mode', true);
 
-		$color_var = !empty($this->adminify_ui) ? 'var(--adminify-menu-text-color)' : '#fff';
+		// currentColor, so the glyphs take the colour of whatever bar they land in:
+		// #f0f0f1 from core's `#wpadminbar .ab-empty-item` in the stock admin bar,
+		// and the surrounding text colour inside the dropdown or anywhere Adminify
+		// styles the bar itself. --adminify-menu-text-color was the SIDEBAR's
+		// colour - near-black in light mode, so the icon all but vanished against
+		// the dark admin bar - and it is not even defined on screens where
+		// OutputCSS does not run, customize.php among them.
+		$color_var = 'currentColor';
 
 		$adminbar_switcher_icon = '<div id="wp-adminify-color-mode-wrapper">
 			<div class="mode-icon adminify-color-mode-' . esc_attr($color_mode) . '-active">
@@ -297,6 +308,10 @@ class AdminBar extends AdminSettingsModel
 	{
 		global $pagenow;
 		if ($pagenow == 'wp-login.php' || $pagenow == 'wp-register.php' || $pagenow == 'customize.php') {
+			// Adminify's main bundle is skipped on these screens by design, but
+			// WordPress 7.1 prints the admin bar on customize.php - switcher node
+			// and all. Hand it the standalone assets so it is not left inert.
+			$this->enqueue_standalone_switcher();
 			return;
 		}
 
@@ -306,6 +321,44 @@ class AdminBar extends AdminSettingsModel
 			$this->admin_topbar_loader_css();
 		}
 		wp_localize_script('adminify-admin', 'PXLBSADMINIFY_ADMINBAR', $this->create_admin_bar_js_object());
+	}
+
+	/**
+	 * Self-contained Light/Dark/System switcher for screens the main bundle skips.
+	 *
+	 * `wp-adminify.css` scopes the switcher rules under `.adminify-ui` and
+	 * `wp-adminify.js` carries the behaviour, and neither loads on customize.php
+	 * (Assets::should_skip_adminify_scripts). WordPress 7.1 renders the admin bar
+	 * there, so without this the node paints as bare unstyled SVGs and clicking it
+	 * does nothing. Same approach DarkModeConflicts already takes for dark mode.
+	 *
+	 * Safe to call more than once: wp_enqueue_*() is a no-op on a handle that is
+	 * already queued.
+	 *
+	 * @return void
+	 */
+	public function enqueue_standalone_switcher()
+	{
+		if (empty($this->options['admin_bar_dark_light_btn'])) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'adminify-admin-bar-switcher',
+			PXLBSADMINIFY_ASSETS . 'css/wp-adminify-admin-bar-switcher' . Utils::assets_ext('.css'),
+			array(),
+			PXLBSADMINIFY_VER
+		);
+
+		wp_enqueue_script(
+			'adminify-admin-bar-switcher',
+			PXLBSADMINIFY_ASSETS . 'admin/js/wp-adminify-admin-bar-switcher' . Utils::assets_ext('.js'),
+			array(),
+			PXLBSADMINIFY_VER,
+			true
+		);
+
+		wp_localize_script('adminify-admin-bar-switcher', 'PXLBSADMINIFY_ADMINBAR', $this->create_admin_bar_js_object());
 	}
 
 

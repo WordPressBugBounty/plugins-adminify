@@ -709,6 +709,22 @@ if (!class_exists('Productivity')) {
 				// ],
 			];
 
+			// Infinite scroll became the Media Library default in WordPress 7.1, with a
+			// per-user opt-out under Profile > Personal Options. Offering the switch
+			// there would be worse than redundant: turning it on forces the
+			// `media_library_infinite_scrolling` filter, which core documents as
+			// taking precedence over that preference.
+			if ( ! Utils::is_wp_below_7_1() ) {
+				$attachment_fields_data = array_values(
+					array_filter(
+						$attachment_fields_data,
+						static function ( $field ) {
+							return ! isset( $field['id'] ) || 'media_ininite_scroll' !== $field['id'];
+						}
+					)
+				);
+			}
+
 			$attachment_fields[] = array(
 				'id'       => 'media_attachments',
 				'type'     => 'fieldset',

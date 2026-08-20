@@ -87,14 +87,18 @@ if (!class_exists('Latest_Updates')) {
 
 			if("dismissed" !== $forever_notice){
 				$pxlbsadminify_changelog_items =
-				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> Performance improved. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> Dashboard Widget &amp; Admin Pages Icons Picker improved. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> Adminify UI with Admin Bar Editor Secondary menu hidden for logo-out icon show. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The tabs inside the Admin Page setting boxes now look like proper tabs instead of plain links. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The code editor box for Custom CSS/JS now has a visible border again. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Free version after update auto deactivate issue fixed. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Adminify UI Admin Menu reload with auto collapse issue fixed. </span><br>', 'adminify')
-				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Footer text overlap content issue fixed. </span><br>', 'adminify');
+				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> WordPress 7.1 compatibility. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> The Gutenberg Editor Logo option is now hidden on WordPress 7.1 and newer, where WordPress no longer provides the editor button it replaced. It keeps working on older versions. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> The Infinite Scroll for Media Library option is now hidden on WordPress 7.1 and newer, where the Media Library already scrolls infinitely and each user can opt out from their own profile. It keeps working on older versions. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> Dark mode in the block editor. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> Disabled buttons now look disabled instead of appearing fully active. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Improved:</strong> Heartbeat intervals longer than 2 minutes are now marked as not recommended, and the post editor is capped at 2 minutes so post locks and autosave keep working. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Custom Gravatar images now show up on Settings &gt; Discussion and for users who do not have a Gravatar. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The Light/Dark switcher in the admin bar now looks and works correctly on the Site Editor and Customizer screens. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> With Adminify UI on, publishing a post now updates the browser address bar, and the back button in the editor returns to the post list. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The block editor pre-publish panel no longer leaves a duplicate Publish button showing above it. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> The Control Heartbeat API interval settings now take effect. Picking 15 or 30 seconds previously changed nothing at all. </span><br>', 'adminify')
+				. __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Disabling the Heartbeat API no longer stops autosave and the session expiry check from loading, and the post editor setting now applies on WordPress installed in a subdirectory. </span><br>', 'adminify');
 
 			$pxlbsadminify_changelog_message = sprintf(
 					/* translators: %1$s: changelogs page URL. %2$s: link anchor text. %3$s: plugin update heading HTML. %4$s: changelog list items HTML. */

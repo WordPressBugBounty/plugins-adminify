@@ -228,7 +228,7 @@ body.wp-adminify {
   animation-fill-mode: forwards;
   background: #fff;
   border: 1px solid #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   box-shadow: 0 0.7px 1px rgba(0, 0, 0, 0.1490196078), 0 2.7px 3.8px -0.2px rgba(0, 0, 0, 0.1490196078), 0 5.5px 7.8px -0.3px rgba(0, 0, 0, 0.1490196078), 0.1px 11.5px 16.4px -0.5px rgba(0, 0, 0, 0.1490196078);
   padding: 16px;
   z-index: 100001;
@@ -889,7 +889,7 @@ body.wp-adminify {
   justify-content: space-between;
   gap: 10px;
   padding: 6px 14px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   font-size: var(--adminify-menu-font-size);
   line-height: var(--adminify-menu-line-height);
   letter-spacing: var(--adminify-menu-letter-spacing);

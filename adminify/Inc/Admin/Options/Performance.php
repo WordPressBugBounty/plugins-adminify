@@ -39,7 +39,7 @@ if (!class_exists('Performance')) {
                     'backend'               => 'default',
                     'backend_modify'        => 60,
                     'on_post_create'        => 'default',
-                    'on_post_create_modify' => 15,
+                    'on_post_create_modify' => 60,
                     'on_frontend'           => 'default',
                     'on_frontend_modify'    => 60
                 ],
@@ -185,6 +185,30 @@ if (!class_exists('Performance')) {
         }
 
         public function control_heartbit_api_settings(&$fields){
+
+            /*
+             * heartbeat.js accepts 1-3600 seconds, but core draws the safe line at 120.
+             * Its own note on `minimalInterval` reads "setting it to longer than 120
+             * seconds will limit or disable some of the functionality (like post locks)",
+             * and the Heartbeat API handbook describes the tick as running "every 15-120
+             * seconds". Anything past that is offered but labelled, and withheld entirely
+             * on post screens - where the post lock and autosave live, and where core
+             * deliberately disables idle suspension to keep the lock alive
+             * (wp_heartbeat_set_suspension).
+             */
+            $safe_intervals = array(
+                '15'  => __('15 seconds', 'adminify'),
+                '30'  => __('30 seconds', 'adminify'),
+                '60'  => __('1 Minute', 'adminify'),
+                '120' => __('2 Minute', 'adminify'),
+            );
+
+            $interval_options = $safe_intervals + array(
+                '180' => __('3 Minute (not recommended)', 'adminify'),
+                '300' => __('5 Minute (not recommended)', 'adminify'),
+                '600' => __('10 Minute (not recommended)', 'adminify'),
+            );
+
             $fields[] = [
                 'id'         => 'enabled',
                 'type'       => 'switcher',
@@ -214,16 +238,8 @@ if (!class_exists('Performance')) {
                 'id'       => 'backend_modify',
                 'type'     => 'select',
                 'title'    => __('Set interval to once every', 'adminify'),
-                'subtitle' => __('Default: 1 Minute', 'adminify'),
-                'options'  => array(
-                    '15'  => __('15 seconds', 'adminify'),
-                    '30'  => __('30 seconds', 'adminify'),
-                    '60'  => __('1 Minute', 'adminify'),
-                    '120' => __('2 Minute', 'adminify'),
-                    '180' => __('3 Minute', 'adminify'),
-                    '300' => __('5 Minute', 'adminify'),
-                    '600' => __('10 Minute', 'adminify'),
-                ),
+                'subtitle' => __('Default: 1 Minute. Intervals over 2 minutes can delay post locks.', 'adminify'),
+                'options'  => $interval_options,
                 'default' => $this->get_default_field('heartbeat_api')['backend_modify'],
                 'dependency' => ['enabled|backend', '==|==', 'true|modify', 'true'],
             ];
@@ -248,16 +264,8 @@ if (!class_exists('Performance')) {
                 'id'       => 'on_post_create_modify',
                 'type'     => 'select',
                 'title'    => __('Set interval to once every', 'adminify'),
-                'subtitle' => __('Default: 15 seconds', 'adminify'),
-                'options'  => array(
-                    '15'  => __('15 seconds', 'adminify'),
-                    '30'  => __('30 seconds', 'adminify'),
-                    '60'  => __('1 Minute', 'adminify'),
-                    '120' => __('2 Minute', 'adminify'),
-                    '180' => __('3 Minute', 'adminify'),
-                    '300' => __('5 Minute', 'adminify'),
-                    '600' => __('10 Minute', 'adminify'),
-                ),
+                'subtitle' => __('Default: 1 Minute. Capped at 2 minutes so post locks and autosave keep working.', 'adminify'),
+                'options'  => $safe_intervals,
                 'default'    => $this->get_default_field('heartbeat_api')['on_post_create_modify'],
                 'dependency' => ['enabled|on_post_create', '==|==', 'true|modify', 'true'],
             ];
@@ -282,16 +290,8 @@ if (!class_exists('Performance')) {
                 'id'       => 'on_frontend_modify',
                 'type'     => 'select',
                 'title'    => __('Set interval to once every', 'adminify'),
-                'subtitle' => __('Default: 1 Minute', 'adminify'),
-                'options'  => array(
-                    '15'  => __('15 seconds', 'adminify'),
-                    '30'  => __('30 seconds', 'adminify'),
-                    '60'  => __('1 Minute', 'adminify'),
-                    '120' => __('2 Minute', 'adminify'),
-                    '180' => __('3 Minute', 'adminify'),
-                    '300' => __('5 Minute', 'adminify'),
-                    '600' => __('10 Minute', 'adminify'),
-                ),
+                'subtitle' => __('Default: 1 Minute. Intervals over 2 minutes can delay post locks.', 'adminify'),
+                'options'  => $interval_options,
                 'default'    => $this->get_default_field('heartbeat_api')['on_frontend_modify'],
                 'dependency' => ['enabled|on_frontend', '==|==', 'true|modify', 'true'],
             ];

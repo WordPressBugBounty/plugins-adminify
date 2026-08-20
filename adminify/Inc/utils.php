@@ -1263,6 +1263,27 @@ class Utils
 		return version_compare( $wp_version, $version, $operator );
 	}
 
+	/**
+	 * Shared guard for features that only work below WordPress 7.1.
+	 *
+	 * 7.1 rewrote the block editor chrome and absorbed features Adminify used to
+	 * provide, so several settings became either inert or actively harmful there.
+	 * Rather than repeat the version literal at each of them, they all gate on this
+	 * one call, so the boundary moves in a single place.
+	 *
+	 * Features behind this guard:
+	 *  - `gutenberg_editor_logo`: painted over `.edit-post-fullscreen-mode-close`,
+	 *    a class the rebuilt icon-only close button no longer carries.
+	 *  - `media_attachments.media_ininite_scroll`: the Media Library grid scrolls
+	 *    infinitely by default from 7.1, with a per-user opt-out. Forcing the
+	 *    `media_library_infinite_scrolling` filter overrides that preference.
+	 *
+	 * @return bool True on WordPress older than 7.1.
+	 */
+	public static function is_wp_below_7_1() {
+		return self::check_wp_version( '<', '7.1' );
+	}
+
 	public static function help_urls($module_name = '', $docs = '', $youtube = '', $facebook_grp = '', $support = '')
 	{
 		$help_content = '';

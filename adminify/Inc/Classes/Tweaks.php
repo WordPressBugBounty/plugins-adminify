@@ -65,6 +65,8 @@ class Tweaks extends AdminSettingsModel
 		if (!empty($this->custom_gravatar) && array_key_exists('enable', $this->custom_gravatar)) {
 			// Add Custom Default Gravatar Image
 			add_filter('avatar_defaults', [$this, 'add_custom_gravatar_image'], 99);
+			// ...and serve it from this site rather than through gravatar.com.
+			add_filter('get_avatar_data', [$this, 'serve_custom_gravatar_locally'], 99);
 		}
 
 		// If Admin bar Editor Plugin not Installed
@@ -540,22 +542,143 @@ class Tweaks extends AdminSettingsModel
 		$wp_admin_bar->remove_node('wp-logo');
 	}
 
+	/**
+	 * The avatar images an administrator configured in the plugin settings.
+	 *
+	 * Keyed by URL, because that is the identifier WordPress stores in the
+	 * `avatar_default` option and hands back to `get_avatar()` later.
+	 *
+	 * @return array<string,string> Avatar URL => label.
+	 */
+	private function custom_gravatar_images()
+	{
+		$images = [];
+
+		if ( empty( $this->custom_gravatar['image'] ) || ! is_array( $this->custom_gravatar['image'] ) ) {
+			return $images;
+		}
+
+		foreach ( $this->custom_gravatar['image'] as $value ) {
+			if ( empty( $value['avatar_image']['url'] ) ) {
+				continue;
+			}
+
+			$avatar_url            = esc_url_raw( $value['avatar_image']['url'] );
+			$images[ $avatar_url ] = ! empty( $value['avatar_name'] )
+				? sanitize_text_field( $value['avatar_name'] )
+				: __( 'Custom Gravatar', 'adminify' );
+		}
+
+		return $images;
+	}
+
 	// Custom Avatars
 	public function add_custom_gravatar_image($avatar_defaults)
 	{
 		// Register the avatar images configured by the administrator in the plugin settings.
-		if ( ! empty( $this->custom_gravatar['image'] ) && is_array( $this->custom_gravatar['image'] ) ) {
-			foreach ( $this->custom_gravatar['image'] as $value ) {
-				if ( empty( $value['avatar_image']['url'] ) ) {
-					continue;
-				}
-				$avatar_url                     = esc_url_raw( $value['avatar_image']['url'] );
-				$avatar_name                    = ! empty( $value['avatar_name'] ) ? sanitize_text_field( $value['avatar_name'] ) : __( 'Custom Gravatar', 'adminify' );
-				$avatar_defaults[ $avatar_url ] = $avatar_name;
-			}
+		return array_merge( (array) $avatar_defaults, $this->custom_gravatar_images() );
+	}
+
+	/**
+	 * Serve a custom default avatar from this site instead of through gravatar.com.
+	 *
+	 * Core hands the chosen default to Gravatar as the `d=` query arg, which means
+	 * gravatar.com has to fetch the image from THIS server before it can serve it
+	 * back. That only works when the URL is publicly resolvable: on a local install,
+	 * a staging site behind HTTP auth, or an intranet, Gravatar cannot reach it and
+	 * every avatar that falls back to the default comes out broken.
+	 *
+	 * Gravatar precedence is preserved: a user who genuinely has a Gravatar still
+	 * gets theirs, because the custom image is only substituted once
+	 * email_has_gravatar() has established there is nothing to fall back FROM. That
+	 * keeps "Default Avatar" meaning what WordPress says it means.
+	 *
+	 * @param array $args Avatar data, after processing.
+	 * @return array
+	 */
+	public function serve_custom_gravatar_locally( $args )
+	{
+		if ( empty( $args['default'] ) || ! is_string( $args['default'] ) ) {
+			return $args;
 		}
 
-		return $avatar_defaults;
+		$images = $this->custom_gravatar_images();
+
+		if ( ! isset( $images[ $args['default'] ] ) ) {
+			return $args;
+		}
+
+		// `force_default` means the caller asked for the default image specifically -
+		// the radio list on Settings > Discussion renders every option that way - so
+		// there is nothing to look up.
+		if ( empty( $args['force_default'] ) && $this->email_has_gravatar( $args['url'] ) ) {
+			return $args;
+		}
+
+		// `found_avatar` is deliberately untouched: it only decides whether
+		// get_avatar() adds the `avatar-default` class, which is correct here.
+		$args['url'] = $args['default'];
+
+		return $args;
+	}
+
+	/**
+	 * Whether the address behind a gravatar.com URL actually has an avatar there.
+	 *
+	 * `d=404` is Gravatar's documented way of asking the question: instead of serving
+	 * a fallback image it answers 404 when the address is unknown. The answer is
+	 * cached per hash, so a busy comment thread costs one request per new address
+	 * rather than one per avatar rendered.
+	 *
+	 * The hash is read back out of the URL core just built rather than recomputed,
+	 * which avoids re-implementing its resolution of user IDs, comments, posts,
+	 * WP_User objects and raw hashes - and means a URL another plugin has already
+	 * pointed somewhere else is left alone.
+	 *
+	 * @param string $avatar_url The avatar URL core built.
+	 * @return bool True when the address has a Gravatar, or when it is not safe to say.
+	 */
+	private function email_has_gravatar( $avatar_url )
+	{
+		if ( empty( $avatar_url ) || ! is_string( $avatar_url ) ) {
+			return true;
+		}
+
+		$path = wp_parse_url( $avatar_url, PHP_URL_PATH );
+		$hash = $path ? basename( $path ) : '';
+
+		// SHA-256 in current core (hash('sha256', ...) in get_avatar_data), MD5 in
+		// older releases. Anything else is not a gravatar.com avatar URL - another
+		// plugin has already pointed it elsewhere - and is none of our business.
+		if ( ! preg_match( '/^[a-f0-9]{32}$|^[a-f0-9]{64}$/i', $hash ) ) {
+			return true;
+		}
+
+		$cache_key = 'adminify_has_gravatar_' . $hash;
+		$cached    = get_transient( $cache_key );
+
+		if ( false !== $cached ) {
+			return '1' === $cached;
+		}
+
+		$response = wp_remote_head(
+			'https://secure.gravatar.com/avatar/' . $hash . '?d=404&s=1',
+			array( 'timeout' => 3 )
+		);
+
+		if ( is_wp_error( $response ) ) {
+			// Offline, blocked, or too slow. Show the custom image rather than a URL
+			// gravatar.com may not be able to resolve either, and ask again soon -
+			// a temporary outage should not pin a real Gravatar out of view for a week.
+			set_transient( $cache_key, '0', 15 * MINUTE_IN_SECONDS );
+			return false;
+		}
+
+		$has_gravatar = 200 === (int) wp_remote_retrieve_response_code( $response );
+
+		set_transient( $cache_key, $has_gravatar ? '1' : '0', WEEK_IN_SECONDS );
+
+		return $has_gravatar;
 	}
 
 	// Check Last Login Column
@@ -773,13 +896,6 @@ class Tweaks extends AdminSettingsModel
 		}
 	}
 
-
-	/** Control Interval Heartbeat API **/
-	public function control_heartbeat_api($settings)
-	{
-		$settings['interval'] = 60;
-		return $settings;
-	}
 
 	/** Remove Query Strings from Scripts/Styles **/
 	public function remove_script_versions($src)

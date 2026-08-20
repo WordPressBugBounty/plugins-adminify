@@ -171,7 +171,7 @@ body.wp-adminify {
   letter-spacing: 0.5px;
   color: #191821;
   padding: 10px 20px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   border: 1px solid transparent;
   cursor: pointer;
 }
@@ -232,7 +232,7 @@ body.wp-adminify {
   color: #191821;
   background: none;
   border: none;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   width: 100%;
   height: 100%;
   cursor: pointer;
@@ -269,7 +269,7 @@ body.wp-adminify {
 .wp-adminify-tabs-wrapper ul {
   display: flex;
   align-items: center;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   padding: 4px;
   background-color: #dedee7;
 }
@@ -288,7 +288,7 @@ body.wp-adminify {
 .wp-adminify-tabs-wrapper ul li.active {
   color: #191821;
   font-weight: 700;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   background-color: #fff;
 }
 
@@ -331,7 +331,7 @@ body input,
 body textarea {
   outline: none;
   border: 1px solid #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   width: 100%;
   margin-top: 1rem;
   padding: 8px;
@@ -371,7 +371,7 @@ body .screen-reader-text {
   border-radius: 2px;
   border: 1px solid #dedee7;
   background-color: #fff;
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .wp-adminify-setup-wizard-wrapper .adminify-ui-content h1 {
   font-size: 24px;
@@ -401,16 +401,16 @@ body .screen-reader-text {
 .wp-adminify-setup-wizard-wrapper .adminify-ui-content.adminify-choose-ui .choose-ui-image {
   cursor: pointer;
   border: 2px solid transparent;
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .wp-adminify-setup-wizard-wrapper .adminify-ui-content.adminify-choose-ui .choose-ui-image img {
   border-radius: 2px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   width: 100%;
 }
 .wp-adminify-setup-wizard-wrapper .adminify-ui-content.adminify-choose-ui .choose-ui-image.active-ui {
   position: relative;
-  border-radius: 6px;
+  border-radius: "revert-rule4";
   border: 4px solid #3a3ae9;
   border: 4px solid var(--adminify-primary);
 }
@@ -480,8 +480,8 @@ body .screen-reader-text {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-top-right-radius: 2px;
-  border-bottom-right-radius: 2px;
+  border-top-right-radius: "revert-rule";
+  border-bottom-right-radius: "revert-rule";
   cursor: pointer;
 }
 .wp-adminify-setup-wizard-wrapper .adminify-ui-content.adminify-ui-media .adminify-ui-media {

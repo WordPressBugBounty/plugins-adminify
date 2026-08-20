@@ -2,8 +2,8 @@
 Contributors: pixarlabs, litonice13
 Tags: white label, admin menu editor, login customizer, admin columns, dark mode
 Requires at least: 5.0
-Tested up to: 7.0
-Stable tag: 4.3.0
+Tested up to: 7.1
+Stable tag: 4.3.1
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -186,6 +186,20 @@ Please report security bugs found in the source code of this plugin through the 
 7. The module settings page showing available addons such as Activity Logs.
 
 == Changelog ==
+= Adminify - 4.3.1 (20-08-2026) =
+* Improved: WordPress 7.1 compatibility.
+* Improved: The Gutenberg Editor Logo option is now hidden on WordPress 7.1 and newer, where WordPress no longer provides the editor button it replaced. It keeps working on older versions.
+* Improved: The Infinite Scroll for Media Library option is now hidden on WordPress 7.1 and newer, where the Media Library already scrolls infinitely and each user can opt out from their own profile. It keeps working on older versions.
+* Improved: Dark mode in the block editor.
+* Improved: Disabled buttons now look disabled instead of appearing fully active.
+* Improved: Heartbeat intervals longer than 2 minutes are now marked as not recommended, and the post editor is capped at 2 minutes so post locks and autosave keep working.
+* Fixed: Custom Gravatar images now show up on Settings > Discussion and for users who do not have a Gravatar.
+* Fixed: The Light/Dark switcher in the admin bar now looks and works correctly on the Site Editor and Customizer screens.
+* Fixed: With Adminify UI on, publishing a post now updates the browser address bar, and the editor's back button returns to the post list.
+* Fixed: The block editor pre-publish panel no longer leaves a duplicate Publish button showing above it.
+* Fixed: The Control Heartbeat API interval settings now take effect. Picking 15 or 30 seconds previously changed nothing at all.
+* Fixed: Disabling the Heartbeat API no longer stops autosave and the session expiry check from loading, and the post editor setting now applies on WordPress installed in a subdirectory.
+
 = Adminify - 4.3.0 (18-08-2026) =
 * Improved: Performance improved.
 * Improved: Dashboard Widget & Admin Pages Icons Picker improved.

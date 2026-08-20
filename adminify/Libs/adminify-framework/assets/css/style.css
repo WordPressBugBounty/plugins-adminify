@@ -118,7 +118,7 @@ body.wp-adminify {
   margin-top: 16px;
   background: #fff;
   border: 1px solid #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   width: 80%;
   margin: 60px auto;
   /**
@@ -138,7 +138,7 @@ body.wp-adminify {
 .wp-adminify-settings .button-primary:not(.adminify-btn),
 .wp-adminify-settings a.page-title-action:not(.adminify-btn) {
   color: #fff;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   cursor: pointer;
   transition: all 0.15s;
   border: 1px solid var(--adminify-primary);
@@ -222,7 +222,7 @@ body.wp-adminify {
   line-height: 24px;
   position: relative;
   padding: 8px 10px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   -webkit-text-decoration: none;
   text-decoration: none;
   display: flex;
@@ -332,7 +332,7 @@ body.wp-adminify {
   gap: 6px;
 }
 .wp-adminify-settings .adminify-pro-notice img {
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .wp-adminify-settings .adminify-pro-notice svg {
   width: 13px;
@@ -1157,14 +1157,14 @@ body.wp-adminify {
   display: inline-flex;
   border: 1px solid #dedee7;
   padding: 4px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   gap: 2px;
 }
 .adminify-section .adminify-field-button_set .adminify--button-group .adminify--button {
   display: inline-block;
   color: #736e91;
   padding: 4px 24px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   font-size: 13px;
   font-weight: 600;
   line-height: 20px;
@@ -1253,7 +1253,7 @@ body.wp-adminify {
 }
 .adminify-section .adminify-field-fieldset .adminify-fieldset-content > .adminify-field {
   padding: 12px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .adminify-section .adminify-field-fieldset .adminify-field-subheading {
   font-size: 18px;
@@ -2578,7 +2578,7 @@ body.wp-adminify {
   font-weight: 700;
   line-height: 1.3;
   padding: 8px 12px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   cursor: pointer;
   transition: all 0.15s;
   padding: 4px 8px;

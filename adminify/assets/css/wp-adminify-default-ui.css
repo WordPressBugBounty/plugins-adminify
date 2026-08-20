@@ -309,7 +309,7 @@ body.wp-adminify {
   padding: 24px;
   margin-right: 16px;
   border: 1px solid #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   display: flex;
   flex-direction: column;
   margin-top: 16px;
@@ -376,7 +376,7 @@ body.wp-adminify {
   margin: 0 !important;
   width: 100%;
   border: 1px solid #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .wp-adminify-addons-wrapper .wp-list-table #the-list .plugin-card .plugin-card-top {
   padding: 16px 16px 0 16px;
@@ -431,7 +431,7 @@ body.wp-adminify {
   padding: 12px 16px;
   background-color: var(--adminify-preset-background);
   border-top: 1px solid #dedee7;
-  border-radius: 0 0 2px 2px;
+  border-radius: 0 0 "revert-rule" "revert-rule";
 }
 .wp-adminify-addons-wrapper .wp-list-table #the-list .plugin-card .authors cite a {
   color: var(--adminify-primary) !important;
@@ -780,7 +780,7 @@ body.wp-adminify {
   font-weight: 500;
   color: #48455f;
   padding: 8px 12px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .wp-adminify #_wp_adminify_admin_page_display .inside .adminify-wrapper .adminify-nav a.adminify-active {
   color: #fff;
@@ -877,7 +877,7 @@ a {
   font-weight: 700;
   line-height: 1.3;
   padding: 8px 12px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   cursor: pointer;
   transition: all 0.15s;
 }
@@ -1268,7 +1268,7 @@ a {
   left: 50% !important;
   margin: 0 !important;
   transform: translate(-50%, -50%);
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 #TB_window #TB_title #TB_closeWindowButton span::before {
   color: #f04438;

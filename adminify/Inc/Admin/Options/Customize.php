@@ -293,20 +293,23 @@ if ( ! class_exists( 'Customize' ) ) {
 				'default'      => $this->get_default_field('admin_favicon_logo'),
 			];
 
-			// Gutenberg Editor Logo
-			$fields[] = [
-				'id'           => 'gutenberg_editor_logo',
-				'type'         => 'media',
-				/* translators: %s: pro upgrade badge HTML */
-				'title'        => sprintf(__('Gutenberg Editor Logo %s', 'adminify'), Utils::upgrade_pro_badge()),
-				'class'		   => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
-				'subtitle'     => __('Replace Gutenberg Post/Page WordPress Logo', 'adminify'),
-				'library'      => 'image',
-				'preview_size' => 'thumbnail',
-				'button_title' => __('Add Editor Logo', 'adminify'),
-				'remove_title' => __('Remove Editor Logo', 'adminify'),
-				'default'      => $this->get_default_field('gutenberg_editor_logo'),
-			];
+			// Gutenberg Editor Logo. WordPress 7.1 dropped the class this hooks
+			// onto, so the field is only offered where it can still do something.
+			if ( Utils::is_wp_below_7_1() ) {
+				$fields[] = [
+					'id'           => 'gutenberg_editor_logo',
+					'type'         => 'media',
+					/* translators: %s: pro upgrade badge HTML */
+					'title'        => sprintf(__('Gutenberg Editor Logo %s', 'adminify'), Utils::upgrade_pro_badge()),
+					'class'		   => 'adminify-pro-fieldset adminify-pro-notice adminify-pro-pointer',
+					'subtitle'     => __('Replace Gutenberg Post/Page WordPress Logo', 'adminify'),
+					'library'      => 'image',
+					'preview_size' => 'thumbnail',
+					'button_title' => __('Add Editor Logo', 'adminify'),
+					'remove_title' => __('Remove Editor Logo', 'adminify'),
+					'default'      => $this->get_default_field('gutenberg_editor_logo'),
+				];
+			}
 
 		}
 

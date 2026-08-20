@@ -309,7 +309,7 @@ body.wp-adminify {
   padding: 24px;
   margin-right: 16px;
   border: 1px solid #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   display: flex;
   flex-direction: column;
   margin-top: 16px;
@@ -376,7 +376,7 @@ body.wp-adminify {
   margin: 0 !important;
   width: 100%;
   border: 1px solid #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .wp-adminify-addons-wrapper .wp-list-table #the-list .plugin-card .plugin-card-top {
   padding: 16px 16px 0 16px;
@@ -431,7 +431,7 @@ body.wp-adminify {
   padding: 12px 16px;
   background-color: var(--adminify-preset-background);
   border-top: 1px solid #dedee7;
-  border-radius: 0 0 2px 2px;
+  border-radius: 0 0 "revert-rule" "revert-rule";
 }
 .wp-adminify-addons-wrapper .wp-list-table #the-list .plugin-card .authors cite a {
   color: var(--adminify-primary) !important;
@@ -780,7 +780,7 @@ body.wp-adminify {
   font-weight: 500;
   color: #48455f;
   padding: 8px 12px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .wp-adminify #_wp_adminify_admin_page_display .inside .adminify-wrapper .adminify-nav a.adminify-active {
   color: #fff;
@@ -877,7 +877,7 @@ a {
   font-weight: 700;
   line-height: 1.3;
   padding: 8px 12px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   cursor: pointer;
   transition: all 0.15s;
 }
@@ -1268,7 +1268,7 @@ a {
   left: 50% !important;
   margin: 0 !important;
   transform: translate(-50%, -50%);
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 #TB_window #TB_title #TB_closeWindowButton span::before {
   color: #f04438;
@@ -1460,7 +1460,7 @@ a {
 
 .adminify-ui .welcome-panel {
   border: 1px solid #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .adminify-ui .welcome-panel .welcome-panel-close {
   color: #fff;
@@ -1475,14 +1475,14 @@ a {
   color: #f04438;
 }
 .adminify-ui .welcome-panel .welcome-panel-header {
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .adminify-ui .welcome-panel .welcome-panel-header a {
   color: #fff !important;
 }
 .adminify-ui #dashboard-widgets-wrap .postbox {
   border-color: #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .adminify-ui #dashboard-widgets-wrap .postbox .postbox-header {
   padding: 12px 16px;
@@ -1538,7 +1538,7 @@ a {
   border-right-color: #dedee7;
   border-bottom-color: #dedee7;
   background-color: #fff;
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .wp-adminify .notice:not(.plugin-update .notice) .notice-dismiss::before {
   color: #5a5676;
@@ -1565,7 +1565,7 @@ a {
   border-right-color: #dedee7;
   border-bottom-color: #dedee7;
   background-color: #fff;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   padding: 1px 12px;
   margin-top: 5px;
 }
@@ -1616,7 +1616,7 @@ a {
 .adminify-ui .wp-list-table,
 .adminify-ui .widefat {
   border-color: #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .adminify-ui .wp-list-table .notice,
 .adminify-ui .widefat .notice {
@@ -1773,13 +1773,13 @@ a {
 .adminify-ui .form-wrap {
   padding: 16px;
   border: 1px solid #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   background-color: #fff;
 }
 
 .adminify-ui .media-toolbar {
   border-color: #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .adminify-ui .view-grid::before {
   color: var(--adminify-primary) !important;
@@ -1808,26 +1808,26 @@ a {
   border-radius: 6px;
 }
 .adminify-ui .attachments-wrapper ul li .attachment-preview .thumbnail {
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .adminify-ui .attachments-wrapper ul li .attachment-preview::after {
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .adminify-ui .attachments-wrapper ul li:focus {
-  border-radius: 2px;
+  border-radius: "revert-rule";
   box-shadow: inset 0 0 0 2px var(--adminify-primary) !important;
 }
 .adminify-ui .load-more-count {
   color: #48455f;
 }
 .adminify-ui .media-modal .media-modal-content {
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .adminify-ui .media-modal .media-modal-content .media-frame-content {
   border-color: #dedee7;
 }
 .adminify-ui .media-modal .media-modal-content .media-frame-content .thumbnail-image img {
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .adminify-ui .media-modal .media-modal-content .media-frame-content .attachment-info {
   border-color: #dedee7;
@@ -1837,12 +1837,12 @@ a {
 }
 .adminify-ui #drag-drop-area {
   border-color: #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 
 .adminify-ui.options-general-php #wpbody-content form, .adminify-ui.options-writing-php #wpbody-content form, .adminify-ui.options-reading-php #wpbody-content form, .adminify-ui.options-discussion-php #wpbody-content form, .adminify-ui.options-media-php #wpbody-content form, .adminify-ui.options-permalink-php #wpbody-content form, .adminify-ui.privacy-settings #wpbody-content form, .adminify-ui.user-new-php #wpbody-content form, .adminify-ui.profile-php #wpbody-content form, .adminify-ui.export-php #wpbody-content form {
   padding: 1rem 1.5rem 11px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   border: 1px solid #dedee7;
   background-color: #fff;
 }
@@ -1851,7 +1851,7 @@ a {
 }
 .adminify-ui.options-general-php #wpbody-content form .action-buttons button, .adminify-ui.options-writing-php #wpbody-content form .action-buttons button, .adminify-ui.options-reading-php #wpbody-content form .action-buttons button, .adminify-ui.options-discussion-php #wpbody-content form .action-buttons button, .adminify-ui.options-media-php #wpbody-content form .action-buttons button, .adminify-ui.options-permalink-php #wpbody-content form .action-buttons button, .adminify-ui.privacy-settings #wpbody-content form .action-buttons button, .adminify-ui.user-new-php #wpbody-content form .action-buttons button, .adminify-ui.profile-php #wpbody-content form .action-buttons button, .adminify-ui.export-php #wpbody-content form .action-buttons button {
   border-color: #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   background-color: #fff;
 }
 .adminify-ui.options-general-php #wpbody-content .privacy-settings-header, .adminify-ui.options-writing-php #wpbody-content .privacy-settings-header, .adminify-ui.options-reading-php #wpbody-content .privacy-settings-header, .adminify-ui.options-discussion-php #wpbody-content .privacy-settings-header, .adminify-ui.options-media-php #wpbody-content .privacy-settings-header, .adminify-ui.options-permalink-php #wpbody-content .privacy-settings-header, .adminify-ui.privacy-settings #wpbody-content .privacy-settings-header, .adminify-ui.user-new-php #wpbody-content .privacy-settings-header, .adminify-ui.profile-php #wpbody-content .privacy-settings-header, .adminify-ui.export-php #wpbody-content .privacy-settings-header {
@@ -1863,12 +1863,12 @@ a {
 .adminify-ui.options-general-php #wpbody-content .privacy-settings-body, .adminify-ui.options-writing-php #wpbody-content .privacy-settings-body, .adminify-ui.options-reading-php #wpbody-content .privacy-settings-body, .adminify-ui.options-discussion-php #wpbody-content .privacy-settings-body, .adminify-ui.options-media-php #wpbody-content .privacy-settings-body, .adminify-ui.options-permalink-php #wpbody-content .privacy-settings-body, .adminify-ui.privacy-settings #wpbody-content .privacy-settings-body, .adminify-ui.user-new-php #wpbody-content .privacy-settings-body, .adminify-ui.profile-php #wpbody-content .privacy-settings-body, .adminify-ui.export-php #wpbody-content .privacy-settings-body {
   max-width: 92%;
   padding: 0 1.5rem 11px;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   border: 1px solid #dedee7;
   background-color: #fff;
 }
 .adminify-ui.options-general-php #wpbody-content .privacy-settings-body .privacy-settings-accordion, .adminify-ui.options-writing-php #wpbody-content .privacy-settings-body .privacy-settings-accordion, .adminify-ui.options-reading-php #wpbody-content .privacy-settings-body .privacy-settings-accordion, .adminify-ui.options-discussion-php #wpbody-content .privacy-settings-body .privacy-settings-accordion, .adminify-ui.options-media-php #wpbody-content .privacy-settings-body .privacy-settings-accordion, .adminify-ui.options-permalink-php #wpbody-content .privacy-settings-body .privacy-settings-accordion, .adminify-ui.privacy-settings #wpbody-content .privacy-settings-body .privacy-settings-accordion, .adminify-ui.user-new-php #wpbody-content .privacy-settings-body .privacy-settings-accordion, .adminify-ui.profile-php #wpbody-content .privacy-settings-body .privacy-settings-accordion, .adminify-ui.export-php #wpbody-content .privacy-settings-body .privacy-settings-accordion {
-  border-radius: 2px;
+  border-radius: "revert-rule";
   border-color: #dedee7;
 }
 .adminify-ui.options-general-php #wpbody-content .privacy-settings-body .privacy-settings-accordion .privacy-settings-accordion-panel,
@@ -1909,7 +1909,7 @@ a {
 .adminify-ui.profile-php #wpbody-content .privacy-settings-body .privacy-settings-accordion .privacy-settings-accordion-trigger:not(.privacy-settings-accordion-panel):focus, .adminify-ui.export-php #wpbody-content .privacy-settings-body .privacy-settings-accordion .privacy-settings-accordion-panel:not(.privacy-settings-accordion-panel):focus,
 .adminify-ui.export-php #wpbody-content .privacy-settings-body .privacy-settings-accordion .privacy-settings-accordion-trigger:not(.privacy-settings-accordion-panel):focus {
   outline-color: var(--adminify-primary);
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .adminify-ui.options-general-php #wpbody-content .hr-separator, .adminify-ui.options-writing-php #wpbody-content .hr-separator, .adminify-ui.options-reading-php #wpbody-content .hr-separator, .adminify-ui.options-discussion-php #wpbody-content .hr-separator, .adminify-ui.options-media-php #wpbody-content .hr-separator, .adminify-ui.options-permalink-php #wpbody-content .hr-separator, .adminify-ui.privacy-settings #wpbody-content .hr-separator, .adminify-ui.user-new-php #wpbody-content .hr-separator, .adminify-ui.profile-php #wpbody-content .hr-separator, .adminify-ui.export-php #wpbody-content .hr-separator {
   border-top-color: #dedee7;
@@ -1920,7 +1920,7 @@ a {
   padding: 24px;
   margin-right: 16px;
   border: 1px solid #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   margin-top: 48px !important;
 }
 .adminify-ui .plugin-install-tab-featured .wp-filter {
@@ -1972,7 +1972,7 @@ a {
   margin: 0 !important;
   width: 100%;
   border: 1px solid #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .adminify-ui .plugin-install-tab-featured .wp-list-table #the-list .plugin-card .plugin-card-top {
   padding: 16px 16px 0 16px;
@@ -2027,7 +2027,7 @@ a {
   padding: 12px 16px;
   background-color: var(--adminify-preset-background);
   border-top: 1px solid #dedee7;
-  border-radius: 0 0 2px 2px;
+  border-radius: 0 0 "revert-rule" "revert-rule";
 }
 .adminify-ui .plugin-install-tab-featured .wp-list-table #the-list .plugin-card .authors cite a {
   color: var(--adminify-primary) !important;
@@ -2044,20 +2044,20 @@ body.wp-adminify {
 * Useable Mixin
 */
 .adminify-ui #wpbody-content .theme-browser .themes .theme {
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .adminify-ui #wpbody-content .theme-browser .themes .theme .theme-screenshot {
-  border-radius: 2px 2px 0 0;
+  border-radius: "revert-rule" "revert-rule" 0 0;
 }
 .adminify-ui #wpbody-content .theme-browser .themes .theme .theme-id-container .theme-name {
-  border-radius: 0 0 2px 2px;
+  border-radius: 0 0 "revert-rule" "revert-rule";
 }
 .adminify-ui #wpbody-content .theme-browser .themes .theme .more-details {
-  border-radius: 2px;
+  border-radius: "revert-rule";
   background-color: var(--adminify-primary);
 }
 .adminify-ui #wpbody-content .theme-browser .themes .theme.add-new-theme a::after {
-  border-radius: 2px;
+  border-radius: "revert-rule";
   border-color: #dedee7;
 }
 .adminify-ui #wpbody-content .theme-browser .themes .theme.add-new-theme a:hover::after {
@@ -2068,7 +2068,7 @@ body.wp-adminify {
   color: var(--adminify-primary);
 }
 .adminify-ui #wpbody-content .theme-wrap {
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .adminify-ui #wpbody-content .theme-wrap .theme-header {
   border-color: #dedee7;
@@ -2087,7 +2087,7 @@ body.wp-adminify {
 }
 .adminify-ui #wpbody-content .theme-wrap .theme-about .screenshot {
   box-shadow: 0 0 0 1px #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
 }
 .adminify-ui #wpbody-content .theme-wrap .theme-about .theme-info .theme-name {
   font-size: 32px;
@@ -2105,7 +2105,7 @@ body.wp-adminify {
 }
 .adminify-ui #wpbody-content .theme-wrap .theme-actions {
   border-color: #dedee7;
-  border-radius: 0 0 2px 2px;
+  border-radius: 0 0 "revert-rule" "revert-rule";
 }
 
 .adminify-ui.adminify-dark-mode {
@@ -2125,7 +2125,7 @@ body {
 .adminify-ui .button:not(.adminify-warning-primary):not(.wpsc-boost-migration-button) {
   color: #fff;
   background: transparent;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   cursor: pointer;
   transition: all 0.15s;
   border: 1px solid var(--adminify-primary);
@@ -2142,7 +2142,7 @@ body {
 .adminify-ui .button-primary:not(.adminify-btn):not(.wpsc-boost-migration-button),
 .adminify-ui a.page-title-action:not(.adminify-btn):not(.wpsc-boost-migration-button) {
   color: #fff;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   cursor: pointer;
   transition: all 0.15s;
   border: 1px solid var(--adminify-primary);
@@ -2154,6 +2154,11 @@ body {
   color: var(--adminify-primary);
   background: transparent;
   border-color: var(--adminify-primary);
+}
+.adminify-ui .button[aria-disabled=true],
+.adminify-ui button[aria-disabled=true],
+.adminify-ui input[type=submit][aria-disabled=true] {
+  opacity: 0.6;
 }
 .adminify-ui p {
   color: #5a5676;
@@ -2252,7 +2257,7 @@ body {
 .adminify-ui select {
   color: #48455f;
   border-color: #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   outline: none;
   background-color: #fff;
 }
@@ -2271,7 +2276,7 @@ body {
   color: #fff;
   background-color: var(--adminify-primary);
   border-color: var(--adminify-primary);
-  border-radius: 2px;
+  border-radius: "revert-rule";
   transition: all 0.15s;
 }
 .adminify-ui input:not(.adminify-btn)[type=submit]:hover {
@@ -2372,7 +2377,7 @@ body {
 .adminify-ui #wpbody-content .widefat.importers tbody .importer-item {
   background: #fff;
   border: 1px solid #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
   padding: 1.125rem;
   position: relative;
 }
@@ -2406,7 +2411,7 @@ body {
 }
 .adminify-ui #wpbody-content #screen-meta {
   border-color: #dedee7;
-  border-radius: 0 0 2px 2px;
+  border-radius: 0 0 "revert-rule" "revert-rule";
 }
 .adminify-ui #wpbody-content #screen-meta #contextual-help-wrap #contextual-help-back {
   border-color: #dedee7;
@@ -2419,7 +2424,122 @@ body {
 }
 .adminify-ui .card {
   border-color: #dedee7;
-  border-radius: 2px;
+  border-radius: "revert-rule";
+}
+.adminify-ui #wp-adminify-color-mode-wrapper {
+  position: relative;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .mode-icon {
+  padding: 4px;
+  width: 18px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  position: relative;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .mode-icon.adminify-color-mode-system-active {
+  width: 22px;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .mode-icon .darkIcon,
+.adminify-ui #wp-adminify-color-mode-wrapper .mode-icon .lightIcon {
+  position: absolute;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .mode-icon > svg {
+  width: 18px;
+  height: 18px;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .mode-icon > svg.systemIcon {
+  width: 14px;
+  height: 14px;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .mode-icon > svg.systemIcon path {
+  stroke-width: 1.5px;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .light-dark-dropdown {
+  background: #2c3338;
+  width: 110px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 5px 0 5px 10px;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 40px;
+  right: -39px;
+  z-index: 9999;
+  box-sizing: border-box;
+  visibility: hidden;
+  opacity: 0.0001;
+  transition: 0.3s cubic-bezier(0.2, 0, 0, 1.6);
+  transform: scale(0.6) translateY(-20%);
+  -webkit-transform: scale(0.6) translateY(-20%);
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .light-dark-dropdown::before {
+  content: "";
+  position: absolute;
+  height: 12px;
+  width: 12px;
+  border: solid 1px #eee;
+  border-width: 1px 0 0 1px;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  background-color: #2c3338;
+  top: -7px;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .light-dark-dropdown > div {
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  color: white;
+  padding: 3px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .light-dark-dropdown > div > span {
+  font-size: 12px;
+  color: #fff;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .light-dark-dropdown > div > svg.lightIcon,
+.adminify-ui #wp-adminify-color-mode-wrapper .light-dark-dropdown > div > svg.darkIcon {
+  width: 16px !important;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .light-dark-dropdown > div > svg.systemIcon {
+  width: 14px;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .light-dark-dropdown > div > svg.systemIcon path {
+  stroke-width: 1.5px;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .adminify-color-mode-dark-active .darkIcon {
+  display: block;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .adminify-color-mode-dark-active .lightIcon,
+.adminify-ui #wp-adminify-color-mode-wrapper .adminify-color-mode-dark-active .systemIcon {
+  display: none;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .adminify-color-mode-light-active .darkIcon,
+.adminify-ui #wp-adminify-color-mode-wrapper .adminify-color-mode-light-active .systemIcon {
+  display: none;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .adminify-color-mode-light-active .lightIcon {
+  display: block;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .adminify-color-mode-system-active .systemIcon {
+  display: block;
+}
+.adminify-ui #wp-adminify-color-mode-wrapper .adminify-color-mode-system-active .lightIcon,
+.adminify-ui #wp-adminify-color-mode-wrapper .adminify-color-mode-system-active .darkIcon {
+  display: none;
 }
 .adminify-ui #wp-adminify-color-mode-wrapper .light-dark-dropdown {
   background: var(--adminify-menu-bg);

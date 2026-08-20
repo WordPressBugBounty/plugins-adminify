@@ -428,7 +428,9 @@ class DarkModeConflicts
             $parent_selector .interface-interface-skeleton__body .interface-interface-skeleton__secondary-sidebar {border-right: 1px solid #e0e0e0;}
             $parent_selector .block-editor__container .edit-post-header {border-bottom: 1px solid #e0e0e0}
             $parent_selector .components-modal__content .components-text,
-            $parent_selector .components-popover__content .components-text { color: black!important; }
+            $parent_selector .components-panel .components-text,
+            $parent_selector .components-popover__content .components-text,
+            $parent_selector .preferences__tabs button[aria-selected=false] > span { color: black!important; }
             $parent_selector .block-editor-block-inspector .components-tools-panel { border-top-color: #e0e0e0; }
             $parent_selector .admin-ui-navigable-region .components-panel__header > div > button { color: black; }
             $parent_selector .editor-sidebar__panel .editor-post-card-panel__header svg,
@@ -448,8 +450,10 @@ class DarkModeConflicts
                 background: #1e1e1e!important; color: #f0f0f1!important; border-color: #4a4a4a!important;
             }
             /* Unit suffix/select (the \"px\" box) is a separate element the engine leaves
-               white — force it dark to match the WIDTH input. */
-            $parent_selector .css-dkbncl-Menu-Menu,
+               white — force it dark to match the WIDTH input. Its popover is an Ariakit
+               dialog, so match it on the attributes it carries WHILE OPEN; a bare
+               [data-dialog] also hits every closed one and any other dialog on the page. */
+            $parent_selector div[data-dialog][data-open=\"true\"][role=\"menu\"],
             $parent_selector .block-editor-block-inspector .components-unit-control__unit-select,
             $parent_selector .block-editor-block-inspector .components-unit-control select,
             $parent_selector .block-editor-block-inspector .components-input-control__suffix,

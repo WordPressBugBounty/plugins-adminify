@@ -1,0 +1,128 @@
+/*!*********************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!./dev/scss/admin-bar-switcher.scss ***!
+  \*********************************************************************************************************************************************************************************************************************************************************/
+/**
+ * Admin bar Light/Dark/System switcher - standalone build.
+ *
+ * The main Adminify stylesheets are deliberately skipped on customize.php
+ * (Assets::should_skip_adminify_scripts), and the copy inside `style.scss` is
+ * scoped under `.adminify-ui` anyway. WordPress 7.1 renders the admin bar on
+ * that screen, so the switcher node ships with nothing to style it. This entry
+ * reuses the unscoped rules from the default-UI build so the widget can carry
+ * its own styling wherever the rest of Adminify is not loaded.
+ */
+#wp-adminify-color-mode-wrapper {
+  position: relative;
+}
+#wp-adminify-color-mode-wrapper .mode-icon {
+  padding: 4px;
+  width: 18px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  position: relative;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+#wp-adminify-color-mode-wrapper .mode-icon.adminify-color-mode-system-active {
+  width: 22px;
+}
+#wp-adminify-color-mode-wrapper .mode-icon .darkIcon,
+#wp-adminify-color-mode-wrapper .mode-icon .lightIcon {
+  position: absolute;
+}
+#wp-adminify-color-mode-wrapper .mode-icon > svg {
+  width: 18px;
+  height: 18px;
+}
+#wp-adminify-color-mode-wrapper .mode-icon > svg.systemIcon {
+  width: 14px;
+  height: 14px;
+}
+#wp-adminify-color-mode-wrapper .mode-icon > svg.systemIcon path {
+  stroke-width: 1.5px;
+}
+#wp-adminify-color-mode-wrapper .light-dark-dropdown {
+  background: #2c3338;
+  width: 110px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 5px 0 5px 10px;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 40px;
+  right: -39px;
+  z-index: 9999;
+  box-sizing: border-box;
+  visibility: hidden;
+  opacity: 0.0001;
+  transition: 0.3s cubic-bezier(0.2, 0, 0, 1.6);
+  transform: scale(0.6) translateY(-20%);
+  -webkit-transform: scale(0.6) translateY(-20%);
+}
+#wp-adminify-color-mode-wrapper .light-dark-dropdown::before {
+  content: "";
+  position: absolute;
+  height: 12px;
+  width: 12px;
+  border: solid 1px #eee;
+  border-width: 1px 0 0 1px;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  background-color: #2c3338;
+  top: -7px;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+#wp-adminify-color-mode-wrapper .light-dark-dropdown > div {
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  color: white;
+  padding: 3px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+#wp-adminify-color-mode-wrapper .light-dark-dropdown > div > span {
+  font-size: 12px;
+  color: #fff;
+}
+#wp-adminify-color-mode-wrapper .light-dark-dropdown > div > svg.lightIcon,
+#wp-adminify-color-mode-wrapper .light-dark-dropdown > div > svg.darkIcon {
+  width: 16px !important;
+}
+#wp-adminify-color-mode-wrapper .light-dark-dropdown > div > svg.systemIcon {
+  width: 14px;
+}
+#wp-adminify-color-mode-wrapper .light-dark-dropdown > div > svg.systemIcon path {
+  stroke-width: 1.5px;
+}
+#wp-adminify-color-mode-wrapper .adminify-color-mode-dark-active .darkIcon {
+  display: block;
+}
+#wp-adminify-color-mode-wrapper .adminify-color-mode-dark-active .lightIcon,
+#wp-adminify-color-mode-wrapper .adminify-color-mode-dark-active .systemIcon {
+  display: none;
+}
+#wp-adminify-color-mode-wrapper .adminify-color-mode-light-active .darkIcon,
+#wp-adminify-color-mode-wrapper .adminify-color-mode-light-active .systemIcon {
+  display: none;
+}
+#wp-adminify-color-mode-wrapper .adminify-color-mode-light-active .lightIcon {
+  display: block;
+}
+#wp-adminify-color-mode-wrapper .adminify-color-mode-system-active .systemIcon {
+  display: block;
+}
+#wp-adminify-color-mode-wrapper .adminify-color-mode-system-active .lightIcon,
+#wp-adminify-color-mode-wrapper .adminify-color-mode-system-active .darkIcon {
+  display: none;
+}
