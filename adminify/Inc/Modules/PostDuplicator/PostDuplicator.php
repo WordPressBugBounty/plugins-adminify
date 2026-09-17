@@ -197,20 +197,16 @@ class PostDuplicator
 			}
 
 			/*
-			 * duplicate all post meta just in two SQL queries
+			 * duplicate all post meta
+			 * get_post_meta() without a key returns raw (still serialized) values,
+			 * so rows are copied byte-for-byte via parameterized $wpdb->insert().
 			 */
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- direct query required for copying all post meta rows; not cached intentionally.
-			$post_meta_infos = $wpdb->get_results($wpdb->prepare("SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id=%d", $post_id));
-			if (count($post_meta_infos) != 0) {
-				$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
-				foreach ($post_meta_infos as $meta_info) {
-					$meta_key = $meta_info->meta_key;
-
+			$new_post_id = absint($new_post_id);
+			$post_metas  = $new_post_id ? get_post_meta($post_id) : [];
+			if (!empty($post_metas) && is_array($post_metas)) {
+				foreach ($post_metas as $meta_key => $meta_values) {
 					// Do not copy these values
-					if ($meta_key == '_wp_old_slug') {
-						continue;
-					}
-					if ($meta_key == '_elementor_css') {
+					if (in_array($meta_key, ['_wp_old_slug', '_elementor_css'], true)) {
 						continue;
 					}
 
@@ -219,12 +215,20 @@ class PostDuplicator
 						delete_post_meta($new_post_id, '_elementor_template_type');
 					}
 
-					$meta_value      = $meta_info->meta_value;
-					$sql_query_sel[] = $wpdb->prepare('SELECT %d, %s, %s', $new_post_id, $meta_key, $meta_value);
+					foreach ((array) $meta_values as $meta_value) {
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- raw copy keeps serialized values intact; $wpdb->insert() is parameterized.
+						$wpdb->insert(
+							$wpdb->postmeta,
+							[
+								'post_id'    => $new_post_id,
+								'meta_key'   => $meta_key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_query_meta_key
+								'meta_value' => $meta_value, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_query_meta_value
+							],
+							['%d', '%s', '%s']
+						);
+					}
 				}
-				$sql_query .= implode(' UNION ALL ', $sql_query_sel);
-				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql_query is built from $wpdb->prepare() fragments above; direct query required for bulk meta insert, not cached intentionally.
-				$wpdb->query($sql_query);
+				wp_cache_delete($new_post_id, 'post_meta');
 			}
 
 			/*

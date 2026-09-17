@@ -1,4 +1,7 @@
 == Changelog ==
+= Adminify - 4.3.2 (17-09-2026) =
+* Security: Security Update.
+
 = Adminify - 4.3.1 (20-08-2026) =
 * Improved: WordPress 7.1 compatibility.
 * Improved: The Gutenberg Editor Logo option is now hidden on WordPress 7.1 and newer, where WordPress no longer provides the editor button it replaced. It keeps working on older versions.
