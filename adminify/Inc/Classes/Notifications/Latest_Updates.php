@@ -87,7 +87,7 @@ if (!class_exists('Latest_Updates')) {
 
 			if("dismissed" !== $forever_notice){
 				$pxlbsadminify_changelog_items =
-				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Security:</strong> Security Update. </span><br>', 'adminify');
+				  __('<span class="dashicons dashicons-yes"></span> <span class="adminify-changes-list"> <strong>Fixed:</strong> Elementor screens such as System Info and Form Submissions no longer render partially with page scrolling locked while Hide Admin Notices is on. </span><br>', 'adminify');
 
 			$pxlbsadminify_changelog_message = sprintf(
 					/* translators: %1$s: changelogs page URL. %2$s: link anchor text. %3$s: plugin update heading HTML. %4$s: changelog list items HTML. */

@@ -3,7 +3,7 @@ Contributors: pixarlabs, litonice13
 Tags: white label, admin menu editor, login customizer, admin columns, dark mode
 Requires at least: 5.0
 Tested up to: 7.1
-Stable tag: 4.3.2
+Stable tag: 4.3.3
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -186,6 +186,9 @@ Please report security bugs found in the source code of this plugin through the 
 7. The module settings page showing available addons such as Activity Logs.
 
 == Changelog ==
+= Adminify - 4.3.3 (12-10-2026) =
+* Fixed: Elementor screens such as System Info and Form Submissions no longer render partially with page scrolling locked while Hide Admin Notices is on.
+
 = Adminify - 4.3.2 (17-09-2026) =
 * Security: Security Update.
 
